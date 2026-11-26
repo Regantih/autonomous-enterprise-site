@@ -85,7 +85,7 @@ function matrix(AE) {
     }).join('');
     return `<tr><th scope="row"><a href="/workflows/#wf-${w.id}">${esc(w.short)}</a></th>${cells}</tr>`;
   }).join('\n');
-  return `<div class="fw-table-wrap bp-matrix-wrap" tabindex="0" role="region" aria-label="Workflows by layer matrix, scroll sideways"><table class="fw-table bp-matrix"><thead><tr><th scope="col">Workflow</th>${head}</tr></thead><tbody>
+  return `<div class="fw-table-wrap bp-matrix-wrap" tabindex="0" role="region" aria-label="Workflows by layer matrix"><table class="fw-table bp-matrix"><thead><tr><th scope="col">Workflow</th>${head}</tr></thead><tbody>
 ${rows}
 </tbody></table></div>`;
 }
