@@ -18,6 +18,7 @@ import {
   type ToolCall,
   type TraceItem,
 } from './guide-tools';
+import { misboundFigures, mismatchNote } from './fact-check';
 
 /**
  * The guide's agent loop. Each step is one real model call that returns one JSON object: either tool calls or an
@@ -448,12 +449,15 @@ export async function runTurn(
     // fact must trace back to the CORE or this turn's tool results. One rewrite; then copying is withheld and
     // untraceable sentences are dropped.
     const copied = copiesExample(answer);
-    const unsupported = parsed.clarify || declineAfterSearch ? [] : unsupportedSentences(answer, evidence.join('\n'));
+    // Figures bound to labels: on a sample-data answer, each number must match the value for its own label and entity.
+    const misbound = graphRan ? misboundFigures(answer) : [];
+    const unsupported = parsed.clarify || declineAfterSearch ? [] : [...new Set([...unsupportedSentences(answer, evidence.join('\n')), ...misbound.map((m) => m.sentence)])];
     if ((copied || unsupported.length) && !nudgedGround && retryable) {
       nudgedGround = true;
       const why = [
         copied ? `It copies the example in the instructions word for word; that example answers a different question. Write a new answer to this visitor's question in your own words.` : '',
-        unsupported.length ? `These sentences are not supported by the passages; remove them or replace them with what the passages say: ${unsupported.map((x) => `"${x}"`).join(' ')}` : '',
+        misbound.length ? `These figures are attached to the wrong label; use the number from FACTS BY ENTITY for that same label: ${mismatchNote(misbound)}` : '',
+        unsupported.some((x) => !misbound.some((m) => m.sentence === x)) ? `These sentences are not supported by the passages; remove them or replace them with what the passages say: ${unsupported.filter((x) => !misbound.some((m) => m.sentence === x)).map((x) => `"${x}"`).join(' ')}` : '',
       ].filter(Boolean).join(' ');
       nudge(`Rewrite the answer. ${why} Keep the length, the cites and the page suggestions.`);
       again();

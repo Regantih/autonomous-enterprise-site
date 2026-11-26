@@ -1,5 +1,6 @@
 import { KNOWLEDGE } from './knowledge.generated';
 import { routeQuestion, subgraphText, traverseKg, traverseSkills, type Subgraph } from './graph';
+import { factSheet } from './fact-check';
 
 /**
  * The guide's tools. All of them are code that runs on the server; none calls a model.
@@ -187,7 +188,8 @@ export function runTool(call: ToolCall, visitorText = ''): ToolResult {
     const subs: Subgraph[] = [];
     if (route.graphs.kg) subs.push(traverseKg(q, 14));
     if (route.graphs.skills) subs.push(traverseSkills(q, 14));
-    const text = subgraphText(subs).slice(0, 3500);
+    const sheet = factSheet(subs);
+    const text = `${sheet ? `${sheet}\n\n` : ''}${subgraphText(subs)}`.slice(0, 3800);
     return {
       trace: { tool: 'ask_graph', label: `Checked the graphs: ${graphSummary(subs)}`, detail: q, href: '/blueprints/graphs/' },
       forModel: `ask_graph("${q}") selected this subgraph in code. The knowledge graph is synthetic sample accounts-payable data, not a real company:\n${text}`,

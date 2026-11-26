@@ -17,6 +17,7 @@ import {
   violatesRules,
   type ChatMessage,
 } from '../lib/guide';
+import { misboundFigures } from '../lib/fact-check';
 import { CORE, EXAMPLE_ANSWER, INTAKE_WORDS, MAX_CALLS_PER_TURN, MAX_TOOL_STEPS, MIN_ANSWER_WORDS, buildSystemPrompt, copiesExample, dedupeSentences, normalizeCite, parseStep, unsupportedSentences } from '../lib/guide-agent';
 import { HANDOFFS, KNOWN_CITES, PASSAGES, SITE_PAGES, chapterTags, graphIntent, intakeIntent, pagePlan, requestKind, runTool, searchBook } from '../lib/guide-tools';
 import { KNOWLEDGE } from '../lib/knowledge.generated';
@@ -253,6 +254,33 @@ describe('POST /api/guide (agent loop)', () => {
     expect(first.messages.at(-1)!.content).toContain('code ran ask_graph');
     expect((body.trace as { tool: string }[])[0].tool).toBe('ask_graph');
     expect(body.ok).toBe(true);
+  });
+
+  it('binds figures to their labels: a number given to the wrong label goes back once, then its sentence is dropped', async () => {
+    const LEAD = 'In the synthetic sample data, the riskiest supplier is Supplier 34, with a risk score of 7, the highest of the 54 suppliers. The score counts the exceptions that need a person and the exceptions where the resolver agent suggested the wrong resolution, so those cases deserve review.';
+    const BAD = step({ answer: `${LEAD} Supplier 34 has 4 exceptions that need a person and 4 wrong agent suggestions.` });
+    const GOOD = step({ answer: `${LEAD} Supplier 34 has 4 exceptions in total, 3 of which need a person, and 4 wrong agent suggestions.` });
+    ai.run.mockReset().mockResolvedValueOnce(BAD).mockResolvedValueOnce(GOOD);
+    const { body } = await call(chat([{ role: 'user', content: 'Which supplier in the sample data is riskiest?' }]));
+    const first = ai.run.mock.calls[0][1] as { messages: { content: string }[] };
+    expect(first.messages.at(-1)!.content).toContain('Supplier 34 (SUP-34): 4 exceptions in total; 3 of them need a person; 4 wrong agent suggestions; risk score 7');
+    const nudge = (ai.run.mock.calls[1][1] as { messages: { content: string }[] }).messages.at(-1)!.content;
+    expect(nudge).toContain("gives 4 for Supplier 34's exceptions need a person; the data says 3");
+    expect(body).toMatchObject({ ok: true });
+    expect(String(body.reply)).toContain('3 of which need a person');
+    // A second wrong answer: the sentence with the misbound figure is dropped, the rest stands.
+    ai.run.mockReset().mockResolvedValueOnce(BAD).mockResolvedValueOnce(BAD);
+    const again = await call(chat([{ role: 'user', content: 'Which supplier in the sample data is riskiest?' }]));
+    expect(again.body).toMatchObject({ ok: true });
+    expect(String(again.body.reply)).not.toContain('4 exceptions that need a person');
+    expect(String(again.body.reply)).toContain('risk score of 7');
+  });
+
+  it('misboundFigures reads the label around each number and checks it against the same entity', () => {
+    expect(misboundFigures('Supplier 34 has 4 exceptions that need a person and 4 wrong agent suggestions.').map((m) => [m.entity, m.attr, m.claimed, m.expected])).toEqual([['Supplier 34', 'needs_person', 4, 3]]);
+    expect(misboundFigures('Supplier 34 has 4 exceptions, 3 of which need a person. It ranks 1 of 54 with a risk score of 7.')).toEqual([]);
+    expect(misboundFigures('Supplier 34 leads. Supplier 38 has a risk score of 7.').map((m) => m.entity)).toEqual(['Supplier 38']);
+    expect(misboundFigures('Invoices above $25,000 need a person under Delegated authority $25,000; HO-01 applies from L2 and the confidence floor is 0.95.')).toEqual([]);
   });
 
   const INTAKE_ANSWER = 'A board workshop drawing on the book would start with the autonomy scale, from L0 Manual to L5 Full, and the rule that the harness, not the model, sets the autonomy ceiling. It would cover why agents decide while deterministic rules post, and how autonomy is earned with evidence and can be withdrawn automatically. The intake agent will ask about your audience, date and format, and nothing is sent until you consent.';

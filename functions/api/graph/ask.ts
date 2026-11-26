@@ -1,3 +1,4 @@
+import { misboundFigures } from '../../../lib/fact-check';
 import { AGENTS_FALLBACK_MODEL, AGENTS_PRIMARY_MODEL, costUsd, estimateUsage, nextUtcMidnight, readUsage, type Usage } from '../../../lib/agents';
 import {
   ASK_MAX_TOKENS,
@@ -132,8 +133,13 @@ export async function onRequestPost({ request, env }: Ctx): Promise<Response> {
     const checked = checkAnswer(text, subs);
     evals = checked.evals;
     if (checked.ok) {
+      // Figures bound to labels: a sentence that gives an entity a number belonging to another label is dropped.
+      const wrong = misboundFigures(checked.answer);
+      const answer = wrong.length ? checked.answer.replace(/\s+/g, ' ').trim().split(/(?<=[.!?])\s+(?=[A-Z0-9"\u201c(])/).filter((x) => !wrong.some((w) => w.sentence === x.trim())).join(' ') : checked.answer;
+      evals = [...evals, { name: 'Figures match their labels', pass: wrong.length === 0, detail: wrong.length ? `${wrong.length} figure${wrong.length === 1 ? '' : 's'} attached to the wrong label; that sentence was dropped.` : 'Every labelled figure matches the data.' }];
+      if (!answer.trim()) { last = 'unreadable'; continue; }
       return json(200, {
-        ok: true, answer: checked.answer, cited: checked.cited, evals, calls, ...base,
+        ok: true, answer, cited: checked.cited, evals, calls, ...base,
         latency_ms: Date.now() - t0,
         trace: { at: new Date().toISOString(), signal: 'web', skill: 'SK-graph', agent: 'AG-graph', action: 'answer (read only)' },
       });
