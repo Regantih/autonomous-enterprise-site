@@ -223,7 +223,9 @@
     if (c.legacyErp) cores.push({ kind: 'Legacy ERP', count: c.legacyErp, q: CORE_Q.map(function (x) { return [x[1], i.erpQ[x[0]]]; }), st: erpStrategy(i.erpQ), cite: '11.5.1' });
     if (c.homegrown) cores.push({ kind: 'Homegrown core', count: c.homegrown, q: CORE_Q.map(function (x) { return [x[0] === 'q1' ? 'Do skills or hardware risks end its safe life before your earliest safe finish?' : x[1], i.hgQ[x[0]]]; }), st: erpStrategy(i.hgQ), cite: '11.5.1' });
     if (c.mainframe) cores.push({ kind: 'Mainframe', count: c.mainframe, q: MF_Q.map(function (x) { return [x[1], i.mfQ[x[0]]]; }), st: mfStrategy(i.mfQ), cite: '11.12.2' });
-    return { core: cores.length > 0, cores: cores, earlyStart: c.cloud > 0 };
+    // A core clock runs when at least one core actually moves (any strategy other than keeping it wrapped).
+    cores.forEach(function (x) { x.moves = !(x.st.list.length === 1 && x.st.list[0] === 'Keep-and-wrap') && x.st.list[1] !== 'Keep wrapped; review yearly'; });
+    return { core: cores.some(function (x) { return x.moves; }), cores: cores, wrapOnly: cores.length > 0 && !cores.some(function (x) { return x.moves; }), earlyStart: c.cloud > 0 };
   }
 
   function foundations(i) {
@@ -281,14 +283,14 @@
     var data = f.layers[0], gov = f.layers[2];
     var hasData = function (k) { return i.ready.data.indexOf(k) >= 0; };
     var hasGov = function (k) { return i.ready.gov.indexOf(k) >= 0; };
-    if (c.legacyErp || c.homegrown) add('COR-01', 'Migration larger than estimated', 'You have a legacy core to move.', '26.10.2');
-    if (c.legacyErp >= 2) add('INT-02', 'Bridges break intercompany', 'Several legacy ERPs run side by side during the waves.', '26.10.3');
+    if (ck.core) add('COR-01', 'Migration larger than estimated', 'You have a legacy core to move.', '26.10.2');
+    if (c.legacyErp >= 2 && ck.core) add('INT-02', 'Bridges break intercompany', 'Several legacy ERPs run side by side during the waves.', '26.10.3');
     if (!hasData('authority') || !hasData('ownership')) add('DAT-01', 'Master data duplicates', 'Source authority or ownership is not yet evidenced.', '26.10.4');
     add('CTL-01', 'Rubber-stamp approvals', 'Every pilot starts with people approving agent proposals.', '26.10.6');
     if (i.outcomes.indexOf('capacity') >= 0) add('STR-02', 'Freed capacity absorbed', 'You chose capacity as an outcome.', '26.10.1');
     if (i.outcomes.indexOf('capacity') >= 0 || i.streams.indexOf('front') >= 0) add('PPL-01', 'Fear and bypass', 'Agents take over tasks people do today.', '26.10.7');
     if (c.cloud >= 2) add('VND-03', 'Metering and price changes', 'Several cloud suites each ship a meter.', '26.10.8');
-    if (c.mainframe) add('INT-04', 'Mainframe wrap late', 'Agents depend on APIs in front of the mainframe.', '26.10.3');
+    if (c.mainframe || ck.wrapOnly) add('INT-04', 'Mainframe wrap late', (c.mainframe ? 'Agents depend on APIs in front of the mainframe.' : 'Agents depend on the APIs that wrap your core.'), '26.10.3');
     if (i.streams.indexOf('supply') >= 0 && (c.legacyErp + c.cloud) >= 2) add('AGT-04', 'Error cascades across agents', 'Supply chain chains agents from demand to buying.', '26.10.5');
     if (ck.core) add('VND-01', 'Capability not GA', 'Core waves may plan on capabilities not yet generally available.', '26.10.8');
     if (i.interfaces === '300-1000' || i.interfaces === 'gt1000') add('INT-01', 'Hidden interfaces found late', 'Hundreds of interfaces rarely have a complete inventory.', '26.10.3');
@@ -316,17 +318,17 @@
       return { months: false, total: 33, note: 'The book gives no duration for this archetype: the regulator and the OT boundary set the pace.',
         phases: P.map(function (p) { return { name: p[0], from: p[1] + 1, to: p[2], gate: p[3], label: 'Pace set by the regulator' }; }), cite: '26.1.3' };
     }
-    var lo = a.range[0], hi = a.range[1];
+    var lo = a.range[0], hi = a.range[1], mid = (lo + hi) / 2;
     var m = function (x, r) { return Math.max(1, Math.round(x / 30 * r)); };
     var phases = P.map(function (p, k) {
       var toLo = m(p[2], lo), toHi = m(p[2], hi);
-      var fromLo = k ? m(P[k - 1][2], lo) + 1 : 1;
-      return { name: p[0], from: fromLo, to: toHi, gate: p[3], label: 'Ends month ' + (toLo === toHi ? toLo : toLo + '-' + toHi) };
+      // Drawn at the middle of the range so the bars never overlap; the label carries the range.
+      return { name: p[0], from: k ? P[k - 1][2] / 30 * mid + 1 : 1, to: p[2] / 30 * mid, gate: p[3], label: 'Ends month ' + (toLo === toHi ? toLo : toLo + '-' + toHi) };
     });
     var note = lo + '-' + hi + ' months to G3, scaled from Meridian\u2019s phase shape.';
-    if (arch.id === 'harbor') note += ' With no core clock, phase 2 is the first agents promoted, not a core go-live.';
-    if (ck.core && arch.id === 'harbor') note += ' Your legacy core adds a core clock Harbor does not have: plan for the upper end or longer.';
-    return { months: true, exact: false, total: m(33, hi), note: note, phases: phases, cite: '26.1.3' };
+    if (!ck.core) note += ' With no core clock, phase 2 is the first agents promoted, not a core go-live.';
+    if (ck.core && arch.id !== 'meridian') note += ' A core that moves adds a core clock this archetype does not have: plan for the upper end or longer.';
+    return { months: true, exact: false, total: 33 / 30 * mid, axisEnd: m(33, hi), note: note, phases: phases, cite: '26.1.3' };
   }
 
   function first90(i, ck, f, arch, pl) {
@@ -461,7 +463,7 @@
     });
     if (t.months) {
       out.push('<text class="rm-axis" x="' + x0 + '" y="86">Month 1</text>');
-      out.push('<text class="rm-axis" x="' + (W - 4) + '" y="86" text-anchor="end">Month ' + tot + '</text>');
+      out.push('<text class="rm-axis" x="' + (W - 4) + '" y="86" text-anchor="end">Month ' + (t.axisEnd ? 'about ' + t.axisEnd : tot) + '</text>');
     } else out.push('<text class="rm-axis" x="' + x0 + '" y="86">Relative phases; no durations in the book</text>');
     out.push('</svg>');
     return out.join('');
@@ -488,7 +490,7 @@
     }
 
     var ck = r.clocks;
-    var clockBody = '<p class="rm-big">' + (ck.core ? 'You have a core clock and an autonomy clock.' : 'No core clock: only the autonomy clock runs.') + '</p>'
+    var clockBody = '<p class="rm-big">' + (ck.core ? 'You have a core clock and an autonomy clock.' : ck.wrapOnly ? 'No core clock yet: your cores stay and get wrapped, so the autonomy clock sets the pace.' : 'No core clock: only the autonomy clock runs.') + '</p>'
       + '<ul class="rm-list"><li><b>Core clock:</b> waves of 6-12 months, set by migration, testing, cutover rehearsals and support dates. It speeds up only a little, at high risk.</li>'
       + '<li><b>Autonomy clock:</b> promotions of 1-3 months, set by evidence. It speeds up only by collecting evidence faster.</li>'
       + (ck.core ? '<li><b>Rule:</b> sequence agents behind the waves, not in parallel with them.' + (ck.earlyStart ? ' Agents on cloud suites already in their target state can start early.' : '') + '</li>' : '') + '</ul>';

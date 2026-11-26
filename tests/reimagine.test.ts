@@ -59,6 +59,14 @@ describe('reimagine rule engine: two clocks and strategies (Ch 11.5.1, 11.12.2)'
     const r = R.compute({ cores: { legacyErp: 1 }, erpQ: { q1: false, q2: true, q3: true } });
     expect(r.clocks.cores[0].st.list).toEqual(['Keep-and-wrap']);
   });
+  it('runs a core clock only when a core moves; a wrapped core leaves the autonomy clock in charge', () => {
+    const nw = R.compute(NORTHWIND);
+    expect(nw.clocks.core).toBe(false);
+    expect(nw.clocks.wrapOnly).toBe(true);
+    expect(nw.risks.map((x: Any) => x.id)).not.toContain('COR-01');
+    expect(nw.timeline.note).toContain('With no core clock');
+    expect(R.compute(R.MERIDIAN).clocks.core).toBe(true);
+  });
   it('maps the five answers to strategies and always wraps a mainframe first', () => {
     const r = R.compute(R.MERIDIAN);
     expect(r.clocks.cores.map((c: Any) => c.st.list)).toEqual([
@@ -95,7 +103,8 @@ describe('reimagine rule engine: risks (Ch 26.9, 26.10)', () => {
   it('triggers risks from the inputs, from the eight categories only', () => {
     expect(ids({ cores: { mainframe: 1 } })).toContain('INT-04');
     expect(ids({ cores: { cloud: 1 } })).not.toContain('INT-04');
-    expect(ids({ cores: { legacyErp: 2 } })).toContain('INT-02');
+    expect(ids({ cores: { legacyErp: 2 }, erpQ: { q1: true, q3: true } })).toContain('INT-02');
+    expect(ids({ cores: { legacyErp: 2 } })).not.toContain('INT-02');
     expect(ids({ appetite: 'ambitious' })).toContain('AGT-02');
     expect(ids({ appetite: 'cautious' })).not.toContain('AGT-02');
     expect(ids({ ot: true })).toContain('CTL-05');

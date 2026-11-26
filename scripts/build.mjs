@@ -381,7 +381,7 @@ function reimagineVars() {
   const g = r.foundations.gate;
   const home = `<ul class="rm-home-facts">
         <li><b>Closest archetype</b> ${R.esc(r.archetype.a.name)}: the hardest estate, with two legacy ERPs, a mainframe and 620 interfaces.</li>
-        <li><b>Invest first in</b> ${R.esc(g ? g.name.toLowerCase() : 'agents')}. A board that funds agents first and data second pays twice.</li>
+        <li><b>Invest first in</b> ${R.esc(g ? g.name : 'Agents')}. A board that funds agents first and data second pays twice.</li>
         <li><b>First three pilots</b> ${R.esc(r.pilots.map((p) => p.d.d).join('; '))}.</li>
         <li><b>Top risk</b> ${R.esc(r.risks[0].id)} ${R.esc(r.risks[0].name.toLowerCase())}.</li>
       </ul>`;
