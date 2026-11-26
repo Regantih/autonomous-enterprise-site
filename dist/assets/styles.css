@@ -161,6 +161,14 @@ p { margin: 0 0 1em; }
 }
 .site-nav a:hover, .site-nav a[aria-current="page"] { color: var(--paper); background: rgba(247, 244, 238, 0.08); }
 .header-cta { min-height: 2.5rem; padding: 0.45rem 1rem; font-size: 0.95rem; }
+@media (max-width: 59.99rem) {
+  .brand { flex: 1 1 0; min-width: 0; }
+  .header-inner { gap: 0.75rem; }
+}
+@media (max-width: 30rem) {
+  .site-header .brand-sub { display: none; }
+  .header-cta { padding-inline: 0.8rem; font-size: 0.85rem; }
+}
 @media (min-width: 60rem) {
   .site-nav { order: 0; width: auto; margin: 0; }
   .site-nav ul { padding: 0; }
