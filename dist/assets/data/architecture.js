@@ -104,6 +104,7 @@
     AE.componentById[c.id] = c;
   });
   ['H9', 'tracestore'].forEach(function (id) { AE.componentById[id].link = { href: '/blueprints/trace/', label: 'Open the decision trace viewer' }; });
+  ['kg', 'kgstore'].forEach(function (id) { AE.componentById[id].link = { href: '/blueprints/graphs/', label: 'Explore a real knowledge graph' }; });
 
   // Model family table and chooser.
   AE.models = [
@@ -157,7 +158,7 @@
     { id: 'optimizer', name: 'Optimizer and LLM', level: 'L3', desc: 'A solver decides the plan; a GPT-class model explains it and handles exceptions.', path: [
       ['stream', 'Orders and shipments stream in.'], ['ml', 'Forecast models predict demand with ranges.'], ['opt', 'The solver builds the plan under constraints.'], ['llm', 'The model explains the plan and its trade-offs.'],
       ['H3', 'Policy routes large changes to people.'], ['inbox', 'The planner approves.'], ['apigw', 'Orders release through released interfaces.']] },
-    { id: 'graph', name: 'Graph-grounded agent', level: 'L2 to L3', desc: 'A knowledge graph resolves entities and links before the agent acts.', path: [
+    { id: 'graph', name: 'Graph-grounded agent', level: 'L2 to L3', desc: 'A knowledge graph resolves entities and links before the agent acts.', link: { href: '/blueprints/graphs/', label: 'Ask a real graph-grounded agent' }, path: [
       ['email', 'A new supplier invoice arrives.'], ['ag-fin', 'The finance agent starts its checks.'], ['kg', 'Graph models resolve the supplier entity.'], ['kgstore', 'The graph shows a bank account shared with another supplier.'],
       ['reason', 'A reasoning model tests the fraud-ring pattern.'], ['H3', 'Policy blocks payment and routes the case.'], ['escalation', 'The fraud team gets the graph path as evidence.'], ['H9', 'The trace keeps every check.']] }
   ];

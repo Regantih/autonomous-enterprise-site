@@ -71,3 +71,26 @@ export async function checkRun(token: unknown, salt: string, now = Date.now()): 
   if (!Number.isFinite(issued) || issued > now + 60_000) return 'invalid';
   return now - issued > RUN_TTL_MS ? 'expired' : 'ok';
 }
+
+// ---------- shared helpers for other agents on the same budget (graph agent, intake agent) ----------
+
+/**
+ * Counts one question for a visitor in its own bucket (one row per question, created_at = now) and checks the
+ * site-wide daily budget. Rows: '<bucket>:<sha256(salt:bucket:ip)>'. The model calls themselves are reserved with
+ * reserveGlobalCall, one row each, in the same 'agents:global:YYYY-MM-DD' key /api/agents and /api/loop/step use.
+ */
+export async function startVisitorTurn(db: D1Database, bucket: string, ip: string, salt: string, perHour: number, now = Date.now()): Promise<'ok' | 'visitor_limit' | 'daily_cap'> {
+  await cleanup(db, now);
+  const key = `${bucket}:${await sha256Hex(`${salt}:${bucket}:${ip}`)}`;
+  if ((await count(db, key, now - HOUR)) >= perHour) return 'visitor_limit';
+  if ((await count(db, dayKey(now), 0)) >= GLOBAL_DAILY_CALLS) return 'daily_cap';
+  await insert(db, key, now);
+  return 'ok';
+}
+
+/** Reserves one model call against the site-wide daily budget only. */
+export async function reserveGlobalCall(db: D1Database, now = Date.now()): Promise<'ok' | 'daily_cap'> {
+  if ((await count(db, dayKey(now), 0)) >= GLOBAL_DAILY_CALLS) return 'daily_cap';
+  await insert(db, dayKey(now), nextUtcMidnight(now));
+  return 'ok';
+}

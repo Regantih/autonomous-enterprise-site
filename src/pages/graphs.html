@@ -1,0 +1,53 @@
+<section class="page-head bp-head" aria-labelledby="page-title">
+  <div class="container">
+    <p class="eyebrow">Blueprints &middot; Graphs</p>
+    <h1 id="page-title">Knowledge graph, skill graph and the enterprise brain</h1>
+    <p class="lead">Agents act well only when they know what is connected and what they may do. These graphs show both. The brain connects them.</p>
+  </div>
+</section>
+{{BP_SUBNAV}}
+
+<section class="section bp-section" id="kg" aria-labelledby="kg-title">
+  <div class="container">
+    <p class="eyebrow">1 &middot; Knowledge graph</p>
+    <h2 id="kg-title" class="h-sm">What is connected to what</h2>
+    <p class="gr-intro">Real data. Real computation. Real AI calls. Code builds this graph from 150 synthetic accounts-payable exceptions, the same sample the <a href="/blueprints/loops/">improvement loop</a> runs on. It has {{GR_KG_NODES}} nodes and {{GR_KG_EDGES}} edges: suppliers, exceptions, exception types, policies, controls and the people who decide.</p>
+    <div class="bp-ix" hidden><div data-gr="kg"></div></div>
+    <noscript><p class="fw-note">Turn on JavaScript to explore the graph. The stats and the full tables are below.</p></noscript>
+    <h3 class="gr-h3">Computed from the graph</h3>
+    {{GR_KG_STATS}}
+    {{GR_KG_TABLES}}
+    <p class="fw-note">Sample data: synthetic, not real suppliers, invoices or people. <a href="{{AP_SAMPLE_URL}}">Download the sample (JSON)</a> or <a href="{{GRAPHS_JSON_URL}}">the graphs (JSON)</a>.</p>
+  </div>
+</section>
+
+<section class="section section-paper-2 bp-section" id="skills" aria-labelledby="skills-title">
+  <div class="container">
+    <p class="eyebrow">2 &middot; Skill graph</p>
+    <h2 id="skills-title" class="h-sm">Who may do what, and what stops them</h2>
+    <p class="gr-intro">Each agent on this site appears here with its skills, tools, data, controls and autonomy level. Limits come from the site&rsquo;s own code: the action whitelist, the scorer lock, the do-not-automate list and the call budget. Pick an agent to see what it can and cannot do.</p>
+    <div class="bp-ix" hidden><div data-gr="skills"></div></div>
+    <noscript><p class="fw-note">Turn on JavaScript to explore the graph. The table below lists every agent.</p></noscript>
+    {{GR_SK_STATS}}
+    {{GR_SK_TABLES}}
+  </div>
+</section>
+
+<section class="section bp-section" id="brain" aria-labelledby="brain-title">
+  <div class="container">
+    <p class="eyebrow">3 &middot; Enterprise brain</p>
+    <h2 id="brain-title" class="h-sm">The layer that connects graphs, models and memory</h2>
+    <p class="gr-intro">Ask a question. Code routes it, walks the graphs and picks a model family. One real model call answers from the subgraph only. Code checks the answer. The trace joins your session memory, and the map grows.</p>
+    <div class="bp-ix" hidden><div data-gr="ask"></div><div data-gr="brain"></div></div>
+    <noscript><p class="fw-note">Turn on JavaScript to ask the graph agent. The brain&rsquo;s steps are listed below.</p></noscript>
+    {{GR_BRAIN_STATIC}}
+    {{GR_BRAIN_TABLES}}
+    <details class="lp-more">
+      <summary>Limits and what is real</summary>
+      <p><b>Real.</b> The graphs, the routing, the traversal and every check are code. The answer is one call to a GPT-class model, with a smaller model as fallback.</p>
+      <p><b>Not run.</b> Other model families appear on the map so you see the choice. The demo labels them &ldquo;routed to, not run in this demo&rdquo; and shows no output for them.</p>
+      <p><b>Limits.</b> Eight questions per visitor per hour. The site shares a daily allowance of model calls that resets at midnight UTC. Your questions are not stored.</p>
+    </details>
+    <p class="fw-note">Related: the <a href="/architecture/#patterns">graph-grounded agent pattern</a> and controls <a class="cid" href="/controls/#MR-04">MR-04</a> <a class="cid" href="/controls/#PCS-01">PCS-01</a> <a class="cid" href="/controls/#MR-10">MR-10</a>.</p>
+  </div>
+</section>

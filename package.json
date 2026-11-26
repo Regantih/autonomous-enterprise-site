@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "check:dist": "node scripts/build.mjs && git diff --exit-code -- dist lib/knowledge.generated.ts",
+    "check:dist": "node scripts/build.mjs && git diff --exit-code -- dist lib/knowledge.generated.ts src/assets/data/graphs.json",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --no-file-parallelism",
     "dev": "wrangler pages dev",

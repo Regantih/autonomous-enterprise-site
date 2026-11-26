@@ -152,16 +152,18 @@ describe('alignment layers and architecture data', () => {
 
 describe('built Blueprints pages', () => {
   it('builds the hub and its tools with sub-nav, scripts and illustrative labels', () => {
-    expect(bpPages.map((p) => p.path)).toEqual(['/blueprints/', '/architecture/', '/workflows/', '/controls/', '/designer/', '/blueprints/trace/', '/blueprints/loops/']);
+    expect(bpPages.map((p) => p.path)).toEqual(['/blueprints/', '/architecture/', '/workflows/', '/controls/', '/designer/', '/blueprints/trace/', '/blueprints/loops/', '/blueprints/graphs/']);
     for (const p of bpPages) {
       const h = html(p.out);
       expect(h, p.out).toContain('<nav class="bp-subnav" aria-label="Blueprints">');
-      for (const href of ['/architecture/', '/workflows/', '/controls/', '/designer/', '/blueprints/trace/', '/blueprints/loops/']) expect(h).toContain(`href="${href}"`);
+      for (const href of ['/architecture/', '/workflows/', '/controls/', '/designer/', '/blueprints/trace/', '/blueprints/loops/', '/blueprints/graphs/']) expect(h).toContain(`href="${href}"`);
+      expect(h, p.out).toContain('<li><a href="/blueprints/graphs/"' + (p.bp === 'graphs' ? ' aria-current="page"' : '') + '>Graphs</a></li>');
       expect(h, p.out).toContain('<li><a href="/blueprints/loops/"' + (p.bp === 'loops' ? ' aria-current="page"' : '') + '>Improvement loops</a></li>');
       expect(h, p.out).toMatch(/<a href="\/blueprints\/" aria-current="page">Blueprints<\/a>/);
       for (const f of ['data/controls.js', 'data/layers.js', 'data/workflows.js', 'data/architecture.js', 'blueprints.js']) expect(h, p.out).toMatch(new RegExp(`<script src="/assets/${f}\\?v=[0-9a-f]{10}" defer></script>`));
       // Every tool is labelled: illustrative everywhere except the loops room, which runs real agents on sample data.
       if (p.bp === 'loops') expect(h, p.out).toContain('Real AI agents. Real computation on sample AP data.');
+      else if (p.bp === 'graphs') expect(h, p.out).toContain('Real data. Real computation. Real AI calls.');
       else expect(h, p.out).toMatch(/[Ii]llustrative/);
       expect(h, p.out).not.toMatch(/\sstyle="/);
     }

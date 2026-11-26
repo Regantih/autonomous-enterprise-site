@@ -269,12 +269,14 @@
       $$('.ar-c', svg).forEach(function (g) { g.classList.remove('on', 'cur'); });
       $$('.ar-var', vars).forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
       replay.disabled = clear.disabled = true;
+      $$('.ar-vlink', ctl).forEach(function (a) { a.remove(); });
     }
     async function play(v) {
       var my = ++run; current = v; reset(); replay.disabled = clear.disabled = false;
       function live() { return my === run; }
       $$('.ar-var', vars).forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.v === v.id)); });
       title.textContent = v.name + ' \u00b7 ' + v.level + ' \u00b7 ' + v.desc;
+      if (v.link) ctl.appendChild(el('a', 'pill pill-ghost ar-vlink', esc(v.link.label))).setAttribute('href', v.link.href);
       svg.classList.add('has-path');
       var pts = v.path.map(function (p) { return boxes[p[0]]; });
       var ids = v.path.map(function (p) { return p[0]; });

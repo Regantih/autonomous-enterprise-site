@@ -23,6 +23,7 @@ export const SUBNAV = [
   ['designer', '/designer/', 'Designer'],
   ['trace', '/blueprints/trace/', 'Trace viewer'],
   ['loops', '/blueprints/loops/', 'Improvement loops'],
+  ['graphs', '/blueprints/graphs/', 'Graphs'],
 ];
 
 export function subnav(current) {
@@ -128,7 +129,7 @@ ${AE.models.map((m) => `<tr><th scope="row">${esc(AE.componentById[m.id].name)}<
 }
 
 function variationsStatic(AE) {
-  return `<ol class="bp-var-static">${AE.variations.map((v) => `<li><b>${esc(v.name)} (${v.level}).</b> ${esc(v.desc)} <span class="muted">${v.path.map((p) => esc(AE.componentById[p[0]].name)).join(' &rarr; ')}</span></li>`).join('')}</ol>`;
+  return `<ol class="bp-var-static">${AE.variations.map((v) => `<li><b>${esc(v.name)} (${v.level}).</b> ${esc(v.desc)} <span class="muted">${v.path.map((p) => esc(AE.componentById[p[0]].name)).join(' &rarr; ')}</span>${v.link ? ` <a href="${v.link.href}">${esc(v.link.label)}</a>.` : ''}</li>`).join('')}</ol>`;
 }
 
 export function blueprintVars(assetsDir) {

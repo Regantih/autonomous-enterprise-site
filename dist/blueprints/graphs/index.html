@@ -1,0 +1,1368 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Knowledge Graph, Skill Graph and the Enterprise Brain | Human-Led Enterprise</title>
+<meta name="description" content="A real knowledge graph built from sample AP data, a skill graph of what each agent may do, and an enterprise brain that routes your question to a real AI answer.">
+<meta name="author" content="Hemanth Reganti">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://humanledenterprise.com/blueprints/graphs/">
+<meta name="theme-color" content="#141414">
+<meta name="color-scheme" content="light">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Human-Led Enterprise">
+<meta property="og:title" content="Knowledge Graph, Skill Graph and the Enterprise Brain | Human-Led Enterprise">
+<meta property="og:description" content="A real knowledge graph built from sample AP data, a skill graph of what each agent may do, and an enterprise brain that routes your question to a real AI answer.">
+<meta property="og:url" content="https://humanledenterprise.com/blueprints/graphs/">
+<meta property="og:image" content="https://humanledenterprise.com/assets/images/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Autonomous Enterprise by Hemanth Reganti: book cover on a dark background">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Knowledge Graph, Skill Graph and the Enterprise Brain | Human-Led Enterprise">
+<meta name="twitter:description" content="A real knowledge graph built from sample AP data, a skill graph of what each agent may do, and an enterprise brain that routes your question to a real AI answer.">
+<meta name="twitter:image" content="https://humanledenterprise.com/assets/images/og-image.jpg">
+<meta name="twitter:image:alt" content="The Autonomous Enterprise by Hemanth Reganti: book cover on a dark background">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preload" href="/assets/fonts/oswald-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
+<script src="/assets/data/controls.js?v=e0d936f9ff" defer></script>
+<script src="/assets/data/layers.js?v=7c10827ab4" defer></script>
+<script src="/assets/data/workflows.js?v=357666b3fd" defer></script>
+<script src="/assets/data/architecture.js?v=f634c57d9f" defer></script>
+<script src="/assets/blueprints.js?v=dc77177432" defer></script>
+<link rel="stylesheet" href="/assets/graphs.css?v=1046dd304e">
+<script src="/assets/graphs-data.js?v=000c1bac5f" defer></script>
+<script src="/assets/graphs.js?v=c88a487310" defer></script>
+<link rel="stylesheet" href="/assets/styles.css?v=0489f12596">
+<script src="/assets/site.js?v=0489f12596" defer></script>
+<script src="/assets/guide.js?v=0489f12596" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="The Autonomous Enterprise: human-led, agent-operated, home"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="3" fill="#F2622E"/><path fill="#141414" d="M5 23h3v4H5zM9.5 20h3v7h-3zM14 17h3v10h-3zM18.5 13h3v14h-3zM23 9h3v18h-3z"/></svg><span class="brand-text"><span class="brand-name">The Autonomous Enterprise</span> <span class="brand-sub">Human-led, agent-operated</span></span></a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/book/">Book</a></li>
+        <li><a href="/frameworks/">Frameworks</a></li>
+        <li><a href="/blueprints/" aria-current="page">Blueprints</a></li>
+        <li><a href="/ideas/">Ideas</a></li>
+        <li><a href="/speaking/">Speaking</a></li>
+        <li><a href="/advisory/">Advisory</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn-primary header-cta" href="/contact/#advisory">Talk to the author</a>
+  </div>
+</header>
+<main id="main" tabindex="-1">
+<section class="page-head bp-head" aria-labelledby="page-title">
+  <div class="container">
+    <p class="eyebrow">Blueprints &middot; Graphs</p>
+    <h1 id="page-title">Knowledge graph, skill graph and the enterprise brain</h1>
+    <p class="lead">Agents act well only when they know what is connected and what they may do. These graphs show both. The brain connects them.</p>
+  </div>
+</section>
+<nav class="bp-subnav" aria-label="Blueprints">
+  <div class="container">
+    <a class="bp-subnav-home" href="/blueprints/">Blueprints</a>
+    <ul>
+      <li><a href="/architecture/">Architecture</a></li>
+      <li><a href="/workflows/">Workflows</a></li>
+      <li><a href="/controls/">Controls</a></li>
+      <li><a href="/designer/">Designer</a></li>
+      <li><a href="/blueprints/trace/">Trace viewer</a></li>
+      <li><a href="/blueprints/loops/">Improvement loops</a></li>
+      <li><a href="/blueprints/graphs/" aria-current="page">Graphs</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="section bp-section" id="kg" aria-labelledby="kg-title">
+  <div class="container">
+    <p class="eyebrow">1 &middot; Knowledge graph</p>
+    <h2 id="kg-title" class="h-sm">What is connected to what</h2>
+    <p class="gr-intro">Real data. Real computation. Real AI calls. Code builds this graph from 150 synthetic accounts-payable exceptions, the same sample the <a href="/blueprints/loops/">improvement loop</a> runs on. It has 227 nodes and 637 edges: suppliers, exceptions, exception types, policies, controls and the people who decide.</p>
+    <div class="bp-ix" hidden><div data-gr="kg"></div></div>
+    <noscript><p class="fw-note">Turn on JavaScript to explore the graph. The stats and the full tables are below.</p></noscript>
+    <h3 class="gr-h3">Computed from the graph</h3>
+    <ul class="gr-stats">
+      <li><b>227</b> nodes</li><li><b>637</b> edges</li><li><b>1</b> connected component</li><li><b>5.6</b> mean degree</li>
+    </ul>
+    <div class="gr-stat-grid">
+      <div><h4>Nodes by type</h4><ul><li>Control: 8</li><li>Exception: 150</li><li>Exception type: 6</li><li>Policy: 6</li><li>Role: 3</li><li>Supplier: 54</li></ul></div>
+      <div><h4>Most exceptions</h4><ol><li>Supplier 38: 8</li><li>Supplier 21: 6</li><li>Supplier 57: 6</li><li>Supplier 41: 5</li><li>Supplier 46: 5</li></ol></div>
+      <div><h4>Highest risk score</h4><ol><li>Supplier 34: 7 (3 need a person, 4 wrong agent suggestions)</li><li>Supplier 38: 5 (2 need a person, 3 wrong agent suggestions)</li><li>Supplier 32: 5 (2 need a person, 3 wrong agent suggestions)</li><li>Supplier 41: 4 (2 need a person, 2 wrong agent suggestions)</li><li>Supplier 56: 4 (2 need a person, 2 wrong agent suggestions)</li></ol></div>
+      <div><h4>Most connected nodes</h4><ol><li>AP clerk (reviewer): degree 140</li><li>Match tolerance 1%: degree 72</li><li>Small-supplier protection: degree 46</li><li>Price variance: degree 44</li><li>Confidence floor 0.95: degree 34</li></ol></div>
+    </div>
+    <p class="gr-note">Risk score = exceptions that need a person + exceptions where the resolver agent suggested the wrong resolution. Ties go to the larger total amount. Under the baseline policy, 1 exception go to the resolver agent, 138 to an AP clerk and 11 to a senior approver.</p>
+    <details class="gr-alt">
+      <summary>All 227 nodes of the knowledge graph, as a table</summary>
+      <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Nodes of the knowledge graph"><table class="fw-table gr-table"><thead><tr><th scope="col">ID</th><th scope="col">Type</th><th scope="col">Label</th><th scope="col">Facts</th></tr></thead><tbody>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-01">SUP-01</a></th><td>Supplier</td><td>Supplier 01</td><td><b>size:</b> large; <b>exceptions:</b> 2; <b>total amount:</b> $2,863; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 1; <b>risk score:</b> 1; <b>risk rank:</b> 33 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-02">SUP-02</a></th><td>Supplier</td><td>Supplier 02</td><td><b>size:</b> small; <b>exceptions:</b> 3; <b>total amount:</b> $7,317; <b>needs person:</b> 1; <b>wrong agent suggestions:</b> 2; <b>risk score:</b> 3; <b>risk rank:</b> 11 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-03">SUP-03</a></th><td>Supplier</td><td>Supplier 03</td><td><b>size:</b> large; <b>exceptions:</b> 2; <b>total amount:</b> $12,678; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 0; <b>risk score:</b> 0; <b>risk rank:</b> 39 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-04">SUP-04</a></th><td>Supplier</td><td>Supplier 04</td><td><b>size:</b> small; <b>exceptions:</b> 4; <b>total amount:</b> $9,137; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 2; <b>risk score:</b> 2; <b>risk rank:</b> 19 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-05">SUP-05</a></th><td>Supplier</td><td>Supplier 05</td><td><b>size:</b> small; <b>exceptions:</b> 2; <b>total amount:</b> $1,822; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 0; <b>risk score:</b> 0; <b>risk rank:</b> 50 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-06">SUP-06</a></th><td>Supplier</td><td>Supplier 06</td><td><b>size:</b> mid; <b>exceptions:</b> 4; <b>total amount:</b> $14,224; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 1; <b>risk score:</b> 1; <b>risk rank:</b> 28 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-07">SUP-07</a></th><td>Supplier</td><td>Supplier 07</td><td><b>size:</b> large; <b>exceptions:</b> 1; <b>total amount:</b> $1,963; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 0; <b>risk score:</b> 0; <b>risk rank:</b> 49 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-08">SUP-08</a></th><td>Supplier</td><td>Supplier 08</td><td><b>size:</b> mid; <b>exceptions:</b> 1; <b>total amount:</b> $1,581; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 0; <b>risk score:</b> 0; <b>risk rank:</b> 51 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-11">SUP-11</a></th><td>Supplier</td><td>Supplier 11</td><td><b>size:</b> large; <b>exceptions:</b> 3; <b>total amount:</b> $10,006; <b>needs person:</b> 1; <b>wrong agent suggestions:</b> 1; <b>risk score:</b> 2; <b>risk rank:</b> 17 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-12">SUP-12</a></th><td>Supplier</td><td>Supplier 12</td><td><b>size:</b> small; <b>exceptions:</b> 1; <b>total amount:</b> $485; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 1; <b>risk score:</b> 1; <b>risk rank:</b> 37 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-13">SUP-13</a></th><td>Supplier</td><td>Supplier 13</td><td><b>size:</b> small; <b>exceptions:</b> 2; <b>total amount:</b> $15,149; <b>needs person:</b> 1; <b>wrong agent suggestions:</b> 1; <b>risk score:</b> 2; <b>risk rank:</b> 16 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-15">SUP-15</a></th><td>Supplier</td><td>Supplier 15</td><td><b>size:</b> small; <b>exceptions:</b> 3; <b>total amount:</b> $17,017; <b>needs person:</b> 1; <b>wrong agent suggestions:</b> 0; <b>risk score:</b> 1; <b>risk rank:</b> 27 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-16">SUP-16</a></th><td>Supplier</td><td>Supplier 16</td><td><b>size:</b> large; <b>exceptions:</b> 3; <b>total amount:</b> $8,356; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 1; <b>risk score:</b> 1; <b>risk rank:</b> 30 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-18">SUP-18</a></th><td>Supplier</td><td>Supplier 18</td><td><b>size:</b> small; <b>exceptions:</b> 4; <b>total amount:</b> $15,785; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 2; <b>risk score:</b> 2; <b>risk rank:</b> 15 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-19">SUP-19</a></th><td>Supplier</td><td>Supplier 19</td><td><b>size:</b> small; <b>exceptions:</b> 1; <b>total amount:</b> $1,235; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 1; <b>risk score:</b> 1; <b>risk rank:</b> 36 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-20">SUP-20</a></th><td>Supplier</td><td>Supplier 20</td><td><b>size:</b> mid; <b>exceptions:</b> 2; <b>total amount:</b> $4,168; <b>needs person:</b> 1; <b>wrong agent suggestions:</b> 1; <b>risk score:</b> 2; <b>risk rank:</b> 26 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-21">SUP-21</a></th><td>Supplier</td><td>Supplier 21</td><td><b>size:</b> mid; <b>exceptions:</b> 6; <b>total amount:</b> $68,199; <b>needs person:</b> 1; <b>wrong agent suggestions:</b> 1; <b>risk score:</b> 2; <b>risk rank:</b> 12 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-22">SUP-22</a></th><td>Supplier</td><td>Supplier 22</td><td><b>size:</b> mid; <b>exceptions:</b> 1; <b>total amount:</b> $1,320; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 0; <b>risk score:</b> 0; <b>risk rank:</b> 52 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-23">SUP-23</a></th><td>Supplier</td><td>Supplier 23</td><td><b>size:</b> small; <b>exceptions:</b> 2; <b>total amount:</b> $6,442; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 1; <b>risk score:</b> 1; <b>risk rank:</b> 31 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-24">SUP-24</a></th><td>Supplier</td><td>Supplier 24</td><td><b>size:</b> mid; <b>exceptions:</b> 4; <b>total amount:</b> $28,459; <b>needs person:</b> 2; <b>wrong agent suggestions:</b> 1; <b>risk score:</b> 3; <b>risk rank:</b> 6 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-25">SUP-25</a></th><td>Supplier</td><td>Supplier 25</td><td><b>size:</b> mid; <b>exceptions:</b> 2; <b>total amount:</b> $1,908; <b>needs person:</b> 1; <b>wrong agent suggestions:</b> 0; <b>risk score:</b> 1; <b>risk rank:</b> 34 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-26">SUP-26</a></th><td>Supplier</td><td>Supplier 26</td><td><b>size:</b> small; <b>exceptions:</b> 3; <b>total amount:</b> $3,288; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 1; <b>risk score:</b> 1; <b>risk rank:</b> 32 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-27">SUP-27</a></th><td>Supplier</td><td>Supplier 27</td><td><b>size:</b> mid; <b>exceptions:</b> 4; <b>total amount:</b> $9,158; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 2; <b>risk score:</b> 2; <b>risk rank:</b> 18 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-28">SUP-28</a></th><td>Supplier</td><td>Supplier 28</td><td><b>size:</b> large; <b>exceptions:</b> 1; <b>total amount:</b> $2,089; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 0; <b>risk score:</b> 0; <b>risk rank:</b> 47 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-29">SUP-29</a></th><td>Supplier</td><td>Supplier 29</td><td><b>size:</b> large; <b>exceptions:</b> 2; <b>total amount:</b> $5,035; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 0; <b>risk score:</b> 0; <b>risk rank:</b> 42 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-30">SUP-30</a></th><td>Supplier</td><td>Supplier 30</td><td><b>size:</b> small; <b>exceptions:</b> 2; <b>total amount:</b> $6,179; <b>needs person:</b> 1; <b>wrong agent suggestions:</b> 1; <b>risk score:</b> 2; <b>risk rank:</b> 20 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-31">SUP-31</a></th><td>Supplier</td><td>Supplier 31</td><td><b>size:</b> mid; <b>exceptions:</b> 2; <b>total amount:</b> $9,716; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 0; <b>risk score:</b> 0; <b>risk rank:</b> 41 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-32">SUP-32</a></th><td>Supplier</td><td>Supplier 32</td><td><b>size:</b> mid; <b>exceptions:</b> 3; <b>total amount:</b> $11,255; <b>needs person:</b> 2; <b>wrong agent suggestions:</b> 3; <b>risk score:</b> 5; <b>risk rank:</b> 3 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-33">SUP-33</a></th><td>Supplier</td><td>Supplier 33</td><td><b>size:</b> mid; <b>exceptions:</b> 1; <b>total amount:</b> $3,517; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 0; <b>risk score:</b> 0; <b>risk rank:</b> 45 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-34">SUP-34</a></th><td>Supplier</td><td>Supplier 34</td><td><b>size:</b> mid; <b>exceptions:</b> 4; <b>total amount:</b> $7,148; <b>needs person:</b> 3; <b>wrong agent suggestions:</b> 4; <b>risk score:</b> 7; <b>risk rank:</b> 1 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-35">SUP-35</a></th><td>Supplier</td><td>Supplier 35</td><td><b>size:</b> mid; <b>exceptions:</b> 2; <b>total amount:</b> $4,920; <b>needs person:</b> 1; <b>wrong agent suggestions:</b> 1; <b>risk score:</b> 2; <b>risk rank:</b> 23 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-36">SUP-36</a></th><td>Supplier</td><td>Supplier 36</td><td><b>size:</b> mid; <b>exceptions:</b> 1; <b>total amount:</b> $4,389; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 0; <b>risk score:</b> 0; <b>risk rank:</b> 43 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-38">SUP-38</a></th><td>Supplier</td><td>Supplier 38</td><td><b>size:</b> mid; <b>exceptions:</b> 8; <b>total amount:</b> $52,311; <b>needs person:</b> 2; <b>wrong agent suggestions:</b> 3; <b>risk score:</b> 5; <b>risk rank:</b> 2 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-39">SUP-39</a></th><td>Supplier</td><td>Supplier 39</td><td><b>size:</b> mid; <b>exceptions:</b> 1; <b>total amount:</b> $2,521; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 0; <b>risk score:</b> 0; <b>risk rank:</b> 46 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-40">SUP-40</a></th><td>Supplier</td><td>Supplier 40</td><td><b>size:</b> mid; <b>exceptions:</b> 1; <b>total amount:</b> $2,015; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 0; <b>risk score:</b> 0; <b>risk rank:</b> 48 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-41">SUP-41</a></th><td>Supplier</td><td>Supplier 41</td><td><b>size:</b> mid; <b>exceptions:</b> 5; <b>total amount:</b> $13,506; <b>needs person:</b> 2; <b>wrong agent suggestions:</b> 2; <b>risk score:</b> 4; <b>risk rank:</b> 4 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-42">SUP-42</a></th><td>Supplier</td><td>Supplier 42</td><td><b>size:</b> large; <b>exceptions:</b> 4; <b>total amount:</b> $16,740; <b>needs person:</b> 1; <b>wrong agent suggestions:</b> 1; <b>risk score:</b> 2; <b>risk rank:</b> 14 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-44">SUP-44</a></th><td>Supplier</td><td>Supplier 44</td><td><b>size:</b> large; <b>exceptions:</b> 1; <b>total amount:</b> $1,128; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 0; <b>risk score:</b> 0; <b>risk rank:</b> 54 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-45">SUP-45</a></th><td>Supplier</td><td>Supplier 45</td><td><b>size:</b> mid; <b>exceptions:</b> 2; <b>total amount:</b> $4,399; <b>needs person:</b> 2; <b>wrong agent suggestions:</b> 0; <b>risk score:</b> 2; <b>risk rank:</b> 24 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-46">SUP-46</a></th><td>Supplier</td><td>Supplier 46</td><td><b>size:</b> large; <b>exceptions:</b> 5; <b>total amount:</b> $5,474; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 2; <b>risk score:</b> 2; <b>risk rank:</b> 21 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-47">SUP-47</a></th><td>Supplier</td><td>Supplier 47</td><td><b>size:</b> mid; <b>exceptions:</b> 3; <b>total amount:</b> $5,162; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 2; <b>risk score:</b> 2; <b>risk rank:</b> 22 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-48">SUP-48</a></th><td>Supplier</td><td>Supplier 48</td><td><b>size:</b> mid; <b>exceptions:</b> 4; <b>total amount:</b> $12,838; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 3; <b>risk score:</b> 3; <b>risk rank:</b> 9 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-49">SUP-49</a></th><td>Supplier</td><td>Supplier 49</td><td><b>size:</b> small; <b>exceptions:</b> 3; <b>total amount:</b> $4,225; <b>needs person:</b> 1; <b>wrong agent suggestions:</b> 1; <b>risk score:</b> 2; <b>risk rank:</b> 25 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-50">SUP-50</a></th><td>Supplier</td><td>Supplier 50</td><td><b>size:</b> mid; <b>exceptions:</b> 4; <b>total amount:</b> $24,522; <b>needs person:</b> 1; <b>wrong agent suggestions:</b> 1; <b>risk score:</b> 2; <b>risk rank:</b> 13 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-51">SUP-51</a></th><td>Supplier</td><td>Supplier 51</td><td><b>size:</b> large; <b>exceptions:</b> 3; <b>total amount:</b> $11,243; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 0; <b>risk score:</b> 0; <b>risk rank:</b> 40 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-52">SUP-52</a></th><td>Supplier</td><td>Supplier 52</td><td><b>size:</b> small; <b>exceptions:</b> 1; <b>total amount:</b> $1,148; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 0; <b>risk score:</b> 0; <b>risk rank:</b> 53 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-53">SUP-53</a></th><td>Supplier</td><td>Supplier 53</td><td><b>size:</b> small; <b>exceptions:</b> 3; <b>total amount:</b> $4,003; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 0; <b>risk score:</b> 0; <b>risk rank:</b> 44 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-54">SUP-54</a></th><td>Supplier</td><td>Supplier 54</td><td><b>size:</b> large; <b>exceptions:</b> 1; <b>total amount:</b> $24,495; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 0; <b>risk score:</b> 0; <b>risk rank:</b> 38 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-55">SUP-55</a></th><td>Supplier</td><td>Supplier 55</td><td><b>size:</b> small; <b>exceptions:</b> 4; <b>total amount:</b> $12,269; <b>needs person:</b> 2; <b>wrong agent suggestions:</b> 1; <b>risk score:</b> 3; <b>risk rank:</b> 10 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-56">SUP-56</a></th><td>Supplier</td><td>Supplier 56</td><td><b>size:</b> small; <b>exceptions:</b> 4; <b>total amount:</b> $7,481; <b>needs person:</b> 2; <b>wrong agent suggestions:</b> 2; <b>risk score:</b> 4; <b>risk rank:</b> 5 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-57">SUP-57</a></th><td>Supplier</td><td>Supplier 57</td><td><b>size:</b> mid; <b>exceptions:</b> 6; <b>total amount:</b> $13,345; <b>needs person:</b> 2; <b>wrong agent suggestions:</b> 1; <b>risk score:</b> 3; <b>risk rank:</b> 8 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-58">SUP-58</a></th><td>Supplier</td><td>Supplier 58</td><td><b>size:</b> small; <b>exceptions:</b> 4; <b>total amount:</b> $20,059; <b>needs person:</b> 1; <b>wrong agent suggestions:</b> 2; <b>risk score:</b> 3; <b>risk rank:</b> 7 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-59">SUP-59</a></th><td>Supplier</td><td>Supplier 59</td><td><b>size:</b> small; <b>exceptions:</b> 4; <b>total amount:</b> $9,338; <b>needs person:</b> 1; <b>wrong agent suggestions:</b> 0; <b>risk score:</b> 1; <b>risk rank:</b> 29 of 54</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SUP-60">SUP-60</a></th><td>Supplier</td><td>Supplier 60</td><td><b>size:</b> mid; <b>exceptions:</b> 1; <b>total amount:</b> $1,573; <b>needs person:</b> 0; <b>wrong agent suggestions:</b> 1; <b>risk score:</b> 1; <b>risk rank:</b> 35 of 54</td></tr>
+<tr><th scope="row">AP-0001</th><td>Exception</td><td>AP-0001 Suspected duplicate</td><td><b>supplier:</b> Supplier 51; <b>type:</b> Suspected duplicate; <b>amount:</b> $7,436; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.92; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0002</th><td>Exception</td><td>AP-0002 Missing purchase order</td><td><b>supplier:</b> Supplier 06; <b>type:</b> Missing purchase order; <b>amount:</b> $6,701; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.91; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0003</th><td>Exception</td><td>AP-0003 Tax code</td><td><b>supplier:</b> Supplier 26; <b>type:</b> Tax code; <b>amount:</b> $506; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.67; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0004</th><td>Exception</td><td>AP-0004 Tax code</td><td><b>supplier:</b> Supplier 59; <b>type:</b> Tax code; <b>amount:</b> $3,116; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.98; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0005</th><td>Exception</td><td>AP-0005 Tax code</td><td><b>supplier:</b> Supplier 41; <b>type:</b> Tax code; <b>amount:</b> $2,683; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.89; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0006</th><td>Exception</td><td>AP-0006 Missing purchase order</td><td><b>supplier:</b> Supplier 27; <b>type:</b> Missing purchase order; <b>amount:</b> $719; <b>agent suggestion:</b> reject; <b>agent confidence:</b> 0.59; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0007</th><td>Exception</td><td>AP-0007 Bank-detail change</td><td><b>supplier:</b> Supplier 55; <b>type:</b> Bank-detail change; <b>amount:</b> $2,228; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.66; <b>correct resolution:</b> hold; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0008</th><td>Exception</td><td>AP-0008 Price variance</td><td><b>supplier:</b> Supplier 04; <b>type:</b> Price variance; <b>amount:</b> $5,165; <b>variance pct:</b> 6.1%; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.94; <b>correct resolution:</b> hold; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0009</th><td>Exception</td><td>AP-0009 Quantity mismatch</td><td><b>supplier:</b> Supplier 04; <b>type:</b> Quantity mismatch; <b>amount:</b> $853; <b>variance pct:</b> 0.2%; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.94; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0010</th><td>Exception</td><td>AP-0010 Tax code</td><td><b>supplier:</b> Supplier 26; <b>type:</b> Tax code; <b>amount:</b> $2,038; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.82; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0011</th><td>Exception</td><td>AP-0011 Missing purchase order</td><td><b>supplier:</b> Supplier 01; <b>type:</b> Missing purchase order; <b>amount:</b> $869; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.66; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0012</th><td>Exception</td><td>AP-0012 Bank-detail change</td><td><b>supplier:</b> Supplier 24; <b>type:</b> Bank-detail change; <b>amount:</b> $6,289; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.89; <b>correct resolution:</b> hold; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0013</th><td>Exception</td><td>AP-0013 Price variance</td><td><b>supplier:</b> Supplier 32; <b>type:</b> Price variance; <b>amount:</b> $1,990; <b>variance pct:</b> 3.7%; <b>agent suggestion:</b> reject; <b>agent confidence:</b> 0.84; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0014</th><td>Exception</td><td>AP-0014 Suspected duplicate</td><td><b>supplier:</b> Supplier 21; <b>type:</b> Suspected duplicate; <b>amount:</b> $6,266; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.89; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0015</th><td>Exception</td><td>AP-0015 Price variance</td><td><b>supplier:</b> Supplier 34; <b>type:</b> Price variance; <b>amount:</b> $816; <b>variance pct:</b> 6.1%; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.65; <b>correct resolution:</b> hold; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0016</th><td>Exception</td><td>AP-0016 Quantity mismatch</td><td><b>supplier:</b> Supplier 08; <b>type:</b> Quantity mismatch; <b>amount:</b> $1,581; <b>variance pct:</b> 1.6%; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.98; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0017</th><td>Exception</td><td>AP-0017 Quantity mismatch</td><td><b>supplier:</b> Supplier 03; <b>type:</b> Quantity mismatch; <b>amount:</b> $3,325; <b>variance pct:</b> 0.5%; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.72; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0018</th><td>Exception</td><td>AP-0018 Price variance</td><td><b>supplier:</b> Supplier 57; <b>type:</b> Price variance; <b>amount:</b> $1,169; <b>variance pct:</b> 3.1%; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.84; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0019</th><td>Exception</td><td>AP-0019 Suspected duplicate</td><td><b>supplier:</b> Supplier 28; <b>type:</b> Suspected duplicate; <b>amount:</b> $2,089; <b>agent suggestion:</b> reject; <b>agent confidence:</b> 0.97; <b>correct resolution:</b> reject; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0020</th><td>Exception</td><td>AP-0020 Price variance</td><td><b>supplier:</b> Supplier 26; <b>type:</b> Price variance; <b>amount:</b> $744; <b>variance pct:</b> 4.3%; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.75; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0021</th><td>Exception</td><td>AP-0021 Price variance</td><td><b>supplier:</b> Supplier 57; <b>type:</b> Price variance; <b>amount:</b> $1,431; <b>variance pct:</b> 3.3%; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.95; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0022</th><td>Exception</td><td>AP-0022 Price variance</td><td><b>supplier:</b> Supplier 49; <b>type:</b> Price variance; <b>amount:</b> $1,910; <b>variance pct:</b> 0.5%; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.62; <b>correct resolution:</b> approve; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0023</th><td>Exception</td><td>AP-0023 Missing purchase order</td><td><b>supplier:</b> Supplier 53; <b>type:</b> Missing purchase order; <b>amount:</b> $1,873; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.88; <b>correct resolution:</b> hold; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0024</th><td>Exception</td><td>AP-0024 Bank-detail change</td><td><b>supplier:</b> Supplier 50; <b>type:</b> Bank-detail change; <b>amount:</b> $5,031; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.83; <b>correct resolution:</b> hold; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0025</th><td>Exception</td><td>AP-0025 Price variance</td><td><b>supplier:</b> Supplier 48; <b>type:</b> Price variance; <b>amount:</b> $3,028; <b>variance pct:</b> 1.9%; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.74; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0026</th><td>Exception</td><td>AP-0026 Suspected duplicate</td><td><b>supplier:</b> Supplier 59; <b>type:</b> Suspected duplicate; <b>amount:</b> $2,121; <b>agent suggestion:</b> reject; <b>agent confidence:</b> 0.75; <b>correct resolution:</b> reject; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0027</th><td>Exception</td><td>AP-0027 Price variance</td><td><b>supplier:</b> Supplier 35; <b>type:</b> Price variance; <b>amount:</b> $1,662; <b>variance pct:</b> 2.4%; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.88; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0028</th><td>Exception</td><td>AP-0028 Suspected duplicate</td><td><b>supplier:</b> Supplier 20; <b>type:</b> Suspected duplicate; <b>amount:</b> $1,573; <b>agent suggestion:</b> reject; <b>agent confidence:</b> 0.61; <b>correct resolution:</b> approve; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0029</th><td>Exception</td><td>AP-0029 Missing purchase order</td><td><b>supplier:</b> Supplier 24; <b>type:</b> Missing purchase order; <b>amount:</b> $1,355; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.95; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0030</th><td>Exception</td><td>AP-0030 Missing purchase order</td><td><b>supplier:</b> Supplier 47; <b>type:</b> Missing purchase order; <b>amount:</b> $419; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.71; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0031</th><td>Exception</td><td>AP-0031 Quantity mismatch</td><td><b>supplier:</b> Supplier 41; <b>type:</b> Quantity mismatch; <b>amount:</b> $2,076; <b>variance pct:</b> 0.6%; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.95; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0032</th><td>Exception</td><td>AP-0032 Missing purchase order</td><td><b>supplier:</b> Supplier 33; <b>type:</b> Missing purchase order; <b>amount:</b> $3,517; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.96; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0033</th><td>Exception</td><td>AP-0033 Tax code</td><td><b>supplier:</b> Supplier 49; <b>type:</b> Tax code; <b>amount:</b> $1,389; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.88; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0034</th><td>Exception</td><td>AP-0034 Price variance</td><td><b>supplier:</b> Supplier 55; <b>type:</b> Price variance; <b>amount:</b> $5,842; <b>variance pct:</b> 9.5%; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.55; <b>correct resolution:</b> hold; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0035</th><td>Exception</td><td>AP-0035 Price variance</td><td><b>supplier:</b> Supplier 15; <b>type:</b> Price variance; <b>amount:</b> $15,170; <b>variance pct:</b> 10.2%; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.91; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> Senior approver</td></tr>
+<tr><th scope="row">AP-0036</th><td>Exception</td><td>AP-0036 Price variance</td><td><b>supplier:</b> Supplier 57; <b>type:</b> Price variance; <b>amount:</b> $5,601; <b>variance pct:</b> 0.9%; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.71; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0037</th><td>Exception</td><td>AP-0037 Suspected duplicate</td><td><b>supplier:</b> Supplier 57; <b>type:</b> Suspected duplicate; <b>amount:</b> $2,751; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.6; <b>correct resolution:</b> approve; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0038</th><td>Exception</td><td>AP-0038 Bank-detail change</td><td><b>supplier:</b> Supplier 41; <b>type:</b> Bank-detail change; <b>amount:</b> $825; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.9; <b>correct resolution:</b> hold; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0039</th><td>Exception</td><td>AP-0039 Price variance</td><td><b>supplier:</b> Supplier 48; <b>type:</b> Price variance; <b>amount:</b> $1,263; <b>variance pct:</b> 3.1%; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.69; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0040</th><td>Exception</td><td>AP-0040 Suspected duplicate</td><td><b>supplier:</b> Supplier 13; <b>type:</b> Suspected duplicate; <b>amount:</b> $10,228; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.68; <b>correct resolution:</b> reject; <b>needs person:</b> no; <b>baseline route:</b> Senior approver</td></tr>
+<tr><th scope="row">AP-0041</th><td>Exception</td><td>AP-0041 Tax code</td><td><b>supplier:</b> Supplier 06; <b>type:</b> Tax code; <b>amount:</b> $447; <b>agent suggestion:</b> reject; <b>agent confidence:</b> 0.76; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0042</th><td>Exception</td><td>AP-0042 Missing purchase order</td><td><b>supplier:</b> Supplier 46; <b>type:</b> Missing purchase order; <b>amount:</b> $853; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.76; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0043</th><td>Exception</td><td>AP-0043 Price variance</td><td><b>supplier:</b> Supplier 57; <b>type:</b> Price variance; <b>amount:</b> $1,757; <b>variance pct:</b> 1.8%; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.84; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0044</th><td>Exception</td><td>AP-0044 Price variance</td><td><b>supplier:</b> Supplier 23; <b>type:</b> Price variance; <b>amount:</b> $4,736; <b>variance pct:</b> 4.8%; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.87; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0045</th><td>Exception</td><td>AP-0045 Price variance</td><td><b>supplier:</b> Supplier 39; <b>type:</b> Price variance; <b>amount:</b> $2,521; <b>variance pct:</b> 5.8%; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.76; <b>correct resolution:</b> hold; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0046</th><td>Exception</td><td>AP-0046 Price variance</td><td><b>supplier:</b> Supplier 06; <b>type:</b> Price variance; <b>amount:</b> $4,400; <b>variance pct:</b> 3.4%; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.96; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0047</th><td>Exception</td><td>AP-0047 Suspected duplicate</td><td><b>supplier:</b> Supplier 58; <b>type:</b> Suspected duplicate; <b>amount:</b> $612; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.83; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0048</th><td>Exception</td><td>AP-0048 Bank-detail change</td><td><b>supplier:</b> Supplier 57; <b>type:</b> Bank-detail change; <b>amount:</b> $637; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.79; <b>correct resolution:</b> hold; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0049</th><td>Exception</td><td>AP-0049 Quantity mismatch</td><td><b>supplier:</b> Supplier 56; <b>type:</b> Quantity mismatch; <b>amount:</b> $3,145; <b>variance pct:</b> 4%; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.66; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0050</th><td>Exception</td><td>AP-0050 Quantity mismatch</td><td><b>supplier:</b> Supplier 06; <b>type:</b> Quantity mismatch; <b>amount:</b> $2,676; <b>variance pct:</b> 6.6%; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.69; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0051</th><td>Exception</td><td>AP-0051 Price variance</td><td><b>supplier:</b> Supplier 44; <b>type:</b> Price variance; <b>amount:</b> $1,128; <b>variance pct:</b> 0.2%; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.76; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0052</th><td>Exception</td><td>AP-0052 Tax code</td><td><b>supplier:</b> Supplier 46; <b>type:</b> Tax code; <b>amount:</b> $460; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.85; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0053</th><td>Exception</td><td>AP-0053 Price variance</td><td><b>supplier:</b> Supplier 41; <b>type:</b> Price variance; <b>amount:</b> $385; <b>variance pct:</b> 5.2%; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.97; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0054</th><td>Exception</td><td>AP-0054 Price variance</td><td><b>supplier:</b> Supplier 46; <b>type:</b> Price variance; <b>amount:</b> $400; <b>variance pct:</b> 2%; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.93; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0055</th><td>Exception</td><td>AP-0055 Quantity mismatch</td><td><b>supplier:</b> Supplier 18; <b>type:</b> Quantity mismatch; <b>amount:</b> $10,132; <b>variance pct:</b> 5.9%; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.93; <b>correct resolution:</b> hold; <b>needs person:</b> no; <b>baseline route:</b> Senior approver</td></tr>
+<tr><th scope="row">AP-0056</th><td>Exception</td><td>AP-0056 Quantity mismatch</td><td><b>supplier:</b> Supplier 21; <b>type:</b> Quantity mismatch; <b>amount:</b> $5,258; <b>variance pct:</b> 4%; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.73; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0057</th><td>Exception</td><td>AP-0057 Price variance</td><td><b>supplier:</b> Supplier 51; <b>type:</b> Price variance; <b>amount:</b> $1,048; <b>variance pct:</b> 9.5%; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.94; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0058</th><td>Exception</td><td>AP-0058 Tax code</td><td><b>supplier:</b> Supplier 48; <b>type:</b> Tax code; <b>amount:</b> $800; <b>agent suggestion:</b> reject; <b>agent confidence:</b> 0.86; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0059</th><td>Exception</td><td>AP-0059 Suspected duplicate</td><td><b>supplier:</b> Supplier 11; <b>type:</b> Suspected duplicate; <b>amount:</b> $4,662; <b>agent suggestion:</b> reject; <b>agent confidence:</b> 0.97; <b>correct resolution:</b> reject; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0060</th><td>Exception</td><td>AP-0060 Quantity mismatch</td><td><b>supplier:</b> Supplier 21; <b>type:</b> Quantity mismatch; <b>amount:</b> $2,722; <b>variance pct:</b> 10.3%; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.75; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0061</th><td>Exception</td><td>AP-0061 Tax code</td><td><b>supplier:</b> Supplier 50; <b>type:</b> Tax code; <b>amount:</b> $1,165; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.88; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0062</th><td>Exception</td><td>AP-0062 Quantity mismatch</td><td><b>supplier:</b> Supplier 04; <b>type:</b> Quantity mismatch; <b>amount:</b> $2,244; <b>variance pct:</b> 0.8%; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.74; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0063</th><td>Exception</td><td>AP-0063 Missing purchase order</td><td><b>supplier:</b> Supplier 20; <b>type:</b> Missing purchase order; <b>amount:</b> $2,595; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.98; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0064</th><td>Exception</td><td>AP-0064 Missing purchase order</td><td><b>supplier:</b> Supplier 30; <b>type:</b> Missing purchase order; <b>amount:</b> $4,657; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.97; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0065</th><td>Exception</td><td>AP-0065 Price variance</td><td><b>supplier:</b> Supplier 53; <b>type:</b> Price variance; <b>amount:</b> $1,120; <b>variance pct:</b> 0.6%; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.92; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0066</th><td>Exception</td><td>AP-0066 Price variance</td><td><b>supplier:</b> Supplier 58; <b>type:</b> Price variance; <b>amount:</b> $2,751; <b>variance pct:</b> 1%; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.79; <b>correct resolution:</b> approve; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0067</th><td>Exception</td><td>AP-0067 Price variance</td><td><b>supplier:</b> Supplier 53; <b>type:</b> Price variance; <b>amount:</b> $1,011; <b>variance pct:</b> 6.1%; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.9; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0068</th><td>Exception</td><td>AP-0068 Bank-detail change</td><td><b>supplier:</b> Supplier 42; <b>type:</b> Bank-detail change; <b>amount:</b> $1,843; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.97; <b>correct resolution:</b> hold; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0069</th><td>Exception</td><td>AP-0069 Price variance</td><td><b>supplier:</b> Supplier 46; <b>type:</b> Price variance; <b>amount:</b> $3,328; <b>variance pct:</b> 2%; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.85; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0070</th><td>Exception</td><td>AP-0070 Price variance</td><td><b>supplier:</b> Supplier 27; <b>type:</b> Price variance; <b>amount:</b> $2,037; <b>variance pct:</b> 0.2%; <b>agent suggestion:</b> reject; <b>agent confidence:</b> 0.7; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0071</th><td>Exception</td><td>AP-0071 Price variance</td><td><b>supplier:</b> Supplier 18; <b>type:</b> Price variance; <b>amount:</b> $964; <b>variance pct:</b> 0.2%; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.87; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0072</th><td>Exception</td><td>AP-0072 Bank-detail change</td><td><b>supplier:</b> Supplier 35; <b>type:</b> Bank-detail change; <b>amount:</b> $3,258; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.86; <b>correct resolution:</b> hold; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0073</th><td>Exception</td><td>AP-0073 Quantity mismatch</td><td><b>supplier:</b> Supplier 12; <b>type:</b> Quantity mismatch; <b>amount:</b> $485; <b>variance pct:</b> 1.2%; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.93; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0074</th><td>Exception</td><td>AP-0074 Price variance</td><td><b>supplier:</b> Supplier 47; <b>type:</b> Price variance; <b>amount:</b> $4,258; <b>variance pct:</b> 0.3%; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.68; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0075</th><td>Exception</td><td>AP-0075 Missing purchase order</td><td><b>supplier:</b> Supplier 23; <b>type:</b> Missing purchase order; <b>amount:</b> $1,705; <b>agent suggestion:</b> reject; <b>agent confidence:</b> 0.71; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0076</th><td>Exception</td><td>AP-0076 Missing purchase order</td><td><b>supplier:</b> Supplier 02; <b>type:</b> Missing purchase order; <b>amount:</b> $2,181; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.69; <b>correct resolution:</b> hold; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0077</th><td>Exception</td><td>AP-0077 Price variance</td><td><b>supplier:</b> Supplier 51; <b>type:</b> Price variance; <b>amount:</b> $2,759; <b>variance pct:</b> 11%; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.85; <b>correct resolution:</b> hold; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0078</th><td>Exception</td><td>AP-0078 Missing purchase order</td><td><b>supplier:</b> Supplier 32; <b>type:</b> Missing purchase order; <b>amount:</b> $8,276; <b>agent suggestion:</b> reject; <b>agent confidence:</b> 0.81; <b>correct resolution:</b> hold; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0079</th><td>Exception</td><td>AP-0079 Tax code</td><td><b>supplier:</b> Supplier 31; <b>type:</b> Tax code; <b>amount:</b> $6,214; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.81; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0080</th><td>Exception</td><td>AP-0080 Quantity mismatch</td><td><b>supplier:</b> Supplier 59; <b>type:</b> Quantity mismatch; <b>amount:</b> $1,681; <b>variance pct:</b> 6.3%; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.98; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0081</th><td>Exception</td><td>AP-0081 Tax code</td><td><b>supplier:</b> Supplier 18; <b>type:</b> Tax code; <b>amount:</b> $886; <b>agent suggestion:</b> reject; <b>agent confidence:</b> 0.6; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0082</th><td>Exception</td><td>AP-0082 Price variance</td><td><b>supplier:</b> Supplier 32; <b>type:</b> Price variance; <b>amount:</b> $990; <b>variance pct:</b> 0.8%; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.6; <b>correct resolution:</b> approve; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0083</th><td>Exception</td><td>AP-0083 Tax code</td><td><b>supplier:</b> Supplier 38; <b>type:</b> Tax code; <b>amount:</b> $581; <b>agent suggestion:</b> reject; <b>agent confidence:</b> 0.78; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0084</th><td>Exception</td><td>AP-0084 Bank-detail change</td><td><b>supplier:</b> Supplier 30; <b>type:</b> Bank-detail change; <b>amount:</b> $1,521; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.96; <b>correct resolution:</b> hold; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0085</th><td>Exception</td><td>AP-0085 Price variance</td><td><b>supplier:</b> Supplier 42; <b>type:</b> Price variance; <b>amount:</b> $6,772; <b>variance pct:</b> 1.6%; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.78; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0086</th><td>Exception</td><td>AP-0086 Price variance</td><td><b>supplier:</b> Supplier 38; <b>type:</b> Price variance; <b>amount:</b> $1,590; <b>variance pct:</b> 0.6%; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.91; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0087</th><td>Exception</td><td>AP-0087 Missing purchase order</td><td><b>supplier:</b> Supplier 24; <b>type:</b> Missing purchase order; <b>amount:</b> $8,992; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.81; <b>correct resolution:</b> hold; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0088</th><td>Exception</td><td>AP-0088 Tax code</td><td><b>supplier:</b> Supplier 29; <b>type:</b> Tax code; <b>amount:</b> $831; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.89; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0089</th><td>Exception</td><td>AP-0089 Quantity mismatch</td><td><b>supplier:</b> Supplier 01; <b>type:</b> Quantity mismatch; <b>amount:</b> $1,994; <b>variance pct:</b> 10.8%; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.89; <b>correct resolution:</b> hold; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0090</th><td>Exception</td><td>AP-0090 Price variance</td><td><b>supplier:</b> Supplier 18; <b>type:</b> Price variance; <b>amount:</b> $3,803; <b>variance pct:</b> 1.4%; <b>agent suggestion:</b> reject; <b>agent confidence:</b> 0.76; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0091</th><td>Exception</td><td>AP-0091 Price variance</td><td><b>supplier:</b> Supplier 38; <b>type:</b> Price variance; <b>amount:</b> $2,493; <b>variance pct:</b> 7.9%; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.96; <b>correct resolution:</b> hold; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0092</th><td>Exception</td><td>AP-0092 Tax code</td><td><b>supplier:</b> Supplier 34; <b>type:</b> Tax code; <b>amount:</b> $4,821; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.64; <b>correct resolution:</b> adjust; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0093</th><td>Exception</td><td>AP-0093 Price variance</td><td><b>supplier:</b> Supplier 34; <b>type:</b> Price variance; <b>amount:</b> $896; <b>variance pct:</b> 1%; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.64; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0094</th><td>Exception</td><td>AP-0094 Missing purchase order</td><td><b>supplier:</b> Supplier 25; <b>type:</b> Missing purchase order; <b>amount:</b> $845; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.98; <b>correct resolution:</b> hold; <b>needs person:</b> no; <b>baseline route:</b> Resolver agent</td></tr>
+<tr><th scope="row">AP-0095</th><td>Exception</td><td>AP-0095 Price variance</td><td><b>supplier:</b> Supplier 21; <b>type:</b> Price variance; <b>amount:</b> $27,268; <b>variance pct:</b> 3.9%; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.85; <b>correct resolution:</b> adjust; <b>needs person:</b> yes; <b>baseline route:</b> Senior approver</td></tr>
+<tr><th scope="row">AP-0096</th><td>Exception</td><td>AP-0096 Bank-detail change</td><td><b>supplier:</b> Supplier 15; <b>type:</b> Bank-detail change; <b>amount:</b> $1,051; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.87; <b>correct resolution:</b> hold; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0097</th><td>Exception</td><td>AP-0097 Suspected duplicate</td><td><b>supplier:</b> Supplier 42; <b>type:</b> Suspected duplicate; <b>amount:</b> $1,567; <b>agent suggestion:</b> reject; <b>agent confidence:</b> 0.8; <b>correct resolution:</b> reject; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0098</th><td>Exception</td><td>AP-0098 Bank-detail change</td><td><b>supplier:</b> Supplier 13; <b>type:</b> Bank-detail change; <b>amount:</b> $4,921; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.85; <b>correct resolution:</b> hold; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0099</th><td>Exception</td><td>AP-0099 Tax code</td><td><b>supplier:</b> Supplier 27; <b>type:</b> Tax code; <b>amount:</b> $2,087; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.97; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0100</th><td>Exception</td><td>AP-0100 Bank-detail change</td><td><b>supplier:</b> Supplier 59; <b>type:</b> Bank-detail change; <b>amount:</b> $2,421; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.9; <b>correct resolution:</b> hold; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0101</th><td>Exception</td><td>AP-0101 Tax code</td><td><b>supplier:</b> Supplier 55; <b>type:</b> Tax code; <b>amount:</b> $1,304; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.87; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0102</th><td>Exception</td><td>AP-0102 Quantity mismatch</td><td><b>supplier:</b> Supplier 15; <b>type:</b> Quantity mismatch; <b>amount:</b> $796; <b>variance pct:</b> 0.7%; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.7; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0103</th><td>Exception</td><td>AP-0103 Bank-detail change</td><td><b>supplier:</b> Supplier 45; <b>type:</b> Bank-detail change; <b>amount:</b> $1,321; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.97; <b>correct resolution:</b> hold; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0104</th><td>Exception</td><td>AP-0104 Tax code</td><td><b>supplier:</b> Supplier 31; <b>type:</b> Tax code; <b>amount:</b> $3,502; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.78; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0105</th><td>Exception</td><td>AP-0105 Quantity mismatch</td><td><b>supplier:</b> Supplier 11; <b>type:</b> Quantity mismatch; <b>amount:</b> $723; <b>variance pct:</b> 2.4%; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.65; <b>correct resolution:</b> adjust; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0106</th><td>Exception</td><td>AP-0106 Missing purchase order</td><td><b>supplier:</b> Supplier 34; <b>type:</b> Missing purchase order; <b>amount:</b> $615; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.64; <b>correct resolution:</b> approve; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0107</th><td>Exception</td><td>AP-0107 Price variance</td><td><b>supplier:</b> Supplier 50; <b>type:</b> Price variance; <b>amount:</b> $10,221; <b>variance pct:</b> 0.2%; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.79; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> Senior approver</td></tr>
+<tr><th scope="row">AP-0108</th><td>Exception</td><td>AP-0108 Quantity mismatch</td><td><b>supplier:</b> Supplier 58; <b>type:</b> Quantity mismatch; <b>amount:</b> $13,935; <b>variance pct:</b> 5.8%; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.88; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> Senior approver</td></tr>
+<tr><th scope="row">AP-0109</th><td>Exception</td><td>AP-0109 Tax code</td><td><b>supplier:</b> Supplier 07; <b>type:</b> Tax code; <b>amount:</b> $1,963; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.91; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0110</th><td>Exception</td><td>AP-0110 Tax code</td><td><b>supplier:</b> Supplier 02; <b>type:</b> Tax code; <b>amount:</b> $3,233; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.56; <b>correct resolution:</b> adjust; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0111</th><td>Exception</td><td>AP-0111 Quantity mismatch</td><td><b>supplier:</b> Supplier 38; <b>type:</b> Quantity mismatch; <b>amount:</b> $12,135; <b>variance pct:</b> 4.1%; <b>agent suggestion:</b> reject; <b>agent confidence:</b> 0.67; <b>correct resolution:</b> adjust; <b>needs person:</b> yes; <b>baseline route:</b> Senior approver</td></tr>
+<tr><th scope="row">AP-0112</th><td>Exception</td><td>AP-0112 Missing purchase order</td><td><b>supplier:</b> Supplier 60; <b>type:</b> Missing purchase order; <b>amount:</b> $1,573; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.71; <b>correct resolution:</b> hold; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0113</th><td>Exception</td><td>AP-0113 Missing purchase order</td><td><b>supplier:</b> Supplier 11; <b>type:</b> Missing purchase order; <b>amount:</b> $4,622; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.93; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0114</th><td>Exception</td><td>AP-0114 Price variance</td><td><b>supplier:</b> Supplier 46; <b>type:</b> Price variance; <b>amount:</b> $433; <b>variance pct:</b> 0.9%; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.87; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0115</th><td>Exception</td><td>AP-0115 Suspected duplicate</td><td><b>supplier:</b> Supplier 16; <b>type:</b> Suspected duplicate; <b>amount:</b> $747; <b>agent suggestion:</b> reject; <b>agent confidence:</b> 0.93; <b>correct resolution:</b> reject; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0116</th><td>Exception</td><td>AP-0116 Suspected duplicate</td><td><b>supplier:</b> Supplier 22; <b>type:</b> Suspected duplicate; <b>amount:</b> $1,320; <b>agent suggestion:</b> reject; <b>agent confidence:</b> 0.82; <b>correct resolution:</b> reject; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0117</th><td>Exception</td><td>AP-0117 Bank-detail change</td><td><b>supplier:</b> Supplier 45; <b>type:</b> Bank-detail change; <b>amount:</b> $3,078; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.72; <b>correct resolution:</b> hold; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0118</th><td>Exception</td><td>AP-0118 Suspected duplicate</td><td><b>supplier:</b> Supplier 54; <b>type:</b> Suspected duplicate; <b>amount:</b> $24,495; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.99; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> Senior approver</td></tr>
+<tr><th scope="row">AP-0119</th><td>Exception</td><td>AP-0119 Price variance</td><td><b>supplier:</b> Supplier 42; <b>type:</b> Price variance; <b>amount:</b> $6,559; <b>variance pct:</b> 2.7%; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.65; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0120</th><td>Exception</td><td>AP-0120 Tax code</td><td><b>supplier:</b> Supplier 56; <b>type:</b> Tax code; <b>amount:</b> $797; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.81; <b>correct resolution:</b> adjust; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0121</th><td>Exception</td><td>AP-0121 Missing purchase order</td><td><b>supplier:</b> Supplier 55; <b>type:</b> Missing purchase order; <b>amount:</b> $2,896; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.81; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0122</th><td>Exception</td><td>AP-0122 Suspected duplicate</td><td><b>supplier:</b> Supplier 38; <b>type:</b> Suspected duplicate; <b>amount:</b> $321; <b>agent suggestion:</b> reject; <b>agent confidence:</b> 0.91; <b>correct resolution:</b> reject; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0123</th><td>Exception</td><td>AP-0123 Quantity mismatch</td><td><b>supplier:</b> Supplier 19; <b>type:</b> Quantity mismatch; <b>amount:</b> $1,235; <b>variance pct:</b> 4.9%; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.69; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0124</th><td>Exception</td><td>AP-0124 Quantity mismatch</td><td><b>supplier:</b> Supplier 16; <b>type:</b> Quantity mismatch; <b>amount:</b> $2,596; <b>variance pct:</b> 2.5%; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.93; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0125</th><td>Exception</td><td>AP-0125 Missing purchase order</td><td><b>supplier:</b> Supplier 05; <b>type:</b> Missing purchase order; <b>amount:</b> $281; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.79; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0126</th><td>Exception</td><td>AP-0126 Suspected duplicate</td><td><b>supplier:</b> Supplier 03; <b>type:</b> Suspected duplicate; <b>amount:</b> $9,354; <b>agent suggestion:</b> reject; <b>agent confidence:</b> 0.85; <b>correct resolution:</b> reject; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0127</th><td>Exception</td><td>AP-0127 Quantity mismatch</td><td><b>supplier:</b> Supplier 05; <b>type:</b> Quantity mismatch; <b>amount:</b> $1,541; <b>variance pct:</b> 0.4%; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.8; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0128</th><td>Exception</td><td>AP-0128 Quantity mismatch</td><td><b>supplier:</b> Supplier 38; <b>type:</b> Quantity mismatch; <b>amount:</b> $3,906; <b>variance pct:</b> 4.6%; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.63; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0129</th><td>Exception</td><td>AP-0129 Missing purchase order</td><td><b>supplier:</b> Supplier 38; <b>type:</b> Missing purchase order; <b>amount:</b> $5,236; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.77; <b>correct resolution:</b> hold; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0130</th><td>Exception</td><td>AP-0130 Missing purchase order</td><td><b>supplier:</b> Supplier 56; <b>type:</b> Missing purchase order; <b>amount:</b> $2,408; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.6; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0131</th><td>Exception</td><td>AP-0131 Missing purchase order</td><td><b>supplier:</b> Supplier 56; <b>type:</b> Missing purchase order; <b>amount:</b> $1,132; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.79; <b>correct resolution:</b> approve; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0132</th><td>Exception</td><td>AP-0132 Missing purchase order</td><td><b>supplier:</b> Supplier 47; <b>type:</b> Missing purchase order; <b>amount:</b> $485; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.8; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0133</th><td>Exception</td><td>AP-0133 Quantity mismatch</td><td><b>supplier:</b> Supplier 41; <b>type:</b> Quantity mismatch; <b>amount:</b> $7,536; <b>variance pct:</b> 10.6%; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.75; <b>correct resolution:</b> adjust; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0134</th><td>Exception</td><td>AP-0134 Price variance</td><td><b>supplier:</b> Supplier 38; <b>type:</b> Price variance; <b>amount:</b> $26,049; <b>variance pct:</b> 0.4%; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.97; <b>correct resolution:</b> approve; <b>needs person:</b> yes; <b>baseline route:</b> Senior approver</td></tr>
+<tr><th scope="row">AP-0135</th><td>Exception</td><td>AP-0135 Tax code</td><td><b>supplier:</b> Supplier 16; <b>type:</b> Tax code; <b>amount:</b> $5,012; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.85; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0136</th><td>Exception</td><td>AP-0136 Quantity mismatch</td><td><b>supplier:</b> Supplier 21; <b>type:</b> Quantity mismatch; <b>amount:</b> $24,844; <b>variance pct:</b> 2.5%; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.83; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> Senior approver</td></tr>
+<tr><th scope="row">AP-0137</th><td>Exception</td><td>AP-0137 Price variance</td><td><b>supplier:</b> Supplier 02; <b>type:</b> Price variance; <b>amount:</b> $1,903; <b>variance pct:</b> 0.2%; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.73; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0138</th><td>Exception</td><td>AP-0138 Missing purchase order</td><td><b>supplier:</b> Supplier 58; <b>type:</b> Missing purchase order; <b>amount:</b> $2,761; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.96; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0139</th><td>Exception</td><td>AP-0139 Tax code</td><td><b>supplier:</b> Supplier 04; <b>type:</b> Tax code; <b>amount:</b> $875; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.62; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0140</th><td>Exception</td><td>AP-0140 Quantity mismatch</td><td><b>supplier:</b> Supplier 29; <b>type:</b> Quantity mismatch; <b>amount:</b> $4,204; <b>variance pct:</b> 0.4%; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.78; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0141</th><td>Exception</td><td>AP-0141 Tax code</td><td><b>supplier:</b> Supplier 21; <b>type:</b> Tax code; <b>amount:</b> $1,841; <b>agent suggestion:</b> reject; <b>agent confidence:</b> 0.76; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0142</th><td>Exception</td><td>AP-0142 Quantity mismatch</td><td><b>supplier:</b> Supplier 36; <b>type:</b> Quantity mismatch; <b>amount:</b> $4,389; <b>variance pct:</b> 9.8%; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.87; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0143</th><td>Exception</td><td>AP-0143 Tax code</td><td><b>supplier:</b> Supplier 50; <b>type:</b> Tax code; <b>amount:</b> $8,106; <b>agent suggestion:</b> reject; <b>agent confidence:</b> 0.83; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0144</th><td>Exception</td><td>AP-0144 Price variance</td><td><b>supplier:</b> Supplier 40; <b>type:</b> Price variance; <b>amount:</b> $2,015; <b>variance pct:</b> 2.3%; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.92; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0145</th><td>Exception</td><td>AP-0145 Bank-detail change</td><td><b>supplier:</b> Supplier 25; <b>type:</b> Bank-detail change; <b>amount:</b> $1,063; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.94; <b>correct resolution:</b> hold; <b>needs person:</b> yes; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0146</th><td>Exception</td><td>AP-0146 Price variance</td><td><b>supplier:</b> Supplier 24; <b>type:</b> Price variance; <b>amount:</b> $11,823; <b>variance pct:</b> 0.2%; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.55; <b>correct resolution:</b> approve; <b>needs person:</b> yes; <b>baseline route:</b> Senior approver</td></tr>
+<tr><th scope="row">AP-0147</th><td>Exception</td><td>AP-0147 Tax code</td><td><b>supplier:</b> Supplier 48; <b>type:</b> Tax code; <b>amount:</b> $7,748; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.93; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0148</th><td>Exception</td><td>AP-0148 Quantity mismatch</td><td><b>supplier:</b> Supplier 52; <b>type:</b> Quantity mismatch; <b>amount:</b> $1,148; <b>variance pct:</b> 7.2%; <b>agent suggestion:</b> hold; <b>agent confidence:</b> 0.78; <b>correct resolution:</b> hold; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0149</th><td>Exception</td><td>AP-0149 Price variance</td><td><b>supplier:</b> Supplier 27; <b>type:</b> Price variance; <b>amount:</b> $4,315; <b>variance pct:</b> 7.2%; <b>agent suggestion:</b> adjust; <b>agent confidence:</b> 0.78; <b>correct resolution:</b> adjust; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">AP-0150</th><td>Exception</td><td>AP-0150 Quantity mismatch</td><td><b>supplier:</b> Supplier 49; <b>type:</b> Quantity mismatch; <b>amount:</b> $925; <b>variance pct:</b> 0.2%; <b>agent suggestion:</b> approve; <b>agent confidence:</b> 0.88; <b>correct resolution:</b> approve; <b>needs person:</b> no; <b>baseline route:</b> AP clerk (reviewer)</td></tr>
+<tr><th scope="row">TYPE-price_variance</th><td>Exception type</td><td>Price variance</td><td><b>exceptions:</b> 44; <b>total amount:</b> $187,523; <b>needs person:</b> 8</td></tr>
+<tr><th scope="row">TYPE-quantity_mismatch</th><td>Exception type</td><td>Quantity mismatch</td><td><b>exceptions:</b> 27; <b>total amount:</b> $118,084; <b>needs person:</b> 3</td></tr>
+<tr><th scope="row">TYPE-missing_po</th><td>Exception type</td><td>Missing purchase order</td><td><b>exceptions:</b> 25; <b>total amount:</b> $67,565; <b>needs person:</b> 3</td></tr>
+<tr><th scope="row">TYPE-duplicate_suspect</th><td>Exception type</td><td>Suspected duplicate</td><td><b>exceptions:</b> 15; <b>total amount:</b> $75,542; <b>needs person:</b> 2</td></tr>
+<tr><th scope="row">TYPE-tax_code</th><td>Exception type</td><td>Tax code</td><td><b>exceptions:</b> 25; <b>total amount:</b> $62,405; <b>needs person:</b> 3</td></tr>
+<tr><th scope="row">TYPE-bank_detail_change</th><td>Exception type</td><td>Bank-detail change</td><td><b>exceptions:</b> 14; <b>total amount:</b> $35,486; <b>needs person:</b> 14</td></tr>
+<tr><th scope="row">POL-authority</th><td>Policy</td><td>Delegated authority $25,000</td><td><b>rule:</b> Invoices above $25,000 need a person with authority.; <b>exceptions:</b> 2</td></tr>
+<tr><th scope="row">POL-senior</th><td>Policy</td><td>Senior review above $10,000</td><td><b>rule:</b> Baseline policy: exceptions above $10,000 go to a senior approver.; <b>exceptions:</b> 11</td></tr>
+<tr><th scope="row">POL-dna-bank</th><td>Policy</td><td>Do not automate: bank-detail changes</td><td><b>rule:</b> Bank-detail changes always go to a person, with out-of-band verification.; <b>exceptions:</b> 14</td></tr>
+<tr><th scope="row">POL-match</th><td>Policy</td><td>Match tolerance 1%</td><td><b>rule:</b> Baseline policy: price and quantity variances within 1% may be approved by rule.; <b>exceptions:</b> 71</td></tr>
+<tr><th scope="row">POL-small</th><td>Policy</td><td>Small-supplier protection</td><td><b>rule:</b> Automated hold or reject decisions for small suppliers go to a person.; <b>exceptions:</b> 44</td></tr>
+<tr><th scope="row">POL-confidence</th><td>Policy</td><td>Confidence floor 0.95</td><td><b>rule:</b> Baseline policy: the resolver agent acts alone only at confidence 0.95 or above.; <b>exceptions:</b> 33</td></tr>
+<tr><th scope="row">ROLE-resolver</th><td>Role</td><td>Resolver agent</td><td><b>does:</b> Resolves the exception alone, inside the policy.; <b>exceptions under baseline:</b> 1</td></tr>
+<tr><th scope="row">ROLE-clerk</th><td>Role</td><td>AP clerk (reviewer)</td><td><b>does:</b> Reviews the exception and decides.; <b>exceptions under baseline:</b> 138</td></tr>
+<tr><th scope="row">ROLE-senior</th><td>Role</td><td>Senior approver</td><td><b>does:</b> Decides large exceptions with delegated authority.; <b>exceptions under baseline:</b> 11</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#HO-01">HO-01</a></th><td>Control</td><td>HO-01 Decision card for approvals</td><td><b>name:</b> Decision card for approvals; <b>purpose:</b> Show the approver the proposal, evidence, rule, confidence and options on one card.; <b>required from:</b> L2</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#MR-07">MR-07</a></th><td>Control</td><td>MR-07 Calibration check</td><td><b>name:</b> Calibration check; <b>purpose:</b> Check that stated confidence matches observed accuracy in every segment of the work.; <b>required from:</b> L3</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#MR-08">MR-08</a></th><td>Control</td><td>MR-08 Bias testing for decisions about people</td><td><b>name:</b> Bias testing for decisions about people; <b>purpose:</b> Test decisions that affect people for unfair differences between groups.; <b>required from:</b> L1</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SOD-01">SOD-01</a></th><td>Control</td><td>SOD-01 Approver cannot change limits</td><td><b>name:</b> Approver cannot change limits; <b>purpose:</b> The person who approves agent actions may not change the limits, instructions or tools of that agent.; <b>required from:</b> L2</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#TAL-01">TAL-01</a></th><td>Control</td><td>TAL-01 Limits outside the model</td><td><b>name:</b> Limits outside the model; <b>purpose:</b> Enforce amount, risk and counterparty limits in a policy table that the agent cannot change.; <b>required from:</b> L3</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#TAL-02">TAL-02</a></th><td>Control</td><td>TAL-02 Propose, validate, route, commit</td><td><b>name:</b> Propose, validate, route, commit; <b>purpose:</b> The agent proposes. Deterministic rules validate, route and commit.; <b>required from:</b> L3</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#TAL-05">TAL-05</a></th><td>Control</td><td>TAL-05 Do-not-automate list</td><td><b>name:</b> Do-not-automate list; <b>purpose:</b> Named decisions stay with people. Agents cannot hold the permissions for those decisions.; <b>required from:</b> L0</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#TAL-07">TAL-07</a></th><td>Control</td><td>TAL-07 Out-of-band verification for bank changes</td><td><b>name:</b> Out-of-band verification for bank changes; <b>purpose:</b> A person verifies each bank-detail change by calling a known number from the master record.; <b>required from:</b> L0</td></tr>
+</tbody></table></div>
+    </details>
+    <details class="gr-alt">
+      <summary>All 637 edges of the knowledge graph, as a table</summary>
+      <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Edges of the knowledge graph"><table class="fw-table gr-table"><thead><tr><th scope="col">From</th><th scope="col">Relation</th><th scope="col">To</th></tr></thead><tbody>
+<tr><td>AP-0001</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-51">SUP-51</a></td></tr>
+<tr><td>AP-0001</td><td>is a</td><td>TYPE-duplicate_suspect</td></tr>
+<tr><td>AP-0001</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0002</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-06">SUP-06</a></td></tr>
+<tr><td>AP-0002</td><td>is a</td><td>TYPE-missing_po</td></tr>
+<tr><td>AP-0002</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0003</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-26">SUP-26</a></td></tr>
+<tr><td>AP-0003</td><td>is a</td><td>TYPE-tax_code</td></tr>
+<tr><td>AP-0003</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0003</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0003</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0004</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-59">SUP-59</a></td></tr>
+<tr><td>AP-0004</td><td>is a</td><td>TYPE-tax_code</td></tr>
+<tr><td>AP-0004</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0004</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0005</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-41">SUP-41</a></td></tr>
+<tr><td>AP-0005</td><td>is a</td><td>TYPE-tax_code</td></tr>
+<tr><td>AP-0005</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0006</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-27">SUP-27</a></td></tr>
+<tr><td>AP-0006</td><td>is a</td><td>TYPE-missing_po</td></tr>
+<tr><td>AP-0006</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0006</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0007</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-55">SUP-55</a></td></tr>
+<tr><td>AP-0007</td><td>is a</td><td>TYPE-bank_detail_change</td></tr>
+<tr><td>AP-0007</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0007</td><td>governed by</td><td>POL-dna-bank</td></tr>
+<tr><td>AP-0007</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0008</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-04">SUP-04</a></td></tr>
+<tr><td>AP-0008</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0008</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0008</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0008</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0009</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-04">SUP-04</a></td></tr>
+<tr><td>AP-0009</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0009</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0009</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0009</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0009</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0010</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-26">SUP-26</a></td></tr>
+<tr><td>AP-0010</td><td>is a</td><td>TYPE-tax_code</td></tr>
+<tr><td>AP-0010</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0011</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-01">SUP-01</a></td></tr>
+<tr><td>AP-0011</td><td>is a</td><td>TYPE-missing_po</td></tr>
+<tr><td>AP-0011</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0011</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0012</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-24">SUP-24</a></td></tr>
+<tr><td>AP-0012</td><td>is a</td><td>TYPE-bank_detail_change</td></tr>
+<tr><td>AP-0012</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0012</td><td>governed by</td><td>POL-dna-bank</td></tr>
+<tr><td>AP-0013</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-32">SUP-32</a></td></tr>
+<tr><td>AP-0013</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0013</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0013</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0014</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-21">SUP-21</a></td></tr>
+<tr><td>AP-0014</td><td>is a</td><td>TYPE-duplicate_suspect</td></tr>
+<tr><td>AP-0014</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0015</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-34">SUP-34</a></td></tr>
+<tr><td>AP-0015</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0015</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0015</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0015</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0016</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-08">SUP-08</a></td></tr>
+<tr><td>AP-0016</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0016</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0016</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0017</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-03">SUP-03</a></td></tr>
+<tr><td>AP-0017</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0017</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0017</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0018</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-57">SUP-57</a></td></tr>
+<tr><td>AP-0018</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0018</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0018</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0019</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-28">SUP-28</a></td></tr>
+<tr><td>AP-0019</td><td>is a</td><td>TYPE-duplicate_suspect</td></tr>
+<tr><td>AP-0019</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0020</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-26">SUP-26</a></td></tr>
+<tr><td>AP-0020</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0020</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0020</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0020</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0021</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-57">SUP-57</a></td></tr>
+<tr><td>AP-0021</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0021</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0021</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0022</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-49">SUP-49</a></td></tr>
+<tr><td>AP-0022</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0022</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0022</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0022</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0023</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-53">SUP-53</a></td></tr>
+<tr><td>AP-0023</td><td>is a</td><td>TYPE-missing_po</td></tr>
+<tr><td>AP-0023</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0023</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0024</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-50">SUP-50</a></td></tr>
+<tr><td>AP-0024</td><td>is a</td><td>TYPE-bank_detail_change</td></tr>
+<tr><td>AP-0024</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0024</td><td>governed by</td><td>POL-dna-bank</td></tr>
+<tr><td>AP-0025</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-48">SUP-48</a></td></tr>
+<tr><td>AP-0025</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0025</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0025</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0026</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-59">SUP-59</a></td></tr>
+<tr><td>AP-0026</td><td>is a</td><td>TYPE-duplicate_suspect</td></tr>
+<tr><td>AP-0026</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0027</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-35">SUP-35</a></td></tr>
+<tr><td>AP-0027</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0027</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0027</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0028</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-20">SUP-20</a></td></tr>
+<tr><td>AP-0028</td><td>is a</td><td>TYPE-duplicate_suspect</td></tr>
+<tr><td>AP-0028</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0029</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-24">SUP-24</a></td></tr>
+<tr><td>AP-0029</td><td>is a</td><td>TYPE-missing_po</td></tr>
+<tr><td>AP-0029</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0030</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-47">SUP-47</a></td></tr>
+<tr><td>AP-0030</td><td>is a</td><td>TYPE-missing_po</td></tr>
+<tr><td>AP-0030</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0030</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0031</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-41">SUP-41</a></td></tr>
+<tr><td>AP-0031</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0031</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0031</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0032</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-33">SUP-33</a></td></tr>
+<tr><td>AP-0032</td><td>is a</td><td>TYPE-missing_po</td></tr>
+<tr><td>AP-0032</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0033</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-49">SUP-49</a></td></tr>
+<tr><td>AP-0033</td><td>is a</td><td>TYPE-tax_code</td></tr>
+<tr><td>AP-0033</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0033</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0034</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-55">SUP-55</a></td></tr>
+<tr><td>AP-0034</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0034</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0034</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0035</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-15">SUP-15</a></td></tr>
+<tr><td>AP-0035</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0035</td><td>routed to</td><td>ROLE-senior</td></tr>
+<tr><td>AP-0035</td><td>governed by</td><td>POL-senior</td></tr>
+<tr><td>AP-0035</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0035</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0036</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-57">SUP-57</a></td></tr>
+<tr><td>AP-0036</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0036</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0036</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0036</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0037</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-57">SUP-57</a></td></tr>
+<tr><td>AP-0037</td><td>is a</td><td>TYPE-duplicate_suspect</td></tr>
+<tr><td>AP-0037</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0038</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-41">SUP-41</a></td></tr>
+<tr><td>AP-0038</td><td>is a</td><td>TYPE-bank_detail_change</td></tr>
+<tr><td>AP-0038</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0038</td><td>governed by</td><td>POL-dna-bank</td></tr>
+<tr><td>AP-0039</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-48">SUP-48</a></td></tr>
+<tr><td>AP-0039</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0039</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0039</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0040</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-13">SUP-13</a></td></tr>
+<tr><td>AP-0040</td><td>is a</td><td>TYPE-duplicate_suspect</td></tr>
+<tr><td>AP-0040</td><td>routed to</td><td>ROLE-senior</td></tr>
+<tr><td>AP-0040</td><td>governed by</td><td>POL-senior</td></tr>
+<tr><td>AP-0040</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0041</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-06">SUP-06</a></td></tr>
+<tr><td>AP-0041</td><td>is a</td><td>TYPE-tax_code</td></tr>
+<tr><td>AP-0041</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0041</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0042</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-46">SUP-46</a></td></tr>
+<tr><td>AP-0042</td><td>is a</td><td>TYPE-missing_po</td></tr>
+<tr><td>AP-0042</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0042</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0043</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-57">SUP-57</a></td></tr>
+<tr><td>AP-0043</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0043</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0043</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0044</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-23">SUP-23</a></td></tr>
+<tr><td>AP-0044</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0044</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0044</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0044</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0045</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-39">SUP-39</a></td></tr>
+<tr><td>AP-0045</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0045</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0045</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0046</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-06">SUP-06</a></td></tr>
+<tr><td>AP-0046</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0046</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0046</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0047</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-58">SUP-58</a></td></tr>
+<tr><td>AP-0047</td><td>is a</td><td>TYPE-duplicate_suspect</td></tr>
+<tr><td>AP-0047</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0047</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0047</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0048</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-57">SUP-57</a></td></tr>
+<tr><td>AP-0048</td><td>is a</td><td>TYPE-bank_detail_change</td></tr>
+<tr><td>AP-0048</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0048</td><td>governed by</td><td>POL-dna-bank</td></tr>
+<tr><td>AP-0048</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0049</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-56">SUP-56</a></td></tr>
+<tr><td>AP-0049</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0049</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0049</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0049</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0050</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-06">SUP-06</a></td></tr>
+<tr><td>AP-0050</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0050</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0050</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0051</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-44">SUP-44</a></td></tr>
+<tr><td>AP-0051</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0051</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0051</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0052</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-46">SUP-46</a></td></tr>
+<tr><td>AP-0052</td><td>is a</td><td>TYPE-tax_code</td></tr>
+<tr><td>AP-0052</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0052</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0053</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-41">SUP-41</a></td></tr>
+<tr><td>AP-0053</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0053</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0053</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0053</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0053</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0054</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-46">SUP-46</a></td></tr>
+<tr><td>AP-0054</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0054</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0054</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0054</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0054</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0055</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-18">SUP-18</a></td></tr>
+<tr><td>AP-0055</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0055</td><td>routed to</td><td>ROLE-senior</td></tr>
+<tr><td>AP-0055</td><td>governed by</td><td>POL-senior</td></tr>
+<tr><td>AP-0055</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0055</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0056</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-21">SUP-21</a></td></tr>
+<tr><td>AP-0056</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0056</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0056</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0057</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-51">SUP-51</a></td></tr>
+<tr><td>AP-0057</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0057</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0057</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0058</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-48">SUP-48</a></td></tr>
+<tr><td>AP-0058</td><td>is a</td><td>TYPE-tax_code</td></tr>
+<tr><td>AP-0058</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0058</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0058</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0059</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-11">SUP-11</a></td></tr>
+<tr><td>AP-0059</td><td>is a</td><td>TYPE-duplicate_suspect</td></tr>
+<tr><td>AP-0059</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0060</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-21">SUP-21</a></td></tr>
+<tr><td>AP-0060</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0060</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0060</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0061</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-50">SUP-50</a></td></tr>
+<tr><td>AP-0061</td><td>is a</td><td>TYPE-tax_code</td></tr>
+<tr><td>AP-0061</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0061</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0062</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-04">SUP-04</a></td></tr>
+<tr><td>AP-0062</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0062</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0062</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0063</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-20">SUP-20</a></td></tr>
+<tr><td>AP-0063</td><td>is a</td><td>TYPE-missing_po</td></tr>
+<tr><td>AP-0063</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0064</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-30">SUP-30</a></td></tr>
+<tr><td>AP-0064</td><td>is a</td><td>TYPE-missing_po</td></tr>
+<tr><td>AP-0064</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0064</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0065</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-53">SUP-53</a></td></tr>
+<tr><td>AP-0065</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0065</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0065</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0066</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-58">SUP-58</a></td></tr>
+<tr><td>AP-0066</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0066</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0066</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0066</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0067</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-53">SUP-53</a></td></tr>
+<tr><td>AP-0067</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0067</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0067</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0067</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0068</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-42">SUP-42</a></td></tr>
+<tr><td>AP-0068</td><td>is a</td><td>TYPE-bank_detail_change</td></tr>
+<tr><td>AP-0068</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0068</td><td>governed by</td><td>POL-dna-bank</td></tr>
+<tr><td>AP-0069</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-46">SUP-46</a></td></tr>
+<tr><td>AP-0069</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0069</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0069</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0070</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-27">SUP-27</a></td></tr>
+<tr><td>AP-0070</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0070</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0070</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0071</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-18">SUP-18</a></td></tr>
+<tr><td>AP-0071</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0071</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0071</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0071</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0072</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-35">SUP-35</a></td></tr>
+<tr><td>AP-0072</td><td>is a</td><td>TYPE-bank_detail_change</td></tr>
+<tr><td>AP-0072</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0072</td><td>governed by</td><td>POL-dna-bank</td></tr>
+<tr><td>AP-0072</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0073</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-12">SUP-12</a></td></tr>
+<tr><td>AP-0073</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0073</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0073</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0073</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0073</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0074</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-47">SUP-47</a></td></tr>
+<tr><td>AP-0074</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0074</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0074</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0075</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-23">SUP-23</a></td></tr>
+<tr><td>AP-0075</td><td>is a</td><td>TYPE-missing_po</td></tr>
+<tr><td>AP-0075</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0075</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0076</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-02">SUP-02</a></td></tr>
+<tr><td>AP-0076</td><td>is a</td><td>TYPE-missing_po</td></tr>
+<tr><td>AP-0076</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0076</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0077</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-51">SUP-51</a></td></tr>
+<tr><td>AP-0077</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0077</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0077</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0078</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-32">SUP-32</a></td></tr>
+<tr><td>AP-0078</td><td>is a</td><td>TYPE-missing_po</td></tr>
+<tr><td>AP-0078</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0079</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-31">SUP-31</a></td></tr>
+<tr><td>AP-0079</td><td>is a</td><td>TYPE-tax_code</td></tr>
+<tr><td>AP-0079</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0080</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-59">SUP-59</a></td></tr>
+<tr><td>AP-0080</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0080</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0080</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0081</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-18">SUP-18</a></td></tr>
+<tr><td>AP-0081</td><td>is a</td><td>TYPE-tax_code</td></tr>
+<tr><td>AP-0081</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0081</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0082</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-32">SUP-32</a></td></tr>
+<tr><td>AP-0082</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0082</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0082</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0082</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0082</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0083</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-38">SUP-38</a></td></tr>
+<tr><td>AP-0083</td><td>is a</td><td>TYPE-tax_code</td></tr>
+<tr><td>AP-0083</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0083</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0084</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-30">SUP-30</a></td></tr>
+<tr><td>AP-0084</td><td>is a</td><td>TYPE-bank_detail_change</td></tr>
+<tr><td>AP-0084</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0084</td><td>governed by</td><td>POL-dna-bank</td></tr>
+<tr><td>AP-0085</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-42">SUP-42</a></td></tr>
+<tr><td>AP-0085</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0085</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0085</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0085</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0086</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-38">SUP-38</a></td></tr>
+<tr><td>AP-0086</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0086</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0086</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0087</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-24">SUP-24</a></td></tr>
+<tr><td>AP-0087</td><td>is a</td><td>TYPE-missing_po</td></tr>
+<tr><td>AP-0087</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0088</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-29">SUP-29</a></td></tr>
+<tr><td>AP-0088</td><td>is a</td><td>TYPE-tax_code</td></tr>
+<tr><td>AP-0088</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0088</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0089</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-01">SUP-01</a></td></tr>
+<tr><td>AP-0089</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0089</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0089</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0090</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-18">SUP-18</a></td></tr>
+<tr><td>AP-0090</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0090</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0090</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0091</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-38">SUP-38</a></td></tr>
+<tr><td>AP-0091</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0091</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0091</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0092</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-34">SUP-34</a></td></tr>
+<tr><td>AP-0092</td><td>is a</td><td>TYPE-tax_code</td></tr>
+<tr><td>AP-0092</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0093</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-34">SUP-34</a></td></tr>
+<tr><td>AP-0093</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0093</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0093</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0093</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0094</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-25">SUP-25</a></td></tr>
+<tr><td>AP-0094</td><td>is a</td><td>TYPE-missing_po</td></tr>
+<tr><td>AP-0094</td><td>routed to</td><td>ROLE-resolver</td></tr>
+<tr><td>AP-0094</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0095</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-21">SUP-21</a></td></tr>
+<tr><td>AP-0095</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0095</td><td>routed to</td><td>ROLE-senior</td></tr>
+<tr><td>AP-0095</td><td>governed by</td><td>POL-authority</td></tr>
+<tr><td>AP-0095</td><td>governed by</td><td>POL-senior</td></tr>
+<tr><td>AP-0095</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0096</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-15">SUP-15</a></td></tr>
+<tr><td>AP-0096</td><td>is a</td><td>TYPE-bank_detail_change</td></tr>
+<tr><td>AP-0096</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0096</td><td>governed by</td><td>POL-dna-bank</td></tr>
+<tr><td>AP-0097</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-42">SUP-42</a></td></tr>
+<tr><td>AP-0097</td><td>is a</td><td>TYPE-duplicate_suspect</td></tr>
+<tr><td>AP-0097</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0097</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0098</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-13">SUP-13</a></td></tr>
+<tr><td>AP-0098</td><td>is a</td><td>TYPE-bank_detail_change</td></tr>
+<tr><td>AP-0098</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0098</td><td>governed by</td><td>POL-dna-bank</td></tr>
+<tr><td>AP-0098</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0099</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-27">SUP-27</a></td></tr>
+<tr><td>AP-0099</td><td>is a</td><td>TYPE-tax_code</td></tr>
+<tr><td>AP-0099</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0099</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0100</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-59">SUP-59</a></td></tr>
+<tr><td>AP-0100</td><td>is a</td><td>TYPE-bank_detail_change</td></tr>
+<tr><td>AP-0100</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0100</td><td>governed by</td><td>POL-dna-bank</td></tr>
+<tr><td>AP-0101</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-55">SUP-55</a></td></tr>
+<tr><td>AP-0101</td><td>is a</td><td>TYPE-tax_code</td></tr>
+<tr><td>AP-0101</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0102</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-15">SUP-15</a></td></tr>
+<tr><td>AP-0102</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0102</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0102</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0102</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0103</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-45">SUP-45</a></td></tr>
+<tr><td>AP-0103</td><td>is a</td><td>TYPE-bank_detail_change</td></tr>
+<tr><td>AP-0103</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0103</td><td>governed by</td><td>POL-dna-bank</td></tr>
+<tr><td>AP-0104</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-31">SUP-31</a></td></tr>
+<tr><td>AP-0104</td><td>is a</td><td>TYPE-tax_code</td></tr>
+<tr><td>AP-0104</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0105</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-11">SUP-11</a></td></tr>
+<tr><td>AP-0105</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0105</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0105</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0105</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0105</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0106</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-34">SUP-34</a></td></tr>
+<tr><td>AP-0106</td><td>is a</td><td>TYPE-missing_po</td></tr>
+<tr><td>AP-0106</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0106</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0107</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-50">SUP-50</a></td></tr>
+<tr><td>AP-0107</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0107</td><td>routed to</td><td>ROLE-senior</td></tr>
+<tr><td>AP-0107</td><td>governed by</td><td>POL-senior</td></tr>
+<tr><td>AP-0107</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0108</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-58">SUP-58</a></td></tr>
+<tr><td>AP-0108</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0108</td><td>routed to</td><td>ROLE-senior</td></tr>
+<tr><td>AP-0108</td><td>governed by</td><td>POL-senior</td></tr>
+<tr><td>AP-0108</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0109</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-07">SUP-07</a></td></tr>
+<tr><td>AP-0109</td><td>is a</td><td>TYPE-tax_code</td></tr>
+<tr><td>AP-0109</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0110</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-02">SUP-02</a></td></tr>
+<tr><td>AP-0110</td><td>is a</td><td>TYPE-tax_code</td></tr>
+<tr><td>AP-0110</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0111</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-38">SUP-38</a></td></tr>
+<tr><td>AP-0111</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0111</td><td>routed to</td><td>ROLE-senior</td></tr>
+<tr><td>AP-0111</td><td>governed by</td><td>POL-senior</td></tr>
+<tr><td>AP-0111</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0112</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-60">SUP-60</a></td></tr>
+<tr><td>AP-0112</td><td>is a</td><td>TYPE-missing_po</td></tr>
+<tr><td>AP-0112</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0113</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-11">SUP-11</a></td></tr>
+<tr><td>AP-0113</td><td>is a</td><td>TYPE-missing_po</td></tr>
+<tr><td>AP-0113</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0114</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-46">SUP-46</a></td></tr>
+<tr><td>AP-0114</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0114</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0114</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0114</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0114</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0115</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-16">SUP-16</a></td></tr>
+<tr><td>AP-0115</td><td>is a</td><td>TYPE-duplicate_suspect</td></tr>
+<tr><td>AP-0115</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0115</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0116</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-22">SUP-22</a></td></tr>
+<tr><td>AP-0116</td><td>is a</td><td>TYPE-duplicate_suspect</td></tr>
+<tr><td>AP-0116</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0117</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-45">SUP-45</a></td></tr>
+<tr><td>AP-0117</td><td>is a</td><td>TYPE-bank_detail_change</td></tr>
+<tr><td>AP-0117</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0117</td><td>governed by</td><td>POL-dna-bank</td></tr>
+<tr><td>AP-0117</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0118</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-54">SUP-54</a></td></tr>
+<tr><td>AP-0118</td><td>is a</td><td>TYPE-duplicate_suspect</td></tr>
+<tr><td>AP-0118</td><td>routed to</td><td>ROLE-senior</td></tr>
+<tr><td>AP-0118</td><td>governed by</td><td>POL-senior</td></tr>
+<tr><td>AP-0119</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-42">SUP-42</a></td></tr>
+<tr><td>AP-0119</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0119</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0119</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0120</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-56">SUP-56</a></td></tr>
+<tr><td>AP-0120</td><td>is a</td><td>TYPE-tax_code</td></tr>
+<tr><td>AP-0120</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0120</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0121</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-55">SUP-55</a></td></tr>
+<tr><td>AP-0121</td><td>is a</td><td>TYPE-missing_po</td></tr>
+<tr><td>AP-0121</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0122</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-38">SUP-38</a></td></tr>
+<tr><td>AP-0122</td><td>is a</td><td>TYPE-duplicate_suspect</td></tr>
+<tr><td>AP-0122</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0122</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0122</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0123</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-19">SUP-19</a></td></tr>
+<tr><td>AP-0123</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0123</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0123</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0123</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0124</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-16">SUP-16</a></td></tr>
+<tr><td>AP-0124</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0124</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0124</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0125</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-05">SUP-05</a></td></tr>
+<tr><td>AP-0125</td><td>is a</td><td>TYPE-missing_po</td></tr>
+<tr><td>AP-0125</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0125</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0125</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0126</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-03">SUP-03</a></td></tr>
+<tr><td>AP-0126</td><td>is a</td><td>TYPE-duplicate_suspect</td></tr>
+<tr><td>AP-0126</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0127</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-05">SUP-05</a></td></tr>
+<tr><td>AP-0127</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0127</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0127</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0128</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-38">SUP-38</a></td></tr>
+<tr><td>AP-0128</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0128</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0128</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0128</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0129</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-38">SUP-38</a></td></tr>
+<tr><td>AP-0129</td><td>is a</td><td>TYPE-missing_po</td></tr>
+<tr><td>AP-0129</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0130</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-56">SUP-56</a></td></tr>
+<tr><td>AP-0130</td><td>is a</td><td>TYPE-missing_po</td></tr>
+<tr><td>AP-0130</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0131</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-56">SUP-56</a></td></tr>
+<tr><td>AP-0131</td><td>is a</td><td>TYPE-missing_po</td></tr>
+<tr><td>AP-0131</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0132</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-47">SUP-47</a></td></tr>
+<tr><td>AP-0132</td><td>is a</td><td>TYPE-missing_po</td></tr>
+<tr><td>AP-0132</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0132</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0132</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0133</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-41">SUP-41</a></td></tr>
+<tr><td>AP-0133</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0133</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0133</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0134</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-38">SUP-38</a></td></tr>
+<tr><td>AP-0134</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0134</td><td>routed to</td><td>ROLE-senior</td></tr>
+<tr><td>AP-0134</td><td>governed by</td><td>POL-authority</td></tr>
+<tr><td>AP-0134</td><td>governed by</td><td>POL-senior</td></tr>
+<tr><td>AP-0134</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0135</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-16">SUP-16</a></td></tr>
+<tr><td>AP-0135</td><td>is a</td><td>TYPE-tax_code</td></tr>
+<tr><td>AP-0135</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0136</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-21">SUP-21</a></td></tr>
+<tr><td>AP-0136</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0136</td><td>routed to</td><td>ROLE-senior</td></tr>
+<tr><td>AP-0136</td><td>governed by</td><td>POL-senior</td></tr>
+<tr><td>AP-0136</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0137</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-02">SUP-02</a></td></tr>
+<tr><td>AP-0137</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0137</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0137</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0138</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-58">SUP-58</a></td></tr>
+<tr><td>AP-0138</td><td>is a</td><td>TYPE-missing_po</td></tr>
+<tr><td>AP-0138</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0139</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-04">SUP-04</a></td></tr>
+<tr><td>AP-0139</td><td>is a</td><td>TYPE-tax_code</td></tr>
+<tr><td>AP-0139</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0139</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0139</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>AP-0140</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-29">SUP-29</a></td></tr>
+<tr><td>AP-0140</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0140</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0140</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0141</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-21">SUP-21</a></td></tr>
+<tr><td>AP-0141</td><td>is a</td><td>TYPE-tax_code</td></tr>
+<tr><td>AP-0141</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0142</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-36">SUP-36</a></td></tr>
+<tr><td>AP-0142</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0142</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0142</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0143</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-50">SUP-50</a></td></tr>
+<tr><td>AP-0143</td><td>is a</td><td>TYPE-tax_code</td></tr>
+<tr><td>AP-0143</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0144</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-40">SUP-40</a></td></tr>
+<tr><td>AP-0144</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0144</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0144</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0145</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-25">SUP-25</a></td></tr>
+<tr><td>AP-0145</td><td>is a</td><td>TYPE-bank_detail_change</td></tr>
+<tr><td>AP-0145</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0145</td><td>governed by</td><td>POL-dna-bank</td></tr>
+<tr><td>AP-0145</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0146</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-24">SUP-24</a></td></tr>
+<tr><td>AP-0146</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0146</td><td>routed to</td><td>ROLE-senior</td></tr>
+<tr><td>AP-0146</td><td>governed by</td><td>POL-senior</td></tr>
+<tr><td>AP-0146</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0147</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-48">SUP-48</a></td></tr>
+<tr><td>AP-0147</td><td>is a</td><td>TYPE-tax_code</td></tr>
+<tr><td>AP-0147</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0148</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-52">SUP-52</a></td></tr>
+<tr><td>AP-0148</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0148</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0148</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0148</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0149</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-27">SUP-27</a></td></tr>
+<tr><td>AP-0149</td><td>is a</td><td>TYPE-price_variance</td></tr>
+<tr><td>AP-0149</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0149</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0150</td><td>billed by</td><td><a class="cid" href="/controls/#SUP-49">SUP-49</a></td></tr>
+<tr><td>AP-0150</td><td>is a</td><td>TYPE-quantity_mismatch</td></tr>
+<tr><td>AP-0150</td><td>routed to</td><td>ROLE-clerk</td></tr>
+<tr><td>AP-0150</td><td>governed by</td><td>POL-match</td></tr>
+<tr><td>AP-0150</td><td>governed by</td><td>POL-small</td></tr>
+<tr><td>AP-0150</td><td>governed by</td><td>POL-confidence</td></tr>
+<tr><td>POL-authority</td><td>enforced by</td><td><a class="cid" href="/controls/#TAL-01">TAL-01</a></td></tr>
+<tr><td>POL-authority</td><td>enforced by</td><td><a class="cid" href="/controls/#SOD-01">SOD-01</a></td></tr>
+<tr><td>POL-authority</td><td>routes to</td><td>ROLE-senior</td></tr>
+<tr><td>POL-senior</td><td>enforced by</td><td><a class="cid" href="/controls/#HO-01">HO-01</a></td></tr>
+<tr><td>POL-senior</td><td>routes to</td><td>ROLE-senior</td></tr>
+<tr><td>POL-dna-bank</td><td>enforced by</td><td><a class="cid" href="/controls/#TAL-05">TAL-05</a></td></tr>
+<tr><td>POL-dna-bank</td><td>enforced by</td><td><a class="cid" href="/controls/#TAL-07">TAL-07</a></td></tr>
+<tr><td>POL-dna-bank</td><td>routes to</td><td>ROLE-clerk</td></tr>
+<tr><td>POL-match</td><td>enforced by</td><td><a class="cid" href="/controls/#TAL-02">TAL-02</a></td></tr>
+<tr><td>POL-small</td><td>enforced by</td><td><a class="cid" href="/controls/#MR-08">MR-08</a></td></tr>
+<tr><td>POL-small</td><td>routes to</td><td>ROLE-clerk</td></tr>
+<tr><td>POL-confidence</td><td>enforced by</td><td><a class="cid" href="/controls/#MR-07">MR-07</a></td></tr>
+</tbody></table></div>
+    </details>
+    <p class="fw-note">Sample data: synthetic, not real suppliers, invoices or people. <a href="/assets/data/ap-sample.json?v=9d2e57beb0">Download the sample (JSON)</a> or <a href="/assets/data/graphs.json?v=63fc6cdcd3">the graphs (JSON)</a>.</p>
+  </div>
+</section>
+
+<section class="section section-paper-2 bp-section" id="skills" aria-labelledby="skills-title">
+  <div class="container">
+    <p class="eyebrow">2 &middot; Skill graph</p>
+    <h2 id="skills-title" class="h-sm">Who may do what, and what stops them</h2>
+    <p class="gr-intro">Each agent on this site appears here with its skills, tools, data, controls and autonomy level. Limits come from the site&rsquo;s own code: the action whitelist, the scorer lock, the do-not-automate list and the call budget. Pick an agent to see what it can and cannot do.</p>
+    <div class="bp-ix" hidden><div data-gr="skills"></div></div>
+    <noscript><p class="fw-note">Turn on JavaScript to explore the graph. The table below lists every agent.</p></noscript>
+    <ul class="gr-stats"><li><b>73</b> nodes</li><li><b>135</b> edges</li><li><b>26</b> controls, all from the library</li><li><b>8</b> agents</li></ul>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="What each agent can and cannot do"><table class="fw-table gr-table"><caption>What each agent can and cannot do</caption><thead><tr><th scope="col">Agent</th><th scope="col">Can (autonomy level)</th><th scope="col">Cannot (blocked by)</th></tr></thead><tbody>
+<tr><th scope="row">Proposer (AI)</th><td>Propose policy variants (L1)</td><td>Change the scorer, goal or test set (<a class="cid" href="/controls/#MR-10">MR-10</a>); Ship a one-way-door change (<a class="cid" href="/controls/#HO-06">HO-06</a> <a class="cid" href="/controls/#SOD-03">SOD-03</a>); Automate a bank-detail change (<a class="cid" href="/controls/#TAL-05">TAL-05</a> <a class="cid" href="/controls/#TAL-07">TAL-07</a>); Loosen a guardrail cap (<a class="cid" href="/controls/#SOD-01">SOD-01</a>); Write to the requests table (<a class="cid" href="/controls/#IAM-03">IAM-03</a>); Exceed the model-call budget (<a class="cid" href="/controls/#CST-03">CST-03</a> <a class="cid" href="/controls/#TAL-04">TAL-04</a>)</td></tr>
+<tr><th scope="row">Guardrail harness (code)</th><td>Run a policy over the sample (L4); Check fitness rules and block (L4); Ship a two-way-door change (L3)</td><td>Automate a bank-detail change (<a class="cid" href="/controls/#TAL-05">TAL-05</a> <a class="cid" href="/controls/#TAL-07">TAL-07</a>)</td></tr>
+<tr><th scope="row">Supervisor (AI)</th><td>Explain results and draft decision cards (L1)</td><td>Change the scorer, goal or test set (<a class="cid" href="/controls/#MR-10">MR-10</a>); Ship a one-way-door change (<a class="cid" href="/controls/#HO-06">HO-06</a> <a class="cid" href="/controls/#SOD-03">SOD-03</a>); Loosen a guardrail cap (<a class="cid" href="/controls/#SOD-01">SOD-01</a>); Write to the requests table (<a class="cid" href="/controls/#IAM-03">IAM-03</a>); Exceed the model-call budget (<a class="cid" href="/controls/#CST-03">CST-03</a> <a class="cid" href="/controls/#TAL-04">TAL-04</a>)</td></tr>
+<tr><th scope="row">Evaluator (code)</th><td>Score the goal number (L4)</td><td>&ndash;</td></tr>
+<tr><th scope="row">Archivist (code)</th><td>Archive variants and lineage (L4)</td><td>&ndash;</td></tr>
+<tr><th scope="row">Room voices (AI)</th><td>Answer room instructions (L1)</td><td>Change the scorer, goal or test set (<a class="cid" href="/controls/#MR-10">MR-10</a>); Ship a one-way-door change (<a class="cid" href="/controls/#HO-06">HO-06</a> <a class="cid" href="/controls/#SOD-03">SOD-03</a>); Automate a bank-detail change (<a class="cid" href="/controls/#TAL-05">TAL-05</a> <a class="cid" href="/controls/#TAL-07">TAL-07</a>); Loosen a guardrail cap (<a class="cid" href="/controls/#SOD-01">SOD-01</a>); Take an action outside the whitelist (<a class="cid" href="/controls/#TAL-03">TAL-03</a> <a class="cid" href="/controls/#IAM-03">IAM-03</a>); Write to the requests table (<a class="cid" href="/controls/#IAM-03">IAM-03</a>); Exceed the model-call budget (<a class="cid" href="/controls/#CST-03">CST-03</a> <a class="cid" href="/controls/#TAL-04">TAL-04</a>)</td></tr>
+<tr><th scope="row">Book guide (AI)</th><td>Answer from the book (L1); Pass a consented lead to Hemanth (L1)</td><td>Take an action outside the whitelist (<a class="cid" href="/controls/#TAL-03">TAL-03</a> <a class="cid" href="/controls/#IAM-03">IAM-03</a>); Exceed the model-call budget (<a class="cid" href="/controls/#CST-03">CST-03</a> <a class="cid" href="/controls/#TAL-04">TAL-04</a>)</td></tr>
+<tr><th scope="row">Graph agent (AI)</th><td>Answer from a code-selected subgraph (L1)</td><td>Change the scorer, goal or test set (<a class="cid" href="/controls/#MR-10">MR-10</a>); Take an action outside the whitelist (<a class="cid" href="/controls/#TAL-03">TAL-03</a> <a class="cid" href="/controls/#IAM-03">IAM-03</a>); Write to the requests table (<a class="cid" href="/controls/#IAM-03">IAM-03</a>); Exceed the model-call budget (<a class="cid" href="/controls/#CST-03">CST-03</a> <a class="cid" href="/controls/#TAL-04">TAL-04</a>)</td></tr>
+</tbody></table></div>
+    <details class="gr-alt">
+      <summary>All 73 nodes of the skill graph, as a table</summary>
+      <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Nodes of the skill graph"><table class="fw-table gr-table"><thead><tr><th scope="col">ID</th><th scope="col">Type</th><th scope="col">Label</th><th scope="col">Facts</th></tr></thead><tbody>
+<tr><th scope="row">AG-proposer</th><td>Agent</td><td>Proposer (AI)</td><td><b>kind:</b> AI agent; <b>does:</b> Proposes two policy variants per generation.; <b>source:</b> functions/api/loop/step.ts</td></tr>
+<tr><th scope="row">AG-harness</th><td>Agent</td><td>Guardrail harness (code)</td><td><b>kind:</b> Code; <b>does:</b> Runs each variant over the sample and checks the fitness rules.; <b>source:</b> lib/loop.ts</td></tr>
+<tr><th scope="row">AG-supervisor</th><td>Agent</td><td>Supervisor (AI)</td><td><b>kind:</b> AI agent; <b>does:</b> Explains results and writes decision cards. Code decides the doors.; <b>source:</b> functions/api/loop/step.ts</td></tr>
+<tr><th scope="row">AG-evaluator</th><td>Agent</td><td>Evaluator (code)</td><td><b>kind:</b> Code; <b>does:</b> Computes the goal number with the locked scorer.; <b>source:</b> lib/loop.ts</td></tr>
+<tr><th scope="row">AG-archivist</th><td>Agent</td><td>Archivist (code)</td><td><b>kind:</b> Code; <b>does:</b> Keeps every variant, its parent and its scores.; <b>source:</b> lib/loop.ts</td></tr>
+<tr><th scope="row">AG-room</th><td>Agent</td><td>Room voices (AI)</td><td><b>kind:</b> AI agent; <b>does:</b> Answers visitor instructions in the operations room.; <b>source:</b> functions/api/agents.ts</td></tr>
+<tr><th scope="row">AG-guide</th><td>Agent</td><td>Book guide (AI)</td><td><b>kind:</b> AI agent; <b>does:</b> Answers questions from the book knowledge pack.; <b>source:</b> functions/api/guide.ts</td></tr>
+<tr><th scope="row">AG-graph</th><td>Agent</td><td>Graph agent (AI)</td><td><b>kind:</b> AI agent; <b>does:</b> Answers from a subgraph that code selected.; <b>source:</b> functions/api/graph/ask.ts</td></tr>
+<tr><th scope="row">SK-propose</th><td>Skill</td><td>Propose policy variants</td><td><b>autonomy:</b> L1; <b>why:</b> Suggests only. Code tests every variant and decides what ships.; <b>controls:</b> MR-10 PCS-02 TRC-05 CST-03</td></tr>
+<tr><th scope="row">SK-runpolicy</th><td>Skill</td><td>Run a policy over the sample</td><td><b>autonomy:</b> L4; <b>why:</b> Deterministic code. It runs and reports every time.; <b>controls:</b> MR-01 TAL-05</td></tr>
+<tr><th scope="row">SK-guard</th><td>Skill</td><td>Check fitness rules and block</td><td><b>autonomy:</b> L4; <b>why:</b> Blocks failing variants and any scorer change, in code.; <b>controls:</b> MR-10 SOD-02 SOD-01</td></tr>
+<tr><th scope="row">SK-ship</th><td>Skill</td><td>Ship a two-way-door change</td><td><b>autonomy:</b> L3; <b>why:</b> Acts within limits, behind a one-click undo.; <b>controls:</b> TAL-02 TAL-06 TRC-01</td></tr>
+<tr><th scope="row">SK-explain</th><td>Skill</td><td>Explain results and draft decision cards</td><td><b>autonomy:</b> L1; <b>why:</b> Explains. A named person approves one-way doors.; <b>controls:</b> HO-01 HO-06 PCS-02 CST-03</td></tr>
+<tr><th scope="row">SK-score</th><td>Skill</td><td>Score the goal number</td><td><b>autonomy:</b> L4; <b>why:</b> Locked code outside the loop.; <b>controls:</b> MR-10 MR-09</td></tr>
+<tr><th scope="row">SK-archive</th><td>Skill</td><td>Archive variants and lineage</td><td><b>autonomy:</b> L4; <b>why:</b> Records every variant, parent and approver.; <b>controls:</b> TRC-05 TRC-04</td></tr>
+<tr><th scope="row">SK-room</th><td>Skill</td><td>Answer room instructions</td><td><b>autonomy:</b> L1; <b>why:</b> Talks and picks at most one whitelisted action: propose_variant, tighten_guardrail, request_decision, reframe_goal, none.; <b>controls:</b> TAL-03 PCS-01 PCS-03 TAL-04 CST-03</td></tr>
+<tr><th scope="row">SK-guide</th><td>Skill</td><td>Answer from the book</td><td><b>autonomy:</b> L1; <b>why:</b> Answers only from the knowledge pack.; <b>controls:</b> MR-04 PCS-01 PCS-05 TAL-04</td></tr>
+<tr><th scope="row">SK-lead</th><td>Skill</td><td>Pass a consented lead to Hemanth</td><td><b>autonomy:</b> L1; <b>why:</b> Stores a lead only when the visitor submits it.; <b>controls:</b> PRV-01 PRV-04 TAL-04</td></tr>
+<tr><th scope="row">SK-graph</th><td>Skill</td><td>Answer from a code-selected subgraph</td><td><b>autonomy:</b> L1; <b>why:</b> Read only. Cited node IDs are checked in code.; <b>controls:</b> MR-04 PCS-01 PCS-02 CST-03 TAL-04</td></tr>
+<tr><th scope="row">DENY-scorer</th><td>Cannot do</td><td>Cannot: Change the scorer, goal or test set</td><td><b>how:</b> Any proposed key matching /scor|evaluat|metric|goal|grader|reward|test.?set|benchmark|measure|judge/i is blocked before it runs.; <b>controls:</b> MR-10</td></tr>
+<tr><th scope="row">DENY-oneway</th><td>Cannot do</td><td>Cannot: Ship a one-way-door change</td><td><b>how:</b> Code flags one-way doors (for example an auto-approve limit above $5,000) and sends them to a person.; <b>controls:</b> HO-06 SOD-03</td></tr>
+<tr><th scope="row">DENY-bank</th><td>Cannot do</td><td>Cannot: Automate a bank-detail change</td><td><b>how:</b> Hard-coded do-not-automate list: bank_detail_change. Not a setting.; <b>controls:</b> TAL-05 TAL-07</td></tr>
+<tr><th scope="row">DENY-loosen</th><td>Cannot do</td><td>Cannot: Loosen a guardrail cap</td><td><b>how:</b> Caps can only tighten. Looser values are clamped in code.; <b>controls:</b> SOD-01</td></tr>
+<tr><th scope="row">DENY-actions</th><td>Cannot do</td><td>Cannot: Take an action outside the whitelist</td><td><b>how:</b> Unknown action types become none. Extra fields are dropped.; <b>controls:</b> TAL-03 IAM-03</td></tr>
+<tr><th scope="row">DENY-requests</th><td>Cannot do</td><td>Cannot: Write to the requests table</td><td><b>how:</b> Only the lead path writes requests, after the visitor submits.; <b>controls:</b> IAM-03</td></tr>
+<tr><th scope="row">DENY-budget</th><td>Cannot do</td><td>Cannot: Exceed the model-call budget</td><td><b>how:</b> Calls are counted in the rate-limit table: 120 per day site-wide.; <b>controls:</b> CST-03 TAL-04</td></tr>
+<tr><th scope="row">TOOL-model</th><td>Tool or API</td><td>Model gateway</td><td><b>what:</b> One GPT-class model, with a smaller fallback model.</td></tr>
+<tr><th scope="row">TOOL-loop</th><td>Tool or API</td><td>POST /api/loop/step</td><td><b>what:</b> Actions: decide, generation, reframe, start, why.</td></tr>
+<tr><th scope="row">TOOL-agents</th><td>Tool or API</td><td>POST /api/agents</td><td><b>what:</b> Whitelisted actions: propose_variant, tighten_guardrail, request_decision, reframe_goal, none.</td></tr>
+<tr><th scope="row">TOOL-guide</th><td>Tool or API</td><td>POST /api/guide</td><td><b>what:</b> Chat and consented lead capture.</td></tr>
+<tr><th scope="row">TOOL-graph</th><td>Tool or API</td><td>POST /api/graph/ask</td><td><b>what:</b> Graph traversal in code, then one model call.</td></tr>
+<tr><th scope="row">TOOL-runner</th><td>Tool or API</td><td>Policy runner</td><td><b>what:</b> Runs a policy over all sample exceptions. Deterministic.</td></tr>
+<tr><th scope="row">TOOL-caps</th><td>Tool or API</td><td>Call budget</td><td><b>what:</b> 10 calls per loop run; 120 model calls per day, site-wide.</td></tr>
+<tr><th scope="row">DATA-sample</th><td>Data</td><td>Sample AP exceptions</td><td><b>what:</b> 150 synthetic exceptions. Read only.</td></tr>
+<tr><th scope="row">DATA-metrics</th><td>Data</td><td>Aggregate results</td><td><b>what:</b> Goal number and guardrail readings per variant.</td></tr>
+<tr><th scope="row">DATA-policy</th><td>Data</td><td>Policy config</td><td><b>what:</b> Six settings: auto_approve_limit, match_tolerance_pct, senior_review_above, small_supplier_protection, confidence_floor, audit_trace.</td></tr>
+<tr><th scope="row">DATA-scorer</th><td>Data</td><td>Locked scorer and goal</td><td><b>what:</b> Outside the loop. No agent may edit it.</td></tr>
+<tr><th scope="row">DATA-archive</th><td>Data</td><td>Variant archive</td><td><b>what:</b> Kept in the visitor’s browser for the run.</td></tr>
+<tr><th scope="row">DATA-knowledge</th><td>Data</td><td>Book knowledge pack</td><td><b>what:</b> The guide’s source text.</td></tr>
+<tr><th scope="row">DATA-requests</th><td>Data</td><td>Requests table</td><td><b>what:</b> Leads a visitor submits with consent.</td></tr>
+<tr><th scope="row">DATA-graphs</th><td>Data</td><td>Knowledge and skill graphs</td><td><b>what:</b> Built from committed files at build time.</td></tr>
+<tr><th scope="row">DATA-ratelimits</th><td>Data</td><td>Rate-limit table</td><td><b>what:</b> Counts calls for the caps. No content.</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#CST-03">CST-03</a></th><td>Control</td><td>CST-03 Model quotas</td><td><b>name:</b> Model quotas; <b>purpose:</b> Set token and call quotas per agent at the model gateway.; <b>required from:</b> L1</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#HO-01">HO-01</a></th><td>Control</td><td>HO-01 Decision card for approvals</td><td><b>name:</b> Decision card for approvals; <b>purpose:</b> Show the approver the proposal, evidence, rule, confidence and options on one card.; <b>required from:</b> L2</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#HO-06">HO-06</a></th><td>Control</td><td>HO-06 Named approval for one-way-door changes</td><td><b>name:</b> Named approval for one-way-door changes; <b>purpose:</b> A named person approves any change that is hard to undo before it ships.; <b>required from:</b> L1</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#IAM-03">IAM-03</a></th><td>Control</td><td>IAM-03 Least-privilege tool scopes</td><td><b>name:</b> Least-privilege tool scopes; <b>purpose:</b> Give each agent only the read and write scopes that its step needs.; <b>required from:</b> L1</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#MR-01">MR-01</a></th><td>Control</td><td>MR-01 Pre-release evaluation suite</td><td><b>name:</b> Pre-release evaluation suite; <b>purpose:</b> Test each agent and model version against a fixed set of evaluations before release.; <b>required from:</b> L1</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#MR-04">MR-04</a></th><td>Control</td><td>MR-04 Groundedness and citation check</td><td><b>name:</b> Groundedness and citation check; <b>purpose:</b> Check that each claim in an agent output cites a retrieved source.; <b>required from:</b> L1</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#MR-09">MR-09</a></th><td>Control</td><td>MR-09 Shadow run before promotion</td><td><b>name:</b> Shadow run before promotion; <b>purpose:</b> Run a new agent version beside people, with no effect, before it gains a level.; <b>required from:</b> L2</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#MR-10">MR-10</a></th><td>Control</td><td>MR-10 Scorer isolation for improvement loops</td><td><b>name:</b> Scorer isolation for improvement loops; <b>purpose:</b> An improvement loop may never change the scorer, the test set or the guardrails that judge it.; <b>required from:</b> L1</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#PCS-01">PCS-01</a></th><td>Control</td><td>PCS-01 Untrusted content is data</td><td><b>name:</b> Untrusted content is data; <b>purpose:</b> Treat emails, documents, web pages and transcripts as data. Never treat them as instructions.; <b>required from:</b> L1</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#PCS-02">PCS-02</a></th><td>Control</td><td>PCS-02 Output schema validation</td><td><b>name:</b> Output schema validation; <b>purpose:</b> Accept agent output only when it matches the expected schema and value ranges.; <b>required from:</b> L1</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#PCS-03">PCS-03</a></th><td>Control</td><td>PCS-03 No secrets or limits in prompts</td><td><b>name:</b> No secrets or limits in prompts; <b>purpose:</b> Keep secrets, keys and limits out of prompts. Detect attempts to extract the system instructions.; <b>required from:</b> L1</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#PCS-05">PCS-05</a></th><td>Control</td><td>PCS-05 Content safety filter</td><td><b>name:</b> Content safety filter; <b>purpose:</b> Screen inputs and outputs for harmful, offensive or off-policy content.; <b>required from:</b> L1</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#PRV-01">PRV-01</a></th><td>Control</td><td>PRV-01 Data minimization in context</td><td><b>name:</b> Data minimization in context; <b>purpose:</b> Only the fields that a step needs enter the model context.; <b>required from:</b> L1</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#PRV-04">PRV-04</a></th><td>Control</td><td>PRV-04 Agent disclosure and recording notice</td><td><b>name:</b> Agent disclosure and recording notice; <b>purpose:</b> Tell people that they deal with an agent, and tell callers when a call is recorded.; <b>required from:</b> L1</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SOD-01">SOD-01</a></th><td>Control</td><td>SOD-01 Approver cannot change limits</td><td><b>name:</b> Approver cannot change limits; <b>purpose:</b> The person who approves agent actions may not change the limits, instructions or tools of that agent.; <b>required from:</b> L2</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SOD-02">SOD-02</a></th><td>Control</td><td>SOD-02 Maker-checker for agent changes</td><td><b>name:</b> Maker-checker for agent changes; <b>purpose:</b> One person cannot both change an agent and release that change.; <b>required from:</b> L1</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#SOD-03">SOD-03</a></th><td>Control</td><td>SOD-03 Agent cannot approve its own proposal</td><td><b>name:</b> Agent cannot approve its own proposal; <b>purpose:</b> The agent that proposes an action cannot approve or commit that action.; <b>required from:</b> L2</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#TAL-02">TAL-02</a></th><td>Control</td><td>TAL-02 Propose, validate, route, commit</td><td><b>name:</b> Propose, validate, route, commit; <b>purpose:</b> The agent proposes. Deterministic rules validate, route and commit.; <b>required from:</b> L3</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#TAL-03">TAL-03</a></th><td>Control</td><td>TAL-03 Typed tool contracts</td><td><b>name:</b> Typed tool contracts; <b>purpose:</b> Agents call only registered tools with typed inputs, typed outputs and declared scopes.; <b>required from:</b> L1</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#TAL-04">TAL-04</a></th><td>Control</td><td>TAL-04 Rate and volume limits</td><td><b>name:</b> Rate and volume limits; <b>purpose:</b> Cap the actions per minute and per day for each agent and each tool.; <b>required from:</b> L2</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#TAL-05">TAL-05</a></th><td>Control</td><td>TAL-05 Do-not-automate list</td><td><b>name:</b> Do-not-automate list; <b>purpose:</b> Named decisions stay with people. Agents cannot hold the permissions for those decisions.; <b>required from:</b> L0</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#TAL-06">TAL-06</a></th><td>Control</td><td>TAL-06 Idempotent commit and reversal path</td><td><b>name:</b> Idempotent commit and reversal path; <b>purpose:</b> Every committed action has a tested reversal. No action can post twice.; <b>required from:</b> L3</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#TAL-07">TAL-07</a></th><td>Control</td><td>TAL-07 Out-of-band verification for bank changes</td><td><b>name:</b> Out-of-band verification for bank changes; <b>purpose:</b> A person verifies each bank-detail change by calling a known number from the master record.; <b>required from:</b> L0</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#TRC-01">TRC-01</a></th><td>Control</td><td>TRC-01 Decision trace before commit</td><td><b>name:</b> Decision trace before commit; <b>purpose:</b> Write what the agent saw, decided and did before any action commits.; <b>required from:</b> L1</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#TRC-04">TRC-04</a></th><td>Control</td><td>TRC-04 Change log for agents</td><td><b>name:</b> Change log for agents; <b>purpose:</b> Log every change to instructions, tools, limits and model versions.; <b>required from:</b> L1</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#TRC-05">TRC-05</a></th><td>Control</td><td>TRC-05 Variant lineage and archive</td><td><b>name:</b> Variant lineage and archive; <b>purpose:</b> Keep every variant an improvement loop proposed, with its parent, change, scores and decision.; <b>required from:</b> L1</td></tr>
+<tr><th scope="row">LVL-0</th><td>Autonomy level</td><td>L0</td><td><b>meaning:</b> Manual</td></tr>
+<tr><th scope="row">LVL-1</th><td>Autonomy level</td><td>L1</td><td><b>meaning:</b> Assist</td></tr>
+<tr><th scope="row">LVL-2</th><td>Autonomy level</td><td>L2</td><td><b>meaning:</b> Approve</td></tr>
+<tr><th scope="row">LVL-3</th><td>Autonomy level</td><td>L3</td><td><b>meaning:</b> Act within limits</td></tr>
+<tr><th scope="row">LVL-4</th><td>Autonomy level</td><td>L4</td><td><b>meaning:</b> Run and report</td></tr>
+</tbody></table></div>
+    </details>
+    <details class="gr-alt">
+      <summary>All 135 edges of the skill graph, as a table</summary>
+      <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Edges of the skill graph"><table class="fw-table gr-table"><thead><tr><th scope="col">From</th><th scope="col">Relation</th><th scope="col">To</th></tr></thead><tbody>
+<tr><td>AG-proposer</td><td>has skill</td><td>SK-propose</td></tr>
+<tr><td>SK-propose</td><td>uses</td><td>TOOL-model</td></tr>
+<tr><td>SK-propose</td><td>uses</td><td>TOOL-loop</td></tr>
+<tr><td>SK-propose</td><td>uses</td><td>TOOL-caps</td></tr>
+<tr><td>SK-propose</td><td>reads</td><td>DATA-metrics</td></tr>
+<tr><td>SK-propose</td><td>reads</td><td>DATA-policy</td></tr>
+<tr><td>SK-propose</td><td>gated by</td><td><a class="cid" href="/controls/#MR-10">MR-10</a></td></tr>
+<tr><td>SK-propose</td><td>gated by</td><td><a class="cid" href="/controls/#PCS-02">PCS-02</a></td></tr>
+<tr><td>SK-propose</td><td>gated by</td><td><a class="cid" href="/controls/#TRC-05">TRC-05</a></td></tr>
+<tr><td>SK-propose</td><td>gated by</td><td><a class="cid" href="/controls/#CST-03">CST-03</a></td></tr>
+<tr><td>SK-propose</td><td>runs at</td><td>LVL-1</td></tr>
+<tr><td>AG-harness</td><td>has skill</td><td>SK-runpolicy</td></tr>
+<tr><td>SK-runpolicy</td><td>uses</td><td>TOOL-runner</td></tr>
+<tr><td>SK-runpolicy</td><td>reads</td><td>DATA-sample</td></tr>
+<tr><td>SK-runpolicy</td><td>reads</td><td>DATA-policy</td></tr>
+<tr><td>SK-runpolicy</td><td>writes</td><td>DATA-metrics</td></tr>
+<tr><td>SK-runpolicy</td><td>gated by</td><td><a class="cid" href="/controls/#MR-01">MR-01</a></td></tr>
+<tr><td>SK-runpolicy</td><td>gated by</td><td><a class="cid" href="/controls/#TAL-05">TAL-05</a></td></tr>
+<tr><td>SK-runpolicy</td><td>runs at</td><td>LVL-4</td></tr>
+<tr><td>AG-harness</td><td>has skill</td><td>SK-guard</td></tr>
+<tr><td>SK-guard</td><td>uses</td><td>TOOL-runner</td></tr>
+<tr><td>SK-guard</td><td>reads</td><td>DATA-metrics</td></tr>
+<tr><td>SK-guard</td><td>gated by</td><td><a class="cid" href="/controls/#MR-10">MR-10</a></td></tr>
+<tr><td>SK-guard</td><td>gated by</td><td><a class="cid" href="/controls/#SOD-02">SOD-02</a></td></tr>
+<tr><td>SK-guard</td><td>gated by</td><td><a class="cid" href="/controls/#SOD-01">SOD-01</a></td></tr>
+<tr><td>SK-guard</td><td>runs at</td><td>LVL-4</td></tr>
+<tr><td>AG-harness</td><td>has skill</td><td>SK-ship</td></tr>
+<tr><td>SK-ship</td><td>uses</td><td>TOOL-loop</td></tr>
+<tr><td>SK-ship</td><td>reads</td><td>DATA-metrics</td></tr>
+<tr><td>SK-ship</td><td>writes</td><td>DATA-policy</td></tr>
+<tr><td>SK-ship</td><td>gated by</td><td><a class="cid" href="/controls/#TAL-02">TAL-02</a></td></tr>
+<tr><td>SK-ship</td><td>gated by</td><td><a class="cid" href="/controls/#TAL-06">TAL-06</a></td></tr>
+<tr><td>SK-ship</td><td>gated by</td><td><a class="cid" href="/controls/#TRC-01">TRC-01</a></td></tr>
+<tr><td>SK-ship</td><td>runs at</td><td>LVL-3</td></tr>
+<tr><td>AG-supervisor</td><td>has skill</td><td>SK-explain</td></tr>
+<tr><td>SK-explain</td><td>uses</td><td>TOOL-model</td></tr>
+<tr><td>SK-explain</td><td>uses</td><td>TOOL-loop</td></tr>
+<tr><td>SK-explain</td><td>uses</td><td>TOOL-caps</td></tr>
+<tr><td>SK-explain</td><td>reads</td><td>DATA-metrics</td></tr>
+<tr><td>SK-explain</td><td>gated by</td><td><a class="cid" href="/controls/#HO-01">HO-01</a></td></tr>
+<tr><td>SK-explain</td><td>gated by</td><td><a class="cid" href="/controls/#HO-06">HO-06</a></td></tr>
+<tr><td>SK-explain</td><td>gated by</td><td><a class="cid" href="/controls/#PCS-02">PCS-02</a></td></tr>
+<tr><td>SK-explain</td><td>gated by</td><td><a class="cid" href="/controls/#CST-03">CST-03</a></td></tr>
+<tr><td>SK-explain</td><td>runs at</td><td>LVL-1</td></tr>
+<tr><td>AG-evaluator</td><td>has skill</td><td>SK-score</td></tr>
+<tr><td>SK-score</td><td>uses</td><td>TOOL-runner</td></tr>
+<tr><td>SK-score</td><td>reads</td><td>DATA-scorer</td></tr>
+<tr><td>SK-score</td><td>reads</td><td>DATA-metrics</td></tr>
+<tr><td>SK-score</td><td>gated by</td><td><a class="cid" href="/controls/#MR-10">MR-10</a></td></tr>
+<tr><td>SK-score</td><td>gated by</td><td><a class="cid" href="/controls/#MR-09">MR-09</a></td></tr>
+<tr><td>SK-score</td><td>runs at</td><td>LVL-4</td></tr>
+<tr><td>AG-archivist</td><td>has skill</td><td>SK-archive</td></tr>
+<tr><td>SK-archive</td><td>uses</td><td>TOOL-loop</td></tr>
+<tr><td>SK-archive</td><td>reads</td><td>DATA-metrics</td></tr>
+<tr><td>SK-archive</td><td>writes</td><td>DATA-archive</td></tr>
+<tr><td>SK-archive</td><td>gated by</td><td><a class="cid" href="/controls/#TRC-05">TRC-05</a></td></tr>
+<tr><td>SK-archive</td><td>gated by</td><td><a class="cid" href="/controls/#TRC-04">TRC-04</a></td></tr>
+<tr><td>SK-archive</td><td>runs at</td><td>LVL-4</td></tr>
+<tr><td>AG-room</td><td>has skill</td><td>SK-room</td></tr>
+<tr><td>SK-room</td><td>uses</td><td>TOOL-model</td></tr>
+<tr><td>SK-room</td><td>uses</td><td>TOOL-agents</td></tr>
+<tr><td>SK-room</td><td>uses</td><td>TOOL-caps</td></tr>
+<tr><td>SK-room</td><td>reads</td><td>DATA-metrics</td></tr>
+<tr><td>SK-room</td><td>writes</td><td>DATA-ratelimits</td></tr>
+<tr><td>SK-room</td><td>gated by</td><td><a class="cid" href="/controls/#TAL-03">TAL-03</a></td></tr>
+<tr><td>SK-room</td><td>gated by</td><td><a class="cid" href="/controls/#PCS-01">PCS-01</a></td></tr>
+<tr><td>SK-room</td><td>gated by</td><td><a class="cid" href="/controls/#PCS-03">PCS-03</a></td></tr>
+<tr><td>SK-room</td><td>gated by</td><td><a class="cid" href="/controls/#TAL-04">TAL-04</a></td></tr>
+<tr><td>SK-room</td><td>gated by</td><td><a class="cid" href="/controls/#CST-03">CST-03</a></td></tr>
+<tr><td>SK-room</td><td>runs at</td><td>LVL-1</td></tr>
+<tr><td>AG-guide</td><td>has skill</td><td>SK-guide</td></tr>
+<tr><td>SK-guide</td><td>uses</td><td>TOOL-model</td></tr>
+<tr><td>SK-guide</td><td>uses</td><td>TOOL-guide</td></tr>
+<tr><td>SK-guide</td><td>reads</td><td>DATA-knowledge</td></tr>
+<tr><td>SK-guide</td><td>writes</td><td>DATA-ratelimits</td></tr>
+<tr><td>SK-guide</td><td>gated by</td><td><a class="cid" href="/controls/#MR-04">MR-04</a></td></tr>
+<tr><td>SK-guide</td><td>gated by</td><td><a class="cid" href="/controls/#PCS-01">PCS-01</a></td></tr>
+<tr><td>SK-guide</td><td>gated by</td><td><a class="cid" href="/controls/#PCS-05">PCS-05</a></td></tr>
+<tr><td>SK-guide</td><td>gated by</td><td><a class="cid" href="/controls/#TAL-04">TAL-04</a></td></tr>
+<tr><td>SK-guide</td><td>runs at</td><td>LVL-1</td></tr>
+<tr><td>AG-guide</td><td>has skill</td><td>SK-lead</td></tr>
+<tr><td>SK-lead</td><td>uses</td><td>TOOL-guide</td></tr>
+<tr><td>SK-lead</td><td>writes</td><td>DATA-requests</td></tr>
+<tr><td>SK-lead</td><td>gated by</td><td><a class="cid" href="/controls/#PRV-01">PRV-01</a></td></tr>
+<tr><td>SK-lead</td><td>gated by</td><td><a class="cid" href="/controls/#PRV-04">PRV-04</a></td></tr>
+<tr><td>SK-lead</td><td>gated by</td><td><a class="cid" href="/controls/#TAL-04">TAL-04</a></td></tr>
+<tr><td>SK-lead</td><td>runs at</td><td>LVL-1</td></tr>
+<tr><td>AG-graph</td><td>has skill</td><td>SK-graph</td></tr>
+<tr><td>SK-graph</td><td>uses</td><td>TOOL-model</td></tr>
+<tr><td>SK-graph</td><td>uses</td><td>TOOL-graph</td></tr>
+<tr><td>SK-graph</td><td>uses</td><td>TOOL-caps</td></tr>
+<tr><td>SK-graph</td><td>reads</td><td>DATA-graphs</td></tr>
+<tr><td>SK-graph</td><td>writes</td><td>DATA-ratelimits</td></tr>
+<tr><td>SK-graph</td><td>gated by</td><td><a class="cid" href="/controls/#MR-04">MR-04</a></td></tr>
+<tr><td>SK-graph</td><td>gated by</td><td><a class="cid" href="/controls/#PCS-01">PCS-01</a></td></tr>
+<tr><td>SK-graph</td><td>gated by</td><td><a class="cid" href="/controls/#PCS-02">PCS-02</a></td></tr>
+<tr><td>SK-graph</td><td>gated by</td><td><a class="cid" href="/controls/#CST-03">CST-03</a></td></tr>
+<tr><td>SK-graph</td><td>gated by</td><td><a class="cid" href="/controls/#TAL-04">TAL-04</a></td></tr>
+<tr><td>SK-graph</td><td>runs at</td><td>LVL-1</td></tr>
+<tr><td>AG-proposer</td><td>cannot</td><td>DENY-scorer</td></tr>
+<tr><td>AG-supervisor</td><td>cannot</td><td>DENY-scorer</td></tr>
+<tr><td>AG-room</td><td>cannot</td><td>DENY-scorer</td></tr>
+<tr><td>AG-graph</td><td>cannot</td><td>DENY-scorer</td></tr>
+<tr><td>DENY-scorer</td><td>blocked by</td><td><a class="cid" href="/controls/#MR-10">MR-10</a></td></tr>
+<tr><td>AG-proposer</td><td>cannot</td><td>DENY-oneway</td></tr>
+<tr><td>AG-supervisor</td><td>cannot</td><td>DENY-oneway</td></tr>
+<tr><td>AG-room</td><td>cannot</td><td>DENY-oneway</td></tr>
+<tr><td>DENY-oneway</td><td>blocked by</td><td><a class="cid" href="/controls/#HO-06">HO-06</a></td></tr>
+<tr><td>DENY-oneway</td><td>blocked by</td><td><a class="cid" href="/controls/#SOD-03">SOD-03</a></td></tr>
+<tr><td>AG-proposer</td><td>cannot</td><td>DENY-bank</td></tr>
+<tr><td>AG-harness</td><td>cannot</td><td>DENY-bank</td></tr>
+<tr><td>AG-room</td><td>cannot</td><td>DENY-bank</td></tr>
+<tr><td>DENY-bank</td><td>blocked by</td><td><a class="cid" href="/controls/#TAL-05">TAL-05</a></td></tr>
+<tr><td>DENY-bank</td><td>blocked by</td><td><a class="cid" href="/controls/#TAL-07">TAL-07</a></td></tr>
+<tr><td>AG-proposer</td><td>cannot</td><td>DENY-loosen</td></tr>
+<tr><td>AG-supervisor</td><td>cannot</td><td>DENY-loosen</td></tr>
+<tr><td>AG-room</td><td>cannot</td><td>DENY-loosen</td></tr>
+<tr><td>DENY-loosen</td><td>blocked by</td><td><a class="cid" href="/controls/#SOD-01">SOD-01</a></td></tr>
+<tr><td>AG-room</td><td>cannot</td><td>DENY-actions</td></tr>
+<tr><td>AG-graph</td><td>cannot</td><td>DENY-actions</td></tr>
+<tr><td>AG-guide</td><td>cannot</td><td>DENY-actions</td></tr>
+<tr><td>DENY-actions</td><td>blocked by</td><td><a class="cid" href="/controls/#TAL-03">TAL-03</a></td></tr>
+<tr><td>DENY-actions</td><td>blocked by</td><td><a class="cid" href="/controls/#IAM-03">IAM-03</a></td></tr>
+<tr><td>AG-proposer</td><td>cannot</td><td>DENY-requests</td></tr>
+<tr><td>AG-supervisor</td><td>cannot</td><td>DENY-requests</td></tr>
+<tr><td>AG-room</td><td>cannot</td><td>DENY-requests</td></tr>
+<tr><td>AG-graph</td><td>cannot</td><td>DENY-requests</td></tr>
+<tr><td>DENY-requests</td><td>blocked by</td><td><a class="cid" href="/controls/#IAM-03">IAM-03</a></td></tr>
+<tr><td>AG-proposer</td><td>cannot</td><td>DENY-budget</td></tr>
+<tr><td>AG-supervisor</td><td>cannot</td><td>DENY-budget</td></tr>
+<tr><td>AG-room</td><td>cannot</td><td>DENY-budget</td></tr>
+<tr><td>AG-guide</td><td>cannot</td><td>DENY-budget</td></tr>
+<tr><td>AG-graph</td><td>cannot</td><td>DENY-budget</td></tr>
+<tr><td>DENY-budget</td><td>blocked by</td><td><a class="cid" href="/controls/#CST-03">CST-03</a></td></tr>
+<tr><td>DENY-budget</td><td>blocked by</td><td><a class="cid" href="/controls/#TAL-04">TAL-04</a></td></tr>
+</tbody></table></div>
+    </details>
+  </div>
+</section>
+
+<section class="section bp-section" id="brain" aria-labelledby="brain-title">
+  <div class="container">
+    <p class="eyebrow">3 &middot; Enterprise brain</p>
+    <h2 id="brain-title" class="h-sm">The layer that connects graphs, models and memory</h2>
+    <p class="gr-intro">Ask a question. Code routes it, walks the graphs and picks a model family. One real model call answers from the subgraph only. Code checks the answer. The trace joins your session memory, and the map grows.</p>
+    <div class="bp-ix" hidden><div data-gr="ask"></div><div data-gr="brain"></div></div>
+    <noscript><p class="fw-note">Turn on JavaScript to ask the graph agent. The brain&rsquo;s steps are listed below.</p></noscript>
+    <ol class="gr-brain-static">
+      <li><b>Signal.</b> Your question arrives on the web. Chat, email, voice, IoT and robot signals are not connected in this demo.</li>
+      <li><b>Brain router.</b> 10 rules in code read the question and pick the graph and the model family.</li>
+      <li><b>Graph lookup.</b> Code walks the knowledge graph or the skill graph and selects a subgraph.</li>
+      <li><b>Model family.</b> One GPT-class model call writes the answer. Every other family is routed to, not run in this demo.</li>
+      <li><b>Skill and agent.</b> The graph agent answers from the subgraph only.</li>
+      <li><b>Gate.</b> Code checks citations, vendor names, prompt leaks, length and the call budget: <a class="cid" href="/controls/#MR-04">MR-04</a> <a class="cid" href="/controls/#PCS-01">PCS-01</a> <a class="cid" href="/controls/#PCS-02">PCS-02</a> <a class="cid" href="/controls/#PCS-05">PCS-05</a> <a class="cid" href="/controls/#CST-03">CST-03</a> <a class="cid" href="/controls/#TAL-04">TAL-04</a> <a class="cid" href="/controls/#TRC-01">TRC-01</a> <a class="cid" href="/controls/#RES-02">RES-02</a>.</li>
+      <li><b>Action.</b> A read-only answer with cited nodes.</li>
+      <li><b>Trace and memory.</b> The trace is added to your session memory in this browser tab. Nothing is stored on the server.</li>
+    </ol>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Model families the router can pick"><table class="fw-table gr-table"><caption>Model families the router can pick</caption><thead><tr><th scope="col">Family</th><th scope="col">In this demo</th><th scope="col">Evals you need</th><th scope="col">Mandatory controls</th></tr></thead><tbody>
+<tr><th scope="row">GPT-class LLM</th><td>run: composes the answer from the subgraph</td><td>Task accuracy, groundedness, injection, refusal</td><td><a class="cid" href="/controls/#PCS-01">PCS-01</a> <a class="cid" href="/controls/#PCS-02">PCS-02</a> <a class="cid" href="/controls/#MR-04">MR-04</a> <a class="cid" href="/controls/#PRV-02">PRV-02</a></td></tr>
+<tr><th scope="row">Small model</th><td>routed to, not run in this demo</td><td>Accuracy per class, robustness to new inputs</td><td><a class="cid" href="/controls/#MR-01">MR-01</a> <a class="cid" href="/controls/#PCS-02">PCS-02</a></td></tr>
+<tr><th scope="row">Retrieval (RAG)</th><td>routed to, not run in this demo</td><td>Retrieval recall, citation accuracy, access leaks</td><td><a class="cid" href="/controls/#PCS-04">PCS-04</a> <a class="cid" href="/controls/#MR-04">MR-04</a></td></tr>
+<tr><th scope="row">Graph ML and knowledge graph</th><td>graph traversal runs in code; graph ML is routed to, not run in this demo</td><td>Entity match precision, link coverage</td><td><a class="cid" href="/controls/#DQ-03">DQ-03</a></td></tr>
+<tr><th scope="row">Classical ML and forecasting</th><td>routed to, not run in this demo</td><td>Error by segment, calibration, drift</td><td><a class="cid" href="/controls/#MR-01">MR-01</a> <a class="cid" href="/controls/#MON-02">MON-02</a></td></tr>
+<tr><th scope="row">Optimizer</th><td>routed to, not run in this demo</td><td>Constraint satisfaction, cost gap, scenario tests</td><td><a class="cid" href="/controls/#MR-01">MR-01</a> <a class="cid" href="/controls/#TAL-01">TAL-01</a></td></tr>
+<tr><th scope="row">Reinforcement learning</th><td>routed to, not run in this demo</td><td>Simulation return, unsafe-action rate, shadow agreement</td><td><a class="cid" href="/controls/#MR-05">MR-05</a> <a class="cid" href="/controls/#PHY-04">PHY-04</a> <a class="cid" href="/controls/#MON-03">MON-03</a></td></tr>
+<tr><th scope="row">Speech</th><td>routed to, not run in this demo</td><td>Word error rate, read-back accuracy</td><td><a class="cid" href="/controls/#PRV-04">PRV-04</a> <a class="cid" href="/controls/#IAM-05">IAM-05</a></td></tr>
+<tr><th scope="row">Vision and multimodal</th><td>routed to, not run in this demo</td><td>Field accuracy, layout coverage</td><td><a class="cid" href="/controls/#PCS-02">PCS-02</a> <a class="cid" href="/controls/#DQ-01">DQ-01</a></td></tr>
+<tr><th scope="row">Physical AI policy</th><td>routed to, not run in this demo</td><td>Task success, safety stops, near misses</td><td><a class="cid" href="/controls/#PHY-01">PHY-01</a> <a class="cid" href="/controls/#PHY-02">PHY-02</a> <a class="cid" href="/controls/#PHY-04">PHY-04</a> <a class="cid" href="/controls/#OT-03">OT-03</a></td></tr>
+</tbody></table></div>
+    <details class="gr-alt">
+      <summary>All 32 nodes of the brain map, as a table</summary>
+      <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Nodes of the brain map"><table class="fw-table gr-table"><thead><tr><th scope="col">ID</th><th scope="col">Type</th><th scope="col">Label</th><th scope="col">Facts</th></tr></thead><tbody>
+<tr><th scope="row">SIG-web</th><td>Signal</td><td>Web (this page)</td><td><b>status:</b> live; <b>what:</b> Your question arrives here. This is the only live signal in the demo.</td></tr>
+<tr><th scope="row">SIG-chat</th><td>Signal</td><td>Chat</td><td><b>status:</b> not connected; <b>what:</b> The site has a chat guide, but it does not feed this brain demo.</td></tr>
+<tr><th scope="row">SIG-email</th><td>Signal</td><td>Email</td><td><b>status:</b> not connected; <b>what:</b> Not connected in this demo.</td></tr>
+<tr><th scope="row">SIG-voice</th><td>Signal</td><td>Voice</td><td><b>status:</b> not connected; <b>what:</b> Not connected in this demo.</td></tr>
+<tr><th scope="row">SIG-iot</th><td>Signal</td><td>IoT sensors</td><td><b>status:</b> not connected; <b>what:</b> Not connected in this demo.</td></tr>
+<tr><th scope="row">SIG-robot</th><td>Signal</td><td>Robots and machines</td><td><b>status:</b> not connected; <b>what:</b> Not connected in this demo.</td></tr>
+<tr><th scope="row">BR-router</th><td>Router</td><td>Brain router</td><td><b>what:</b> Rules in code read the question, pick the graph and the model family.; <b>rules:</b> 10</td></tr>
+<tr><th scope="row">BR-kg</th><td>Graph lookup</td><td>Knowledge graph lookup</td><td><b>what:</b> Traverses the AP knowledge graph in code.; <b>nodes:</b> 227; <b>edges:</b> 637</td></tr>
+<tr><th scope="row">BR-skills</th><td>Graph lookup</td><td>Skill graph lookup</td><td><b>what:</b> Traverses the skill graph in code.; <b>nodes:</b> 73; <b>edges:</b> 135</td></tr>
+<tr><th scope="row">MF-llm</th><td>Model family</td><td>GPT-class LLM</td><td><b>status:</b> run: composes the answer from the subgraph; <b>good at:</b> Language, drafting, explanation, flexible reasoning; <b>evals:</b> Task accuracy, groundedness, injection, refusal; <b>mandatory controls:</b> PCS-01 PCS-02 MR-04 PRV-02; <b>typical ceiling:</b> L3 in a strong harness</td></tr>
+<tr><th scope="row">MF-slm</th><td>Model family</td><td>Small model</td><td><b>status:</b> routed to, not run in this demo; <b>good at:</b> Narrow classification and extraction at low cost; <b>evals:</b> Accuracy per class, robustness to new inputs; <b>mandatory controls:</b> MR-01 PCS-02; <b>typical ceiling:</b> L3 to L4 for narrow tasks</td></tr>
+<tr><th scope="row">MF-rag</th><td>Model family</td><td>Retrieval (RAG)</td><td><b>status:</b> routed to, not run in this demo; <b>good at:</b> Grounded answers from documents; <b>evals:</b> Retrieval recall, citation accuracy, access leaks; <b>mandatory controls:</b> PCS-04 MR-04; <b>typical ceiling:</b> L3 with citations</td></tr>
+<tr><th scope="row">MF-kg</th><td>Model family</td><td>Graph ML and knowledge graph</td><td><b>status:</b> graph traversal runs in code; graph ML is routed to, not run in this demo; <b>good at:</b> Entities, relationships, explainable links; <b>evals:</b> Entity match precision, link coverage; <b>mandatory controls:</b> DQ-03; <b>typical ceiling:</b> L3 for checks</td></tr>
+<tr><th scope="row">MF-ml</th><td>Model family</td><td>Classical ML and forecasting</td><td><b>status:</b> routed to, not run in this demo; <b>good at:</b> Numbers, time series, scores; <b>evals:</b> Error by segment, calibration, drift; <b>mandatory controls:</b> MR-01 MON-02; <b>typical ceiling:</b> L3 to L4 with drift monitoring</td></tr>
+<tr><th scope="row">MF-opt</th><td>Model family</td><td>Optimizer</td><td><b>status:</b> routed to, not run in this demo; <b>good at:</b> Best plan under constraints; <b>evals:</b> Constraint satisfaction, cost gap, scenario tests; <b>mandatory controls:</b> MR-01 TAL-01; <b>typical ceiling:</b> L3 to L4 for plans</td></tr>
+<tr><th scope="row">MF-rl</th><td>Model family</td><td>Reinforcement learning</td><td><b>status:</b> routed to, not run in this demo; <b>good at:</b> Sequential decisions with feedback; <b>evals:</b> Simulation return, unsafe-action rate, shadow agreement; <b>mandatory controls:</b> MR-05 PHY-04 MON-03; <b>typical ceiling:</b> L2 to L3 after simulation</td></tr>
+<tr><th scope="row">MF-speech</th><td>Model family</td><td>Speech</td><td><b>status:</b> routed to, not run in this demo; <b>good at:</b> Voice in and out; <b>evals:</b> Word error rate, read-back accuracy; <b>mandatory controls:</b> PRV-04 IAM-05; <b>typical ceiling:</b> L3 with read-back</td></tr>
+<tr><th scope="row">MF-mm</th><td>Model family</td><td>Vision and multimodal</td><td><b>status:</b> routed to, not run in this demo; <b>good at:</b> Documents, images, inspection; <b>evals:</b> Field accuracy, layout coverage; <b>mandatory controls:</b> PCS-02 DQ-01; <b>typical ceiling:</b> L3 with schema checks</td></tr>
+<tr><th scope="row">MF-phys</th><td>Model family</td><td>Physical AI policy</td><td><b>status:</b> routed to, not run in this demo; <b>good at:</b> Perception and motion in mapped cells; <b>evals:</b> Task success, safety stops, near misses; <b>mandatory controls:</b> PHY-01 PHY-02 PHY-04 OT-03; <b>typical ceiling:</b> Inside a safety envelope</td></tr>
+<tr><th scope="row">BR-agent</th><td>Agent</td><td>Graph agent</td><td><b>skill:</b> SK-graph; <b>what:</b> Answers only from the subgraph code selected.</td></tr>
+<tr><th scope="row">BR-gate</th><td>Gate</td><td>Controls and evals gate</td><td><b>what:</b> Checks citations, vendor names, prompt leaks, length and the call budget, in code.</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#MR-04">MR-04</a></th><td>Control</td><td>MR-04 Groundedness and citation check</td><td><b>name:</b> Groundedness and citation check; <b>purpose:</b> Check that each claim in an agent output cites a retrieved source.</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#PCS-01">PCS-01</a></th><td>Control</td><td>PCS-01 Untrusted content is data</td><td><b>name:</b> Untrusted content is data; <b>purpose:</b> Treat emails, documents, web pages and transcripts as data. Never treat them as instructions.</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#PCS-02">PCS-02</a></th><td>Control</td><td>PCS-02 Output schema validation</td><td><b>name:</b> Output schema validation; <b>purpose:</b> Accept agent output only when it matches the expected schema and value ranges.</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#PCS-05">PCS-05</a></th><td>Control</td><td>PCS-05 Content safety filter</td><td><b>name:</b> Content safety filter; <b>purpose:</b> Screen inputs and outputs for harmful, offensive or off-policy content.</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#CST-03">CST-03</a></th><td>Control</td><td>CST-03 Model quotas</td><td><b>name:</b> Model quotas; <b>purpose:</b> Set token and call quotas per agent at the model gateway.</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#TAL-04">TAL-04</a></th><td>Control</td><td>TAL-04 Rate and volume limits</td><td><b>name:</b> Rate and volume limits; <b>purpose:</b> Cap the actions per minute and per day for each agent and each tool.</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#TRC-01">TRC-01</a></th><td>Control</td><td>TRC-01 Decision trace before commit</td><td><b>name:</b> Decision trace before commit; <b>purpose:</b> Write what the agent saw, decided and did before any action commits.</td></tr>
+<tr><th scope="row"><a class="cid" href="/controls/#RES-02">RES-02</a></th><td>Control</td><td>RES-02 Model fallback and safe degrade</td><td><b>name:</b> Model fallback and safe degrade; <b>purpose:</b> When a model fails, route to a fallback model or drop the step to L1.</td></tr>
+<tr><th scope="row">BR-action</th><td>Action</td><td>Answer (read only)</td><td><b>what:</b> The answer and its cited nodes. Nothing is written to any system.</td></tr>
+<tr><th scope="row">BR-trace</th><td>Trace</td><td>Decision trace</td><td><b>what:</b> Route, controls, evals, tokens and cost for each question.</td></tr>
+<tr><th scope="row">BR-memory</th><td>Memory</td><td>Session memory</td><td><b>what:</b> Traces are kept in your browser tab for this visit only. Nothing is stored on the server.</td></tr>
+</tbody></table></div>
+    </details>
+    <details class="gr-alt">
+      <summary>All 35 edges of the brain map, as a table</summary>
+      <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Edges of the brain map"><table class="fw-table gr-table"><thead><tr><th scope="col">From</th><th scope="col">Relation</th><th scope="col">To</th></tr></thead><tbody>
+<tr><td>SIG-web</td><td>feeds</td><td>BR-router</td></tr>
+<tr><td>SIG-chat</td><td>feeds</td><td>BR-router</td></tr>
+<tr><td>SIG-email</td><td>feeds</td><td>BR-router</td></tr>
+<tr><td>SIG-voice</td><td>feeds</td><td>BR-router</td></tr>
+<tr><td>SIG-iot</td><td>feeds</td><td>BR-router</td></tr>
+<tr><td>SIG-robot</td><td>feeds</td><td>BR-router</td></tr>
+<tr><td>BR-router</td><td>looks up</td><td>BR-kg</td></tr>
+<tr><td>BR-router</td><td>looks up</td><td>BR-skills</td></tr>
+<tr><td>BR-router</td><td>picks</td><td>MF-llm</td></tr>
+<tr><td>BR-router</td><td>picks</td><td>MF-slm</td></tr>
+<tr><td>BR-router</td><td>picks</td><td>MF-rag</td></tr>
+<tr><td>BR-router</td><td>picks</td><td>MF-kg</td></tr>
+<tr><td>BR-router</td><td>picks</td><td>MF-ml</td></tr>
+<tr><td>BR-router</td><td>picks</td><td>MF-opt</td></tr>
+<tr><td>BR-router</td><td>picks</td><td>MF-rl</td></tr>
+<tr><td>BR-router</td><td>picks</td><td>MF-speech</td></tr>
+<tr><td>BR-router</td><td>picks</td><td>MF-mm</td></tr>
+<tr><td>BR-router</td><td>picks</td><td>MF-phys</td></tr>
+<tr><td>BR-kg</td><td>is a</td><td>MF-kg</td></tr>
+<tr><td>BR-kg</td><td>grounds</td><td>BR-agent</td></tr>
+<tr><td>BR-skills</td><td>grounds</td><td>BR-agent</td></tr>
+<tr><td>MF-llm</td><td>runs</td><td>BR-agent</td></tr>
+<tr><td>BR-agent</td><td>checked by</td><td>BR-gate</td></tr>
+<tr><td>BR-gate</td><td>allows</td><td>BR-action</td></tr>
+<tr><td>BR-action</td><td>writes</td><td>BR-trace</td></tr>
+<tr><td>BR-trace</td><td>appends</td><td>BR-memory</td></tr>
+<tr><td>BR-memory</td><td>informs</td><td>BR-router</td></tr>
+<tr><td>BR-gate</td><td>enforces</td><td><a class="cid" href="/controls/#MR-04">MR-04</a></td></tr>
+<tr><td>BR-gate</td><td>enforces</td><td><a class="cid" href="/controls/#PCS-01">PCS-01</a></td></tr>
+<tr><td>BR-gate</td><td>enforces</td><td><a class="cid" href="/controls/#PCS-02">PCS-02</a></td></tr>
+<tr><td>BR-gate</td><td>enforces</td><td><a class="cid" href="/controls/#PCS-05">PCS-05</a></td></tr>
+<tr><td>BR-gate</td><td>enforces</td><td><a class="cid" href="/controls/#CST-03">CST-03</a></td></tr>
+<tr><td>BR-gate</td><td>enforces</td><td><a class="cid" href="/controls/#TAL-04">TAL-04</a></td></tr>
+<tr><td>BR-gate</td><td>enforces</td><td><a class="cid" href="/controls/#TRC-01">TRC-01</a></td></tr>
+<tr><td>BR-gate</td><td>enforces</td><td><a class="cid" href="/controls/#RES-02">RES-02</a></td></tr>
+</tbody></table></div>
+    </details>
+    <details class="lp-more">
+      <summary>Limits and what is real</summary>
+      <p><b>Real.</b> The graphs, the routing, the traversal and every check are code. The answer is one call to a GPT-class model, with a smaller model as fallback.</p>
+      <p><b>Not run.</b> Other model families appear on the map so you see the choice. The demo labels them &ldquo;routed to, not run in this demo&rdquo; and shows no output for them.</p>
+      <p><b>Limits.</b> Eight questions per visitor per hour. The site shares a daily allowance of model calls that resets at midnight UTC. Your questions are not stored.</p>
+    </details>
+    <p class="fw-note">Related: the <a href="/architecture/#patterns">graph-grounded agent pattern</a> and controls <a class="cid" href="/controls/#MR-04">MR-04</a> <a class="cid" href="/controls/#PCS-01">PCS-01</a> <a class="cid" href="/controls/#MR-10">MR-10</a>.</p>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="brand" href="/" aria-label="The Autonomous Enterprise: human-led, agent-operated, home"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="3" fill="#F2622E"/><path fill="#141414" d="M5 23h3v4H5zM9.5 20h3v7h-3zM14 17h3v10h-3zM18.5 13h3v14h-3zM23 9h3v18h-3z"/></svg><span class="brand-text"><span class="brand-name">The Autonomous Enterprise</span> <span class="brand-sub">Human-led, agent-operated</span></span></a>
+      <p>Author, speaker and advisor on human-led, agent-operated enterprises.</p>
+      <p>&copy; 2026 Hemanth Reganti</p>
+      <p>We use your details only to respond to your request.</p>
+    </div>
+    <div>
+      <ul class="footer-links" aria-label="Site">
+        <li><a href="/book/">Book</a></li>
+        <li><a href="/frameworks/">Frameworks</a></li>
+        <li><a href="/blueprints/">Blueprints</a></li>
+        <li><a href="/ideas/">Ideas</a></li>
+        <li><a href="/speaking/">Speaking</a></li>
+        <li><a href="/advisory/">Advisory</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+      <ul class="footer-links footer-ext" aria-label="Elsewhere">
+        <li><a href="/contact/#press">Press kit</a></li>
+        <li><a href="https://www.amazon.com/dp/B0HS8HG6DP" rel="noopener" target="_blank">Amazon<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+        <li><a href="https://www.linkedin.com/in/hemanth-reganti-147153178/" rel="noopener" target="_blank">LinkedIn<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+<a class="guide-fab" href="/talk/" data-guide-open aria-haspopup="dialog"><span class="guide-fab-mark" aria-hidden="true"></span>Talk to the book</a>
+</body>
+</html>
