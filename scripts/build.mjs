@@ -156,7 +156,7 @@ export const PAGES = [
     src: 'organization.html', out: 'blueprints/organization/index.html', path: '/blueprints/organization/', nav: 'BLUEPRINTS', bp: 'organization',
     title: 'Organization: Humans and Agents, Delegation and the Capability Matrix | Human-Led Enterprise',
     description:
-      'How the org chart changes when agents do the work, from the book: new roles, pods, spans, decision rights, autonomy levels, deciding with incomplete information and who does what.',
+      'How the org changes when agents do the work, from the book: roles, pods, decision rights, autonomy levels, incomplete information, who does what, and trust in internal and external agents.',
     sitemap: true, priority: '0.8',
   },
   {
@@ -204,7 +204,7 @@ export const PAGES = [
     src: 'talk.html', out: 'talk/index.html', path: '/talk/', nav: 'TALK',
     title: 'Talk to the Book | The Autonomous Enterprise',
     description:
-      'A short guided conversation on the core idea of The Autonomous Enterprise: autonomy is earned when value compounds faster than risk. Tailored to your role.',
+      'Ask The Autonomous Enterprise in your own words. An agent searches the book, cites chapters, suggests pages and shows every step it takes.',
     sitemap: true, priority: '0.7',
   },
   {

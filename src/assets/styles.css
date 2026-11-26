@@ -512,6 +512,21 @@ fieldset.field legend { padding: 0; margin-bottom: 0.35rem; }
 .guide-foot { display: flex; justify-content: space-between; align-items: center; }
 .guide-reset { background: none; border: 0; padding: 0.5rem 0; font: inherit; font-size: 0.9rem; color: var(--muted); text-decoration: underline; cursor: pointer; }
 .guide-privacy { margin-top: 0.75rem; color: var(--muted); font-size: 0.9rem; }
+.msg-site { background: var(--white); border: 1px dashed var(--muted); align-self: flex-start; }
+.guide-suggest { display: grid; gap: 0.4rem; }
+.guide-suggest-h, .guide-trace-h { margin: 0; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+.guide-trace { margin-top: 0.7rem; padding-top: 0.6rem; border-top: 1px solid var(--line); }
+.guide-trace ol { margin: 0.3rem 0 0; padding-left: 1.3rem; font-size: 0.9rem; }
+.guide-trace li + li { margin-top: 0.15rem; }
+.guide-tool-q { color: var(--muted); }
+.msg .guide-cites { margin-top: 0.6rem; font-size: 0.9rem; font-weight: 600; }
+.msg .guide-uncovered { font-weight: 400; font-style: italic; }
+.guide-pages { margin: 0.6rem 0 0; padding-left: 1.2rem; font-size: 0.95rem; }
+.guide-pages a { font-weight: 700; color: var(--ink); }
+.guide-handoff { margin-top: 0.7rem; display: grid; gap: 0.5rem; justify-items: start; }
+.msg .guide-meter, .guide-hint { margin-top: 0.5rem; font-size: 0.8rem; color: var(--muted); }
+.guide-hint { margin: 0; }
+.msg .guide-alt { margin-top: 0.5rem; }
 .guide-lead { display: grid; gap: 0.75rem; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 1.25rem; max-width: 34rem; }
 .guide-lead-title { margin: 0; font-family: var(--font-display); text-transform: uppercase; font-weight: 700; font-size: 1.3rem; }
 .guide-lead input[type="text"], .guide-lead input[type="email"] { padding: 0.6rem 0.75rem; font: inherit; border: 2px solid var(--line); border-radius: 6px; background: var(--white); color: var(--ink); }

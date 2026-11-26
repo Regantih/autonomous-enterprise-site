@@ -1,17 +1,17 @@
 # Knowledge pack for the "Talk to the book" guide
 Source: The Autonomous Enterprise by Hemanth Reganti (first edition, November 2026; 31 chapters, 742 pages). Use only what is here. Numbers about Meridian Industries are illustrative (a fictional company that runs through the book).
 
-## Core idea
+## Core idea (Book, Ch 01)
 - Human-led, agent-operated: people set intent, own outcomes and decide where not to automate; agents operate inside the harness, within the limits humans set.
 - Thesis: autonomy is earned when value compounds faster than risk. Some work adds risk faster than any agent adds value, so it stays with people.
 - Frameworks like LangChain solve the engineering problem of AI agents. This book solves the management problem: who decides where an agent can act, who owns a decision that spans five systems and three departments, who explains it to the auditor and the board.
 
-## Three rules
+## Three rules (Book, Ch 01)
 1. The harness, not the model, sets the autonomy ceiling. A modest model inside a strong harness can run a narrow step at L3 safely. If a far more capable model arrived next quarter, the ceiling would not move until the harness did.
 2. Agents decide; deterministic rules post. No agent writes a journal entry; releasing money stays with people and signed systems.
 3. Autonomy is earned with evidence and can be withdrawn automatically. Promotion needs evidence and a human gate; demotion triggers move a step down automatically. Promotion is never automatic.
 
-## The autonomy scale (illustrative, used in every chapter)
+## The autonomy scale (illustrative, used in every chapter; Book, Ch 01)
 - L0 Manual: human decides and does the work. Right for rare, high-judgment events.
 - L1 Assist: agent retrieves, summarizes, drafts and suggests; a person decides. Risk: over-trust. Log suggestions as the baseline for L2.
 - L2 Approve: agent prepares the complete action; a person approves each one with evidence in view. Watch approval and edit rates; a high edit rate means not ready for L3. Risk: rubber-stamping.
@@ -36,13 +36,13 @@ Source: The Autonomous Enterprise by Hemanth Reganti (first edition, November 20
 - What is on our "do not automate" list?
 
 ## Selected lines (verbatim)
-- "A board that funds agents first and data second pays twice."
-- "The model is the most flexible part and the least trusted; the safety controller is the least flexible and the most trusted."
-- "An agent optimizes its target harder and more literally than a person."
-- "An agent can act thousands of times before a monthly review."
-- "The unit that moves to an agent is a decision inside a task."
-- "The agent removes the investigation, not the person."
-- "The person who approves an agent's actions may not change the agent's limits, instructions or tools."
+- "A board that funds agents first and data second pays twice." (Ch 26)
+- "The model is the most flexible part and the least trusted; the safety controller is the least flexible and the most trusted." (Ch 07)
+- "An agent optimizes its target harder and more literally than a person." (Ch 06)
+- "An agent can act thousands of times before a monthly review." (Ch 22)
+- "The unit that moves to an agent is a decision inside a task." (Ch 24)
+- "The agent removes the investigation, not the person." (Ch 12)
+- "The person who approves an agent's actions may not change the agent's limits, instructions or tools." (Ch 22)
 
 ## How to engage the author
 - Book: paperback $59.99 https://www.amazon.com/dp/B0HS8HG6DP ; Kindle $12.99 https://www.amazon.com/dp/B0HS8C4WLL
@@ -55,7 +55,7 @@ Source: The Autonomous Enterprise by Hemanth Reganti (first edition, November 20
 - Frameworks: /frameworks (linked from /book and the footer). Contact and press kit: /contact (footer).
 - Models: /blueprints/models, every model family in the book and where it fits in the architecture.
 - Design choices: /blueprints/design, tabular foundation models (TFMs and RPTs), retrieval and grounding, evals and audit trails, agent security and the front door, inference routing and budgets, and which steps go to models or rules (the p* = L / (G + L) threshold).
-- Organization: /blueprints/organization, how the org changes with agents (Book, Ch 24, 22, 25, 01): agents are owned assets of a role, not staff; new roles (agent business owner, agent supervisor, instruction designer, AgentOps analyst, evaluation engineer, AI controls analyst, AI FinOps analyst); run, build and control pods; spans sized by human decision load; who sets autonomy levels (raising needs evidence and a body, lowering needs one person); RACI with exactly one accountable person; deciding with incomplete information (calibrated scores route, never approve; green, amber and red bands; cite or say what is missing; the approval card); and a capability matrix of who does what.
+- Organization: /blueprints/organization, how the org changes with agents (Book, Ch 24, 22, 25, 01): agents are owned assets of a role, not staff; new roles (agent business owner, agent supervisor, instruction designer, AgentOps analyst, evaluation engineer, AI controls analyst, AI FinOps analyst); run, build and control pods; spans sized by human decision load; who sets autonomy levels (raising needs evidence and a body, lowering needs one person); RACI with exactly one accountable person; deciding with incomplete information (calibrated scores route, never approve; green, amber and red bands; cite or say what is missing; the approval card); a capability matrix of who does what; and "Internal vs external agents: credibility and trust" at /blueprints/organization/#trust.
 - Operations: /blueprints/operations, running agents (Book, Ch 05, 22, 25, 26): trace fields and one trace ID, four dashboards by audience, "no registry, no run", audit walkthroughs, guardian agents that may stop but never start, the K1 to K5 kill switch, SLOs, incident severity, the recovery playbook and automatic demotion rules. Its "Pipelines and the work repository" section covers the skill pipeline (propose, write, test with a golden set, version, withdraw), the agent pipeline (design, harness, offline evaluation, register, shadow, pilot, readiness gate, promotion in slices, demotion), the build and release pipeline (regression on every change, pinned models, canary, rollback, no ticket no change), the hand-off queue and a shared work repository (marked as practice where the book is silent), and which pipeline a change goes through by the artifact it touches.
 
 ## Model families (Book, Ch 03, 04, 07, 09, 15)
@@ -68,3 +68,30 @@ Source: The Autonomous Enterprise by Hemanth Reganti (first edition, November 20
 - Embeddings and retrieval, knowledge graphs: layer 3 (data and semantics); the graph resolves which record in which system is the same customer. Defer graph neural networks past year one.
 - Vision and document models, video (camera analytics and world models), voice (speech-to-text, text-to-speech, voice agents), multimodal and screen agents, physical AI and IoT: each runs under deterministic rails. A camera alert is information, not a safety function; voice is a channel, not a credential; a robot model may choose how to do a task, never whether it is safe.
 - Calibration: among proposals scored 0.9, about 90% must be right on your own data. Use calibrated scores to route, never to approve.
+
+## Internal vs external agents: credibility and trust (Book, Ch 03, 05, 10, 13, 14, 22, 23, 25, 29)
+- Site page: /blueprints/organization/#trust. Guidance marked "practice" there is not from the book.
+- Internal agents are owned: each has a registry entry, an agent contract, a business owner and a technical owner, an evaluation set and a kill-switch owner (Ch 05). "No registry, no run": the gateways accept calls only from agent versions whose registry status is active (Ch 05, 25).
+- External agents are supplier, bank, customer and distributor agents that call your interfaces (Ch 10, 23). Treat an outside agent like a new trading partner that never sleeps: one door, the least it needs, watched more closely than your own agents (Ch 23).
+- B2A rules (Ch 10): publish scoped tools instead of tolerating scraping; every external call carries the identity of the company it acts for; read before write; an agent's order passes the same credit, price and allocation checks as an EDI order; anonymous agents get public information only.
+- How agents differentiate: identity (each agent its own identity, never a shared technical user; delegated tokens name the agent as actor, bound to one audience, short-lived; Ch 23, 02); provenance (a signed, short-lived record on the partner's verified domain; Ch 03, 23); declared capability (a claim, never a permission: scopes come from your onboarding; Ch 22, 23); track record (trust tiers earned over time; Ch 23); verifiable outcomes (traces with one correlation ID from request to payment; Ch 14, 25); cost and contribution (a per-agent scorecard: tokens, energy and cost per completed outcome, attributable value, net contribution; "No account, no promotion"; Ch 25).
+- Capability is not permission: capability sets the ceiling of what is possible; governance sets the level allowed; the lower applies (Ch 22).
+- Front-door welcome flow for outside agents (Ch 23): discover (a card is a hint only), verify signature, domain and contract, issue your own short-lived credential, sandbox on synthetic data for 2 to 4 weeks, publish a filtered tool list, set rate, value and volume caps, monitor against a baseline, promote or revoke. Promotion is signed by the owner and the CISO; revocation within five minutes (illustrative).
+- Trust tiers (Ch 23, illustrative): T0 unknown (logged and refused), T1 sandbox (test tools on synthetic data), T2 read (its own records through filtered tools), T3 act within limits (cases and requests within caps, after 90 days at T2 without a material finding). No tier allows payment release, bank-data changes, credit-limit changes or user administration.
+- Four kinds of trouble at the front door (Ch 23): rogue agent (a partner agent that drifts), malicious impostor, injection carrier (instructions hidden in data) and a poisoned tool, skill or model update. Pin and hash every external component; contain first, classify second.
+- Money stays with people: no external agent may change payment instructions, remittance details or bank data until identity, authority and liability are settled with the counterparty; release stays with two people (Ch 13, 23).
+- Agent-to-agent risks (Ch 02, 06, 13, 14, 29): two agents calling each other in a loop (hop limit, cost cap, circuit breaker); a buyer agent's message overriding the contract (take terms from the contract, not the message); two agents contacting one customer (one owner of external communication). A negotiating agent works inside a person-approved envelope: objective, walk-away, allowed and forbidden levers, at most 3 rounds, never discloses another supplier's price, every message "subject to approval", disclosure that offers are AI-assisted. Two agents on different platforms that negotiate or hand off work with judgment need an agent contract.
+- The book is silent on cross-company reputation scores or ratings for agents, on third-party certification of agents, and on two companies' agents negotiating with each other end to end (collusion, deadlock). Guidance on those is practice, not the book.
+
+## Glossary (terms as the book uses them)
+- Harness: the controls around an agent (limits, tools, approvals, traces, stop) that set its autonomy ceiling; the model reasons, the harness governs (Ch 01, 05).
+- Agent registry: the enterprise record of every agent and version; "no registry, no run" (Ch 05, 25).
+- Agent contract: the versioned spec auditors read first: owner, goal, tools, limits, envelope, evaluation, kill-switch owners (Ch 05, 29).
+- Contribution account and per-agent scorecard: what an agent consumed and produced, cost per completed outcome and net contribution, reviewed monthly (Ch 25).
+- Cost per completed outcome: the program's price measure, all costs per finished business outcome (Ch 21, 25).
+- Capability versus permission: what an agent can do versus the level it is allowed (Ch 22).
+- Trust tier: the T0 to T3 levels for outside agents (Ch 23).
+- B2A: business to agent, when customers' and suppliers' agents call your interfaces (Ch 10).
+- Negotiation envelope: the person-approved bounds a negotiating agent works within (Ch 14).
+- Delegated token: a short-lived token naming the agent as actor for a user, bound to one target service (Ch 23).
+- Weakest link: a chain of work runs only as high as its weakest step (Ch 01).

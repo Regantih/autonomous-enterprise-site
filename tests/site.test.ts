@@ -6,6 +6,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { BIO_LONG, BIO_SHORT, LINKEDIN_SHARE, PAGES, QUOTES, SITE_URL, build, wordCount } from '../scripts/build.mjs';
 
 const DIST = fileURLToPath(new URL('../dist', import.meta.url));
+const OPENING_THESIS = 'Human-led, agent-operated: autonomy is earned when value compounds faster than risk.';
 type Page = { out: string; path: string; robots?: string; sitemap?: boolean };
 const pages = PAGES as Page[];
 const html = (p: Page) => readFileSync(join(DIST, p.out), 'utf8');
@@ -365,8 +366,42 @@ describe('portrait, real cover and guide', () => {
     expect(js).toContain('sessionStorage');
     expect(js).not.toMatch(/localStorage|document\.cookie|indexedDB/);
     expect(js).toContain("var API = '/api/guide'");
-    expect(js.match(/https?:\/\/[^'" )]+/g)).toEqual(['https://www.amazon.com/dp/B0HS8HG6DP']);
-    expect(js).toContain('Share a summary of this chat with Hemanth');
+    expect(js.match(/https?:\/\/[^'" )]+/g)).toEqual(['https://www.amazon.com/dp/B0HS8HG6DP', 'https://www.linkedin.com/in/hemanth-reganti-147153178/']);
+    // The old consent lead form is gone: the guide hands off to the intake agent, which asks for consent itself.
+    expect(js).not.toContain('Share a summary of this chat with Hemanth');
+    expect(js).not.toMatch(/createElement\('form'\)[\s\S]*type: 'email'|'guide-lead'/);
+    expect(js).toContain('Nothing is sent until you tick consent and press Send.');
+  });
+
+  it('lets visitors type from the first turn: no disabled-input gate, role chips are optional and labelled', () => {
+    const js = readFileSync(join(DIST, 'assets/guide.js'), 'utf8');
+    expect(js).not.toContain('Choose an option above');
+    expect(js).not.toMatch(/Where are your agents today/);
+    expect(js).toContain('Optional: start from your role');
+    expect(js).toMatch(/role: 'group', 'aria-labelledby': gid/);
+    expect(js).toMatch(/'aria-label': item\[1\] \+ ': ask where to start'/);
+    expect(js).toContain("el('label', { class: 'visually-hidden', for: inputId }, 'Ask the guide a question')");
+    expect(js).toContain(OPENING_THESIS);
+  });
+
+  it('renders the tool trace as a labelled list with sources, pages, handoff and the cost meter', () => {
+    const js = readFileSync(join(DIST, 'assets/guide.js'), 'utf8');
+    expect(js).toContain('What the guide did');
+    expect(js).toMatch(/el\('ol', \{ 'aria-labelledby': tid \}\)/);
+    expect(js).toContain("'Tool step: '");
+    expect(js).toContain("'From the book: '");
+    expect(js).toContain("'Not in the book: '");
+    expect(js).toContain("'aria-label': 'Suggested pages'");
+    expect(js).toContain('with the intake agent');
+    expect(js).toMatch(/AI call/);
+  });
+
+  it('publishes no email address on any built page or script', () => {
+    for (const f of walk(DIST).filter((f) => /\.(html|js|xml|txt|json|webmanifest)$/.test(f))) {
+      const t = readFileSync(f, 'utf8');
+      expect(t, f).not.toContain('regantih@gmail.com');
+      expect(t.match(/[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,}/)?.[0], f).toBeUndefined();
+    }
   });
 
   it('adds the headshot and real cover downloads to the press kit and the Person image to JSON-LD', () => {

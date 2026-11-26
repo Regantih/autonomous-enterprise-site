@@ -1,19 +1,21 @@
-/* Talk to the Book: on-site guide. Same-origin API only; state lives in sessionStorage. */
+/* Talk to the Book: an on-site agent with tools. Same-origin API only; state lives in sessionStorage.
+   Free text works from the first message. Role chips are optional suggestions. Each answer shows what the agent
+   did (its tool trace), the chapters it cites and any page or intake handoff it suggests. */
 (function () {
   'use strict';
-  var KEY = 'hle-guide-v1';
+  var KEY = 'hle-guide-v2';
   var API = '/api/guide';
   var MAX_TURNS = 12;
+  var MAX_CHARS = 600;
   var AMAZON = 'https://www.amazon.com/dp/B0HS8HG6DP';
+  var LINKEDIN = 'https://www.linkedin.com/in/hemanth-reganti-147153178/';
+  var PRICE_IN = 0.293, PRICE_OUT = 2.253;
   var OPENING = 'Human-led, agent-operated: autonomy is earned when value compounds faster than risk.';
+  var INTRO = 'Ask me anything about the book. I search it, cite chapters and point you to the right page.';
   var ROLES = [
     ['ceo-board', 'CEO/board'], ['cfo-finance', 'CFO/finance'], ['cio-technology', 'CIO/technology'],
     ['operations', 'Operations/supply chain'], ['risk-audit', 'Risk/audit'], ['investor', 'Investor'], ['curious', 'Just curious']
   ];
-  var MATURITY = [
-    ['l0-l1', 'L0\u2013L1 exploring'], ['l2', 'L2 pilots with approval'], ['l3-plus', 'L3+ acting within limits'], ['not-sure', 'Not sure']
-  ];
-  var FALLBACK = 'The guide is taking a break right now. The book goes deeper on every one of these questions, and Hemanth is glad to continue the conversation with you directly.';
 
   function label(list, id) { for (var i = 0; i < list.length; i++) if (list[i][0] === id) return list[i][1]; return ''; }
   function load() {
@@ -25,6 +27,17 @@
     if (attrs) for (var k in attrs) if (attrs[k] !== null && attrs[k] !== undefined) n.setAttribute(k, attrs[k]);
     if (text) n.textContent = text;
     return n;
+  }
+  function extLink(href, text, cls) {
+    var a = el('a', { href: href, rel: 'noopener', target: '_blank', class: cls || null }, text);
+    a.appendChild(el('span', { class: 'visually-hidden' }, ' (opens in a new tab)'));
+    return a;
+  }
+  function meterText(calls) {
+    var i = 0, o = 0, est = false;
+    calls.forEach(function (c) { i += c.usage.input_tokens || 0; o += c.usage.output_tokens || 0; if (c.usage.estimated) est = true; });
+    var usd = (i * PRICE_IN + o * PRICE_OUT) / 1e6;
+    return calls.length + ' AI call' + (calls.length === 1 ? '' : 's') + ' \u00b7 ' + (i + o).toLocaleString('en-US') + ' tokens \u00b7 $' + usd.toFixed(4) + (est ? ' (estimated)' : '');
   }
   var uid = 0;
 
@@ -46,14 +59,17 @@
     this.log = el('div', { class: 'guide-log', role: 'log', 'aria-live': 'polite', 'aria-relevant': 'additions', 'aria-label': 'Conversation with the guide', tabindex: '0' });
     this.form = el('form', { class: 'guide-input', novalidate: '' });
     var inputId = this.id + '-q';
-    this.form.appendChild(el('label', { class: 'visually-hidden', for: inputId }, 'Your question'));
-    this.input = el('textarea', { id: inputId, rows: '1', maxlength: '600', autocomplete: 'off', enterkeyhint: 'send' });
+    var hintId = this.id + '-qh';
+    this.form.appendChild(el('label', { class: 'visually-hidden', for: inputId }, 'Ask the guide a question'));
+    this.input = el('textarea', { id: inputId, rows: '1', maxlength: String(MAX_CHARS), autocomplete: 'off', enterkeyhint: 'send', placeholder: 'Ask in your own words', 'aria-describedby': hintId });
     this.send = el('button', { class: 'btn btn-primary', type: 'submit' }, 'Send');
     this.form.appendChild(this.input);
     this.form.appendChild(this.send);
     var foot = el('div', { class: 'guide-foot' });
     var reset = el('button', { class: 'guide-reset', type: 'button' }, 'Start over');
+    this.hint = el('p', { class: 'guide-hint', id: hintId }, 'Press Enter to send. Each step the guide takes is one AI call.');
     this.status = el('p', { class: 'visually-hidden', role: 'status' });
+    foot.appendChild(this.hint);
     foot.appendChild(reset);
     foot.appendChild(this.status);
     this.root.appendChild(this.log);
@@ -68,241 +84,188 @@
       self.s = { messages: [] };
       self.save();
       self.renderAll();
-      self.focusFirst();
+      self.input.focus();
     });
   };
 
+  Guide.prototype.scroll = function () { this.log.scrollTop = this.log.scrollHeight; };
+
   Guide.prototype.bubble = function (who, text) {
     var b = el('div', { class: 'msg msg-' + who });
-    b.appendChild(el('span', { class: 'visually-hidden' }, who === 'you' ? 'You: ' : 'Guide: '));
+    b.appendChild(el('span', { class: 'visually-hidden' }, who === 'you' ? 'You: ' : who === 'site' ? 'Site notice: ' : 'Guide: '));
     String(text).split(/\n{2,}/).forEach(function (para) { if (para.trim()) b.appendChild(el('p', null, para.trim())); });
     this.log.appendChild(b);
     this.scroll();
     return b;
   };
 
-  Guide.prototype.scroll = function () { this.log.scrollTop = this.log.scrollHeight; };
-
-  Guide.prototype.chips = function (question, list, key) {
+  /** What the agent did, in order: tool trace, sources, page cards, intake handoff and the cost meter. */
+  Guide.prototype.extras = function (b, m) {
     var self = this;
-    this.bubble('guide', question);
-    var group = el('div', { class: 'chips', role: 'group', 'aria-label': question });
-    list.forEach(function (item) {
-      var c = el('button', { class: 'chip', type: 'button' }, item[1]);
+    if (m.trace && m.trace.length) {
+      var tid = self.id + '-t' + (++uid);
+      var wrap = el('div', { class: 'guide-trace' });
+      wrap.appendChild(el('p', { class: 'guide-trace-h', id: tid }, 'What the guide did'));
+      var ol = el('ol', { 'aria-labelledby': tid });
+      m.trace.forEach(function (t) {
+        var li = el('li', { class: 'guide-tool guide-tool-' + String(t.tool).replace(/[^a-z_]/g, '') });
+        li.appendChild(el('span', { class: 'visually-hidden' }, 'Tool step: '));
+        li.appendChild(document.createTextNode(t.label));
+        if (t.detail) li.appendChild(el('span', { class: 'guide-tool-q' }, ' \u201c' + t.detail + '\u201d'));
+        ol.appendChild(li);
+      });
+      wrap.appendChild(ol);
+      b.appendChild(wrap);
+    }
+    if (m.cites && m.cites.length) b.appendChild(el('p', { class: 'guide-cites' }, 'From the book: ' + m.cites.join(', ')));
+    if (m.notCovered) b.appendChild(el('p', { class: 'guide-cites guide-uncovered' }, 'Not in the book: ' + m.notCovered));
+    if (m.pages && m.pages.length) {
+      var ul = el('ul', { class: 'guide-pages', 'aria-label': 'Suggested pages' });
+      m.pages.forEach(function (p) {
+        var li = el('li');
+        li.appendChild(el('a', { href: p.href }, p.title));
+        li.appendChild(el('span', null, ' ' + p.reason));
+        ul.appendChild(li);
+      });
+      b.appendChild(ul);
+    }
+    if (m.handoff) {
+      var h = el('div', { class: 'guide-handoff' });
+      h.appendChild(el('p', null, 'The intake agent asks a few questions and fills a request card. Nothing is sent until you tick consent and press Send.'));
+      h.appendChild(el('a', { class: 'btn btn-dark', href: m.handoff.href }, m.handoff.label + ' with the intake agent'));
+      b.appendChild(h);
+    }
+    if (m.calls && m.calls.length) b.appendChild(el('p', { class: 'guide-meter' }, meterText(m.calls)));
+    if (m.kind === 'site') {
+      var p2 = el('p', { class: 'guide-alt' }, 'You can still ');
+      p2.appendChild(extLink(LINKEDIN, 'message Hemanth on LinkedIn'));
+      p2.appendChild(document.createTextNode(' or '));
+      p2.appendChild(extLink(AMAZON, 'get the book'));
+      p2.appendChild(document.createTextNode('.'));
+      b.appendChild(p2);
+    }
+  };
+
+  Guide.prototype.renderMessage = function (m) {
+    var who = m.kind === 'site' ? 'site' : m.role === 'user' ? 'you' : 'guide';
+    var b = this.bubble(who, m.content);
+    if (who !== 'you') this.extras(b, m);
+    return b;
+  };
+
+  Guide.prototype.chips = function () {
+    var self = this;
+    var gid = this.id + '-roles';
+    var wrap = el('div', { class: 'guide-suggest' });
+    wrap.appendChild(el('p', { class: 'guide-suggest-h', id: gid }, 'Optional: start from your role'));
+    var group = el('div', { class: 'chips', role: 'group', 'aria-labelledby': gid });
+    ROLES.forEach(function (item) {
+      var text = item[0] === 'curious' ? 'I\u2019m just curious. Where should I start?' : 'I\u2019m in ' + item[1] + '. Where should I start?';
+      var c = el('button', { class: 'chip', type: 'button', 'aria-label': item[1] + ': ask where to start' }, item[1]);
       c.addEventListener('click', function () {
-        group.remove();
-        self.s[key] = item[0];
-        self.save();
-        self.bubble('you', item[1]);
-        self.next(true);
+        if (self.busy) return;
+        self.s.role = item[0];
+        self.ask(text);
       });
       group.appendChild(c);
     });
-    this.log.appendChild(group);
-    this.scroll();
+    wrap.appendChild(group);
+    this.log.appendChild(wrap);
   };
+
+  Guide.prototype.turns = function () { return this.s.messages.filter(function (m) { return m.role === 'user'; }).length; };
 
   Guide.prototype.renderAll = function () {
     var self = this;
     this.log.textContent = '';
     this.bubble('guide', OPENING);
-    if (this.s.role) {
-      this.bubble('guide', 'Where are you today?');
-      this.bubble('you', label(ROLES, this.s.role));
-    }
-    if (this.s.maturity) {
-      this.bubble('guide', 'Where are your agents today?');
-      this.bubble('you', label(MATURITY, this.s.maturity));
-    }
-    this.s.messages.forEach(function (m, i) {
-      if (i === 0 && m.role === 'user' && m.intro) return;
-      self.bubble(m.role === 'user' ? 'you' : 'guide', m.content);
-    });
-    this.next(false);
+    this.bubble('guide', INTRO);
+    if (!this.turns()) this.chips();
+    this.s.messages.forEach(function (m) { self.renderMessage(m); });
+    if (this.s.actions) this.actions();
+    this.lock();
+    this.scroll();
   };
 
-  /** Shows whatever the conversation needs next. `live` is true after a visitor action. */
-  Guide.prototype.next = function (live) {
-    var s = this.s;
-    if (!s.role) { this.chips('Where are you today?', ROLES, 'role'); this.lock(true); if (live) this.focusFirst(); return; }
-    if (!s.maturity) { this.chips('Where are your agents today?', MATURITY, 'maturity'); this.lock(true); if (live) this.focusFirst(); return; }
-    if (!s.messages.length) {
-      var intro = 'I\u2019m ' + label(ROLES, s.role) + '. Our agents today: ' + label(MATURITY, s.maturity) + '.';
-      s.messages.push({ role: 'user', content: intro, intro: true });
-      this.save();
-      this.request();
-      return;
-    }
-    if (s.lead === 'sent') this.bubble('guide', 'Thank you. Hemanth will reply to you directly.');
-    else if (s.leadOpen) this.leadForm();
-    else if (s.actions) this.actions();
-    var turns = s.messages.filter(function (m) { return m.role === 'user'; }).length;
-    this.lock(!!s.done || turns >= MAX_TURNS);
+  Guide.prototype.lock = function () {
+    var ended = !!this.s.done || this.turns() >= MAX_TURNS;
+    this.input.disabled = ended || this.busy;
+    this.send.disabled = ended || this.busy;
+    this.input.placeholder = ended ? 'This conversation is complete. Press Start over for a new one.' : 'Ask in your own words';
   };
 
-  Guide.prototype.lock = function (locked) {
-    this.input.disabled = locked || this.busy;
-    this.send.disabled = locked || this.busy;
-    this.input.placeholder = locked && !this.busy
-      ? (this.s.role && this.s.maturity ? 'Thanks for the conversation' : 'Choose an option above')
-      : 'Ask about the book\u2019s ideas';
-  };
-
-  Guide.prototype.focusFirst = function () {
-    var t = this.log.querySelector('.chips .chip, .guide-lead input') || (!this.input.disabled && this.input);
-    if (t) t.focus();
-  };
+  Guide.prototype.focusFirst = function () { if (!this.input.disabled) this.input.focus(); };
 
   Guide.prototype.ask = function (text) {
     text = String(text || '').trim();
     if (!text || this.busy || this.input.disabled) return;
     this.input.value = '';
-    this.s.messages.push({ role: 'user', content: text.slice(0, 600) });
+    var chips = this.log.querySelector('.guide-suggest');
+    if (chips) chips.remove();
+    this.s.messages.push({ role: 'user', content: text.slice(0, MAX_CHARS) });
     this.save();
     this.bubble('you', text);
     this.request();
   };
 
-  Guide.prototype.payload = function (extra) {
-    var body = { role: this.s.role, maturity: this.s.maturity, messages: this.s.messages.map(function (m) { return { role: m.role, content: m.content }; }) };
-    for (var k in extra) body[k] = extra[k];
-    return JSON.stringify(body);
+  Guide.prototype.payload = function () {
+    var msgs = this.s.messages.filter(function (m) { return m.kind !== 'site' && !m.unanswered; }).map(function (m) { return { role: m.role, content: m.content }; });
+    var clarified = this.s.messages.some(function (m) { return m.clarify; });
+    return JSON.stringify({ action: 'chat', role: this.s.role || '', messages: msgs, clarified: clarified });
   };
 
   Guide.prototype.request = function () {
     var self = this;
     this.busy = true;
-    this.lock(true);
+    this.lock();
     var dots = el('div', { class: 'msg msg-guide msg-typing', 'aria-hidden': 'true' });
     dots.appendChild(el('span')); dots.appendChild(el('span')); dots.appendChild(el('span'));
     this.log.appendChild(dots);
     this.scroll();
-    this.status.textContent = 'The guide is thinking.';
-    fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: this.payload({ action: 'chat' }), credentials: 'same-origin' })
-      .then(function (r) { return r.json().catch(function () { return {}; }); })
-      .catch(function () { return {}; })
-      .then(function (data) {
+    this.status.textContent = 'The guide is working: searching the book and writing an answer.';
+    fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: this.payload(), credentials: 'same-origin' })
+      .then(function (r) { return r.json().catch(function () { return { ok: false, message: 'The guide is offline: the server did not answer.' }; }); })
+      .catch(function () { return { ok: false, message: 'The guide is offline: the network call failed.' }; })
+      .then(function (d) {
         dots.remove();
         self.busy = false;
         self.status.textContent = '';
-        var reply = typeof data.reply === 'string' && data.reply ? data.reply : FALLBACK;
-        self.s.messages.push({ role: 'assistant', content: reply });
-        if (data.actions || !data.ok) self.s.actions = true;
-        if (data.done) self.s.done = true;
+        var m;
+        if (d.ok && typeof d.reply === 'string' && d.reply) {
+          m = { role: 'assistant', content: d.reply, cites: d.cites || [], notCovered: d.not_covered || '', clarify: !!d.clarify, trace: d.trace || [], pages: d.pages || [], handoff: d.handoff || null, calls: d.calls || [] };
+        } else {
+          var msg = d.message || d.error || 'The guide could not answer.';
+          if (d.retry_at) {
+            try { msg += ' Back after ' + new Date(d.retry_at).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) + '.'; } catch (e) { /* no locale support */ }
+          }
+          m = { role: 'assistant', kind: 'site', content: msg, trace: d.trace || [], calls: d.calls || [] };
+          // The visitor's message got no answer; drop it from what the model sees next time.
+          var last = self.s.messages[self.s.messages.length - 1];
+          if (last && last.role === 'user') last.unanswered = true;
+        }
+        self.s.messages.push(m);
+        if (d.actions || !d.ok) self.s.actions = true;
+        if (d.done) self.s.done = true;
         self.save();
-        self.bubble('guide', reply);
         var old = self.log.querySelector('.guide-actions');
         if (old) old.remove();
-        self.next(false);
+        var b = self.renderMessage(m);
+        if (self.s.actions) self.actions();
+        self.lock();
         if (!self.input.disabled) self.input.focus();
+        else { b.setAttribute('tabindex', '-1'); b.focus(); }
       });
   };
 
   Guide.prototype.actions = function () {
-    var self = this;
     var row = el('div', { class: 'guide-actions', role: 'group', 'aria-label': 'Next steps' });
-    var talk = el('button', { class: 'btn btn-primary', type: 'button' }, 'Talk with Hemanth');
-    talk.addEventListener('click', function () {
-      row.remove();
-      self.s.leadOpen = true;
-      self.save();
-      self.leadForm(true);
-    });
-    var speak = el('a', { class: 'btn btn-ghost', href: '/contact/#speaking' }, 'Invite him to speak');
+    row.appendChild(el('a', { class: 'btn btn-primary', href: '/speaking/#advisory' }, 'Talk with Hemanth'));
+    row.appendChild(el('a', { class: 'btn btn-ghost', href: '/speaking/#speaking' }, 'Invite him to speak'));
     var book = el('a', { class: 'btn btn-ghost ext', href: AMAZON, rel: 'noopener', target: '_blank' }, 'Get the book');
     book.appendChild(el('span', { class: 'visually-hidden' }, ' on Amazon (opens in a new tab)'));
-    row.appendChild(talk); row.appendChild(speak); row.appendChild(book);
+    row.appendChild(book);
     this.log.appendChild(row);
     this.scroll();
-  };
-
-  Guide.prototype.leadForm = function (focus) {
-    var self = this;
-    var id = this.id + '-lead';
-    var f = el('form', { class: 'guide-lead', novalidate: '', 'aria-labelledby': id + '-t' });
-    f.appendChild(el('p', { class: 'guide-lead-title', id: id + '-t' }, 'Talk with Hemanth'));
-    function field(name, text, type, attrs) {
-      var w = el('div', { class: 'field' });
-      var fid = id + '-' + name;
-      w.appendChild(el('label', { for: fid }, text));
-      var a = { id: fid, name: name, type: type || 'text', 'aria-describedby': fid + '-e' };
-      for (var k in attrs) a[k] = attrs[k];
-      var i = el('input', a);
-      w.appendChild(i);
-      w.appendChild(el('p', { class: 'field-error', id: fid + '-e' }));
-      f.appendChild(w);
-      return i;
-    }
-    field('name', 'Name', 'text', { autocomplete: 'name', required: '', maxlength: '120' });
-    field('email', 'Work email', 'email', { autocomplete: 'email', required: '', maxlength: '254' });
-    field('organization', 'Organization', 'text', { autocomplete: 'organization', required: '', maxlength: '160' });
-    var role = field('role', 'Role', 'text', { autocomplete: 'organization-title', maxlength: '120' });
-    role.value = label(ROLES, this.s.role);
-    field('goal', 'One-line goal', 'text', { required: '', maxlength: '200' });
-    var hp = el('div', { class: 'hp', 'aria-hidden': 'true' });
-    hp.appendChild(el('label', { for: id + '-website' }, 'Website'));
-    hp.appendChild(el('input', { id: id + '-website', name: 'website', type: 'text', tabindex: '-1', autocomplete: 'off' }));
-    f.appendChild(hp);
-    var cw = el('div', { class: 'check' });
-    var consent = el('input', { id: id + '-consent', name: 'consent', type: 'checkbox', checked: '' });
-    cw.appendChild(consent);
-    cw.appendChild(el('label', { for: id + '-consent' }, 'Share a summary of this chat with Hemanth'));
-    f.appendChild(cw);
-    var msg = el('p', { class: 'form-status', role: 'alert' });
-    f.appendChild(msg);
-    var btn = el('button', { class: 'btn btn-dark', type: 'submit' }, 'Send to Hemanth');
-    f.appendChild(btn);
-
-    f.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var data = {};
-      ['name', 'email', 'organization', 'role', 'goal', 'website'].forEach(function (n) { data[n] = f.elements[n].value; });
-      data.consent = consent.checked;
-      var errors = {};
-      if (data.name.trim().length < 2) errors.name = 'Name is required.';
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data.email.trim())) errors.email = 'Please enter a valid email address.';
-      if (!data.organization.trim()) errors.organization = 'Organization is required.';
-      if (data.goal.trim().length < 3) errors.goal = 'Goal is required.';
-      if (show(errors)) return;
-      btn.disabled = true;
-      msg.textContent = 'Sending\u2026';
-      data.action = 'lead';
-      data.maturity = self.s.maturity;
-      // The transcript is only sent when the visitor consents to share it.
-      var body = consent.checked ? JSON.parse(self.payload(data)) : data;
-      fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), credentials: 'same-origin' })
-        .then(function (r) { return r.json().catch(function () { return {}; }); })
-        .catch(function () { return {}; })
-        .then(function (res) {
-          btn.disabled = false;
-          if (res.ok) {
-            self.s.lead = 'sent';
-            self.s.leadOpen = false;
-            self.save();
-            f.remove();
-            var b = self.bubble('guide', 'Thank you, ' + data.name.trim().split(/\s+/)[0] + '. Hemanth will reply to ' + data.email.trim() + ' directly.');
-            b.setAttribute('tabindex', '-1');
-            b.focus();
-            return;
-          }
-          if (res.errors) show(res.errors);
-          msg.textContent = res.error || 'Something went wrong. Please try again, or use the contact page.';
-        });
-    });
-    function show(errors) {
-      var first = null;
-      ['name', 'email', 'organization', 'role', 'goal'].forEach(function (n) {
-        var i = f.elements[n];
-        var e = document.getElementById(i.id + '-e');
-        if (errors[n]) { i.setAttribute('aria-invalid', 'true'); e.textContent = errors[n]; if (!first) first = i; }
-        else { i.removeAttribute('aria-invalid'); e.textContent = ''; }
-      });
-      if (first) { msg.textContent = 'Please check the highlighted fields.'; first.focus(); }
-      return !!first;
-    }
-    this.log.appendChild(f);
-    this.scroll();
-    if (focus) f.elements.name.focus();
   };
 
   // Modal wrapper used on every page except /talk.
@@ -358,7 +321,7 @@
   document.addEventListener('click', function (e) {
     var t = e.target.closest && e.target.closest('[data-guide-open]');
     if (!t) return;
-    if (embed) { e.preventDefault(); var g = embed.querySelector('.chip, textarea'); if (g) g.focus(); return; }
+    if (embed) { e.preventDefault(); var g = embed.querySelector('textarea'); if (g) g.focus(); return; }
     if (!canModal || e.metaKey || e.ctrlKey || e.shiftKey) return;
     e.preventDefault();
     opener = t;

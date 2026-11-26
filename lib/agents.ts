@@ -114,7 +114,9 @@ export function sanitizeState(raw: unknown): RunState {
 function section(md: string, heading: string): string {
   const start = md.indexOf(`## ${heading}`);
   if (start < 0) return '';
-  const rest = md.slice(start + heading.length + 3);
+  // Skip the rest of the heading line, such as a chapter tag after the heading text.
+  const eol = md.indexOf('\n', start);
+  const rest = eol < 0 ? '' : md.slice(eol + 1);
   const end = rest.indexOf('\n## ');
   return (end < 0 ? rest : rest.slice(0, end)).trim();
 }

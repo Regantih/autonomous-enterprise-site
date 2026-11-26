@@ -401,6 +401,25 @@ describe('Organization page', () => {
     expect(js).toContain("getAttribute('data-who')");
     expect(js).not.toMatch(/localStorage|sessionStorage|document\.cookie|fetch\(|XMLHttpRequest|Math\.random/);
   });
+  it('adds "Internal vs external agents: credibility and trust" with chapter citations and labelled practice', () => {
+    const h = html('blueprints/organization/index.html');
+    expect(h).toContain('href="#trust">Internal vs external agents</a>');
+    const sec = h.split('id="trust"')[1].split('</section>')[0];
+    expect(h.indexOf('id="trust"')).toBeGreaterThan(h.indexOf('id="capability"'));
+    expect(sec).toContain('Credibility and trust');
+    for (const t of ['Internal agent', 'External agent', 'How agents differentiate', 'Identity.', 'Provenance.', 'Declared capability.', 'Track record.', 'Verifiable outcomes.', 'Cost and contribution.',
+      'How trust is earned and verified', 'Authentication.', 'Scoped permissions.', 'Signed actions.', 'Audit trails.', 'Reputation.', 'Certification and attestation.', 'Limits that grow with evidence.', 'Kill switch.',
+      'T0 Unknown', 'T3 Act within limits', 'Agent-to-agent negotiation risks', 'What the book does not cover']) expect(sec, t).toContain(t);
+    for (const ch of ['02', '03', '05', '06', '13', '14', '22', '23', '25', '29']) expect(sec, ch).toContain(`Ch ${ch}`);
+    expect((sec.match(/<b>Practice:<\/b>/g) ?? []).length).toBeGreaterThanOrEqual(2);
+    expect(sec).toContain('Practice items are common approaches, not from the book.');
+    expect(sec).not.toMatch(VENDORS);
+    expect(sec).not.toMatch(/\b(Stripe|Visa|Mastercard|NANDA|MIT|FIDO|Google|AWS)\b/);
+    // The guide can find it.
+    const k = readFileSync(join(DIST, '../lib/knowledge.generated.ts'), 'utf8');
+    expect(k).toContain('Internal vs external agents: credibility and trust');
+    expect(k).toContain('/blueprints/organization/#trust');
+  });
   it('is linked from the hub, models, design, controls, trace, frameworks and book', () => {
     expect(html('blueprints/index.html')).toContain('<span class="bp-card-n">10</span><h3><a href="/blueprints/organization/">Organization</a></h3>');
     expect(html('blueprints/index.html')).toContain('Eleven tools');

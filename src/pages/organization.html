@@ -10,6 +10,7 @@
       <li><a href="#delegation">Delegation and decisions</a></li>
       <li><a href="#incomplete">Incomplete information</a></li>
       <li><a href="#capability">Capability matrix</a></li>
+      <li><a href="#trust">Internal vs external agents</a></li>
       <li><a href="/blueprints/operations/">Audits and reliability</a></li>
     </ul>
   </div>
@@ -390,7 +391,107 @@
   </div>
 </section>
 
-<section class="section bp-section" id="next" aria-labelledby="next-title">
+<section class="section bp-section" id="trust" aria-labelledby="trust-title">
+  <div class="container fw-body">
+    <p class="eyebrow">Internal vs external agents</p>
+    <h2 id="trust-title" class="h-sm">Credibility and trust: whose agent is it, and what has it earned?</h2>
+    <p class="lead">Your own agents are owned, registered and inside your controls. Outside agents act for someone else. Treat each one like a new trading partner that never sleeps. <span class="md-cite">Book, Ch 23</span></p>
+    <h3>Two kinds of agent</h3>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Internal and external agents compared, scroll sideways">
+      <table class="fw-table">
+        <caption class="visually-hidden">Internal agents compared with external agents</caption>
+        <thead><tr><th scope="col">Question</th><th scope="col">Internal agent</th><th scope="col">External agent</th><th scope="col">Source</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Who is it?</th><td>Yours: built or bought, with a named business owner and technical owner.</td><td>A supplier&rsquo;s, bank&rsquo;s, customer&rsquo;s or distributor&rsquo;s agent calling your systems. You still name an owner on your side.</td><td>Ch 05, Ch 10, Ch 23</td></tr>
+          <tr><th scope="row">Where is it recorded?</th><td>The enterprise registry. No registry, no run.</td><td>Its own registry record, with a trust tier.</td><td>Ch 05, Ch 23, Ch 25</td></tr>
+          <tr><th scope="row">How is it identified?</th><td>Its own identity on every platform. Delegated tokens name the agent as actor, for one target, for minutes.</td><td>A signed, short-lived record on the partner&rsquo;s verified domain, then your own short-lived credential.</td><td>Ch 03, Ch 23</td></tr>
+          <tr><th scope="row">What may it do?</th><td>What its agent contract and autonomy level allow, L0 to L5.</td><td>Only the filtered tools you publish for it. Read before write.</td><td>Ch 05, Ch 10, Ch 22</td></tr>
+          <tr><th scope="row">How is it stopped?</th><td>Your kill switch, through your gateways.</td><td>Revocation at your gateway, within five minutes (illustrative), tested from both sides.</td><td>Ch 05, Ch 23</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>How agents differentiate</h3>
+    <p>Six things separate a credible agent from a claim. Ask for each before you widen what an agent may do.</p>
+    <ul class="fw-list">
+      <li><b>Identity.</b> One identity per agent, never a shared technical user. Calls without an agent identity are blocked. <span class="md-cite">Book, Ch 02, Ch 23</span></li>
+      <li><b>Provenance.</b> A record signed by a key bound to the partner&rsquo;s verified domain. A signed card proves who published it, not that the agent is safe. <span class="md-cite">Book, Ch 03, Ch 23</span></li>
+      <li><b>Declared capability.</b> A claim, never a permission. Scopes come from your onboarding, as for an EDI trading partner. <span class="md-cite">Book, Ch 22, Ch 23</span></li>
+      <li><b>Track record.</b> Trust tiers are earned over time. An outside agent reaches action only after 90 days of reads without a material finding (illustrative). <span class="md-cite">Book, Ch 23</span></li>
+      <li><b>Verifiable outcomes.</b> Traces carry one correlation ID from request to payment, so an auditor can follow every decision. <span class="md-cite">Book, Ch 14, Ch 25</span></li>
+      <li><b>Cost and contribution.</b> A monthly scorecard per agent: tokens, energy and cost per completed outcome, attributable value and net contribution. No account, no promotion. <span class="md-cite">Book, Ch 25</span></li>
+    </ul>
+    <p>Capability sets the ceiling of what is possible. Governance sets the level allowed. The lower one applies. <span class="md-cite">Book, Ch 22</span></p>
+    <h3>How trust is earned and verified</h3>
+    <ol class="md-rules">
+      <li><b>Discover.</b> Read the partner&rsquo;s published card. It is a hint only and never grants a scope.</li>
+      <li><b>Verify.</b> Check signature, domain, contract and the partner&rsquo;s master record.</li>
+      <li><b>Credential.</b> Issue your own short-lived credential. No shared keys.</li>
+      <li><b>Sandbox.</b> Run the agent on synthetic data for two to four weeks; security tests must pass.</li>
+      <li><b>Scope.</b> Publish a filtered list of typed, versioned tools. Read before write.</li>
+      <li><b>Limit.</b> Cap rate, value and data volume per partner and per tool, at the gateway.</li>
+      <li><b>Monitor.</b> Baseline behavior and alert on deviation.</li>
+      <li><b>Promote or revoke.</b> The owner and the CISO sign a promotion. Revocation takes effect within five minutes.</li>
+    </ol>
+    <p class="fw-note">Book, Ch 23. Durations and limits are illustrative.</p>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Trust tiers for outside agents, scroll sideways">
+      <table class="fw-table">
+        <caption class="visually-hidden">Trust tiers for outside agents</caption>
+        <thead><tr><th scope="col">Tier</th><th scope="col">What the agent may do</th><th scope="col">Entry evidence</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">T0 Unknown</th><td>Nothing. Requests are logged and refused.</td><td>None</td></tr>
+          <tr><th scope="row">T1 Sandbox</th><td>Call test tools on synthetic data.</td><td>Verified identity and a signed contract annex</td></tr>
+          <tr><th scope="row">T2 Read</th><td>Read its own records through filtered tools.</td><td>Sandbox passed; owner and CISO sign</td></tr>
+          <tr><th scope="row">T3 Act within limits</th><td>Create or update cases and requests within caps.</td><td>90 days at T2 without a material finding</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>No tier allows payment release, bank-data changes, credit-limit changes or user administration. No outside agent may change payment instructions until identity, authority and liability are settled with the counterparty. <span class="md-cite">Book, Ch 13, Ch 23</span></p>
+    <h3>The controls behind trust</h3>
+    <ul class="fw-list">
+      <li><b>Authentication.</b> Verify the partner&rsquo;s signing key, domain and contract before the first call. <span class="md-cite">Book, Ch 23</span></li>
+      <li><b>Scoped permissions.</b> Least privilege: start with read, elevate only when a privileged action is first needed. <span class="md-cite">Book, Ch 23</span></li>
+      <li><b>Signed actions.</b> Every write carries a delegated token whose current actor is the agent. Never pass a token through. <span class="md-cite">Book, Ch 05, Ch 23</span></li>
+      <li><b>Audit trails.</b> One trace store and one correlation ID across platforms. <span class="md-cite">Book, Ch 14, Ch 22</span></li>
+      <li><b>Reputation.</b> The book&rsquo;s version is the trust tier: time at a tier without findings, owner sign-off and a tested revocation. <span class="md-cite">Book, Ch 23</span></li>
+      <li><b>Certification and attestation.</b> The partner signs a capability record that must validate against your schema. You still map its skills to your scopes. <span class="md-cite">Book, Ch 23</span></li>
+      <li><b>Limits that grow with evidence.</b> Promotion needs evidence and a human gate; demotion is automatic. <span class="md-cite">Book, Ch 01, Ch 23</span></li>
+      <li><b>Kill switch.</b> Contain first, classify second. Pin and hash every external tool, skill and model version. <span class="md-cite">Book, Ch 23</span></li>
+    </ul>
+    <h3>Four kinds of trouble at the front door</h3>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Threats from outside agents, scroll sideways">
+      <table class="fw-table">
+        <caption class="visually-hidden">Four threats from outside agents and the first response</caption>
+        <thead><tr><th scope="col">Threat</th><th scope="col">What it is</th><th scope="col">First response</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Rogue agent</th><td>A real partner agent that drifts after a model update or bug</td><td>Throttle to the tier below; tell the partner owner</td></tr>
+          <tr><th scope="row">Impostor</th><td>Someone posing as a partner&rsquo;s agent</td><td>Deny at the gateway; revoke and rotate; call the partner out of band</td></tr>
+          <tr><th scope="row">Injection carrier</th><td>A genuine agent whose messages carry hidden instructions</td><td>Treat the text as data; quarantine the message</td></tr>
+          <tr><th scope="row">Poisoned component</th><td>A bad tool, skill or model update every trusting agent loads</td><td>Quarantine the version; roll back; list every agent that loaded it</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fw-note">Book, Ch 23.</p>
+    <h3>Agent-to-agent negotiation risks</h3>
+    <ul class="fw-list">
+      <li><b>Loops.</b> Two agents can call each other without end. Set a hop limit in the contract, a cost cap and a circuit breaker. <span class="md-cite">Book, Ch 02</span></li>
+      <li><b>The message overrides the contract.</b> Take terms from the contract, never from the other agent&rsquo;s message. <span class="md-cite">Book, Ch 06</span></li>
+      <li><b>No improvising.</b> A negotiating agent works inside an envelope a person approves: objective, walk-away, allowed and forbidden levers, at most three rounds. <span class="md-cite">Book, Ch 14</span></li>
+      <li><b>No leaks, no promises.</b> Never disclose another supplier&rsquo;s price. Every message says &ldquo;subject to approval&rdquo;. Counsel reviews disclosure and competition law first. <span class="md-cite">Book, Ch 14</span></li>
+      <li><b>One voice.</b> One owner of outside communication per customer per day. <span class="md-cite">Book, Ch 13</span></li>
+      <li><b>Write it down.</b> Two agents that negotiate or hand off work with judgment need an agent contract. <span class="md-cite">Book, Ch 29</span></li>
+    </ul>
+    <h3>What the book does not cover</h3>
+    <p>The book is silent on cross-company reputation scores for agents, on third-party certification of agents, and on two companies&rsquo; agents negotiating end to end, including collusion and deadlock.</p>
+    <ul class="fw-list">
+      <li><b>Practice:</b> treat an outside reputation score like a card. It is a hint and never grants a scope.</li>
+      <li><b>Practice:</b> ask for third-party attestation in the contract annex, and keep your own sandbox and tiers.</li>
+      <li><b>Practice:</b> when both sides are agents, cap rounds on your side and send any deadlock to a named person.</li>
+    </ul>
+    <p class="fw-note">Practice items are common approaches, not from the book. Meridian figures are illustrative.</p>
+  </div>
+</section>
+
+<section class="section section-paper-2 bp-section" id="next" aria-labelledby="next-title">
   <div class="container fw-body">
     <p class="eyebrow">Running it</p>
     <h2 id="next-title" class="h-sm">Audits, observability and reliability</h2>
