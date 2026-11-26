@@ -5,4 +5,8 @@ compatibility_date = "2025-11-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "autonomous-enterprise"
-database_id = "REPLACE_ME"
+database_id = "c44d5f0d-174a-4f3a-8e54-4ae9a3989eb6"
+
+
+
+
