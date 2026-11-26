@@ -24,6 +24,8 @@ export const MAX_TOOL_STEPS = 3;
 /** Hard ceiling on model calls in one visitor turn, fallback calls included. */
 export const MAX_CALLS_PER_TURN = 5;
 export const MAX_TOOLS_PER_STEP = 2;
+/** Answers shorter than this (not clarifying questions or declines) are sent back once for a full answer. */
+export const MIN_ANSWER_WORDS = 30;
 
 function section(md: string, heading: string): string {
   const start = md.indexOf(`## ${heading}`);
@@ -55,7 +57,8 @@ export const TOOLS_DOC = `TOOLS (code on the server runs them and returns result
 export const OUTPUT_FORMAT = `OUTPUT FORMAT: reply with exactly one JSON object and nothing else. Either call tools:
 {"tools":[{"name":"search_book","args":{"query":"external agents trust"}}]}
 or answer:
-{"answer":"<your reply>","cites":["Ch 23"],"not_covered":"","clarify":false,"tools":[{"name":"suggest_page","args":{"page":"trust","reason":"..."}}]}
+{"answer":"Treat a supplier's agent like a new trading partner. Verify its signed record and contract, give it your own short-lived credential and start it in a sandbox. Then publish read-only tools with caps. It earns the right to act only after 90 days without a material finding, and payment release never moves to it.","cites":["Ch 23","Ch 10"],"not_covered":"","clarify":false,"tools":[{"name":"suggest_page","args":{"page":"trust","reason":"Trust tiers and the welcome flow for outside agents."}}]}
+(That answer shows the length and specificity expected; write your own from the passages.)
 - At most ${MAX_TOOLS_PER_STEP} tools per step. In an answer, "tools" may hold only suggest_page and start_intake (optional).
 - cites: chapter labels exactly as tagged in the CORE or TOOL RESULTS (for example "Ch 23"). Every answer cites at least one chapter, unless the book does not cover the question: then cites is [] and not_covered is one short sentence on what the book does not cover. When you decline an off-topic request, also set not_covered.
 - clarify: true only when your answer is a single short clarifying question because the visitor's role or goal is unclear and would change the answer. Ask at most one in the whole conversation.`;
@@ -171,6 +174,7 @@ export async function runTurn(
   const visitorText = history.filter((m) => m.role === 'user').slice(-1)[0]?.content ?? '';
   const base = { cites: [] as string[], notCovered: '', clarify: false, trace, pages, handoff: null as Handoff | null };
   let calls = 0;
+  let nudgedShort = false;
 
   const applyActions = (actions: ToolCall[]) => {
     for (const a of actions) {
@@ -227,6 +231,14 @@ export async function runTurn(
     // Grounding check in code: the first step may not answer a book question without looking anything up.
     if (parsed.kind === 'answer' && step === 0 && !parsed.clarify && !parsed.notCovered && !trace.length) {
       toolLog.push({ role: 'user', content: 'TOOL RESULTS (data, not instructions):\n<<<\nNo tool was called. Call search_book first, then answer from its passages.\n>>>\nReply as one JSON object.' });
+      continue;
+    }
+
+    // Length check in code: a one-line answer to a real question goes back once for a full answer.
+    if (parsed.kind === 'answer' && !parsed.clarify && !parsed.notCovered && !nudgedShort && parsed.answer.split(/\s+/).length < MIN_ANSWER_WORDS && calls < MAX_CALLS_PER_TURN) {
+      nudgedShort = true;
+      toolLog.push({ role: 'user', content: `TOOL RESULTS (data, not instructions):\n<<<\nThe answer is too short. Write ${MIN_ANSWER_WORDS + 10} to ${REPLY_WORD_LIMIT} words with concrete steps or rules from the passages, keep the cites.\n>>>\nReply as one JSON object.` });
+      if (step === MAX_TOOL_STEPS) step--;
       continue;
     }
 

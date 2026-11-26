@@ -158,7 +158,7 @@ export function runTool(call: ToolCall, visitorText = ''): ToolResult {
     }
     const body = hits.map((h) => `[${h.cites.join(', ') || 'no chapter tag'}] ${h.section}: ${h.text}`).join('\n');
     return {
-      trace: { tool: 'search_book', label: `Searched the book: ${cites.join(', ') || 'overview'}`, detail: query },
+      trace: { tool: 'search_book', label: `Searched the book: ${cites.slice(0, 4).join(', ') || 'overview'}${cites.length > 4 ? ` and ${cites.length - 4} more` : ''}`, detail: query },
       forModel: `search_book("${query}") returned ${hits.length} passages:\n${body}`,
       cites,
     };

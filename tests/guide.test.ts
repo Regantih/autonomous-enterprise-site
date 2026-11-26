@@ -166,7 +166,7 @@ describe('POST /api/guide (agent loop)', () => {
   const usage = { prompt_tokens: 1000, completion_tokens: 50 };
   const step = (o: unknown) => ({ response: J(o), usage });
   const SEARCH = step({ tools: [{ name: 'search_book', args: { query: 'external agents trust tiers' } }] });
-  const ANSWER = step({ answer: 'Start outside agents in a sandbox, then read-only tools; actions come after 90 days without findings.', cites: ['Ch 23'], tools: [{ name: 'suggest_page', args: { page: 'trust', reason: 'The trust tiers and welcome flow.' } }] });
+  const ANSWER = step({ answer: 'Treat a supplier agent like a new trading partner. Verify its signed record and contract, issue your own short-lived credential and start it in a sandbox on synthetic data. Then publish read-only tools with caps; actions come after 90 days without findings.', cites: ['Ch 23'], tools: [{ name: 'suggest_page', args: { page: 'trust', reason: 'The trust tiers and welcome flow.' } }] });
 
   beforeEach(() => {
     db = new FakeD1();
@@ -219,6 +219,18 @@ describe('POST /api/guide (agent loop)', () => {
     expect(body).toMatchObject({ ok: true, steps: 3, cites: ['Ch 23'] });
     expect((ai.run.mock.calls[1][1] as { messages: { content: string }[] }).messages.at(-1)!.content).toContain('Call search_book first');
     expect((body.trace as { tool: string }[])[0].tool).toBe('search_book');
+  });
+
+  it('sends a one-line answer back once for a full one', async () => {
+    const SHORT = step({ answer: 'Apply the B2A rules.', cites: ['Ch 10'] });
+    ai.run.mockReset().mockResolvedValueOnce(SEARCH).mockResolvedValueOnce(SHORT).mockResolvedValueOnce(ANSWER);
+    const { body } = await call(chat([{ role: 'user', content: 'How do we trust outside agents?' }]));
+    expect(body).toMatchObject({ ok: true, steps: 3 });
+    expect(String(body.reply).split(/\s+/).length).toBeGreaterThanOrEqual(30);
+    expect((ai.run.mock.calls[2][1] as { messages: { content: string }[] }).messages.at(-1)!.content).toContain('The answer is too short');
+    // A second short answer is accepted rather than looping.
+    ai.run.mockReset().mockResolvedValueOnce(SEARCH).mockResolvedValueOnce(SHORT).mockResolvedValueOnce(SHORT);
+    expect((await call(chat([{ role: 'user', content: 'Again?' }]))).body).toMatchObject({ ok: true, reply: 'Apply the B2A rules.' });
   });
 
   it('withholds an answer that names a vendor, instead of replacing it with a scripted one', async () => {
