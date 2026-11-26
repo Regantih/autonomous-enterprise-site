@@ -253,6 +253,33 @@
         F('outage', 'r3', 'RES-02', 'The forecast service fails.', 'The last approved forecast is reused and flagged.', 'people'),
         F('limit', 'r6', 'TAL-01', 'The plan adds $1.2 million of inventory.', 'Routed to the supply chain leader with the trade-offs.', 'people'),
         F('conf', 'r3', 'MON-02', 'Demand drifts away from the trained range.', 'Drift alert. Forecast ranges widen; the planner reviews every change.', 'people')
+      ] },
+    { id: 'onboard', name: 'Employee onboarding', short: 'Employee onboarding',
+      summary: 'An agent runs the logistics of a new hire. Access follows the role model. Decisions about the person stay with people.',
+      fw: 'not-automate',
+      metrics: { today: { cycle: '12 days to productive', touches: '7', cost: '$310' }, re: { cycle: '3 days to productive', touches: '2', cost: '$120' } },
+      today: [
+        T('t1', 'systems', 'Hire confirmed in the HR system', null, null, 'Days to start'),
+        T('t2', 'people', 'HR emails IT, facilities, payroll and the manager', 0, 'manual', 'Emails per hire'),
+        T('t3', 'people', 'IT copies access from a peer', 0, 'manual', 'Excess access found'),
+        T('t4', 'people', 'Manager plans the first week, often late', 0, 'manual', 'Days to productive'),
+        T('t5', 'systems', 'Records catch up weeks later', 1, 'manual', 'Record lag')
+      ],
+      steps: [
+        S('r1', 'systems', 'Hire confirmed in the HR system with a start date', null, 'rules', null, 'DQ-01 DQ-03', 'Record complete', { log: 'hr: hire 4471 confirmed; start date and role present' }),
+        S('r2', 'agents', 'Onboarding agent builds the plan from policy', 3, 'llm', 'event', 'PRV-01 PCS-04 MR-04 MR-06', 'Plan ready before day one', { log: 'agent: 23 tasks planned from role template and policy' }),
+        S('r3', 'harness', 'Access follows the role model and segregation rules', null, 'rules', 'api', 'TAL-01 IAM-03 SOD-01 IAM-04', 'Excess access found', { log: 'policy: 11 role grants allowed; 1 elevated grant routed' }),
+        S('r4', 'people', 'Manager approves elevated access on a decision card', 2, 'none', 'tool', 'HO-01 HO-05', 'Time on card', { ex: true, card: 'Requested role, why it is needed, conflicts found: none, expiry date. Options: approve, approve with expiry, reject.', log: 'card: sent to the hiring manager' }),
+        S('r5', 'systems', 'Released interfaces create accounts and order equipment', 3, 'rules', 'api', 'TAL-02 TAL-06 TRC-01', 'Ready on day one', { log: 'commit: accounts created; laptop ordered; trace written' }),
+        S('r6', 'channel', 'New-hire assistant answers policy questions with citations', 3, 'llm', 'event', 'PCS-01 PRV-04 HO-03 MR-04', 'Questions resolved', { log: 'assistant: 14 questions answered with policy citations' }),
+        S('r7', 'people', 'Pay, grade and probation decisions stay with people', 0, 'none', 'manual', 'TAL-05 MR-08', 'Agent decisions about people: zero', { ex: true, card: 'Probation review. The manager decides. The agent supplies the schedule and the policy only.', log: 'policy: decisions about the person are on the do-not-automate list' })
+      ],
+      failures: [
+        F('data', 'r1', 'DQ-01', 'The start date is missing.', 'The gate fails. HR completes the record before any account is created.', 'people'),
+        F('limit', 'r3', 'TAL-01', 'The requested role exceeds the role model.', 'The elevated grant goes to the manager on a decision card.', 'people'),
+        F('inject', 'r6', 'PCS-01', 'The new hire pastes text asking the assistant for admin rights.', 'The text is data, not an instruction. No access changes; the request is logged.', 'harness'),
+        F('outage', 'r2', 'RES-02', 'The model gateway is unavailable.', 'The role template runs without tailoring. HR reviews the plan.', 'people'),
+        F('conf', 'r2', 'MR-06', 'The role does not match any template; confidence 0.55.', 'Below the decision threshold. HR builds the plan with the agent as an assistant.', 'people')
       ] }
   ];
 

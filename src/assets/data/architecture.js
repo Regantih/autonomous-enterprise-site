@@ -63,6 +63,7 @@
     K('rl', 'int', 'Reinforcement learning (incl. human feedback, bandits)', 'Learn actions from rewards over many trials.', 'Sequential decisions with fast feedback.', 'Live trials where errors are costly.', 'rl', 'MR-05 PHY-04 MON-03', 'Reward hacking.', 'Train in simulation; deploy at L2 to L3.', 'flywheel', 'ops reg'),
     K('rules', 'int', 'Rules engines and RPA', 'Apply fixed logic and repeat screen tasks.', 'Postings, limits, stable legacy screens.', 'Judgment or changing screens.', 'rules', 'TAL-02 SOD-02', 'Brittle bots break silently.', 'L4 for deterministic steps.', 'pvrc', 'app fin'),
     K('twin', 'int', 'Simulation and digital twins', 'Model a plant, warehouse or network in software.', 'Training and testing policies safely.', 'As proof without field validation.', 'twin', 'MR-05', 'Twin differs from reality.', 'Gates promotion; does not act.', 'earned', 'ops'),
+    K('edge', 'int', 'Edge and IoT analytics', 'Compact models score sensor streams next to the machine.', 'Low-latency anomaly detection on equipment.', 'Heavy models on small devices.', 'edge', 'OT-01 OT-04 MON-02', 'Edge model versions drift apart.', 'Feeds L3 maintenance recommendations.', 'harness', 'data ops'),
     K('phys', 'int', 'Physical AI (robot foundation models, vision-language-action policies)', 'Perceive and act with robots.', 'Picking, inspection, handling in mapped cells.', 'Open spaces with people and no safety envelope.', 'phys', 'PHY-01 PHY-04 OT-03', 'Unsafe motion.', 'Inside a rated safety envelope only.', 'harness', 'ops reg'),
 
     K('H1', 'har', 'Identity and delegation', 'One identity per agent, acting for an accountable person.', 'Every agent call.', 'Shared service accounts.', 'none', '', 'No token, no call.', 'Required from L1.', 'harness', 'app be'),
@@ -102,6 +103,7 @@
     if (!c.controls.length && c.layer === 'har' && AE.controls) c.controls = AE.controls.filter(function (x) { return x.part === c.id; }).map(function (x) { return x.id; });
     AE.componentById[c.id] = c;
   });
+  ['H9', 'tracestore'].forEach(function (id) { AE.componentById[id].link = { href: '/blueprints/trace/', label: 'Open the decision trace viewer' }; });
 
   // Model family table and chooser.
   AE.models = [
@@ -117,6 +119,7 @@
     { id: 'rl', good: 'Sequential decisions with feedback', weak: 'Safe exploration, reward design', evals: 'Simulation return, unsafe-action rate, shadow agreement', ceil: 'L2 to L3 after simulation', mand: 'MR-05 PHY-04 MON-03' },
     { id: 'rules', good: 'Exact, explainable, repeatable logic', weak: 'Ambiguity and change', evals: 'Rule coverage, regression tests', ceil: 'L4 for deterministic steps', mand: 'SOD-02 TRC-04' },
     { id: 'twin', good: 'Safe testing of policies and plans', weak: 'Gap to reality', evals: 'Sim-to-real agreement', ceil: 'Gates promotion; does not act', mand: 'MR-05' },
+    { id: 'edge', good: 'Fast anomaly detection close to the machine', weak: 'Constrained hardware, version sprawl', evals: 'False alarm rate, missed-fault rate', ceil: 'L3 recommendations; machines stay in control', mand: 'OT-01 OT-04' },
     { id: 'phys', good: 'Perception and motion in mapped cells', weak: 'Open, crowded spaces', evals: 'Task success, safety stops, near misses', ceil: 'Inside a safety envelope', mand: 'PHY-01 PHY-02 PHY-04 OT-03' }
   ];
   AE.chooser = [
@@ -124,10 +127,11 @@
     { id: 'nums', q: 'The task is about numbers or time series', fam: { ml: 3, opt: 1 }, why: 'Classical ML is accurate and cheap on numbers.', ctl: 'MON-02' },
     { id: 'explain', q: 'Each decision needs an explanation', fam: { rules: 2, kg: 2, rag: 1, llm: 1 }, why: 'Rules and graphs give explanations that auditors can follow.', ctl: 'TRC-01 MR-04' },
     { id: 'seq', q: 'Decisions are sequential, with feedback', fam: { rl: 3, opt: 2, twin: 1 }, why: 'Reinforcement learning and solvers handle sequences; train in simulation.', ctl: 'MR-05' },
-    { id: 'phys', q: 'The work happens in the physical world', fam: { phys: 3, mm: 2, twin: 2, ml: 1 }, why: 'Physical AI acts; vision sees; the twin tests safely.', ctl: 'PHY-01 OT-03 PHY-04' },
-    { id: 'rt', q: 'It needs real-time latency', fam: { slm: 2, ml: 2, rules: 2 }, why: 'Small models, classical ML and rules answer in milliseconds.', ctl: 'RES-02' },
+    { id: 'phys', q: 'The work happens in the physical world', fam: { phys: 3, mm: 2, twin: 2, ml: 1, edge: 1 }, why: 'Physical AI acts; vision sees; the twin tests safely.', ctl: 'PHY-01 OT-03 PHY-04' },
+    { id: 'rt', q: 'It needs real-time latency', fam: { slm: 2, ml: 2, rules: 2, edge: 1 }, why: 'Small models, classical ML and rules answer in milliseconds.', ctl: 'RES-02' },
     { id: 'cost', q: 'Cost per outcome is a big concern', fam: { slm: 2, rules: 2, ml: 1 }, why: 'Use the simplest engine that works.', ctl: 'CST-01 CST-02 CST-03' },
-    { id: 'reg', q: 'The step is regulated or a key control', fam: { rules: 2, kg: 1 }, why: 'Deterministic engines post; people sign.', ctl: 'HO-01 TRC-01 MR-02 SOD-01' }
+    { id: 'sensor', q: 'Signals come from sensors or machines', fam: { edge: 3, ml: 2, twin: 1 }, why: 'Edge analytics score streams fast; forecasting estimates time to failure.', ctl: 'OT-01 OT-04' },
+    { id: 'reg', q: 'The step is regulated or a key control', fam: { rules: 2, kg: 1 }, why: 'Deterministic engines post; people sign.', ctl: 'HO-01 TRC-01 MR-02 SOD-01 MR-06' }
   ];
 
   // Eight architecture variations. Each path step: [component id, caption].
@@ -142,7 +146,7 @@
       ['web', 'A planner submits a goal: recover a late order.'], ['planner', 'The supervisor splits it into tasks.'], ['contracts', 'Contracts define who decides and what evidence returns.'], ['ag-sc', 'The supply chain agent finds stock and capacity.'],
       ['ag-fin', 'The finance agent checks credit and cost.'], ['H7', 'Verification checks each result against its contract.'], ['wfengine', 'The workflow engine joins the results.'], ['inbox', 'The planner approves the recovery plan.'], ['tracestore', 'Every handoff is in the trace store.']] },
     { id: 'iot', name: 'Event-driven IoT loop', level: 'L2 to L3', desc: 'Sensor anomaly to work order, with a technician approving.', path: [
-      ['iot', 'A vibration sensor reports a rising trend.'], ['ts', 'Readings land in the time-series store.'], ['dqg', 'The plausibility gate checks the readings.'], ['ml', 'Anomaly and forecasting models score the asset.'],
+      ['iot', 'A vibration sensor reports a rising trend.'], ['ts', 'Readings land in the time-series store.'], ['dqg', 'The plausibility gate checks the readings.'], ['edge', 'An edge model flags the anomaly at the machine.'], ['ml', 'A forecasting model estimates days to failure.'],
       ['eventbus', 'An anomaly event is published.'], ['ag-mnt', 'The maintenance agent drafts a work order.'], ['H3', 'Policy checks cost, window and safety class.'], ['inbox', 'The technician approves on a decision card.'], ['apigw', 'The work order and parts reservation commit.']] },
     { id: 'voice', name: 'Voice front door', level: 'L3', desc: 'Speech in, identity check, agent, speech out, and a warm handoff.', path: [
       ['voice', 'A customer calls the service line.'], ['speech', 'Speech-to-text transcribes; the caller hears the agent notice.'], ['H1', 'Identity verification runs before any account action.'], ['ag-svc', 'The service agent finds the intent.'],
@@ -164,6 +168,6 @@
   AE.modelNames = {
     llm: 'GPT-class LLM', slm: 'Small model', reason: 'Reasoning model', mm: 'Multimodal and vision', speech: 'Speech',
     rag: 'Retrieval (RAG)', kg: 'Knowledge graph', ml: 'Classical ML and forecasting', opt: 'Optimization solver',
-    rl: 'Reinforcement learning', rules: 'Rules engine', twin: 'Digital twin', phys: 'Physical AI', none: 'No model'
+    rl: 'Reinforcement learning', rules: 'Rules engine', twin: 'Digital twin', edge: 'Edge and IoT analytics', phys: 'Physical AI', none: 'No model'
   };
 })(typeof window !== 'undefined' ? window : globalThis);
