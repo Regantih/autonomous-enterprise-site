@@ -1,4 +1,4 @@
-/* The conversational intake agent on /contact/, /speaking/ and /advisory/. It replaced the request forms.
+/* The conversational intake agent on /contact/ and /speaking/ (Speaking & Advisory). It replaced the request forms.
    A real model call asks one short question at a time and fills a request card. The visitor can edit any field
    inline. Code checks the card; nothing is sent until the visitor ticks consent and presses Send.
    Talks only to this site's own POST /api/intake. Keeps nothing in storage. */
@@ -57,7 +57,7 @@
 
   var path = location.pathname;
   var fromHash = (INTENTS.filter(function (i) { return location.hash === '#' + i.hash; })[0] || {}).id;
-  var S = { intent: /^\/speaking\//.test(path) ? 'talk' : /^\/advisory\//.test(path) ? 'advisory' : fromHash || null, messages: [], captured: {}, edited: {}, missing: [], busy: false, calls: 0, tokIn: 0, tokOut: 0, sent: false };
+  var S = { intent: fromHash || (/^\/speaking\//.test(path) ? 'talk' : null), messages: [], captured: {}, edited: {}, missing: [], busy: false, calls: 0, tokIn: 0, tokOut: 0, sent: false };
 
   root.innerHTML =
     '<div class="ik-intents" role="group" aria-label="What do you need?"></div>' +
@@ -80,6 +80,14 @@
     var b = el('button', 'pill', esc(it.label)); b.type = 'button'; b.setAttribute('data-intent', it.id); b.setAttribute('aria-pressed', String(S.intent === it.id));
     b.addEventListener('click', function () { setIntent(it.id); text.focus(); });
     bar.appendChild(b);
+  });
+  // Preset links on the Speaking & Advisory page (and #speaking / #advisory in the address) pick the request type.
+  $$('[data-intake-preset]').forEach(function (a) {
+    a.addEventListener('click', function () { var id = a.getAttribute('data-intake-preset'); if (FIELDS[id]) setIntent(id); });
+  });
+  window.addEventListener('hashchange', function () {
+    var id = (INTENTS.filter(function (i) { return location.hash === '#' + i.hash; })[0] || {}).id;
+    if (id) setIntent(id);
   });
   function setIntent(id) {
     if (S.sent) return;

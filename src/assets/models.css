@@ -1,0 +1,34 @@
+/* /blueprints/models/: model families, storyboard and matrix. */
+.md-intro { max-width: 72ch; }
+.md-cite { display: inline-block; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em; color: var(--orange-text); white-space: nowrap; }
+.md-rules { display: grid; gap: 0.6rem; padding-left: 1.4rem; max-width: 70ch; margin: 1rem 0 1.5rem; }
+.md-layers { list-style: none; padding: 0; margin: 1rem 0; display: grid; gap: 0.4rem; max-width: 70ch; }
+.md-layers li { background: var(--white); border: 1px solid var(--line); border-left: 4px solid var(--ink); border-radius: var(--radius); padding: 0.55rem 0.9rem; }
+.md-layers li:nth-child(3) { border-left-color: var(--orange); }
+
+/* Storyboard: numbered panels, read in order. No arrows. */
+.md-story { list-style: none; margin: 1.5rem 0 0; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); }
+.md-panel { position: relative; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.2rem 1.2rem 1.3rem; min-width: 0; }
+.md-panel-key { border: 2px solid var(--ink); }
+.md-panel-n { position: absolute; top: -0.9rem; left: 1rem; width: 2rem; height: 2rem; display: grid; place-items: center; background: var(--orange); color: var(--ink); font-family: var(--font-display); font-weight: 700; border-radius: 2px; }
+.md-panel-key .md-panel-n { background: var(--ink); color: var(--paper); }
+.md-tag { margin: 0.6rem 0 0.25rem; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--orange-text); }
+.md-panel h3 { font-size: 1.15rem; margin: 0 0 0.4rem; }
+.md-panel p:last-child { margin: 0; }
+
+/* Family cards */
+.md-fams { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr)); margin-top: 1.5rem; }
+.md-fam { background: var(--white); border: 1px solid var(--line); border-top: 4px solid var(--orange); border-radius: var(--radius); padding: 1.3rem; min-width: 0; scroll-margin-top: 5rem; }
+.md-fam:target { outline: 3px solid var(--orange); outline-offset: 2px; }
+.md-n { margin: 0 0 0.3rem; font-family: var(--font-display); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.85rem; color: var(--orange-text); }
+.md-fam h3 { margin: 0 0 0.5rem; font-size: 1.25rem; }
+.md-sum { color: var(--muted); margin: 0 0 0.9rem; }
+.md-dl { margin: 0; display: grid; gap: 0.7rem; }
+.md-dl dt { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.md-dl dd { margin: 0.15rem 0 0; }
+
+/* Matrix filter (built from the table rows by models.js) */
+.md-filter { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0 0.5rem; }
+.md-count { font-size: 0.9rem; color: var(--muted); min-height: 1.4em; margin: 0 0 0.5rem; }
+.md-matrix td, .md-matrix th { font-size: 0.92rem; }
+.md-matrix tr[hidden] { display: none; }

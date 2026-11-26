@@ -1,4 +1,4 @@
-/* The conversational intake agent on /contact/, /speaking/ and /advisory/. */
+/* The conversational intake agent on /contact/ and /speaking/ (Speaking & Advisory). */
 .ik-wrap { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(1rem, 3.5vw, 2rem); box-shadow: 0 20px 50px -30px rgba(0, 0, 0, 0.35); min-width: 0; }
 .ik-wrap h3 { font-size: 1.6rem; margin-top: 0; }
 .ik-kinds { display: grid; gap: 0.4rem; padding-left: 1.2rem; margin: 0 0 1.5rem; max-width: 60ch; }

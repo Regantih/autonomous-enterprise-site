@@ -1066,3 +1066,8 @@ fieldset.field legend { padding: 0; margin-bottom: 0.35rem; }
 @media (min-width: 80rem) { .site-header .brand-name { white-space: nowrap; } }
 @media (max-width: 30rem) { .site-header .brand { font-size: 1rem; line-height: 1.05; } }
 @media (max-width: 22.5rem) { .site-header .brand { font-size: 0.92rem; } .header-cta { padding-inline: 0.6rem; font-size: 0.78rem; } .header-inner { padding-block: 0.3rem; } }
+
+/* In-page jump links under a page head (Speaking & Advisory, Models). */
+.sa-jump { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; margin: 1.25rem 0 0; padding: 0; }
+.sa-jump a { font-weight: 600; }
+.page-head .sa-jump a { color: var(--paper); text-decoration-color: var(--orange); text-underline-offset: 0.2em; }

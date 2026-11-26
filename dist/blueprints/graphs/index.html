@@ -33,14 +33,14 @@
 <script src="/assets/data/controls.js?v=e0d936f9ff" defer></script>
 <script src="/assets/data/layers.js?v=7c10827ab4" defer></script>
 <script src="/assets/data/workflows.js?v=357666b3fd" defer></script>
-<script src="/assets/data/architecture.js?v=f634c57d9f" defer></script>
+<script src="/assets/data/architecture.js?v=2a1d6d58f4" defer></script>
 <script src="/assets/blueprints.js?v=dc77177432" defer></script>
 <link rel="stylesheet" href="/assets/graphs.css?v=1046dd304e">
 <script src="/assets/graphs-data.js?v=7b2458483b" defer></script>
-<script src="/assets/graphs.js?v=c88a487310" defer></script>
-<link rel="stylesheet" href="/assets/styles.css?v=ba2aeaf1e8">
-<script src="/assets/site.js?v=ba2aeaf1e8" defer></script>
-<script src="/assets/guide.js?v=ba2aeaf1e8" defer></script>
+<script src="/assets/graphs.js?v=a0e05ab8ab" defer></script>
+<link rel="stylesheet" href="/assets/styles.css?v=b017ebdfba">
+<script src="/assets/site.js?v=b017ebdfba" defer></script>
+<script src="/assets/guide.js?v=b017ebdfba" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -50,16 +50,13 @@
     <nav class="site-nav" aria-label="Main">
       <ul>
         <li><a href="/book/">Book</a></li>
-        <li><a href="/frameworks/">Frameworks</a></li>
         <li><a href="/blueprints/" aria-current="page">Blueprints</a></li>
         <li><a href="/ideas/">Ideas</a></li>
-        <li><a href="/speaking/">Speaking</a></li>
-        <li><a href="/advisory/">Advisory</a></li>
+        <li><a href="/speaking/">Speaking &amp; Advisory</a></li>
         <li><a href="/about/">About</a></li>
-        <li><a href="/contact/">Contact</a></li>
       </ul>
     </nav>
-    <a class="btn btn-primary header-cta" href="/contact/#advisory">Talk to the author</a>
+    <a class="btn btn-primary header-cta" href="/contact/">Talk to the book</a>
   </div>
 </header>
 <main id="main" tabindex="-1">
@@ -81,6 +78,8 @@
       <li><a href="/blueprints/trace/">Trace viewer</a></li>
       <li><a href="/blueprints/loops/">Improvement loops</a></li>
       <li><a href="/blueprints/graphs/" aria-current="page">Graphs</a></li>
+      <li><a href="/blueprints/models/">Models</a></li>
+      <li><a href="/blueprints/design/">Design choices</a></li>
     </ul>
   </div>
 </nav>
@@ -1262,23 +1261,23 @@
       <li><b>Signal.</b> Your question arrives on the web. Chat, email, voice, IoT and robot signals are not connected in this demo.</li>
       <li><b>Brain router.</b> 10 rules in code read the question and pick the graph and the model family.</li>
       <li><b>Graph lookup.</b> Code walks the knowledge graph or the skill graph and selects a subgraph.</li>
-      <li><b>Model family.</b> One GPT-class model call writes the answer. Every other family is routed to, not run in this demo.</li>
+      <li><b>Model family.</b> One GPT-class model call writes the answer. Every other family is routed to, not run in this demo. <a href="/blueprints/models/">What each family does and where it fits</a>.</li>
       <li><b>Skill and agent.</b> The graph agent answers from the subgraph only.</li>
       <li><b>Gate.</b> Code checks citations, vendor names, prompt leaks, length and the call budget: <a class="cid" href="/controls/#MR-04">MR-04</a> <a class="cid" href="/controls/#PCS-01">PCS-01</a> <a class="cid" href="/controls/#PCS-02">PCS-02</a> <a class="cid" href="/controls/#PCS-05">PCS-05</a> <a class="cid" href="/controls/#CST-03">CST-03</a> <a class="cid" href="/controls/#TAL-04">TAL-04</a> <a class="cid" href="/controls/#TRC-01">TRC-01</a> <a class="cid" href="/controls/#RES-02">RES-02</a>.</li>
       <li><b>Action.</b> A read-only answer with cited nodes.</li>
       <li><b>Trace and memory.</b> The trace is added to your session memory in this browser tab. Nothing is stored on the server.</li>
     </ol>
     <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Model families the router can pick"><table class="fw-table gr-table"><caption>Model families the router can pick</caption><thead><tr><th scope="col">Family</th><th scope="col">In this demo</th><th scope="col">Evals you need</th><th scope="col">Mandatory controls</th></tr></thead><tbody>
-<tr><th scope="row">GPT-class LLM</th><td>run: composes the answer from the subgraph</td><td>Task accuracy, groundedness, injection, refusal</td><td><a class="cid" href="/controls/#PCS-01">PCS-01</a> <a class="cid" href="/controls/#PCS-02">PCS-02</a> <a class="cid" href="/controls/#MR-04">MR-04</a> <a class="cid" href="/controls/#PRV-02">PRV-02</a></td></tr>
-<tr><th scope="row">Small model</th><td>routed to, not run in this demo</td><td>Accuracy per class, robustness to new inputs</td><td><a class="cid" href="/controls/#MR-01">MR-01</a> <a class="cid" href="/controls/#PCS-02">PCS-02</a></td></tr>
-<tr><th scope="row">Retrieval (RAG)</th><td>routed to, not run in this demo</td><td>Retrieval recall, citation accuracy, access leaks</td><td><a class="cid" href="/controls/#PCS-04">PCS-04</a> <a class="cid" href="/controls/#MR-04">MR-04</a></td></tr>
-<tr><th scope="row">Graph ML and knowledge graph</th><td>graph traversal runs in code; graph ML is routed to, not run in this demo</td><td>Entity match precision, link coverage</td><td><a class="cid" href="/controls/#DQ-03">DQ-03</a></td></tr>
-<tr><th scope="row">Classical ML and forecasting</th><td>routed to, not run in this demo</td><td>Error by segment, calibration, drift</td><td><a class="cid" href="/controls/#MR-01">MR-01</a> <a class="cid" href="/controls/#MON-02">MON-02</a></td></tr>
-<tr><th scope="row">Optimizer</th><td>routed to, not run in this demo</td><td>Constraint satisfaction, cost gap, scenario tests</td><td><a class="cid" href="/controls/#MR-01">MR-01</a> <a class="cid" href="/controls/#TAL-01">TAL-01</a></td></tr>
+<tr><th scope="row"><a href="/blueprints/models/#llm">GPT-class LLM</a></th><td>run: composes the answer from the subgraph</td><td>Task accuracy, groundedness, injection, refusal</td><td><a class="cid" href="/controls/#PCS-01">PCS-01</a> <a class="cid" href="/controls/#PCS-02">PCS-02</a> <a class="cid" href="/controls/#MR-04">MR-04</a> <a class="cid" href="/controls/#PRV-02">PRV-02</a></td></tr>
+<tr><th scope="row"><a href="/blueprints/models/#slm">Small model</a></th><td>routed to, not run in this demo</td><td>Accuracy per class, robustness to new inputs</td><td><a class="cid" href="/controls/#MR-01">MR-01</a> <a class="cid" href="/controls/#PCS-02">PCS-02</a></td></tr>
+<tr><th scope="row"><a href="/blueprints/models/#rag">Retrieval (RAG)</a></th><td>routed to, not run in this demo</td><td>Retrieval recall, citation accuracy, access leaks</td><td><a class="cid" href="/controls/#PCS-04">PCS-04</a> <a class="cid" href="/controls/#MR-04">MR-04</a></td></tr>
+<tr><th scope="row"><a href="/blueprints/models/#kg">Graph ML and knowledge graph</a></th><td>graph traversal runs in code; graph ML is routed to, not run in this demo</td><td>Entity match precision, link coverage</td><td><a class="cid" href="/controls/#DQ-03">DQ-03</a></td></tr>
+<tr><th scope="row"><a href="/blueprints/models/#ml">Classical ML and forecasting</a></th><td>routed to, not run in this demo</td><td>Error by segment, calibration, drift</td><td><a class="cid" href="/controls/#MR-01">MR-01</a> <a class="cid" href="/controls/#MON-02">MON-02</a></td></tr>
+<tr><th scope="row"><a href="/blueprints/models/#opt">Optimizer</a></th><td>routed to, not run in this demo</td><td>Constraint satisfaction, cost gap, scenario tests</td><td><a class="cid" href="/controls/#MR-01">MR-01</a> <a class="cid" href="/controls/#TAL-01">TAL-01</a></td></tr>
 <tr><th scope="row">Reinforcement learning</th><td>routed to, not run in this demo</td><td>Simulation return, unsafe-action rate, shadow agreement</td><td><a class="cid" href="/controls/#MR-05">MR-05</a> <a class="cid" href="/controls/#PHY-04">PHY-04</a> <a class="cid" href="/controls/#MON-03">MON-03</a></td></tr>
-<tr><th scope="row">Speech</th><td>routed to, not run in this demo</td><td>Word error rate, read-back accuracy</td><td><a class="cid" href="/controls/#PRV-04">PRV-04</a> <a class="cid" href="/controls/#IAM-05">IAM-05</a></td></tr>
-<tr><th scope="row">Vision and multimodal</th><td>routed to, not run in this demo</td><td>Field accuracy, layout coverage</td><td><a class="cid" href="/controls/#PCS-02">PCS-02</a> <a class="cid" href="/controls/#DQ-01">DQ-01</a></td></tr>
-<tr><th scope="row">Physical AI policy</th><td>routed to, not run in this demo</td><td>Task success, safety stops, near misses</td><td><a class="cid" href="/controls/#PHY-01">PHY-01</a> <a class="cid" href="/controls/#PHY-02">PHY-02</a> <a class="cid" href="/controls/#PHY-04">PHY-04</a> <a class="cid" href="/controls/#OT-03">OT-03</a></td></tr>
+<tr><th scope="row"><a href="/blueprints/models/#speech">Speech</a></th><td>routed to, not run in this demo</td><td>Word error rate, read-back accuracy</td><td><a class="cid" href="/controls/#PRV-04">PRV-04</a> <a class="cid" href="/controls/#IAM-05">IAM-05</a></td></tr>
+<tr><th scope="row"><a href="/blueprints/models/#mm">Vision and multimodal</a></th><td>routed to, not run in this demo</td><td>Field accuracy, layout coverage</td><td><a class="cid" href="/controls/#PCS-02">PCS-02</a> <a class="cid" href="/controls/#DQ-01">DQ-01</a></td></tr>
+<tr><th scope="row"><a href="/blueprints/models/#phys">Physical AI policy</a></th><td>routed to, not run in this demo</td><td>Task success, safety stops, near misses</td><td><a class="cid" href="/controls/#PHY-01">PHY-01</a> <a class="cid" href="/controls/#PHY-02">PHY-02</a> <a class="cid" href="/controls/#PHY-04">PHY-04</a> <a class="cid" href="/controls/#OT-03">OT-03</a></td></tr>
 </tbody></table></div>
     <details class="gr-alt">
       <summary>All 32 nodes of the brain map, as a table</summary>
@@ -1360,7 +1359,7 @@
     <details class="lp-more">
       <summary>Limits and what is real</summary>
       <p><b>Real.</b> The graphs, the routing, the traversal and every check are code. The answer is one call to a GPT-class model, with a smaller model as fallback.</p>
-      <p><b>Not run.</b> Other model families appear on the map so you see the choice. The demo labels them &ldquo;routed to, not run in this demo&rdquo; and shows no output for them.</p>
+      <p><b>Not run.</b> Other model families appear on the map so you see the choice. The demo labels them &ldquo;routed to, not run in this demo&rdquo; and shows no output for them. <a href="/blueprints/models/">See what each family does and where it fits</a>.</p>
       <p><b>Limits.</b> Eight questions per visitor per hour. The site shares a daily allowance of model calls that resets at midnight UTC. Your questions are not stored.</p>
     </details>
     <p class="fw-note">Related: the <a href="/architecture/#patterns">graph-grounded agent pattern</a> and controls <a class="cid" href="/controls/#MR-04">MR-04</a> <a class="cid" href="/controls/#PCS-01">PCS-01</a> <a class="cid" href="/controls/#MR-10">MR-10</a>.</p>
@@ -1381,8 +1380,7 @@
         <li><a href="/frameworks/">Frameworks</a></li>
         <li><a href="/blueprints/">Blueprints</a></li>
         <li><a href="/ideas/">Ideas</a></li>
-        <li><a href="/speaking/">Speaking</a></li>
-        <li><a href="/advisory/">Advisory</a></li>
+        <li><a href="/speaking/">Speaking &amp; Advisory</a></li>
         <li><a href="/about/">About</a></li>
         <li><a href="/contact/">Contact</a></li>
       </ul>

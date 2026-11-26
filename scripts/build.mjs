@@ -70,13 +70,13 @@ export const PAGES = [
   },
   {
     src: 'speaking.html', out: 'speaking/index.html', path: '/speaking/', nav: 'SPEAKING',
-    title: 'Speaking | Hemanth Reganti | Human-Led Enterprise',
+    title: 'Speaking & Advisory | Hemanth Reganti | Human-Led Enterprise',
     description:
-      'Book Hemanth Reganti for a keynote, panel, fireside chat or workshop on managing and governing the agent-run company. In person (Dallas–Fort Worth) or virtual.',
+      'Book Hemanth Reganti for a keynote, panel, fireside chat or workshop, or bring him in to advise your leadership team on starting or scaling AI agents. In person (Dallas–Fort Worth) or virtual.',
     sitemap: true, priority: '0.8',
   },
   {
-    src: 'frameworks.html', out: 'frameworks/index.html', path: '/frameworks/', nav: 'FRAMEWORKS',
+    src: 'frameworks.html', out: 'frameworks/index.html', path: '/frameworks/', nav: 'BOOK',
     title: 'Frameworks from The Autonomous Enterprise | Human-Led Enterprise',
     description:
       'The core frameworks of The Autonomous Enterprise explained: the L0 to L5 autonomy scale, the harness, the weakest-link rule, cost per completed outcome, when not to automate and the 30-month plan.',
@@ -139,6 +139,20 @@ export const PAGES = [
     sitemap: true, priority: '0.7',
   },
   {
+    src: 'models.html', out: 'blueprints/models/index.html', path: '/blueprints/models/', nav: 'BLUEPRINTS', bp: 'models',
+    title: 'Models: GPT-class, Tabular, Voice, Vision and Physical AI in the Solution Framework | Human-Led Enterprise',
+    description:
+      'Every model family an agent-operated enterprise uses, from the book: what each is good at, an example, its autonomy level, how it is evaluated and where it sits in the architecture.',
+    sitemap: true, priority: '0.8',
+  },
+  {
+    src: 'design.html', out: 'blueprints/design/index.html', path: '/blueprints/design/', nav: 'BLUEPRINTS', bp: 'design',
+    title: 'Design Choices: Tabular Models, Retrieval, Evals, Security, Inference and Thresholds | Human-Led Enterprise',
+    description:
+      'Six design choices from the book: tabular foundation models, retrieval and grounding, evals and audit trails, agent security, inference routing and budgets, and which steps go to models or rules.',
+    sitemap: true, priority: '0.7',
+  },
+  {
     src: 'leaders.html', out: 'leaders/index.html', path: '/leaders/',
     title: 'Questions Leaders Ask About AI Agents | Human-Led Enterprise',
     description:
@@ -153,14 +167,7 @@ export const PAGES = [
     sitemap: true, priority: '0.8',
   },
   {
-    src: 'advisory.html', out: 'advisory/index.html', path: '/advisory/', nav: 'ADVISORY',
-    title: 'Advisory | Hemanth Reganti | Human-Led Enterprise',
-    description:
-      'Advisory for leadership teams starting or scaling AI agents: autonomy readiness assessment, governance and guardrail design, operating-model changes, business case and 30-month roadmap.',
-    sitemap: true, priority: '0.8',
-  },
-  {
-    src: 'contact.html', out: 'contact/index.html', path: '/contact/', nav: 'CONTACT',
+    src: 'contact.html', out: 'contact/index.html', path: '/contact/',
     title: 'Contact | Hemanth Reganti | Human-Led Enterprise',
     description: 'Book a talk, request advisory, or arrange a media or podcast interview with Hemanth Reganti, author of The Autonomous Enterprise. Press kit and bios.',
     sitemap: true, priority: '0.6',
@@ -342,7 +349,7 @@ export function build() {
   for (const f of readdirSync(join(SRC, 'static'))) cpSync(join(SRC, 'static', f), join(DIST, f), { recursive: true });
 
   const layout = read(join(SRC, 'partials', 'layout.html'));
-  const assetVersion = hash(['styles.css', 'site.js', 'guide.js', 'blueprints.js', 'graphs.js', 'graphs.css', 'intake.js', 'intake.css', ...BP_DATA_FILES].map((f) => read(join(SRC, 'assets', f))).join(''));
+  const assetVersion = hash(['styles.css', 'site.js', 'guide.js', 'blueprints.js', 'graphs.js', 'graphs.css', 'intake.js', 'intake.css', 'models.js', 'models.css', ...BP_DATA_FILES].map((f) => read(join(SRC, 'assets', f))).join(''));
 
   const bpVars = blueprintVars(join(SRC, 'assets'));
   const recording = writeRecording();
@@ -368,8 +375,9 @@ export function build() {
           ? `<script src="${assetUrl('frameworks.js')}" defer></script>\n`
           : page.bp ? bpScripts + (page.src === 'trace.html' ? `<link rel="stylesheet" href="${assetUrl('trace.css')}">\n<script src="${assetUrl('trace-core.js')}" defer></script>\n<script src="${assetUrl('trace.js')}" defer></script>\n`
             : page.src === 'graphs.html' ? `<link rel="stylesheet" href="${assetUrl('graphs.css')}">\n<script src="${graphsData}" defer></script>\n<script src="${assetUrl('graphs.js')}" defer></script>\n`
+            : ['models.html', 'design.html'].includes(page.src) ? `<link rel="stylesheet" href="${assetUrl('models.css')}">\n<script src="${assetUrl('models.js')}" defer></script>\n`
             : page.src === 'loops.html' ? `<link rel="stylesheet" href="${assetUrl('loops.css')}">\n<script src="${assetUrl('loops-live.js')}" defer></script>\n<script src="${recording.url}" defer></script>\n<script src="${assetUrl('loops.js')}" defer></script>\n` : '')
-            : ['contact.html', 'speaking.html', 'advisory.html'].includes(page.src)
+            : ['contact.html', 'speaking.html'].includes(page.src)
               ? `<link rel="stylesheet" href="${assetUrl('intake.css')}">\n<script src="${assetUrl('intake.js')}" defer></script>\n`
             : page.src === 'leaders.html'
               ? `<link rel="stylesheet" href="${assetUrl('leaders.css')}">\n<script src="${assetUrl('leaders.js')}" defer></script>\n`
@@ -381,9 +389,6 @@ export function build() {
       ...bpVars,
       ...grVars,
       GRAPHS_JSON_URL: assetUrl('data/graphs.json'),
-      NAV_FRAMEWORKS: page.nav === 'FRAMEWORKS' ? ' aria-current="page"' : '',
-      NAV_ADVISORY: page.nav === 'ADVISORY' ? ' aria-current="page"' : '',
-      NAV_CONTACT: page.nav === 'CONTACT' ? ' aria-current="page"' : '',
       NAV_BOOK: page.nav === 'BOOK' ? ' aria-current="page"' : '',
       NAV_ABOUT: page.nav === 'ABOUT' ? ' aria-current="page"' : '',
       GUIDE_FAB: page.nav === 'TALK' ? '' : read(join(SRC, 'partials', 'guide-fab.html')).trimEnd(),

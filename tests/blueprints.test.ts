@@ -152,11 +152,11 @@ describe('alignment layers and architecture data', () => {
 
 describe('built Blueprints pages', () => {
   it('builds the hub and its tools with sub-nav, scripts and illustrative labels', () => {
-    expect(bpPages.map((p) => p.path)).toEqual(['/blueprints/', '/architecture/', '/workflows/', '/controls/', '/designer/', '/blueprints/trace/', '/blueprints/loops/', '/blueprints/graphs/']);
+    expect(bpPages.map((p) => p.path)).toEqual(['/blueprints/', '/architecture/', '/workflows/', '/controls/', '/designer/', '/blueprints/trace/', '/blueprints/loops/', '/blueprints/graphs/', '/blueprints/models/', '/blueprints/design/']);
     for (const p of bpPages) {
       const h = html(p.out);
       expect(h, p.out).toContain('<nav class="bp-subnav" aria-label="Blueprints">');
-      for (const href of ['/architecture/', '/workflows/', '/controls/', '/designer/', '/blueprints/trace/', '/blueprints/loops/', '/blueprints/graphs/']) expect(h).toContain(`href="${href}"`);
+      for (const href of ['/architecture/', '/workflows/', '/controls/', '/designer/', '/blueprints/trace/', '/blueprints/loops/', '/blueprints/graphs/', '/blueprints/models/', '/blueprints/design/']) expect(h).toContain(`href="${href}"`);
       expect(h, p.out).toContain('<li><a href="/blueprints/graphs/"' + (p.bp === 'graphs' ? ' aria-current="page"' : '') + '>Graphs</a></li>');
       expect(h, p.out).toContain('<li><a href="/blueprints/loops/"' + (p.bp === 'loops' ? ' aria-current="page"' : '') + '>Improvement loops</a></li>');
       expect(h, p.out).toMatch(/<a href="\/blueprints\/" aria-current="page">Blueprints<\/a>/);
@@ -322,5 +322,46 @@ describe('self-improving loops: live operations room', () => {
     for (const s of Lv.STEPS) for (const sentence of `${s.what} ${s.evidence}`.split(/(?<=\.)\s/)) expect(words(sentence), sentence).toBeLessThanOrEqual(25);
     expect(Lv.CHIPS.map((c: { id: string }) => c.id)).toEqual(['cheaper', 'fairness', 'goal', 'scorer']);
     expect(Lv.AGENTS.map((a: { role: string }) => a.role.split(':')[0])).toEqual(['AI agent', 'Code', 'AI agent', 'Code', 'Code', 'AP process owner']);
+  });
+});
+
+describe('Models page', () => {
+  const FAMILIES = ['llm', 'slm', 'rpt', 'ml', 'opt', 'rag', 'kg', 'mm', 'video', 'speech', 'multimodal', 'phys'];
+  it('covers every model family with the five fields, an 8-panel storyboard and a matrix row per family', () => {
+    const h = html('blueprints/models/index.html');
+    expect(h.match(/<h1[\s>]/g)).toHaveLength(1);
+    for (const id of FAMILIES) expect(h, id).toContain(`<article class="md-fam" id="${id}"`);
+    for (const dt of ['Good at', 'Example', 'Autonomy and risk', 'How it is tested', 'Where it sits']) expect(h.match(new RegExp(`<dt>${dt}</dt>`, 'g'))).toHaveLength(FAMILIES.length);
+    expect(h.match(/<li class="md-panel[ "]/g)).toHaveLength(8);
+    const rows = [...h.matchAll(/<tr data-layer="[^"]+"><th scope="row"><a href="#([a-z]+)">/g)].map((m) => m[1]);
+    expect(rows.sort()).toEqual([...FAMILIES].sort());
+    expect(h).toContain('GPT-class');
+    expect(h).toMatch(/Book, Ch 0[3-9]/);
+    expect(h).toMatch(/<script src="\/assets\/models\.js\?v=[0-9a-f]{10}" defer><\/script>/);
+    expect(h).not.toMatch(/\b(SAP|RPT-1|TabPFN|Prior Labs|AWS|Databricks|Mitra|Kumo|Gemini|Claude|Llama)\b/);
+  });
+  it('is linked from the hub, the architecture page and the graphs page', () => {
+    expect(html('blueprints/index.html')).toContain('<span class="bp-card-n">08</span><h3><a href="/blueprints/models/">Models</a></h3>');
+    expect(html('architecture/index.html')).toContain('href="/blueprints/models/"');
+    expect(html('architecture/index.html')).toContain('href="/blueprints/models/#llm"');
+    const g = html('blueprints/graphs/index.html');
+    expect(g).toContain('href="/blueprints/models/"');
+    expect(g).toContain('href="/blueprints/models/#kg"');
+  });
+});
+
+describe('Design choices page', () => {
+  it('has the six sections with chapter citations, links to controls and the trace viewer, and no downloads or forms', () => {
+    const h = html('blueprints/design/index.html');
+    expect(h.match(/<h1[\s>]/g)).toHaveLength(1);
+    for (const id of ['tabular', 'rag', 'evals', 'security', 'inference', 'deterministic']) expect(h, id).toMatch(new RegExp(`<section class="section[^"]*" id="${id}"`));
+    for (const ch of ['03', '04', '05', '06', '07', '08', '09', '21', '22', '23', '25']) expect(h, ch).toContain(`Ch ${ch}`);
+    expect(h).toContain('href="/controls/"');
+    expect(h).toContain('href="/blueprints/trace/"');
+    expect(h).toContain('p* = L &divide; (G + L)');
+    expect(h).not.toMatch(/<form[\s>]|download|data-intake/);
+    expect(h).not.toMatch(/\b(SAP|TabPFN|Prior Labs|AWS|Databricks|Copilot|Agentforce|Now Assist|Claude|Gemini)\b/);
+    expect(html('blueprints/index.html')).toContain('<span class="bp-card-n">09</span><h3><a href="/blueprints/design/">Design choices</a></h3>');
+    expect(html('blueprints/models/index.html')).toContain('href="/blueprints/design/"');
   });
 });

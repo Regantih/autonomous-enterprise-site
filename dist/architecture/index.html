@@ -33,11 +33,11 @@
 <script src="/assets/data/controls.js?v=e0d936f9ff" defer></script>
 <script src="/assets/data/layers.js?v=7c10827ab4" defer></script>
 <script src="/assets/data/workflows.js?v=357666b3fd" defer></script>
-<script src="/assets/data/architecture.js?v=f634c57d9f" defer></script>
+<script src="/assets/data/architecture.js?v=2a1d6d58f4" defer></script>
 <script src="/assets/blueprints.js?v=dc77177432" defer></script>
-<link rel="stylesheet" href="/assets/styles.css?v=ba2aeaf1e8">
-<script src="/assets/site.js?v=ba2aeaf1e8" defer></script>
-<script src="/assets/guide.js?v=ba2aeaf1e8" defer></script>
+<link rel="stylesheet" href="/assets/styles.css?v=b017ebdfba">
+<script src="/assets/site.js?v=b017ebdfba" defer></script>
+<script src="/assets/guide.js?v=b017ebdfba" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -47,16 +47,13 @@
     <nav class="site-nav" aria-label="Main">
       <ul>
         <li><a href="/book/">Book</a></li>
-        <li><a href="/frameworks/">Frameworks</a></li>
         <li><a href="/blueprints/" aria-current="page">Blueprints</a></li>
         <li><a href="/ideas/">Ideas</a></li>
-        <li><a href="/speaking/">Speaking</a></li>
-        <li><a href="/advisory/">Advisory</a></li>
+        <li><a href="/speaking/">Speaking &amp; Advisory</a></li>
         <li><a href="/about/">About</a></li>
-        <li><a href="/contact/">Contact</a></li>
       </ul>
     </nav>
-    <a class="btn btn-primary header-cta" href="/contact/#advisory">Talk to the author</a>
+    <a class="btn btn-primary header-cta" href="/contact/">Talk to the book</a>
   </div>
 </header>
 <main id="main" tabindex="-1">
@@ -78,6 +75,8 @@
       <li><a href="/blueprints/trace/">Trace viewer</a></li>
       <li><a href="/blueprints/loops/">Improvement loops</a></li>
       <li><a href="/blueprints/graphs/">Graphs</a></li>
+      <li><a href="/blueprints/models/">Models</a></li>
+      <li><a href="/blueprints/design/">Design choices</a></li>
     </ul>
   </div>
 </nav>
@@ -99,21 +98,22 @@
     <div class="bp-ix" hidden><div data-bp="chooser"></div></div>
     <h3>Model families compared</h3>
     <div class="fw-table-wrap"><table class="fw-table bp-models"><thead><tr><th scope="col">Model family</th><th scope="col">Good at</th><th scope="col">Weak at</th><th scope="col">Evals you need</th><th scope="col">Typical ceiling</th></tr></thead><tbody>
-<tr><th scope="row">Frontier large language models (GPT-class)</th><td>Language, drafting, explanation, flexible reasoning</td><td>Arithmetic, exact recall, hard limits</td><td>Task accuracy, groundedness, injection, refusal</td><td>L3 in a strong harness</td></tr>
-<tr><th scope="row">Small and open models</th><td>Narrow classification and extraction at low cost</td><td>Broad or novel tasks</td><td>Accuracy per class, robustness to new inputs</td><td>L3 to L4 for narrow tasks</td></tr>
-<tr><th scope="row">Reasoning models</th><td>Multi-step plans and root cause</td><td>Latency and cost</td><td>Plan correctness, step validity, loop rate</td><td>L2 to L3</td></tr>
-<tr><th scope="row">Multimodal and vision</th><td>Documents, images, inspection</td><td>Low-quality scans, rare layouts</td><td>Field accuracy, layout coverage</td><td>L3 with schema checks</td></tr>
-<tr><th scope="row">Speech (speech-to-text, text-to-speech)</th><td>Voice in and out</td><td>Noise, accents, numbers</td><td>Word error rate, read-back accuracy</td><td>L3 with read-back</td></tr>
-<tr><th scope="row">Embeddings and retrieval (RAG)</th><td>Grounded answers from documents</td><td>Stale or missing documents</td><td>Retrieval recall, citation accuracy, access leaks</td><td>L3 with citations</td></tr>
-<tr><th scope="row">Knowledge graphs and graph machine learning</th><td>Entities, relationships, explainable links</td><td>Unstructured judgment</td><td>Entity match precision, link coverage</td><td>L3 for checks</td></tr>
-<tr><th scope="row">Classical ML and forecasting</th><td>Numbers, time series, scores</td><td>Language, regime change</td><td>Error by segment, calibration, drift</td><td>L3 to L4 with drift monitoring</td></tr>
-<tr><th scope="row">Optimization solvers</th><td>Best plan under constraints</td><td>Unclear goals</td><td>Constraint satisfaction, cost gap, scenario tests</td><td>L3 to L4 for plans</td></tr>
+<tr><th scope="row"><a href="/blueprints/models/#llm">Frontier large language models (GPT-class)</a></th><td>Language, drafting, explanation, flexible reasoning</td><td>Arithmetic, exact recall, hard limits</td><td>Task accuracy, groundedness, injection, refusal</td><td>L3 in a strong harness</td></tr>
+<tr><th scope="row"><a href="/blueprints/models/#slm">Small and open models</a></th><td>Narrow classification and extraction at low cost</td><td>Broad or novel tasks</td><td>Accuracy per class, robustness to new inputs</td><td>L3 to L4 for narrow tasks</td></tr>
+<tr><th scope="row"><a href="/blueprints/models/#llm">Reasoning models</a></th><td>Multi-step plans and root cause</td><td>Latency and cost</td><td>Plan correctness, step validity, loop rate</td><td>L2 to L3</td></tr>
+<tr><th scope="row"><a href="/blueprints/models/#mm">Multimodal and vision</a></th><td>Documents, images, inspection</td><td>Low-quality scans, rare layouts</td><td>Field accuracy, layout coverage</td><td>L3 with schema checks</td></tr>
+<tr><th scope="row"><a href="/blueprints/models/#speech">Speech (speech-to-text, text-to-speech)</a></th><td>Voice in and out</td><td>Noise, accents, numbers</td><td>Word error rate, read-back accuracy</td><td>L3 with read-back</td></tr>
+<tr><th scope="row"><a href="/blueprints/models/#rag">Embeddings and retrieval (RAG)</a></th><td>Grounded answers from documents</td><td>Stale or missing documents</td><td>Retrieval recall, citation accuracy, access leaks</td><td>L3 with citations</td></tr>
+<tr><th scope="row"><a href="/blueprints/models/#kg">Knowledge graphs and graph machine learning</a></th><td>Entities, relationships, explainable links</td><td>Unstructured judgment</td><td>Entity match precision, link coverage</td><td>L3 for checks</td></tr>
+<tr><th scope="row"><a href="/blueprints/models/#ml">Classical ML and forecasting</a></th><td>Numbers, time series, scores</td><td>Language, regime change</td><td>Error by segment, calibration, drift</td><td>L3 to L4 with drift monitoring</td></tr>
+<tr><th scope="row"><a href="/blueprints/models/#opt">Optimization solvers</a></th><td>Best plan under constraints</td><td>Unclear goals</td><td>Constraint satisfaction, cost gap, scenario tests</td><td>L3 to L4 for plans</td></tr>
 <tr><th scope="row">Reinforcement learning (incl. human feedback, bandits)</th><td>Sequential decisions with feedback</td><td>Safe exploration, reward design</td><td>Simulation return, unsafe-action rate, shadow agreement</td><td>L2 to L3 after simulation</td></tr>
-<tr><th scope="row">Rules engines and RPA</th><td>Exact, explainable, repeatable logic</td><td>Ambiguity and change</td><td>Rule coverage, regression tests</td><td>L4 for deterministic steps</td></tr>
+<tr><th scope="row"><a href="/blueprints/models/#opt">Rules engines and RPA</a></th><td>Exact, explainable, repeatable logic</td><td>Ambiguity and change</td><td>Rule coverage, regression tests</td><td>L4 for deterministic steps</td></tr>
 <tr><th scope="row">Simulation and digital twins</th><td>Safe testing of policies and plans</td><td>Gap to reality</td><td>Sim-to-real agreement</td><td>Gates promotion; does not act</td></tr>
-<tr><th scope="row">Edge and IoT analytics</th><td>Fast anomaly detection close to the machine</td><td>Constrained hardware, version sprawl</td><td>False alarm rate, missed-fault rate</td><td>L3 recommendations; machines stay in control</td></tr>
-<tr><th scope="row">Physical AI (robot foundation models, vision-language-action policies)</th><td>Perception and motion in mapped cells</td><td>Open, crowded spaces</td><td>Task success, safety stops, near misses</td><td>Inside a safety envelope</td></tr>
+<tr><th scope="row"><a href="/blueprints/models/#phys">Edge and IoT analytics</a></th><td>Fast anomaly detection close to the machine</td><td>Constrained hardware, version sprawl</td><td>False alarm rate, missed-fault rate</td><td>L3 recommendations; machines stay in control</td></tr>
+<tr><th scope="row"><a href="/blueprints/models/#phys">Physical AI (robot foundation models, vision-language-action policies)</a></th><td>Perception and motion in mapped cells</td><td>Open, crowded spaces</td><td>Task success, safety stops, near misses</td><td>Inside a safety envelope</td></tr>
 </tbody></table></div>
+    <p>Each family in depth, from the book: GPT-class, small, tabular (RPT), forecasting, graph, vision, video, voice and physical AI. See <a href="/blueprints/models/">Models</a>.</p>
   </div>
 </section>
 
@@ -160,7 +160,7 @@
   <li id="c-ag-hr"><b>HR agents.</b> Onboarding tasks, policy answers, scheduling. <span class="muted">Use for: Admin work around people. Not for: Decisions about hiring, pay or dismissal.</span> <a class="cid" href="/controls/#TAL-05">TAL-05</a> <a class="cid" href="/controls/#PRV-01">PRV-01</a> <a class="cid" href="/controls/#HO-01">HO-01</a></li>
   <li id="c-ag-mnt"><b>Maintenance agents.</b> Turn signals into work orders and plans. <span class="muted">Use for: Condition-based maintenance. Not for: Direct machine control.</span> <a class="cid" href="/controls/#OT-03">OT-03</a> <a class="cid" href="/controls/#HO-01">HO-01</a> <a class="cid" href="/controls/#DQ-03">DQ-03</a></li>
 </ul></section>
-<section class="ar-static-layer" aria-labelledby="arl-int"><h3 id="arl-int">Intelligence: model portfolio</h3><ul class="ar-static-list">
+<section class="ar-static-layer" aria-labelledby="arl-int"><h3 id="arl-int">Intelligence: model portfolio</h3><p><a href="/blueprints/models/">Every model family in depth: what it does, an example, its autonomy and its tests</a>.</p><ul class="ar-static-list">
   <li id="c-llm"><b>Frontier large language models (GPT-class).</b> Read, write and reason over language. <span class="muted">Use for: Unstructured text, drafting, explanation. Not for: Arithmetic, postings and hard limits.</span> <a class="cid" href="/controls/#PCS-01">PCS-01</a> <a class="cid" href="/controls/#PCS-02">PCS-02</a> <a class="cid" href="/controls/#MR-04">MR-04</a></li>
   <li id="c-slm"><b>Small and open models.</b> Cheaper, faster language models for narrow tasks. <span class="muted">Use for: Classification, extraction, routing, edge. Not for: Broad open-ended reasoning.</span> <a class="cid" href="/controls/#MR-01">MR-01</a> <a class="cid" href="/controls/#TPS-01">TPS-01</a></li>
   <li id="c-reason"><b>Reasoning models.</b> Plan and check multi-step problems. <span class="muted">Use for: Planning, root cause, complex exceptions. Not for: Low-latency or low-cost paths.</span> <a class="cid" href="/controls/#RES-03">RES-03</a> <a class="cid" href="/controls/#CST-01">CST-01</a> <a class="cid" href="/controls/#MR-04">MR-04</a></li>
@@ -230,8 +230,7 @@
         <li><a href="/frameworks/">Frameworks</a></li>
         <li><a href="/blueprints/">Blueprints</a></li>
         <li><a href="/ideas/">Ideas</a></li>
-        <li><a href="/speaking/">Speaking</a></li>
-        <li><a href="/advisory/">Advisory</a></li>
+        <li><a href="/speaking/">Speaking &amp; Advisory</a></li>
         <li><a href="/about/">About</a></li>
         <li><a href="/contact/">Contact</a></li>
       </ul>

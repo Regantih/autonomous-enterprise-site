@@ -11,7 +11,7 @@ import {
 } from './validate';
 
 /**
- * The conversational intake agent that replaced the request forms on /contact/, /speaking/ and /advisory/.
+ * The conversational intake agent that replaced the request forms on /contact/ and /speaking/ (Speaking & Advisory).
  * A real model call asks one short follow-up at a time and extracts the same fields the forms collected.
  * Code sanitises every field, decides what is still missing (validateRequest, the same rules the forms used),
  * and stores a request only when the visitor confirms with explicit consent. functions/api/intake.ts wires

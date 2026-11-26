@@ -46,5 +46,23 @@ Source: The Autonomous Enterprise by Hemanth Reganti (first edition, November 20
 
 ## How to engage the author
 - Book: paperback $59.99 https://www.amazon.com/dp/B0HS8HG6DP ; Kindle $12.99 https://www.amazon.com/dp/B0HS8C4WLL
-- Speaking (keynote, panel, fireside chat, workshop; in person in Dallas–Fort Worth or virtual): /contact (Speaking tab)
-- Advisory for leadership teams (autonomy readiness assessment, governance and guardrail design, operating-model changes, business case and 30-month roadmap): /contact (Advisory tab)
+- Speaking (keynote, panel, fireside chat, workshop; in person in Dallas–Fort Worth or virtual): /speaking/#speaking on the Speaking & Advisory page, or /contact
+- Advisory for leadership teams (autonomy readiness assessment, governance and guardrail design, operating-model changes, business case and 30-month roadmap): /speaking/#advisory on the Speaking & Advisory page, or /contact
+- Both pages have the intake agent that fills in a request card. /advisory now redirects to /speaking/#advisory.
+
+## Where things are on this site
+- Header: Book, Blueprints, Ideas, Speaking & Advisory, About, and the "Talk to the book" button (goes to /contact).
+- Frameworks: /frameworks (linked from /book and the footer). Contact and press kit: /contact (footer).
+- Models: /blueprints/models, every model family in the book and where it fits in the architecture.
+- Design choices: /blueprints/design, tabular foundation models (TFMs and RPTs), retrieval and grounding, evals and audit trails, agent security and the front door, inference routing and budgets, and which steps go to models or rules (the p* = L / (G + L) threshold).
+
+## Model families (Book, Ch 03, 04, 07, 09, 15)
+- The rule: probabilistic engines propose; solvers and rules decide what is feasible and allowed; a system of record executes. "LLM for everything" is a common failure.
+- GPT-class language models: read, extract, draft, explain, plan; weak at arithmetic over many rows, hard limits and table predictions. They propose and never post.
+- Small language models: narrow, high-volume routing and extraction, edge sites; "a good router and a weak planner". Do not fine-tune frontier models on ERP data.
+- Tabular foundation models (RPTs, relational/tabular pretrained transformers): predict from labeled business rows in one pass, with calibrated probabilities, called by the agent as a tool. "The LLM reasons; the TFM does the statistics."
+- Classical ML and time-series forecasting: forecasts with ranges (for example a 13-week cash forecast with 10th, 50th and 90th percentiles); watch for drift.
+- Solvers and rules: deterministic; solvers find the best feasible plan, rules enforce policy and limits; rules need a 100% test pass rate.
+- Embeddings and retrieval, knowledge graphs: layer 3 (data and semantics); the graph resolves which record in which system is the same customer. Defer graph neural networks past year one.
+- Vision and document models, video (camera analytics and world models), voice (speech-to-text, text-to-speech, voice agents), multimodal and screen agents, physical AI and IoT: each runs under deterministic rails. A camera alert is information, not a safety function; voice is a channel, not a credential; a robot model may choose how to do a task, never whether it is safe.
+- Calibration: among proposals scored 0.9, about 90% must be right on your own data. Use calibrated scores to route, never to approve.

@@ -45,15 +45,19 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://humanledenterprise.com/blueprints/models/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://humanledenterprise.com/blueprints/design/</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://humanledenterprise.com/leaders/</loc>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://humanledenterprise.com/ideas/</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://humanledenterprise.com/advisory/</loc>
     <priority>0.8</priority>
   </url>
   <url>

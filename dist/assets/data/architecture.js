@@ -105,6 +105,11 @@
   });
   ['H9', 'tracestore'].forEach(function (id) { AE.componentById[id].link = { href: '/blueprints/trace/', label: 'Open the decision trace viewer' }; });
   ['kg', 'kgstore'].forEach(function (id) { AE.componentById[id].link = { href: '/blueprints/graphs/', label: 'Explore a real knowledge graph' }; });
+  // Each model family's card on /blueprints/models/ (the book's account of that family).
+  AE.modelPage = { llm: 'llm', reason: 'llm', slm: 'slm', ml: 'ml', opt: 'opt', rules: 'opt', rag: 'rag', kg: 'kg', mm: 'mm', speech: 'speech', edge: 'phys', phys: 'phys' };
+  Object.keys(AE.modelPage).forEach(function (id) {
+    if (!AE.componentById[id].link) AE.componentById[id].link = { href: '/blueprints/models/#' + AE.modelPage[id], label: 'How this model family fits' };
+  });
 
   // Model family table and chooser.
   AE.models = [

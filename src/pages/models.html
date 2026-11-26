@@ -1,0 +1,339 @@
+<section class="page-head bp-head" aria-labelledby="page-title">
+  <div class="container">
+    <p class="eyebrow">Blueprints &middot; Models</p>
+    <h1 id="page-title">Models</h1>
+    <p class="lead">An agent-operated company runs on a portfolio of models, not one. Each family does one kind of work well. This page shows where each one fits.</p>
+    <ul class="sa-jump" aria-label="On this page">
+      <li><a href="#portfolio">The rule</a></li>
+      <li><a href="#storyboard">One dispute, five engines</a></li>
+      <li><a href="#families">Twelve families</a></li>
+      <li><a href="#matrix">Matrix</a></li>
+      <li><a href="#evaluate">How models earn autonomy</a></li>
+      <li><a href="/blueprints/design/">Design choices</a></li>
+    </ul>
+  </div>
+</section>
+{{BP_SUBNAV}}
+
+<section class="section bp-section" id="portfolio" aria-labelledby="portfolio-title">
+  <div class="container fw-body">
+    <p class="eyebrow">A portfolio, not one model</p>
+    <h2 id="portfolio-title" class="h-sm">Probabilistic engines propose. Deterministic engines decide.</h2>
+    <p class="lead">Probabilistic engines propose. Solvers and rules decide what is feasible and allowed. A system of record executes. <span class="md-cite">Book, Ch 04</span></p>
+    <p>A common failure is &ldquo;LLM for everything&rdquo;. The answer looks right, but it is slow, expensive and sometimes wrong. Match the engine to the decision instead. <span class="md-cite">Book, Ch 04</span></p>
+    <ol class="md-rules">
+      <li><b>A policy or hard constraint:</b> a rules engine. Never let a probabilistic model decide whether a policy applies.</li>
+      <li><b>The best plan among many:</b> a solver. A language model may set up the scenario or explain the result.</li>
+      <li><b>A prediction from business tables:</b> a tabular foundation model first. Train a classic model only if it fails the test.</li>
+      <li><b>A forecast of a series:</b> a time-series model.</li>
+      <li><b>Language, images or audio:</b> a language model or a specialist model for that modality.</li>
+      <li><b>A task that spans several:</b> a language model orchestrates and calls the others as tools. The harness governs the result.</li>
+    </ol>
+    <h3>Where models sit in the six layers</h3>
+    <p>The book&rsquo;s architecture has six layers. Most models live in layer 4, behind one model gateway. Changing a model is then configuration plus an evaluation run. <span class="md-cite">Book, Ch 03</span></p>
+    <ul class="md-layers">
+      <li><b>6 Experience.</b> Where people and machines meet: chat, voice, screens, robots.</li>
+      <li><b>5 Agents and harness.</b> Plans work and governs every action. Only the harness turns a proposal into an action.</li>
+      <li><b>4 AI engines.</b> Language, tabular, time-series and specialist models, solvers and rules.</li>
+      <li><b>3 Data and semantics.</b> Knowledge graph, vector indexes and data products. Context lives here, not in prompts.</li>
+      <li><b>2 Integration and events.</b> APIs, events and governed tools.</li>
+      <li><b>1 Systems of record.</b> Hold the legal truth and post transactions.</li>
+    </ul>
+    <p>The site&rsquo;s <a href="/architecture/#chooser">reference architecture</a> shows the same engines as its model portfolio layer, with a chooser.</p>
+  </div>
+</section>
+
+<section class="section section-paper-2 bp-section" id="storyboard" aria-labelledby="story-title">
+  <div class="container">
+    <p class="eyebrow">Storyboard</p>
+    <h2 id="story-title" class="h-sm">One dispute, five engines</h2>
+    <p class="md-intro">A customer short-pays an invoice. Follow the case through each engine. The language model reads, the graph resolves, the tabular model scores, and the harness decides. <span class="md-cite">Book, Ch 03 and Ch 04</span></p>
+    <ol class="md-story">
+      <li class="md-panel">
+        <span class="md-panel-n" aria-hidden="true">1</span>
+        <p class="md-tag">Channel</p>
+        <h3>The email arrives</h3>
+        <p>A customer short-pays a USD 96,000 invoice by USD 3,400. The email says the contract price is 12.50, not 14.20. A case opens.</p>
+      </li>
+      <li class="md-panel">
+        <span class="md-panel-n" aria-hidden="true">2</span>
+        <p class="md-tag">GPT-class model</p>
+        <h3>The language model reads</h3>
+        <p>It reads the email and attachment. It returns a typed claim: pricing, 2,000 units, billed 14.20, claimed 12.50. It decides nothing.</p>
+      </li>
+      <li class="md-panel">
+        <span class="md-panel-n" aria-hidden="true">3</span>
+        <p class="md-tag">Knowledge graph</p>
+        <h3>The graph resolves</h3>
+        <p>It matches the CRM account to the right ERP customer. It finds which ERP holds the invoice and the contract price.</p>
+      </li>
+      <li class="md-panel">
+        <span class="md-panel-n" aria-hidden="true">4</span>
+        <p class="md-tag">Data and retrieval</p>
+        <h3>The facts arrive</h3>
+        <p>Governed tools fetch delivery records, both prices, 24 months of payment history and two past disputes. Data freshness is logged.</p>
+      </li>
+      <li class="md-panel">
+        <span class="md-panel-n" aria-hidden="true">5</span>
+        <p class="md-tag">Tabular model</p>
+        <h3>The tabular model scores</h3>
+        <p>Its context is 1,800 resolved disputes. It returns a 0.87 probability that the claim is valid, with the drivers behind it.</p>
+      </li>
+      <li class="md-panel md-panel-key">
+        <span class="md-panel-n" aria-hidden="true">6</span>
+        <p class="md-tag">Harness</p>
+        <h3>The harness decides</h3>
+        <p>USD 3,400 is inside the channel limit. The threshold for that amount is 0.81, and 0.87 clears it. Segregation of duties passes.</p>
+      </li>
+      <li class="md-panel">
+        <span class="md-panel-n" aria-hidden="true">7</span>
+        <p class="md-tag">Rules, then GPT-class model</p>
+        <h3>A rule posts, the model replies</h3>
+        <p>A deterministic rule posts the credit request at L3. The language model drafts the reply. Over the limit, a person approves at L2.</p>
+      </li>
+      <li class="md-panel">
+        <span class="md-panel-n" aria-hidden="true">8</span>
+        <p class="md-tag">Learning loop</p>
+        <h3>The outcome teaches</h3>
+        <p>After 60 days without reversal, the case becomes a labeled row in the tabular model&rsquo;s context. The trace closes.</p>
+      </li>
+    </ol>
+    <p class="fw-note">Illustrative figures from Meridian, the book&rsquo;s fictional company. The threshold is p* = L &divide; (G + L), so it rises with the amount. At go-live the channel limit is USD 2,500, and the same case goes to a person. <span class="md-cite">Book, Ch 03</span></p>
+  </div>
+</section>
+
+<section class="section bp-section" id="families" aria-labelledby="families-title">
+  <div class="container">
+    <p class="eyebrow">Twelve families</p>
+    <h2 id="families-title" class="h-sm">What each model family does, and where it fits</h2>
+    <p class="md-intro">Each card says what the family is good at, gives an example from the book, its usual autonomy level, how it is tested, and where it sits.</p>
+    <div class="md-fams">
+
+      <article class="md-fam" id="llm" aria-labelledby="md-llm">
+        <p class="md-n">01 &middot; Language</p>
+        <h3 id="md-llm">GPT-class large language models</h3>
+        <p class="md-sum">&ldquo;A very fast, very well-read junior analyst who has never seen your company&rsquo;s data and sometimes states guesses with confidence.&rdquo; <span class="md-cite">Book, Ch 04</span></p>
+        <dl class="md-dl">
+          <div><dt>Good at</dt><dd>Reading documents, extracting fields, drafting, explaining, planning and coding. Weak at arithmetic over many rows, hard limits and table predictions.</dd></div>
+          <div><dt>Example</dt><dd>In a dispute it reads the email and photos, then returns the claim as a typed schema. <span class="md-cite">Book, Ch 04</span></dd></div>
+          <div><dt>Autonomy and risk</dt><dd>It reads and proposes. It has no authority to post. Main risks: invented facts, prompt injection and over-confidence.</dd></div>
+          <div><dt>How it is tested</dt><dd>Schema and amount checks, a golden set of 200 to 500 real cases, a calibrated model-as-judge, a human sample and adversarial tests. <span class="md-cite">Book, Ch 04</span></dd></div>
+          <div><dt>Where it sits</dt><dd>Layer 4, behind the model gateway. Use a reasoning mode to plan and a fast model to extract. Harness: model gateway, tool gateway, verification gates.</dd></div>
+        </dl>
+      </article>
+
+      <article class="md-fam" id="slm" aria-labelledby="md-slm">
+        <p class="md-n">02 &middot; Language</p>
+        <h3 id="md-slm">Small and fine-tuned language models</h3>
+        <p class="md-sum">A compact model that runs on one GPU, a laptop or an edge device. &ldquo;A good router and a weak planner.&rdquo; <span class="md-cite">Book, Ch 04</span></p>
+        <dl class="md-dl">
+          <div><dt>Good at</dt><dd>High-volume narrow tasks: routing an inbox, extracting ten fields from a known form. Also sites cut off from the cloud.</dd></div>
+          <div><dt>Example</dt><dd>IT ticket routing: a small model plus rules, with a first target of L3. <span class="md-cite">Book, Ch 04</span></dd></div>
+          <div><dt>Autonomy and risk</dt><dd>Narrow routing can run at L3. Do not fine-tune frontier models on ERP data: records change daily, and weights freeze them. <span class="md-cite">Book, Ch 03</span></dd></div>
+          <div><dt>How it is tested</dt><dd>On your own golden set. A fine-tuned model falls under model-risk controls: backtests, explanations, pinned versions and re-validation. <span class="md-cite">Book, Ch 04 and Ch 09</span></dd></div>
+          <div><dt>Where it sits</dt><dd>Layer 4, on a private endpoint or at the plant edge. The model gateway routes each step to the cheapest engine that passes evaluation.</dd></div>
+        </dl>
+      </article>
+
+      <article class="md-fam" id="rpt" aria-labelledby="md-rpt">
+        <p class="md-n">03 &middot; Prediction</p>
+        <h3 id="md-rpt">Tabular foundation models (RPTs)</h3>
+        <p class="md-sum">Relational and tabular pretrained transformers. The book calls them tabular foundation models. They predict from labeled business rows in one pass, with no training project. <span class="md-cite">Book, Ch 04</span></p>
+        <dl class="md-dl">
+          <div><dt>Good at</dt><dd>Classifying and scoring rows: open items, orders, deliveries. Output is a probability or a distribution, not a guess.</dd></div>
+          <div><dt>Example</dt><dd>Show it 20,000 invoices labeled &ldquo;paid late&rdquo; or &ldquo;on time&rdquo;. It applies the pattern to the next 500 at once. <span class="md-cite">Book, Ch 04</span></dd></div>
+          <div><dt>Autonomy and risk</dt><dd>Its score acts only through rules. Small, likely-late invoices get reminders at L3; the rest go to collectors at L2.</dd></div>
+          <div><dt>How it is tested</dt><dd>A temporal backtest over 6 to 12 periods. Precision-recall area, Brier score and calibration. Per-row drivers go on the approval card. <span class="md-cite">Book, Ch 04</span></dd></div>
+          <div><dt>Where it sits</dt><dd>Layer 4, called by the agent as a tool. &ldquo;The LLM reasons; the TFM does the statistics.&rdquo; <a href="/blueprints/design/#tabular">Design a TFM use case</a>.</dd></div>
+        </dl>
+      </article>
+
+      <article class="md-fam" id="ml" aria-labelledby="md-ml">
+        <p class="md-n">04 &middot; Prediction</p>
+        <h3 id="md-ml">Classical machine learning and time-series forecasting</h3>
+        <p class="md-sum">Classic models are trained once per task. Time-series models predict what a series does next, with ranges. <span class="md-cite">Book, Ch 04</span></p>
+        <dl class="md-dl">
+          <div><dt>Good at</dt><dd>Forecasts of cash, demand and volumes. A classic trained model can pay off at millions of predictions a day.</dd></div>
+          <div><dt>Example</dt><dd>A 13-week cash forecast gives the 10th, 50th and 90th percentiles. The liquidity buffer is set against the 10th. <span class="md-cite">Book, Ch 04</span></dd></div>
+          <div><dt>Autonomy and risk</dt><dd>The treasurer approves funding at L2. The main risk is silent drift as the business changes.</dd></div>
+          <div><dt>How it is tested</dt><dd>Error measures such as WAPE and MASE, bias and interval coverage. Go live only after beating the best simple baseline. <span class="md-cite">Book, Ch 03 and Ch 04</span></dd></div>
+          <div><dt>Where it sits</dt><dd>Layer 4, as a warehouse function or an endpoint. Harness: drift monitors, and rules that turn a forecast into a target.</dd></div>
+        </dl>
+      </article>
+
+      <article class="md-fam" id="opt" aria-labelledby="md-opt">
+        <p class="md-n">05 &middot; Deterministic</p>
+        <h3 id="md-opt">Optimization solvers and rules engines</h3>
+        <p class="md-sum">They give the same answer for the same input. A solver finds the best feasible plan. A rule says whether an action is allowed. <span class="md-cite">Book, Ch 04</span></p>
+        <dl class="md-dl">
+          <div><dt>Good at</dt><dd>Plans under constraints, limits, segregation of duties and posting logic. An auditor can read and test every rule.</dd></div>
+          <div><dt>Example</dt><dd>A solver sets safety stock per material. Changes under 20% apply at L3; larger ones go to a planner at L2. <span class="md-cite">Book, Ch 04</span></dd></div>
+          <div><dt>Autonomy and risk</dt><dd>They decide what is feasible and allowed. A language model is not a solver. Its &ldquo;optimal plan&rdquo; only looks right.</dd></div>
+          <div><dt>How it is tested</dt><dd>Solvers by their optimality gap and a feasibility check before any write. Rules need a 100% test pass rate. <span class="md-cite">Book, Ch 04</span></dd></div>
+          <div><dt>Where it sits</dt><dd>Solvers stay in planning applications. Rules move into one versioned rules service that the harness uses to validate and route.</dd></div>
+        </dl>
+      </article>
+
+      <article class="md-fam" id="rag" aria-labelledby="md-rag">
+        <p class="md-n">06 &middot; Context</p>
+        <h3 id="md-rag">Embeddings and retrieval</h3>
+        <p class="md-sum">An embedding model turns text or images into vectors. A reranker orders the candidates. Together they find what the agent needs. <span class="md-cite">Book, Ch 04</span></p>
+        <dl class="md-dl">
+          <div><dt>Good at</dt><dd>Retrieval, deduplication and finding similar past cases.</dd></div>
+          <div><dt>Example</dt><dd>Each agent step retrieves policy, certified definitions and permission-filtered passages, then like-for-like precedent. <span class="md-cite">Book, Ch 09</span></dd></div>
+          <div><dt>Autonomy and risk</dt><dd>It supplies context to other steps. Risks: leaks and stale passages. A permission filter can silently return too few results.</dd></div>
+          <div><dt>How it is tested</dt><dd>Zero unauthorized passages on a permission test set, and every claim cited. Test permission filters, not only relevance. <span class="md-cite">Book, Ch 09</span></dd></div>
+          <div><dt>Where it sits</dt><dd>Layer 3, next to the vector index. Harness: context and memory controls. <a href="/blueprints/design/#rag">Retrieval design</a>.</dd></div>
+        </dl>
+      </article>
+
+      <article class="md-fam" id="kg" aria-labelledby="md-kg">
+        <p class="md-n">07 &middot; Context</p>
+        <h3 id="md-kg">Knowledge graphs and graph models</h3>
+        <p class="md-sum">A knowledge graph says which records in which systems are the same customer, order or supplier. Graph models predict from the links. <span class="md-cite">Book, Ch 03 and Ch 04</span></p>
+        <dl class="md-dl">
+          <div><dt>Good at</dt><dd>Resolving entities across systems. Graph models suit fraud rings and supplier networks.</dd></div>
+          <div><dt>Example</dt><dd>Without the graph, the dispute agent cannot know which ERP holds the invoice. The graph sits on the critical path. <span class="md-cite">Book, Ch 03</span></dd></div>
+          <div><dt>Autonomy and risk</dt><dd>Supplier delay risk combines a tabular model, a graph model and a language model at L1 to L2. Defer graph neural networks past year one.</dd></div>
+          <div><dt>How it is tested</dt><dd>A blast-radius query must span every system an order touches. Start with 6 to 10 concepts the first use cases need. <span class="md-cite">Book, Ch 03 and Ch 09</span></dd></div>
+          <div><dt>Where it sits</dt><dd>Layer 3. Buy the engine; build and own the ontology and mappings. The harness checks segregation of duties over graph and role data.</dd></div>
+        </dl>
+      </article>
+
+      <article class="md-fam" id="mm" aria-labelledby="md-mm">
+        <p class="md-n">08 &middot; Vision</p>
+        <h3 id="md-mm">Vision and document models</h3>
+        <p class="md-sum">Document vision reads invoices, delivery notes, labels and forms. Camera inspection finds defects and counts items. <span class="md-cite">Book, Ch 07</span></p>
+        <dl class="md-dl">
+          <div><dt>Good at</dt><dd>Turning paper and images into fields. Main failures: a misread digit, a forged document, a false accept or reject.</dd></div>
+          <div><dt>Example</dt><dd>Invoice coding: a vision model extracts, a tabular model predicts, a rule decides, the ERP posts. <span class="md-cite">Book, Ch 04</span></dd></div>
+          <div><dt>Autonomy and risk</dt><dd>Invoice coding stays at L2 for postings in the book&rsquo;s plan. Uncertain inspection results go to an inspector.</dd></div>
+          <div><dt>How it is tested</dt><dd>Field precision and recall. Field validators, cross-checks to the order and ERP, and totals that must add up. <span class="md-cite">Book, Ch 04 and Ch 07</span></dd></div>
+          <div><dt>Where it sits</dt><dd>Layer 4 on an endpoint; inspection models at the edge. Harness: verification gates, with the model version pinned.</dd></div>
+        </dl>
+      </article>
+
+      <article class="md-fam" id="video" aria-labelledby="md-video">
+        <p class="md-n">09 &middot; Vision</p>
+        <h3 id="md-video">Video: camera analytics and world models</h3>
+        <p class="md-sum">The book covers video in two forms. Cameras with edge models watch for hazards. World models predict how a scene changes. <span class="md-cite">Book, Ch 15 and Ch 19</span></p>
+        <dl class="md-dl">
+          <div><dt>Good at</dt><dd>Spotting people in exclusion zones, missing hard hats, blocked exits and spills. World models train and test robots in simulation.</dd></div>
+          <div><dt>Example</dt><dd>Vision events show one crossing point causing 40% of forklift-pedestrian conflicts. A person decides the layout change. <span class="md-cite">Book, Ch 19</span></dd></div>
+          <div><dt>Autonomy and risk</dt><dd>&ldquo;A camera alert is information, not a safety function.&rdquo; Blur faces, infer no emotions, keep raw clips short.</dd></div>
+          <div><dt>How it is tested</dt><dd>Thresholds set by quality engineering, a second camera or human sample. Simulation evidence needs a versioned world model and scenario set. <span class="md-cite">Book, Ch 07 and Ch 31</span></dd></div>
+          <div><dt>Where it sits</dt><dd>At the edge, feeding events into a data product. Video stays in the region where it was captured.</dd></div>
+        </dl>
+      </article>
+
+      <article class="md-fam" id="speech" aria-labelledby="md-speech">
+        <p class="md-n">10 &middot; Voice</p>
+        <h3 id="md-speech">Voice: speech-to-text, text-to-speech and voice agents</h3>
+        <p class="md-sum">Speech models turn audio into text and back. Voice adds time pressure, identity risk and recording law. <span class="md-cite">Book, Ch 07</span></p>
+        <dl class="md-dl">
+          <div><dt>Good at</dt><dd>Service calls and hands-free work. A scripted acknowledgment keeps the call natural while tools run.</dd></div>
+          <div><dt>Example</dt><dd>The agent reads back &ldquo;invoice 9400312, line 3, 40 units short&rdquo;. The caller confirms before anything happens. <span class="md-cite">Book, Ch 07</span></dd></div>
+          <div><dt>Autonomy and risk</dt><dd>Voice is a channel, not a credential. Its L3 cap is lower than other channels. No promise of money is made by voice.</dd></div>
+          <div><dt>How it is tested</dt><dd>Latency per component at the 95th percentile. Read-back of key fields. A log of what was played, not only generated. <span class="md-cite">Book, Ch 07</span></dd></div>
+          <div><dt>Where it sits</dt><dd>Speech models in layer 4. The call runs in layer 6, in the caller&rsquo;s region. Harness: identity factors, AI disclosure, limits by channel.</dd></div>
+        </dl>
+      </article>
+
+      <article class="md-fam" id="multimodal" aria-labelledby="md-multimodal">
+        <p class="md-n">11 &middot; Multimodal</p>
+        <h3 id="md-multimodal">Multimodal and screen models</h3>
+        <p class="md-sum">A vision-language model takes an image or document plus text and returns text. Screen agents read screenshots, click and type. <span class="md-cite">Book, Ch 04 and Ch 07</span></p>
+        <dl class="md-dl">
+          <div><dt>Good at</dt><dd>Reading mixed evidence: an email with photos, a pallet image with a scale reading. Screen agents work systems that have no API.</dd></div>
+          <div><dt>Example</dt><dd>A damage photo is read together with the customer&rsquo;s claim, and a delivery note is checked against the order. <span class="md-cite">Book, Ch 04</span></dd></div>
+          <div><dt>Autonomy and risk</dt><dd>Read-only screen work can run at L3 with sampling. Writes stay at L2. On one benchmark, the best model finished 12.24% of computer tasks. <span class="md-cite">Book, Ch 07</span></dd></div>
+          <div><dt>How it is tested</dt><dd>After every commit, read the result back through a second path and compare. Keep screenshots before and after each write.</dd></div>
+          <div><dt>Where it sits</dt><dd>Layer 4 for the model. Screen agents are a bridge, governed like bots, with a planned retirement date. Harness: sandbox, allow-list, confirm before commit.</dd></div>
+        </dl>
+      </article>
+
+      <article class="md-fam" id="phys" aria-labelledby="md-phys">
+        <p class="md-n">12 &middot; Physical</p>
+        <h3 id="md-phys">Physical AI, robotics and IoT</h3>
+        <p class="md-sum">AI that senses the physical world and acts through machines. Three families: perception, vision-language-action and world models. <span class="md-cite">Book, Ch 15</span></p>
+        <dl class="md-dl">
+          <div><dt>Good at</dt><dd>Moving pallets, picking, inspection and condition monitoring from sensors. Mobile robots, arms and vision are mature today.</dd></div>
+          <div><dt>Example</dt><dd>A robot camera spots a damaged pallet. The controller stops the robot first. Then the agent proposes quarantine and a re-pick. <span class="md-cite">Book, Ch 15</span></dd></div>
+          <div><dt>Autonomy and risk</dt><dd>A model may choose how a robot does a task. It never chooses whether the task is safe. Certified controllers decide that.</dd></div>
+          <div><dt>How it is tested</dt><dd>A maintenance alert model needs 80% precision over its last 50 alerts before L3. A model update re-opens promotion. <span class="md-cite">Book, Ch 15 and Ch 31</span></dd></div>
+          <div><dt>Where it sits</dt><dd>At the robot and plant edge. Agents never write to machine control. Harness: behavior envelope, registered conduits, kill switch.</dd></div>
+        </dl>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section class="section section-paper-2 bp-section" id="matrix" aria-labelledby="matrix-title">
+  <div class="container">
+    <p class="eyebrow">Matrix</p>
+    <h2 id="matrix-title" class="h-sm">Every family on one page</h2>
+    <p class="md-intro">Family, layer, best use, usual autonomy and the main test, from the cards above.</p>
+    <div class="md-filter" data-md-filter hidden></div>
+    <p class="md-count" data-md-count role="status"></p>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Model family matrix, scroll sideways">
+      <table class="fw-table md-matrix">
+        <caption class="visually-hidden">Model families by layer, best use, autonomy and evaluation</caption>
+        <thead><tr><th scope="col">Family</th><th scope="col">Layer</th><th scope="col">Best for</th><th scope="col">Usual autonomy</th><th scope="col">How it is tested</th></tr></thead>
+        <tbody>
+          <tr data-layer="4 AI engines"><th scope="row"><a href="#llm">GPT-class language models</a></th><td>4 AI engines</td><td>Reading, drafting, planning</td><td>Proposes; never posts</td><td>Golden set, calibrated judge, adversarial tests</td></tr>
+          <tr data-layer="4 AI engines"><th scope="row"><a href="#slm">Small and fine-tuned models</a></th><td>4 AI engines</td><td>Narrow routing and extraction</td><td>L3 for narrow routing</td><td>Own golden set; model-risk controls if tuned</td></tr>
+          <tr data-layer="4 AI engines"><th scope="row"><a href="#rpt">Tabular foundation models (RPTs)</a></th><td>4 AI engines</td><td>Scores from business tables</td><td>L3 through rules; L2 above limits</td><td>Temporal backtest, Brier score, calibration</td></tr>
+          <tr data-layer="4 AI engines"><th scope="row"><a href="#ml">Classical ML and forecasting</a></th><td>4 AI engines</td><td>Forecasts with ranges</td><td>L2 for funding decisions</td><td>WAPE, MASE, interval coverage</td></tr>
+          <tr data-layer="4 AI engines"><th scope="row"><a href="#opt">Solvers and rules</a></th><td>4 AI engines</td><td>Feasible plans; what is allowed</td><td>Decide; small plan changes at L3</td><td>Optimality gap; 100% rule tests</td></tr>
+          <tr data-layer="3 Data and semantics"><th scope="row"><a href="#rag">Embeddings and retrieval</a></th><td>3 Data and semantics</td><td>Finding policy and precedent</td><td>Supplies context</td><td>Permission test set; every claim cited</td></tr>
+          <tr data-layer="3 Data and semantics"><th scope="row"><a href="#kg">Knowledge graphs and graph models</a></th><td>3 Data and semantics</td><td>Same entity across systems</td><td>Graph risk models at L1 to L2</td><td>Blast-radius query across systems</td></tr>
+          <tr data-layer="4 AI engines"><th scope="row"><a href="#mm">Vision and document models</a></th><td>4 AI engines</td><td>Fields from documents; defects</td><td>L2 for postings</td><td>Field precision and recall</td></tr>
+          <tr data-layer="Plant edge"><th scope="row"><a href="#video">Video and world models</a></th><td>Plant edge</td><td>Hazard spotting; simulation</td><td>Information only; people decide</td><td>Thresholds, human sample, versioned scenarios</td></tr>
+          <tr data-layer="6 Experience"><th scope="row"><a href="#speech">Voice</a></th><td>6 Experience</td><td>Calls and hands-free work</td><td>L3 under a lower voice cap</td><td>95th-percentile latency; read-back</td></tr>
+          <tr data-layer="4 AI engines"><th scope="row"><a href="#multimodal">Multimodal and screen models</a></th><td>4 AI engines</td><td>Mixed evidence; systems with no API</td><td>Read at L3; writes at L2</td><td>Read-back through a second path</td></tr>
+          <tr data-layer="Plant edge"><th scope="row"><a href="#phys">Physical AI, robotics and IoT</a></th><td>Plant edge</td><td>Moving, picking, monitoring</td><td>Inside a certified envelope</td><td>Alert precision; re-promotion after updates</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fw-note">&ldquo;Plant edge&rdquo; means the robot, the cell and the site, below the enterprise layers. Levels are illustrative; each company sets its own. <span class="md-cite">Book, Ch 04, Ch 07 and Ch 15</span></p>
+  </div>
+</section>
+
+<section class="section bp-section" id="evaluate" aria-labelledby="evaluate-title">
+  <div class="container fw-body">
+    <p class="eyebrow">How models earn autonomy</p>
+    <h2 id="evaluate-title" class="h-sm">Accuracy is not enough. Calibration decides.</h2>
+    <p class="lead">A raw score is not a probability until it is calibrated. Among proposals scored 0.9, about 90% must be right on your own data. <span class="md-cite">Book, Ch 07</span></p>
+    <p>Use calibrated scores to route, never to approve. An accurate model with the wrong threshold still makes bad decisions. <span class="md-cite">Book, Ch 04 and Ch 07</span></p>
+    <h3>Three levels of evaluation</h3>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <thead><tr><th scope="col">Level</th><th scope="col">Question</th><th scope="col">When</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Model</th><td>Is the output accurate and calibrated?</td><td>Before pilot; after any version change</td></tr>
+          <tr><th scope="row">Decision</th><td>Does the decision rule give good outcomes?</td><td>Shadow and pilot</td></tr>
+          <tr><th scope="row">Process</th><td>Does the whole process improve without new risk?</td><td>Pilot and scale</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Engine evidence before each level</h3>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <thead><tr><th scope="col">Level</th><th scope="col">Minimum evidence (illustrative)</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">L1 Assist</th><td>Backtest beats the current process. No material bias across slices.</td></tr>
+          <tr><th scope="row">L2 Approve</th><td>Plus a shadow period of at least 4 weeks and 300 cases. Calibration in tolerance.</td></tr>
+          <tr><th scope="row">L3 Act within limits</th><td>Plus an error rate below the human rate. Rules tested 100%. Drift monitors. Rollback tested.</td></tr>
+          <tr><th scope="row">L4 Run and report</th><td>Plus L3 over two quarter-ends, an audit walkthrough and independent validation for high-risk models.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fw-note">Book, Ch 04. The harness, not the model, sets the autonomy ceiling: see <a href="/frameworks/#harness">the harness framework</a> and the <a href="/controls/">controls library</a>.</p>
+    <h3>Human review costs more than the model</h3>
+    <p>In the book&rsquo;s invoice-coding example, model cost is about 2% of the automated cost per line. Human review is the largest term. <span class="md-cite">Book, Ch 04</span></p>
+    <p>So calibration, which widens the automated band safely, is worth more than any price negotiation.</p>
+    <p>The six design choices behind these models (tabular models, retrieval, evals and audits, security, inference and thresholds) are on <a href="/blueprints/design/">Design choices</a>.</p>
+    <p class="cta-row"><a class="btn btn-dark" href="/architecture/#chooser">Open the model chooser</a> <a class="btn btn-ghost" href="/blueprints/graphs/#brain">See a brain route a question</a></p>
+  </div>
+</section>

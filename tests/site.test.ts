@@ -31,7 +31,7 @@ function withoutCitations(file: string, text: string) {
 
 describe('built site', () => {
   it('produces every page plus sitemap, robots, 404, headers and favicons', () => {
-    for (const f of ['index.html', 'speaking/index.html', 'advisory/index.html', 'ideas/index.html', 'contact/index.html', '404.html',
+    for (const f of ['index.html', 'speaking/index.html', 'blueprints/models/index.html', 'ideas/index.html', 'contact/index.html', '404.html',
       'blueprints/index.html', 'architecture/index.html', 'workflows/index.html', 'controls/index.html', 'designer/index.html',
       'sitemap.xml', 'robots.txt', '_headers', 'favicon.ico', 'favicon.svg', 'apple-touch-icon.png',
       'site.webmanifest', 'assets/images/og-image.jpg', '_redirects', 'press/the-autonomous-enterprise-cover.jpg']) {
@@ -125,9 +125,9 @@ describe('built site', () => {
     expect(html(pages[0]).match(/LangChain/g)?.length).toBeGreaterThan(0);
   });
 
-  it('has no static forms anywhere: /contact, /speaking and /advisory use the intake agent with a plain link fallback', () => {
+  it('has no static forms anywhere: /contact and /speaking use the intake agent with a plain link fallback', () => {
     for (const p of pages) expect(html(p), p.out).not.toMatch(/<form[\s>]/);
-    for (const out of ['contact/index.html', 'speaking/index.html', 'advisory/index.html']) {
+    for (const out of ['contact/index.html', 'speaking/index.html']) {
       const h = html(byOut(out));
       expect(h, out).toContain('<div class="ik" data-intake hidden></div>');
       expect(h, out).toMatch(/<script src="\/assets\/intake\.js\?v=[0-9a-f]{10}" defer><\/script>/);
@@ -161,13 +161,16 @@ describe('built site', () => {
     }
   });
 
-  it('has Book, Frameworks, Blueprints, Ideas, Speaking, Advisory, About, Contact in the header and footer of every page', () => {
+  it('has Book, Blueprints, Ideas, Speaking & Advisory, About in the header, and Frameworks and Contact in the footer, on every page', () => {
+    const labelsOf = (part: string) => [...part.matchAll(/<li><a href="(\/[^"]*)"[^>]*>([^<]+)<\/a><\/li>/g)].map((m) => [m[1], m[2]]);
     for (const p of pages) {
       const h = html(p);
-      for (const part of [h.match(/<header[\s\S]*?<\/header>/)![0], h.match(/<footer[\s\S]*?<\/footer>/)![0]]) {
-        const labels = [...part.matchAll(/<li><a href="(\/[^"]*)"[^>]*>([^<]+)<\/a><\/li>/g)].map((m) => m[2]);
-        expect(labels.slice(0, 8), p.out).toEqual(['Book', 'Frameworks', 'Blueprints', 'Ideas', 'Speaking', 'Advisory', 'About', 'Contact']);
-      }
+      const nav = h.match(/<nav class="site-nav"[\s\S]*?<\/nav>/)![0];
+      expect(labelsOf(nav), p.out).toEqual([['/book/', 'Book'], ['/blueprints/', 'Blueprints'], ['/ideas/', 'Ideas'], ['/speaking/', 'Speaking &amp; Advisory'], ['/about/', 'About']]);
+      expect(nav, p.out).not.toMatch(/Frameworks|Contact|\/advisory\//);
+      const footer = labelsOf(h.match(/<footer[\s\S]*?<\/footer>/)![0]).slice(0, 7).map((l) => l[1]);
+      expect(footer, p.out).toEqual(['Book', 'Frameworks', 'Blueprints', 'Ideas', 'Speaking &amp; Advisory', 'About', 'Contact']);
+      expect(h, p.out).not.toContain('href="/advisory/"');
     }
   });
 
@@ -201,16 +204,26 @@ describe('built site', () => {
     expect(h).toContain('<div class="ik" data-intake hidden></div>');
   });
 
-  it('serves advisory at /advisory with the engagement steps, no prices, and redirects /consulting', () => {
-    const h = html(byOut('advisory/index.html'));
+  it('merges advisory into /speaking/#advisory with the engagement steps and no prices, and redirects /advisory and /consulting', () => {
+    const h = html(byOut('speaking/index.html'));
+    expect(h).toContain('<h1 id="page-title">Speaking &amp; Advisory</h1>');
+    expect(h).toContain('<section class="section" id="speaking" aria-labelledby="speaking-title">');
+    expect(h).toContain('<section class="section section-paper-2" id="advisory" aria-labelledby="advisory-title">');
+    expect(h).toContain('data-intake-preset="talk"');
+    expect(h).toContain('data-intake-preset="advisory"');
+    expect(h.match(/data-intake hidden/g)).toHaveLength(1);
+    expect(h.match(/Alumnus of Harvard Business School/g)).toHaveLength(1);
+    expect(existsSync(join(DIST, 'advisory'))).toBe(false);
     for (const s of ['Intro call', 'Readiness assessment', 'Roadmap and guardrails', 'How an engagement works']) expect(h).toContain(s);
     const main = h.match(/<main[\s\S]*?<\/main>/)![0].replace(/<section class="section section-orange[\s\S]*?<\/section>/, '');
     expect(main).not.toMatch(/\$\s?\d/);
     expect(h).toContain('<div class="ik" data-intake hidden></div>');
     expect(existsSync(join(DIST, 'consulting'))).toBe(false);
     const redirects = readFileSync(join(DIST, '_redirects'), 'utf8');
-    expect(redirects).toContain('/consulting /advisory/ 301');
-    expect(redirects).toContain('/consulting/ /advisory/ 301');
+    for (const from of ['/consulting', '/consulting/', '/advisory', '/advisory/']) expect(redirects).toContain(`${from} /speaking/#advisory 301`);
+    const sitemap = readFileSync(join(DIST, 'sitemap.xml'), 'utf8');
+    expect(sitemap).not.toContain('/advisory/');
+    expect(sitemap).toContain('https://humanledenterprise.com/blueprints/models/');
   });
 
   it('has a press kit with a cover download and both bios', () => {
@@ -328,11 +341,11 @@ describe('portrait, real cover and guide', () => {
     expect(home()).toMatch(/<a class="btn btn-ghost" href="\/talk\/" data-guide-open>Talk to the book<\/a>/);
   });
 
-  it('has one primary header CTA, Talk to the author, on every page', () => {
+  it('has one primary header CTA, Talk to the book, going to /contact/, on every page', () => {
     for (const p of pages) {
       const header = html(p).split('<header')[1].split('</header>')[0];
       expect(header.match(/btn-primary/g), p.out).toHaveLength(1);
-      expect(header, p.out).toContain('>Talk to the author</a>');
+      expect(header, p.out).toContain('<a class="btn btn-primary header-cta" href="/contact/">Talk to the book</a>');
     }
   });
 

@@ -24,6 +24,8 @@ export const SUBNAV = [
   ['trace', '/blueprints/trace/', 'Trace viewer'],
   ['loops', '/blueprints/loops/', 'Improvement loops'],
   ['graphs', '/blueprints/graphs/', 'Graphs'],
+  ['models', '/blueprints/models/', 'Models'],
+  ['design', '/blueprints/design/', 'Design choices'],
 ];
 
 export function subnav(current) {
@@ -117,14 +119,14 @@ ${w.failures.map((f) => `    <li><strong>${ft[f.type]}.</strong> ${esc(f.what)} 
 }
 
 function archStatic(AE) {
-  return AE.archLayers.map((L) => `<section class="ar-static-layer" aria-labelledby="arl-${L.id}"><h3 id="arl-${L.id}">${esc(L.name)}</h3><ul class="ar-static-list">
+  return AE.archLayers.map((L) => `<section class="ar-static-layer" aria-labelledby="arl-${L.id}"><h3 id="arl-${L.id}">${esc(L.name)}</h3>${L.id === 'int' ? '<p><a href="/blueprints/models/">Every model family in depth: what it does, an example, its autonomy and its tests</a>.</p>' : ''}<ul class="ar-static-list">
 ${AE.components.filter((c) => c.layer === L.id).map((c) => `  <li id="c-${c.id}"><b>${esc(c.name)}.</b> ${esc(c.what)} <span class="muted">Use for: ${esc(c.use)} Not for: ${esc(c.avoid)}</span> ${c.controls.slice(0, 4).map(cid).join(' ')}</li>`).join('\n')}
 </ul></section>`).join('\n');
 }
 
 function modelTable(AE) {
   return `<div class="fw-table-wrap"><table class="fw-table bp-models"><thead><tr><th scope="col">Model family</th><th scope="col">Good at</th><th scope="col">Weak at</th><th scope="col">Evals you need</th><th scope="col">Typical ceiling</th></tr></thead><tbody>
-${AE.models.map((m) => `<tr><th scope="row">${esc(AE.componentById[m.id].name)}</th><td>${esc(m.good)}</td><td>${esc(m.weak)}</td><td>${esc(m.evals)}</td><td>${esc(m.ceil)}</td></tr>`).join('\n')}
+${AE.models.map((m) => `<tr><th scope="row">${AE.modelPage && AE.modelPage[m.id] ? `<a href="/blueprints/models/#${AE.modelPage[m.id]}">${esc(AE.componentById[m.id].name)}</a>` : esc(AE.componentById[m.id].name)}</th><td>${esc(m.good)}</td><td>${esc(m.weak)}</td><td>${esc(m.evals)}</td><td>${esc(m.ceil)}</td></tr>`).join('\n')}
 </tbody></table></div>`;
 }
 

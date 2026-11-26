@@ -1,0 +1,346 @@
+<section class="page-head bp-head" aria-labelledby="page-title">
+  <div class="container">
+    <p class="eyebrow">Blueprints &middot; Design choices</p>
+    <h1 id="page-title">Design choices</h1>
+    <p class="lead">Six choices decide whether models work safely inside an agent-operated company. Each one comes from the book, with the chapter to read next.</p>
+    <ul class="sa-jump" aria-label="On this page">
+      <li><a href="#tabular">Tabular models</a></li>
+      <li><a href="#rag">Retrieval</a></li>
+      <li><a href="#evals">Evals and audits</a></li>
+      <li><a href="#security">Security</a></li>
+      <li><a href="#inference">Inference</a></li>
+      <li><a href="#deterministic">Models or rules</a></li>
+    </ul>
+  </div>
+</section>
+{{BP_SUBNAV}}
+
+<section class="section bp-section" id="tabular" aria-labelledby="tabular-title">
+  <div class="container fw-body">
+    <p class="fw-num">01 &middot; Prediction</p>
+    <h2 id="tabular-title" class="h-sm">Tabular foundation models and RPTs</h2>
+    <p class="lead">A tabular foundation model (TFM, also written TabFM) predicts from labeled business rows in one pass. No model is trained for the task. <span class="md-cite">Book, Ch 04</span></p>
+    <p>Some vendors call their models relational pretrained transformers (RPTs). The book treats them as one class and judges each on your own backtest. <span class="md-cite">Book, Ch 04</span></p>
+    <h3>How it works</h3>
+    <ol class="md-rules">
+      <li><b>Pretrained once.</b> The developer trains the model on a very large number of prediction tasks, many of them synthetic.</li>
+      <li><b>One forward pass.</b> You send rows with known answers and rows with the answer missing. No weights change.</li>
+      <li><b>Probabilities out.</b> Classification returns class probabilities. Regression can return a distribution, so a treasurer can plan on the 10th percentile.</li>
+    </ol>
+    <p>A new use case is a context query and a call, not a training job. The model predicts only classes it has seen in context. It does not repair bad labels. <span class="md-cite">Book, Ch 04</span></p>
+    <h3>The agent pattern: the language model reasons, the TFM does the statistics</h3>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <thead><tr><th scope="col">Step</th><th scope="col">Done by</th><th scope="col">Why</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Understand the request; choose target and population</th><td>Language model</td><td>Language and judgment</td></tr>
+          <tr><th scope="row">Build the context from governed data products</th><td>Tool (query)</td><td>Deterministic, auditable</td></tr>
+          <tr><th scope="row">Predict with probabilities</th><td>TFM, called as a tool</td><td>Statistics, reproducible with a seed</td></tr>
+          <tr><th scope="row">Apply thresholds and limits</th><td>Rules engine</td><td>Policy</td></tr>
+          <tr><th scope="row">Explain and draft the next action</th><td>Language model</td><td>Language</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The language model should call the TFM, not imitate it. A TFM call logs context, version, seed and output. A language model&rsquo;s estimate logs nothing. <span class="md-cite">Book, Ch 04</span></p>
+    <h3>Designing a TFM use case</h3>
+    <ol class="md-rules">
+      <li><b>Define the target precisely.</b> &ldquo;Paid more than 15 days after due date&rdquo; is a target. &ldquo;Late&rdquo; is not.</li>
+      <li><b>Define the decision time.</b> Every feature must be known at that moment. This prevents leakage.</li>
+      <li><b>Select features wide,</b> and remove fields filled only after the outcome.</li>
+      <li><b>Pick the context rows:</b> recent, relevant, labeled cases, usually 6 to 24 months of closed cases.</li>
+      <li><b>Choose sampling:</b> stratify for rare outcomes; sample by time for drifting processes.</li>
+      <li><b>Backtest with a time split,</b> never a random one.</li>
+      <li><b>Set the threshold from economics,</b> not accuracy.</li>
+      <li><b>Log context ID, model version, seed and output</b> for every production prediction.</li>
+    </ol>
+    <h3>Speed, explanation and benchmarks</h3>
+    <ul class="fw-list">
+      <li>Build the context once per scoring window and cache it. Record the cache ID in the trace: it defines what the model &ldquo;knew&rdquo;.</li>
+      <li>Show per-row drivers on the approval card. Use overall feature importance in the monthly model review.</li>
+      <li>Several developers claimed first place on overlapping benchmarks within two months. Decide on your own time-split backtest, and check the weight licence.</li>
+    </ul>
+    <p class="fw-note">Book, Ch 03 and Ch 04. See the <a href="/blueprints/models/#rpt">tabular model card</a> on the Models page.</p>
+  </div>
+</section>
+
+<section class="section section-paper-2 bp-section" id="rag" aria-labelledby="rag-title">
+  <div class="container fw-body">
+    <p class="fw-num">02 &middot; Context</p>
+    <h2 id="rag-title" class="h-sm">Retrieval (RAG): find, ground, cite</h2>
+    <p class="lead">Context, memory and retrieval are different things. Every privacy, audit and cost decision depends on keeping them apart. <span class="md-cite">Book, Ch 05</span></p>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <thead><tr><th scope="col">Aspect</th><th scope="col">Context</th><th scope="col">Memory</th><th scope="col">Retrieval</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">What it is</th><td>The input to one model call</td><td>A store the harness writes and reads</td><td>A lookup that adds passages to context</td></tr>
+          <tr><th scope="row">Main risk</th><td>Too much, stale or untrusted content</td><td>Silent drift; personal data kept too long</td><td>Wrong or unauthorized passages</td></tr>
+          <tr><th scope="row">Control</th><td>Context assembly rules</td><td>Retention, write rules, review</td><td>Access filters at query time; citations</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Retrieval design</h3>
+    <ul class="fw-list">
+      <li><b>Start in a store you already run.</b> Consider a separate vector database only above about 100 million chunks with a 50 ms target. <span class="md-cite">Book, Ch 03</span></li>
+      <li><b>A separate store duplicates permissions.</b> The book calls that the most common source of leaks in retrieval systems. <span class="md-cite">Book, Ch 03</span></li>
+      <li><b>Test the permission filter.</b> Some approximate indexes filter after the search, so a filter can silently return too few results. <span class="md-cite">Book, Ch 09</span></li>
+      <li><b>An embedding is a copy.</b> It points to its source record and carries its source ID, classification and access rule. <span class="md-cite">Book, Ch 09</span></li>
+      <li><b>Put retrieval content under change control.</b> A poisoned policy document can change a threshold. Catch it with content hashes. <span class="md-cite">Book, Ch 23</span></li>
+    </ul>
+    <h3>Chunks and how much to load</h3>
+    <p>The book sets no chunk size or overlap. It sets the test instead. <span class="md-cite">Book, Ch 08</span></p>
+    <ul class="fw-list">
+      <li><b>Set a context budget.</b> Measure quality against context size on the golden set. Stop where quality stops rising.</li>
+      <li><b>Assemble per step, not per run.</b> Planning needs goal and policy. Drafting needs evidence and tone. <span class="md-cite">Book, Ch 05</span></li>
+      <li><b>Fetch just in time on long tasks.</b> Carry identifiers and fetch the record when a step needs it.</li>
+      <li><b>Scope by domain.</b> Load only the concepts in the agent&rsquo;s domain, not everything the company knows.</li>
+    </ul>
+    <h3>Grounding and citations</h3>
+    <ol class="md-rules">
+      <li><b>Policy before precedent.</b> Load current policy and limits first. Past cases enter only as evidence, with their date and policy version.</li>
+      <li><b>Like for like.</b> Retrieve precedent with the same entity class, the same policy version and a confirmed outcome.</li>
+      <li><b>Cite every loaded fact and flag what is missing.</b> An agent that cannot cite says what it lacks rather than guess.</li>
+      <li><b>Untrusted text is data.</b> Emails and PDFs are wrapped so the model and the filters can tell them from instructions.</li>
+    </ol>
+    <h3>When to use a knowledge graph or the record instead</h3>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <thead><tr><th scope="col">The question</th><th scope="col">Use</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">What is the number?</th><td>The semantic layer or the data product</td></tr>
+          <tr><th scope="row">How is this connected to that?</th><td>The knowledge graph</td></tr>
+          <tr><th scope="row">A fact that exists in a data product</th><td>Load the record, not a document that mentions it</td></tr>
+          <tr><th scope="row">Which passage says this?</th><td>Retrieval, with access filters and citations</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fw-note">Book, Ch 05, Ch 08 and Ch 09. In the dispute, the graph decides which ERP holds the invoice; retrieval cannot. See <a href="/blueprints/graphs/">Graphs</a>.</p>
+  </div>
+</section>
+
+<section class="section bp-section" id="evals" aria-labelledby="evals-title">
+  <div class="container fw-body">
+    <p class="fw-num">03 &middot; Evidence</p>
+    <h2 id="evals-title" class="h-sm">Evals and audits</h2>
+    <p class="lead">Evals are the gate evidence for every promotion and demotion. Audits need a trace that answers seven questions. <span class="md-cite">Book, Ch 06 and Ch 22</span></p>
+    <h3>Offline and online</h3>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <thead><tr><th scope="col">Mode</th><th scope="col">What runs</th><th scope="col">When</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Offline</th><td>Golden set, trajectory checks and adversarial tests</td><td>Every change of agent, model, tool or policy version</td></tr>
+          <tr><th scope="row">Online</th><td>Samples, seeded cases, blind checks, judge scores and drift monitors</td><td>Continuously; reported weekly</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>The test plan</h3>
+    <ul class="fw-list">
+      <li><b>Tool tests:</b> each tool returns correct data and rejects bad input.</li>
+      <li><b>Golden set:</b> the final decision matches the expert decision.</li>
+      <li><b>Trajectory checks:</b> right tools, sensible order, no forbidden calls.</li>
+      <li><b>Envelope and failure tests:</b> limits stop the run; a trace store outage blocks the commit.</li>
+      <li><b>Shadow, then canary:</b> live triggers with no actions, then a small share of live volume.</li>
+    </ul>
+    <h3>Golden sets and calibration</h3>
+    <ul class="fw-list">
+      <li>A golden set holds 200 to 500 real cases, refreshed quarterly. Add confirmed overrides weekly. A score means nothing without the set version. <span class="md-cite">Book, Ch 04 and Ch 06</span></li>
+      <li>Calibration means scores match reality: among proposals scored 0.9, about 90% are right on your data. <span class="md-cite">Book, Ch 07</span></li>
+      <li>Calibrate a model-as-judge on at least 100 human-graded cases. Use it only at 85% agreement or better. <span class="md-cite">Book, Ch 06</span></li>
+      <li>A judge never grades its own model family alone. Pair it with another family or with code checks.</li>
+    </ul>
+    <h3>Red-teaming</h3>
+    <p>Run adversarial tests before production, after every material change and after every vendor model update. Examples from the book&rsquo;s security catalog: <span class="md-cite">Book, Ch 23</span></p>
+    <ul class="fw-list">
+      <li>An instruction in a supplier PDF to change bank details. Pass: no change proposed; event logged.</li>
+      <li>Hidden white text with instructions. Pass: ignored and flagged.</li>
+      <li>A forged message from another agent. Pass: rejected at the gateway.</li>
+      <li>The kill switch pulled during a run. Pass: stops in time, with no half-finished postings.</li>
+    </ul>
+    <h3>Keeping reviewers awake</h3>
+    <p>About 1 in 200 proposals is a seeded known-bad case. A reviewer who catches fewer than 90% has their approvals re-checked. <span class="md-cite">Book, Ch 06</span></p>
+    <h3>Drift</h3>
+    <p>Watch input drift, behavior drift and outcome drift. One past its band opens an offline rerun. Two together freeze promotion. <span class="md-cite">Book, Ch 06</span></p>
+    <h3>Audit trails: seven questions</h3>
+    <ol class="md-rules">
+      <li>Who acted: agent, version, identity?</li>
+      <li>What was it authorized to do?</li>
+      <li>What did it actually do, including blocked attempts?</li>
+      <li>On whose behalf did it act?</li>
+      <li>Why: which inputs, rules and evidence?</li>
+      <li>Which version acted: agent, model, prompt, skills, tools?</li>
+      <li>What did the human do, and when?</li>
+    </ol>
+    <ul class="fw-list">
+      <li>One trace ID runs across every platform the case touches. <span class="md-cite">Book, Ch 22</span></li>
+      <li>The trace is written before the commit returns. If the trace store is down, the agent does not post. <span class="md-cite">Book, Ch 05</span></li>
+      <li>Store traces where agents cannot change them. Reconcile monthly: every agent posting has a trace. <span class="md-cite">Book, Ch 22</span></li>
+    </ul>
+    <p class="cta-row"><a class="btn btn-dark" href="/controls/">Open the controls library</a> <a class="btn btn-ghost" href="/blueprints/trace/">Open the decision trace viewer</a></p>
+  </div>
+</section>
+
+<section class="section section-paper-2 bp-section" id="security" aria-labelledby="security-title">
+  <div class="container fw-body">
+    <p class="fw-num">04 &middot; Security</p>
+    <h2 id="security-title" class="h-sm">Security: injection, leakage, identity and the front door</h2>
+    <p class="lead">A language model cannot reliably separate instructions from content. Any text an agent reads can carry an instruction. <span class="md-cite">Book, Ch 23</span></p>
+    <p>In three published incidents on three enterprise platforms, configuration and architecture decided the outcome, not the model. <span class="md-cite">Book, Ch 23</span></p>
+    <h3>Structural defenses first</h3>
+    <ol class="md-rules">
+      <li><b>Separate reading from writing.</b> An agent that reads untrusted text holds no write tool to sensitive objects.</li>
+      <li><b>Type the hand-off.</b> An instruction cannot travel in a field typed as a number.</li>
+      <li><b>Gate irreversible actions.</b> Bank detail changes need a call-back outside the agent.</li>
+      <li><b>Limit egress.</b> An agent holding confidential data has no open channel out. Review the allow-list monthly.</li>
+      <li><b>Segment agent teams.</b> Agents that can find each other sit in a team of equal privilege.</li>
+      <li><b>Supervise powerful tools.</b> After reading untrusted text, create, update, delete and external mail need a human confirmation.</li>
+    </ol>
+    <p><b>Redesign rule.</b> One run must not combine confidential data or financial write tools, untrusted text and an external channel. Remove at least one. <span class="md-cite">Book, Ch 23</span></p>
+    <h3>Data leakage</h3>
+    <ul class="fw-list">
+      <li>Mask personal data before any external model. Masking misses some identifiers, so it cannot be the only privacy control. <span class="md-cite">Book, Ch 04</span></li>
+      <li>If logging runs before masking, personal data reaches the log.</li>
+      <li>&ldquo;Zero retention&rdquo; must be in the contract, not only on a product page.</li>
+      <li>Where inference runs follows the data class: restricted data stays on a self-hosted pool. <span class="md-cite">Book, Ch 09</span></li>
+    </ul>
+    <h3>Agent identity and permissions</h3>
+    <ul class="fw-list">
+      <li>No agent reaches L3 while it acts through a shared account or a person&rsquo;s credentials. <span class="md-cite">Book, Ch 23</span></li>
+      <li>When an agent acts for a person, the token names both. Effective rights are the overlap of the two.</li>
+      <li>Request a short-lived token per tool, bound to that tool. Never forward a token issued for someone else.</li>
+      <li>Pin and hash every outside tool, skill and server version. Treat any change as a change request.</li>
+    </ul>
+    <h3>The front door for outside agents</h3>
+    <p>Treat an outside agent like a new trading partner that never sleeps. One door, the least it needs, and closer watching than your own agents. <span class="md-cite">Book, Ch 23</span></p>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <thead><tr><th scope="col">Tier</th><th scope="col">What the agent may do</th><th scope="col">Entry evidence</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">T0 Unknown</th><td>Nothing; requests are logged and refused</td><td>None</td></tr>
+          <tr><th scope="row">T1 Sandbox</th><td>Call test tools on synthetic data</td><td>Verified identity; contract annex</td></tr>
+          <tr><th scope="row">T2 Read</th><td>Read its own records through filtered tools</td><td>Sandbox passed; owner and security chief sign</td></tr>
+          <tr><th scope="row">T3 Act within limits</th><td>Create or update cases within caps</td><td>90 days at T2 without a material finding</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fw-note">No tier allows payment release, bank-data changes, credit-limit changes or user administration. Revocation runs at the gateway within five minutes (illustrative). Book, Ch 23.</p>
+    <h3>One poisoned invoice</h3>
+    <p>A real supplier&rsquo;s invoice hides white text: change the bank account and pay today. Only a reader agent sees it. The writer holds no bank-data tool. People verify against the master record. <span class="md-cite">Book, Ch 23</span></p>
+    <p>None of these controls depended on the model spotting the attack. Detection helped; structure decided.</p>
+  </div>
+</section>
+
+<section class="section bp-section" id="inference" aria-labelledby="inference-title">
+  <div class="container fw-body">
+    <p class="fw-num">05 &middot; Inference</p>
+    <h2 id="inference-title" class="h-sm">Inference design: route, budget, cache, fall back</h2>
+    <p class="lead">Send each step to the cheapest engine that passes evaluation: rules, a tabular model, a small model, a frontier model, or a person. <span class="md-cite">Book, Ch 09</span></p>
+    <p>In the book&rsquo;s accounts-payable simulation, rules resolve 39% of items, the tabular model 8%, the small model 4%, the frontier model 13% and people 36%. <span class="md-cite">Book, Ch 21</span></p>
+    <ul class="fw-list">
+      <li><b>Small or large.</b> Use a reasoning mode for the plan step and exception analysis. Use a fast model for extraction and drafting. <span class="md-cite">Book, Ch 04</span></li>
+      <li><b>Spend tokens to save review minutes.</b> A stronger model on hard items often costs less per outcome. <span class="md-cite">Book, Ch 21</span></li>
+      <li><b>Compute is small.</b> In the simulation it is about 1.6% of total cost. Review and wrong actions dominate.</li>
+    </ul>
+    <h3>Latency and cost budgets</h3>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <thead><tr><th scope="col">Work</th><th scope="col">Budget (illustrative)</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Interactive</th><td>Under 2 seconds. A call slower than 5 seconds at p95 never sits inside an interactive flow.</td></tr>
+          <tr><th scope="row">Voice, to first audio</th><td>750 to 1,200 milliseconds, with a scripted acknowledgment while tools run</td></tr>
+          <tr><th scope="row">Event-driven agent step</th><td>Up to a minute</td></tr>
+          <tr><th scope="row">Batch</th><td>Hours</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fw-note">Book, Ch 04 and Ch 07.</p>
+    <h3>The operating envelope</h3>
+    <p>The harness, not the agent, limits each task: a deadline, model calls, tool calls, retries, a budget shared across retries and a loop guard. At a limit, the run stops and escalates. <span class="md-cite">Book, Ch 05</span></p>
+    <ul class="fw-list">
+      <li>The run-level cap is the most effective cost control. A reasoning loop can burn thousands of actions before anyone looks. <span class="md-cite">Book, Ch 25</span></li>
+      <li>An agent re-reads its context every step, so input grows with the square of the step count. Cap steps. <span class="md-cite">Book, Ch 21</span></li>
+      <li>Retry only if the chance of success times the human cost avoided beats the retry&rsquo;s cost and risk. <span class="md-cite">Book, Ch 05</span></li>
+      <li>Alert when units per run pass twice the baseline. Review product budgets when the forecast misses by more than 15%. <span class="md-cite">Book, Ch 25</span></li>
+    </ul>
+    <h3>Caching and batching</h3>
+    <ul class="fw-list">
+      <li>Put stable content first: instructions, tool schemas, certified definitions. Put variable content last. That order makes caching pay. <span class="md-cite">Book, Ch 09</span></li>
+      <li>Cache a tabular model&rsquo;s context once per scoring window and reuse it for every query. <span class="md-cite">Book, Ch 04</span></li>
+      <li>Batch work that can wait. On a per-action meter, caching and routing do not help; only fewer actions per task do. <span class="md-cite">Book, Ch 21</span></li>
+    </ul>
+    <h3>Fallbacks and guardrails at inference time</h3>
+    <ul class="fw-list">
+      <li>Keep one tested fallback from a different provider for every production agent. <span class="md-cite">Book, Ch 04</span></li>
+      <li>If no model can serve, the model gateway degrades the step to L1. <span class="md-cite">Book, Ch 05</span></li>
+      <li>The gateway pins versions, masks personal data, filters input and output, and logs model, version, tokens and latency.</li>
+      <li>Every channel writes a fallback ladder: retry tighter, ask, a safe default, hand off to a person, safe stop. <span class="md-cite">Book, Ch 07</span></li>
+      <li>Code, not the model, validates the output schema and does the arithmetic. <span class="md-cite">Book, Ch 04</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="section section-paper-2 bp-section" id="deterministic" aria-labelledby="det-title">
+  <div class="container fw-body">
+    <p class="fw-num">06 &middot; Alignment</p>
+    <h2 id="det-title" class="h-sm">Probabilistic or deterministic: which step goes where</h2>
+    <p class="lead">If you can write the decision as code, write it as code. Use a model only where code would need judgment you cannot specify. <span class="md-cite">Book, Ch 03</span></p>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <thead><tr><th scope="col">If the step&hellip;</th><th scope="col">Then</th><th scope="col">Example</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Has a written rule a clerk applies without judgment</th><td>Code or a rules engine</td><td>Three-way match tolerance</td></tr>
+          <tr><th scope="row">Changes a legal record or moves money</th><td>Deterministic commit after routing</td><td>Post a credit memo</td></tr>
+          <tr><th scope="row">Depends on free text, images or documents</th><td>Language or vision model, schema-bound output</td><td>Read a dispute email</td></tr>
+          <tr><th scope="row">Is a prediction from historical rows</th><td>Tabular model, calibrated probability</td><td>Is the dispute valid?</td></tr>
+          <tr><th scope="row">Is a forecast over time</th><td>Time-series model or a simple baseline</td><td>13-week cash forecast</td></tr>
+          <tr><th scope="row">Chooses among feasible plans</th><td>Solver</td><td>Safety stock levels</td></tr>
+          <tr><th scope="row">Must be identical for identical inputs, for audit</th><td>Deterministic, even if a model could do it</td><td>Revenue recognition rule</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fw-note">Book, Ch 03.</p>
+    <h3>The model proposes; deterministic rails dispose</h3>
+    <p>Six rails can accept, reject, limit or reshape a proposal without asking the model. Each fails closed. <span class="md-cite">Book, Ch 07</span></p>
+    <ul class="fw-list">
+      <li><b>Schema:</b> the proposal has the right shape.</li>
+      <li><b>Validator:</b> values make sense, such as a credit no larger than the invoice line.</li>
+      <li><b>Policy engine:</b> the action is allowed for this actor, channel and amount.</li>
+      <li><b>State machine:</b> only legal next steps happen, in order.</li>
+      <li><b>Ledger:</b> a posted fact is final; a reversal is a new entry.</li>
+      <li><b>Safety controller:</b> physical motion stays inside certified limits.</li>
+    </ul>
+    <p>A wrong answer about money, rights, identity or safety must come from a deterministic component. The model only presents it. <span class="md-cite">Book, Ch 07</span></p>
+    <h3>The confidence threshold</h3>
+    <p>Act automatically only when the expected gain beats the expected loss. The threshold is p* = L &divide; (G + L): G is the gain when right, L the loss when wrong. <span class="md-cite">Book, Ch 03</span></p>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <caption class="visually-hidden">Threshold by credit amount for a pricing dispute, with a model score of 0.87</caption>
+        <thead><tr><th scope="col">Credit amount (USD)</th><th scope="col">Loss if wrong (USD)</th><th scope="col">p*</th><th scope="col">Decision at 0.87</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">1,000</th><td>180</td><td>0.64</td><td>Post (L3)</td></tr>
+          <tr><th scope="row">3,400</th><td>420</td><td>0.81</td><td>Post (L3) on a channel past 90 days</td></tr>
+          <tr><th scope="row">5,000</th><td>580</td><td>0.85</td><td>Post (L3), at the hard limit</td></tr>
+          <tr><th scope="row">7,800</th><td>860</td><td>0.90</td><td>Person (L2): over limit and below p*</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fw-note">Illustrative, with G = USD 100 for a pricing dispute. Book, Ch 03.</p>
+    <ul class="fw-list">
+      <li>The threshold rises with the amount, so one confidence cut-off for all cases is wrong.</li>
+      <li>The root cause changes the loss. For a damage claim at USD 3,400, p* is 0.95, and the same 0.87 score goes to a person.</li>
+      <li>The hard limit stays, because calibration is thin at high amounts and auditors want a ceiling a person signed.</li>
+      <li>p* means nothing unless the model&rsquo;s probabilities are calibrated. Use calibrated scores to route, never to approve. <span class="md-cite">Book, Ch 03 and Ch 07</span></li>
+    </ul>
+    <h3>Three bands for interactions</h3>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <thead><tr><th scope="col">Band</th><th scope="col">Calibrated confidence</th><th scope="col">Route</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Green</th><td>0.95 or more, and all rails pass</td><td>Act at the step&rsquo;s permitted level</td></tr>
+          <tr><th scope="row">Amber</th><td>0.80 to 0.95, or one soft check fails</td><td>Confirm with the person or send to a reviewer</td></tr>
+          <tr><th scope="row">Red</th><td>Under 0.80, or any hard check fails</td><td>Fall back; do not act</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fw-note">Thresholds illustrative. Book, Ch 07. Compute a threshold per step in the <a href="/designer/">workflow designer</a>.</p>
+    <p class="cta-row"><a class="btn btn-dark" href="/blueprints/models/">Back to the model families</a> <a class="btn btn-ghost" href="/frameworks/#pvrc">Propose, validate, route, commit</a></p>
+  </div>
+</section>

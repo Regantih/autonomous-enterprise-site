@@ -1,3 +1,6 @@
-/consulting /advisory/ 301
-/consulting/ /advisory/ 301
-/consulting/* /advisory/ 301
+/consulting /speaking/#advisory 301
+/consulting/ /speaking/#advisory 301
+/consulting/* /speaking/#advisory 301
+/advisory /speaking/#advisory 301
+/advisory/ /speaking/#advisory 301
+/advisory/* /speaking/#advisory 301

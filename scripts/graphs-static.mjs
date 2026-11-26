@@ -56,20 +56,23 @@ ${rows}
 </tbody></table></div>`;
 }
 
+// Model families with a card on /blueprints/models/ (reinforcement learning is not covered there).
+const MODEL_PAGE = { llm: 'llm', slm: 'slm', rag: 'rag', kg: 'kg', ml: 'ml', opt: 'opt', speech: 'speech', mm: 'mm', phys: 'phys' };
+
 function brainStatic(b) {
   const fam = b.nodes.filter((n) => n.type === 'family');
   return `<ol class="gr-brain-static">
       <li><b>Signal.</b> Your question arrives on the web. Chat, email, voice, IoT and robot signals are not connected in this demo.</li>
       <li><b>Brain router.</b> ${b.rules.length} rules in code read the question and pick the graph and the model family.</li>
       <li><b>Graph lookup.</b> Code walks the knowledge graph or the skill graph and selects a subgraph.</li>
-      <li><b>Model family.</b> One GPT-class model call writes the answer. Every other family is routed to, not run in this demo.</li>
+      <li><b>Model family.</b> One GPT-class model call writes the answer. Every other family is routed to, not run in this demo. <a href="/blueprints/models/">What each family does and where it fits</a>.</li>
       <li><b>Skill and agent.</b> The graph agent answers from the subgraph only.</li>
       <li><b>Gate.</b> Code checks citations, vendor names, prompt leaks, length and the call budget: ${b.gate_controls.map(cidLink).join(' ')}.</li>
       <li><b>Action.</b> A read-only answer with cited nodes.</li>
       <li><b>Trace and memory.</b> The trace is added to your session memory in this browser tab. Nothing is stored on the server.</li>
     </ol>
     <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Model families the router can pick"><table class="fw-table gr-table"><caption>Model families the router can pick</caption><thead><tr><th scope="col">Family</th><th scope="col">In this demo</th><th scope="col">Evals you need</th><th scope="col">Mandatory controls</th></tr></thead><tbody>
-${fam.map((n) => `<tr><th scope="row">${esc(n.label)}</th><td>${esc(n.facts.status)}</td><td>${esc(n.facts.evals)}</td><td>${n.facts.mandatory_controls.split(' ').map(cidLink).join(' ')}</td></tr>`).join('\n')}
+${fam.map((n) => `<tr><th scope="row">${MODEL_PAGE[n.id.slice(3)] ? `<a href="/blueprints/models/#${MODEL_PAGE[n.id.slice(3)]}">${esc(n.label)}</a>` : esc(n.label)}</th><td>${esc(n.facts.status)}</td><td>${esc(n.facts.evals)}</td><td>${n.facts.mandatory_controls.split(' ').map(cidLink).join(' ')}</td></tr>`).join('\n')}
 </tbody></table></div>`;
 }
 

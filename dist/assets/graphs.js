@@ -323,6 +323,8 @@
     input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); ask(input.value); } });
     input.addEventListener('input', function () { $('.gr-count', root).textContent = input.value.length > 250 ? (300 - input.value.length) + ' characters left' : ''; });
     var busy = false;
+    // Families with a card on /blueprints/models/.
+    var MODEL_PAGE = { llm: 'llm', slm: 'slm', rag: 'rag', kg: 'kg', ml: 'ml', opt: 'opt', speech: 'speech', mm: 'mm', phys: 'phys' };
 
     function routeList(r, data) {
       var subs = data.subgraphs || [];
@@ -332,7 +334,8 @@
       subs.forEach(function (s) { steps.push([s.graph === 'kg' ? 'Knowledge graph lookup' : 'Skill graph lookup', 'Code walked ' + s.path.length + ' edges and selected ' + s.nodes.length + ' nodes.' + (s.notes.length ? ' ' + s.notes.join(' ') : '')]); });
       steps.push(['Model families', '<ul class="gr-fams">' + r.families.map(function (f) {
         var badge = f.status === 'ran' ? '<span class="gr-b gr-b-run">Run</span>' : f.status === 'traversal_ran' ? '<span class="gr-b gr-b-code">Traversal ran in code</span>' : '<span class="gr-b gr-b-not">Routed to, not run in this demo</span>';
-        return '<li>' + badge + ' <b>' + esc(f.label) + '.</b> ' + esc(f.why) + '</li>';
+        var mp = MODEL_PAGE[f.id];
+        return '<li>' + badge + ' <b>' + (mp ? '<a href="/blueprints/models/#' + mp + '">' + esc(f.label) + '</a>' : esc(f.label)) + '.</b> ' + esc(f.why) + '</li>';
       }).join('') + '</ul>', true]);
       steps.push(['Skill and agent', 'Graph agent, skill: answer from a code-selected subgraph (L1, read only).']);
       steps.push(['Controls', '<ul class="gr-ctl">' + (data.controls || []).map(function (c) { return '<li>' + cid(c.id) + ' ' + esc(c.why) + '</li>'; }).join('') + '</ul>', true]);
