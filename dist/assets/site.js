@@ -209,3 +209,68 @@
     });
   });
 })();
+
+/* Small screens: sideways-scroll hints on wide tables and diagrams, and the "Talk to the book"
+   button steps aside while the reader scrolls down. Classes only, so the CSP needs no inline style. */
+(function () {
+  'use strict';
+  var HINTED = '.fw-table-wrap, .sl-wrap, .ar-svg-wrap, .ld-tablewrap';
+  var MASKED = HINTED + ', .site-nav';
+  var coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+  var seen = typeof WeakSet === 'function' ? new WeakSet() : null;
+  var queued = false;
+
+  function hintFor(w) {
+    var prev = w.previousElementSibling;
+    if (prev && prev.classList.contains('x-hint')) return prev;
+    if (!w.matches(HINTED) || !w.parentNode) return null;
+    var h = document.createElement('p');
+    h.className = 'x-hint';
+    h.setAttribute('aria-hidden', 'true');
+    h.textContent = (coarse ? 'Swipe' : 'Scroll') + ' sideways to see more';
+    h.hidden = true;
+    w.parentNode.insertBefore(h, w);
+    return h;
+  }
+
+  function edges(w) {
+    var max = w.scrollWidth - w.clientWidth;
+    w.classList.toggle('x-more', max > 2 && w.scrollLeft < max - 2);
+    w.classList.toggle('x-less', max > 2 && w.scrollLeft > 2);
+  }
+
+  function update() {
+    queued = false;
+    document.querySelectorAll(MASKED).forEach(function (w) {
+      if (seen && !seen.has(w)) { seen.add(w); w.addEventListener('scroll', function () { edges(w); }, { passive: true }); }
+      var wide = w.clientWidth > 0 && w.scrollWidth > w.clientWidth + 2;
+      w.classList.toggle('x-scroll', wide);
+      edges(w);
+      if (wide || (w.previousElementSibling && w.previousElementSibling.classList.contains('x-hint'))) {
+        var h = hintFor(w);
+        if (h && h.hidden === wide) h.hidden = !wide;
+      }
+    });
+  }
+  function queue() { if (!queued) { queued = true; (window.requestAnimationFrame || setTimeout)(update); } }
+
+  if (seen) {
+    queue();
+    window.addEventListener('resize', queue, { passive: true });
+    window.addEventListener('load', queue);
+    if (window.MutationObserver) new MutationObserver(queue).observe(document.body, { childList: true, subtree: true });
+  }
+
+  var fab = document.querySelector('.guide-fab');
+  var small = window.matchMedia && window.matchMedia('(max-width: 59.99rem)');
+  if (fab && small) {
+    var lastY = window.pageYOffset || 0;
+    window.addEventListener('scroll', function () {
+      var y = window.pageYOffset || 0, d = y - lastY;
+      if (Math.abs(d) < 8) return;
+      var away = small.matches && d > 0 && y > 240 && !fab.contains(document.activeElement);
+      fab.classList.toggle('fab-away', away);
+      lastY = y;
+    }, { passive: true });
+  }
+})();

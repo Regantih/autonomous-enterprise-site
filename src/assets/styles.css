@@ -993,3 +993,76 @@ fieldset.field legend { padding: 0; margin-bottom: 0.35rem; }
 .bp-card-lead { background: var(--orange); border-color: var(--orange); }
 .bp-card-lead .bp-card-n, .bp-card-lead p { color: var(--ink); }
 .ar-link { margin: 1rem 0 0; }
+
+/* Mobile and touch fixes (QA Nov 2026) */
+/* Scroll containers anchor absolutely positioned children (visually-hidden captions and labels),
+   so they are clipped by the scroller instead of widening the page. */
+.fw-table-wrap, .ld-tablewrap, .quote-strip, .site-nav { position: relative; }
+/* Sideways-scroll hint: site.js adds .x-scroll when a wrapper is wider than its box,
+   .x-more while there is more to the right and .x-less once scrolled from the left. */
+.x-hint { display: flex; align-items: center; gap: 0.4rem; margin: 0.75rem 0 -1rem; font-size: 0.82rem; font-weight: 600; color: var(--muted); }
+.x-hint::after { content: "\2192"; font-size: 1rem; color: var(--orange-text); }
+.x-hint + .sl-wrap, .x-hint + .ar-svg-wrap, .x-hint + .ld-tablewrap { margin-top: 1.4rem; }
+.x-hint[hidden] { display: none; }
+@media screen {
+  .x-scroll.x-more { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 2.75rem), rgba(0, 0, 0, 0.15)); mask-image: linear-gradient(90deg, #000 calc(100% - 2.75rem), rgba(0, 0, 0, 0.15)); }
+  .x-scroll.x-less { -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.15), #000 2.75rem); mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.15), #000 2.75rem); }
+  .x-scroll.x-more.x-less { -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.15), #000 2.75rem, #000 calc(100% - 2.75rem), rgba(0, 0, 0, 0.15)); mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.15), #000 2.75rem, #000 calc(100% - 2.75rem), rgba(0, 0, 0, 0.15)); }
+}
+@media print { .x-hint { display: none; } }
+
+/* Framework ceiling grid: let the four columns shrink on narrow screens */
+.ce-grid { grid-template-columns: minmax(5.5rem, 1.1fr) repeat(3, minmax(0, 1fr)); }
+.ce-grid > *, .ce-cell { min-width: 0; overflow-wrap: anywhere; }
+@media (max-width: 30rem) { .ce-grid { font-size: 0.8rem; gap: 0.3rem; } .ce-cell { padding-inline: 0.15rem; } }
+.ce-grid > b { overflow-wrap: normal; -webkit-hyphens: auto; hyphens: auto; }
+@media (max-width: 30rem) { .ce-grid > b { font-size: 0.74rem; } }
+
+/* Designer: room for the step name on phones, checkboxes beside their labels, fields wide enough for their values */
+.dz-fields { grid-template-columns: repeat(auto-fit, minmax(14.5rem, 1fr)); }
+.dz-chk { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2.25rem; cursor: pointer; }
+.dz-step .dz-chk input { width: 1.2rem; height: 1.2rem; flex: none; padding: 0; margin: 0; }
+@media (max-width: 30rem) {
+  .dz-row1 { flex-wrap: wrap; align-items: center; }
+  .dz-move { margin-left: auto; }
+  .dz-name { flex: 1 1 100%; order: 3; }
+}
+
+/* Talk to the book: smaller on phones, steps aside while reading down the page (site.js) */
+.guide-fab { transition: transform 0.25s ease, opacity 0.25s ease; }
+.guide-fab.fab-away { transform: translateY(calc(100% + 2rem)); opacity: 0; pointer-events: none; }
+@media (max-width: 40rem) {
+  .guide-fab { min-height: 2.75rem; padding: 0.55rem 0.95rem; font-size: 0.88rem; gap: 0.45rem; }
+  .site-footer { padding-bottom: 4.5rem; }
+}
+@media (prefers-reduced-motion: reduce) { .guide-fab { transition: none; } }
+
+/* Touch screens: tap targets of at least 40px */
+@media (pointer: coarse) {
+  .pill, .seg, .bp-subnav a { min-height: 2.5rem; }
+  .pill, .seg { display: inline-flex; align-items: center; }
+  .bp-subnav a { display: inline-flex; align-items: center; }
+  .tv-filter .pill { font-size: 0.82rem; padding: 0.3rem 0.7rem; }
+  .tv-case { min-height: 2.5rem; align-items: center; }
+  .tv-table th button { display: inline-block; padding: 0.6rem 0; margin: -0.6rem 0; }
+  .share { display: inline-flex; align-items: center; min-height: 2.5rem; }
+  .dz-move button { width: 2.6rem; height: 2.6rem; }
+  .pr-trig button, .ch-toggle button, .dn-yn button, .ld-stop { min-height: 2.5rem; }
+  .dn-yn button { min-width: 2.75rem; }
+  input[type="range"] { min-height: 2.25rem; }
+  .site-nav a { padding-block: 0.6rem; }
+}
+
+/* Header wordmark leads with the book: one line at desktop, wraps to two short lines on phones */
+.brand-name { overflow-wrap: normal; }
+@media (min-width: 60rem) { .site-header .brand { flex: none; } }
+@media (min-width: 60rem) and (max-width: 79.99rem) {
+  .site-header .brand-text { max-width: 9.5rem; }
+  .site-header .brand-sub { display: none; }
+  .header-inner { gap: 0.75rem; }
+  .site-nav a { padding-inline: 0.4rem; font-size: 0.88rem; }
+  .header-cta { padding-inline: 0.8rem; font-size: 0.88rem; }
+}
+@media (min-width: 80rem) { .site-header .brand-name { white-space: nowrap; } }
+@media (max-width: 30rem) { .site-header .brand { font-size: 1rem; line-height: 1.05; } }
+@media (max-width: 22.5rem) { .site-header .brand { font-size: 0.92rem; } .header-cta { padding-inline: 0.6rem; font-size: 0.78rem; } .header-inner { padding-block: 0.3rem; } }

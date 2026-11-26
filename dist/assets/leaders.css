@@ -142,8 +142,8 @@ details[open] > summary .lq-plus::after { transform: translate(-50%, -50%) rotat
 .ld-cand-h b { flex: 1; font-weight: 700; line-height: 1.25; }
 .ld-x { background: transparent; border: 1px solid var(--line); border-radius: 50%; width: 1.8rem; height: 1.8rem; line-height: 1; font-size: 1.1rem; color: var(--muted); }
 .ld-x:hover { border-color: var(--danger); color: var(--danger); }
-.ld-cand-f { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem 0.75rem; margin-bottom: 0.6rem; }
-@media (min-width: 30rem) { .ld-cand-f { grid-template-columns: repeat(4, 1fr); } }
+.ld-cand-f { display: grid; grid-template-columns: 1fr; gap: 0.5rem 0.75rem; margin-bottom: 0.6rem; }
+@media (min-width: 30rem) { .ld-cand-f { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .ld-cand-f select { padding: 0.35rem 0.4rem; font-size: 0.9rem; }
 .ld-cand-c { display: grid; grid-template-columns: 1fr 1fr; gap: 0 0.75rem; }
 .ld-cand-c .ld-ck { font-size: 0.85rem; margin-bottom: 0.35rem; }
@@ -269,4 +269,11 @@ details[open] > summary .lq-plus::after { transform: translate(-50%, -50%) rotat
 @media print {
   .lq-tabbar, .lq-toolnav, .ld-ix { display: none !important; }
   .lq-panel[hidden] { display: block !important; }
+}
+
+/* Touch screens: tap targets of at least 40px */
+@media (pointer: coarse) {
+  .ld-x { width: 2.5rem; height: 2.5rem; }
+  .ld-ck { min-height: 1.75rem; align-items: center; }
+  .ld-ck input { width: 1.2rem; height: 1.2rem; margin-top: 0; }
 }
