@@ -8,14 +8,14 @@ import { GUIDE_MATURITY, GUIDE_ROLES, maturityLabel, roleLabel } from './validat
 
 export const PRIMARY_MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
 export const FALLBACK_MODEL = '@cf/meta/llama-3.1-8b-instruct';
-export const MAX_TOKENS = 350;
+export const MAX_TOKENS = 480;
 /** Visitor messages per conversation. */
 export const MAX_TURNS = 12;
 export const HISTORY_LIMIT = 8;
 /** Model calls per visitor (salted IP hash) per hour. Every tool step that calls a model counts. */
 export const GUIDE_RATE_LIMIT = 30;
 export const MAX_MESSAGE_CHARS = 800;
-export const REPLY_WORD_LIMIT = 90;
+export const REPLY_WORD_LIMIT = 150;
 export const SUMMARY_WORD_LIMIT = 120;
 /** Offer the next-step buttons from this many visitor messages onward. */
 export const INVITE_AFTER_TURNS = 3;

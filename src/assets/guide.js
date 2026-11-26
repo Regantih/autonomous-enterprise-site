@@ -119,9 +119,11 @@
     }
     if (m.cites && m.cites.length) b.appendChild(el('p', { class: 'guide-cites' }, 'From the book: ' + m.cites.join(', ')));
     if (m.notCovered) b.appendChild(el('p', { class: 'guide-cites guide-uncovered' }, 'Not in the book: ' + m.notCovered));
-    if (m.pages && m.pages.length) {
+    // One or two suggested pages per answer; the server caps them too.
+    var pages = (m.pages || []).slice(0, 2);
+    if (pages.length) {
       var ul = el('ul', { class: 'guide-pages', 'aria-label': 'Suggested pages' });
-      m.pages.forEach(function (p) {
+      pages.forEach(function (p) {
         var li = el('li');
         li.appendChild(el('a', { href: p.href }, p.title));
         li.appendChild(el('span', null, ' ' + p.reason));

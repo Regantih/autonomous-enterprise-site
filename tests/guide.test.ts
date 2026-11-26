@@ -17,8 +17,8 @@ import {
   violatesRules,
   type ChatMessage,
 } from '../lib/guide';
-import { CORE, MAX_CALLS_PER_TURN, MAX_TOOL_STEPS, buildSystemPrompt, normalizeCite, parseStep } from '../lib/guide-agent';
-import { HANDOFFS, KNOWN_CITES, PASSAGES, SITE_PAGES, chapterTags, runTool, searchBook } from '../lib/guide-tools';
+import { CORE, MAX_CALLS_PER_TURN, MAX_TOOL_STEPS, MIN_ANSWER_WORDS, buildSystemPrompt, normalizeCite, parseStep } from '../lib/guide-agent';
+import { HANDOFFS, KNOWN_CITES, PASSAGES, SITE_PAGES, chapterTags, graphIntent, intakeIntent, runTool, searchBook } from '../lib/guide-tools';
 import { KNOWLEDGE } from '../lib/knowledge.generated';
 import { validateConversationLead } from '../lib/validate';
 import { FakeD1 } from './fake-d1';
@@ -166,7 +166,7 @@ describe('POST /api/guide (agent loop)', () => {
   const usage = { prompt_tokens: 1000, completion_tokens: 50 };
   const step = (o: unknown) => ({ response: J(o), usage });
   const SEARCH = step({ tools: [{ name: 'search_book', args: { query: 'external agents trust tiers' } }] });
-  const ANSWER = step({ answer: 'Treat a supplier agent like a new trading partner. Verify its signed record and contract, issue your own short-lived credential and start it in a sandbox on synthetic data. Then publish read-only tools with caps; actions come after 90 days without findings.', cites: ['Ch 23'], tools: [{ name: 'suggest_page', args: { page: 'trust', reason: 'The trust tiers and welcome flow.' } }] });
+  const ANSWER = step({ answer: 'Treat a supplier agent like a new trading partner, not a trusted colleague. Verify its signed record and its contract, issue your own short-lived credential and start it in a sandbox on synthetic data. Then publish read-only tools with caps, so it can look but not act. Actions come only after 90 days without a material finding.', cites: ['Ch 23'], tools: [{ name: 'suggest_page', args: { page: 'trust', reason: 'The trust tiers and welcome flow.' } }] });
 
   beforeEach(() => {
     db = new FakeD1();
@@ -226,11 +226,47 @@ describe('POST /api/guide (agent loop)', () => {
     ai.run.mockReset().mockResolvedValueOnce(SEARCH).mockResolvedValueOnce(SHORT).mockResolvedValueOnce(ANSWER);
     const { body } = await call(chat([{ role: 'user', content: 'How do we trust outside agents?' }]));
     expect(body).toMatchObject({ ok: true, steps: 3 });
-    expect(String(body.reply).split(/\s+/).length).toBeGreaterThanOrEqual(30);
+    expect(String(body.reply).split(/\s+/).length).toBeGreaterThanOrEqual(MIN_ANSWER_WORDS);
     expect((ai.run.mock.calls[2][1] as { messages: { content: string }[] }).messages.at(-1)!.content).toContain('The answer is too short');
     // A second short answer is accepted rather than looping.
     ai.run.mockReset().mockResolvedValueOnce(SEARCH).mockResolvedValueOnce(SHORT).mockResolvedValueOnce(SHORT);
     expect((await call(chat([{ role: 'user', content: 'Again?' }]))).body).toMatchObject({ ok: true, reply: 'Apply the B2A rules.' });
+  });
+
+  it('sends a "not in the book" answer back to search when no tool ran', async () => {
+    const DODGE = step({ answer: 'The book does not cover that.', cites: [], not_covered: 'The book does not cover this.' });
+    ai.run.mockReset().mockResolvedValueOnce(DODGE).mockResolvedValueOnce(SEARCH).mockResolvedValueOnce(ANSWER);
+    const { body } = await call(chat([{ role: 'user', content: 'Where do I start as a CEO?' }]));
+    expect(body).toMatchObject({ ok: true, steps: 3, cites: ['Ch 23'] });
+    expect((ai.run.mock.calls[1][1] as { messages: { content: string }[] }).messages.at(-1)!.content).toContain('Call search_book first');
+  });
+
+  it('routes a sample-data question to ask_graph and nudges once if the model skipped it', async () => {
+    ai.run.mockReset().mockResolvedValueOnce(SEARCH).mockResolvedValueOnce(ANSWER)
+      .mockResolvedValueOnce(step({ tools: [{ name: 'ask_graph', args: { question: 'riskiest supplier' } }] })).mockResolvedValueOnce(ANSWER);
+    const { body } = await call(chat([{ role: 'user', content: 'Which sample supplier is riskiest?' }]));
+    expect((ai.run.mock.calls[0][1] as { messages: { content: string }[] }).messages[0].content).toContain('Call ask_graph first');
+    expect((ai.run.mock.calls[2][1] as { messages: { content: string }[] }).messages.at(-1)!.content).toContain('Call ask_graph');
+    expect((body.trace as { tool: string }[]).map((t) => t.tool)).toContain('ask_graph');
+    expect(body.ok).toBe(true);
+  });
+
+  it('hands a stated wish for a workshop to the intake agent even if the model forgot the tool', async () => {
+    ai.run.mockReset().mockResolvedValueOnce(step({ answer: 'The intake agent will ask about your board, the date and the format.', cites: [] }));
+    const { body } = await call(chat([{ role: 'user', content: 'I want a workshop for my board' }]));
+    expect(body).toMatchObject({ ok: true, actions: true, handoff: { intent: 'talk', href: '/speaking/#speaking' } });
+    expect(ai.run).toHaveBeenCalledTimes(1);
+    expect(db.requests).toHaveLength(0);
+  });
+
+  it('reads intake and graph intent deterministically', () => {
+    expect(intakeIntent('I want a workshop for my board')).toBe('talk');
+    expect(intakeIntent('Could Hemanth advise our leadership team?')).toBe('advisory');
+    expect(intakeIntent('We would like to interview Hemanth for our podcast')).toBe('media');
+    expect(intakeIntent('How do I trust a supplier\u2019s agent?')).toBeNull();
+    expect(intakeIntent('Where do I start?')).toBeNull();
+    expect(graphIntent('Which supplier is riskiest in the sample data?')).toBe(true);
+    expect(graphIntent('How do I trust a supplier\u2019s agent?')).toBe(false);
   });
 
   it('withholds an answer that names a vendor, instead of replacing it with a scripted one', async () => {

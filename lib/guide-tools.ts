@@ -191,3 +191,32 @@ export function runTool(call: ToolCall, visitorText = ''): ToolResult {
     handoff: { intent: which, href: h.href, label: h.label },
   };
 }
+
+// ---------- routing hints (code, deterministic) ----------
+
+/**
+ * A stated wish to book Hemanth for a talk, workshop, advisory or interview. Returns the intake intent, or null.
+ * "Talk to the book" and questions about how to run a workshop are not wishes to book him.
+ */
+export function intakeIntent(text: string): HandoffIntent | null {
+  const t = text.toLowerCase();
+  const wish = /\b(want|wants|wanted|need|needs|would like|i'?d like|we'?d like|looking for|interested in|book|booking|hire|hiring|invite|inviting|arrange|organi[sz]e|schedule|request|get)\b/;
+  const asksHim = /\b(can|could|would|will|does|is) (hemanth|the author|he)\b.{0,40}\b(speak|talk|present|run|lead|facilitate|advise|consult|keynote|join|do)\b/;
+  const media = /\b(interview|podcast|panel|article|journalist|press|media|quote)\b/;
+  const advisory = /\b(advisory|advisor|adviser|advise|consult|consulting|engagement|work with (hemanth|him|the author))\b/;
+  const talk = /\b(workshop|keynote|talk|speaker|speaking|session|offsite|off-site|masterclass|briefing|presentation)\b/;
+  if (!wish.test(t) && !asksHim.test(t)) return null;
+  if (/talk to (the|this) (book|guide)/.test(t) && !/\b(workshop|keynote|speaker|advis|interview|podcast)/.test(t)) return null;
+  if (media.test(t) && /\b(hemanth|author|him|you|interview|podcast)\b/.test(t)) return 'media';
+  if (advisory.test(t)) return 'advisory';
+  if (talk.test(t) || asksHim.test(t)) return 'talk';
+  return null;
+}
+
+/** A question about the site's synthetic sample data (suppliers, invoices, exceptions, controls, risk) or its agents' skills. */
+export function graphIntent(text: string): boolean {
+  const t = text.toLowerCase();
+  if (/\b(sample|synthetic|demo|knowledge graph|skill graph|the graph|graphs)\b/.test(t)) return true;
+  if (/\b(riskiest|highest[- ]risk|most risky|which (supplier|vendor|invoice|control|exception|polic|agent))/.test(t)) return true;
+  return /\b(suppliers?|vendors?|invoices?|exceptions?|controls?)\b.{0,40}\b(most|highest|riskiest|open|overdue|flagged|top|worst|list)\b/.test(t);
+}
