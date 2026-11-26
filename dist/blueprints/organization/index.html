@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Organization: Humans and Agents, Delegation and the Capability Matrix | Human-Led Enterprise</title>
+<meta name="description" content="How the org chart changes when agents do the work, from the book: new roles, pods, spans, decision rights, autonomy levels, deciding with incomplete information and who does what.">
+<meta name="author" content="Hemanth Reganti">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://humanledenterprise.com/blueprints/organization/">
+<meta name="theme-color" content="#141414">
+<meta name="color-scheme" content="light">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Human-Led Enterprise">
+<meta property="og:title" content="Organization: Humans and Agents, Delegation and the Capability Matrix | Human-Led Enterprise">
+<meta property="og:description" content="How the org chart changes when agents do the work, from the book: new roles, pods, spans, decision rights, autonomy levels, deciding with incomplete information and who does what.">
+<meta property="og:url" content="https://humanledenterprise.com/blueprints/organization/">
+<meta property="og:image" content="https://humanledenterprise.com/assets/images/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Autonomous Enterprise by Hemanth Reganti: book cover on a dark background">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Organization: Humans and Agents, Delegation and the Capability Matrix | Human-Led Enterprise">
+<meta name="twitter:description" content="How the org chart changes when agents do the work, from the book: new roles, pods, spans, decision rights, autonomy levels, deciding with incomplete information and who does what.">
+<meta name="twitter:image" content="https://humanledenterprise.com/assets/images/og-image.jpg">
+<meta name="twitter:image:alt" content="The Autonomous Enterprise by Hemanth Reganti: book cover on a dark background">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preload" href="/assets/fonts/oswald-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
+<script src="/assets/data/controls.js?v=e0d936f9ff" defer></script>
+<script src="/assets/data/layers.js?v=7c10827ab4" defer></script>
+<script src="/assets/data/workflows.js?v=357666b3fd" defer></script>
+<script src="/assets/data/architecture.js?v=2a1d6d58f4" defer></script>
+<script src="/assets/blueprints.js?v=dc77177432" defer></script>
+<link rel="stylesheet" href="/assets/models.css?v=6255f8512e">
+<script src="/assets/org.js?v=78d2e0df23" defer></script>
+<link rel="stylesheet" href="/assets/styles.css?v=e5ac018add">
+<script src="/assets/site.js?v=e5ac018add" defer></script>
+<script src="/assets/guide.js?v=e5ac018add" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="The Autonomous Enterprise: human-led, agent-operated, home"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="3" fill="#F2622E"/><path fill="#141414" d="M5 23h3v4H5zM9.5 20h3v7h-3zM14 17h3v10h-3zM18.5 13h3v14h-3zM23 9h3v18h-3z"/></svg><span class="brand-text"><span class="brand-name">The Autonomous Enterprise</span> <span class="brand-sub">Human-led, agent-operated</span></span></a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/book/">Book</a></li>
+        <li><a href="/blueprints/" aria-current="page">Blueprints</a></li>
+        <li><a href="/ideas/">Ideas</a></li>
+        <li><a href="/speaking/">Speaking &amp; Advisory</a></li>
+        <li><a href="/about/">About</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn-primary header-cta" href="/contact/">Talk to the book</a>
+  </div>
+</header>
+<main id="main" tabindex="-1">
+<section class="page-head bp-head" aria-labelledby="page-title">
+  <div class="container">
+    <p class="eyebrow">Blueprints &middot; Organization</p>
+    <h1 id="page-title">Organization: humans and agents</h1>
+    <p class="lead">Agents change who does the work. People still set intent, own outcomes and decide where not to automate. This page shows how the organization changes, from the book.</p>
+    <ul class="sa-jump" aria-label="On this page">
+      <li><a href="#shifts">What changes</a></li>
+      <li><a href="#org">Org structure</a></li>
+      <li><a href="#storyboard">One team, redesigned</a></li>
+      <li><a href="#delegation">Delegation and decisions</a></li>
+      <li><a href="#incomplete">Incomplete information</a></li>
+      <li><a href="#capability">Capability matrix</a></li>
+      <li><a href="/blueprints/operations/">Audits and reliability</a></li>
+    </ul>
+  </div>
+</section>
+<nav class="bp-subnav" aria-label="Blueprints">
+  <div class="container">
+    <a class="bp-subnav-home" href="/blueprints/">Blueprints</a>
+    <ul>
+      <li><a href="/architecture/">Architecture</a></li>
+      <li><a href="/workflows/">Workflows</a></li>
+      <li><a href="/controls/">Controls</a></li>
+      <li><a href="/designer/">Designer</a></li>
+      <li><a href="/blueprints/trace/">Trace viewer</a></li>
+      <li><a href="/blueprints/loops/">Improvement loops</a></li>
+      <li><a href="/blueprints/graphs/">Graphs</a></li>
+      <li><a href="/blueprints/models/">Models</a></li>
+      <li><a href="/blueprints/design/">Design choices</a></li>
+      <li><a href="/blueprints/organization/" aria-current="page">Organization</a></li>
+      <li><a href="/blueprints/operations/">Operations</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="section bp-section" id="shifts" aria-labelledby="shifts-title">
+  <div class="container fw-body">
+    <p class="eyebrow">What changes</p>
+    <h2 id="shifts-title" class="h-sm">Agents absorb tasks, not jobs</h2>
+    <p class="lead">A job is a bundle of tasks. Take each job apart, decide what happens to each task, then rebuild the role. <span class="md-cite">Book, Ch 24</span></p>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <caption class="visually-hidden">Five shifts in the operating model</caption>
+        <thead><tr><th scope="col">Shift</th><th scope="col">Before</th><th scope="col">After</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Who does the work</th><td>People using screens</td><td>Agents and people together</td></tr>
+          <tr><th scope="row">What gets released</th><td>Code and configuration</td><td>Also instructions, skills, models, limits and policies</td></tr>
+          <tr><th scope="row">How cost behaves</th><td>Mostly fixed licenses</td><td>Variable use on several meters</td></tr>
+          <tr><th scope="row">What fails</th><td>Programs and interfaces</td><td>Also reasoning, context, drift and cost loops</td></tr>
+          <tr><th scope="row">Who is accountable</th><td>Process owner for the process</td><td>Process owner for process and agent outcomes</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Four classes for every task</h3>
+    <ul class="fw-list">
+      <li><b>Absorb.</b> The agent does it; a person audits samples. Typically L3 to L4.</li>
+      <li><b>Augment.</b> The agent prepares; a person decides. Typically L1 to L2.</li>
+      <li><b>Retain.</b> A person does it; the agent may inform. Typically L0 to L1.</li>
+      <li><b>New.</b> Work that did not exist before, such as reviewing the weekly override report.</li>
+    </ul>
+    <h3>Common errors</h3>
+    <ul class="fw-list">
+      <li>Saved hours are not saved people. A 30% saving spread over 85 people frees nobody until roles are rebuilt.</li>
+      <li>Review time is real work. At L2, 2,000 proposals a week at 90 seconds each is 50 hours.</li>
+      <li>Do not hollow out the role. If only hard cases remain, the job exhausts people and the entry path closes.</li>
+    </ul>
+    <p class="fw-note">Book, Ch 24. Figures are illustrative.</p>
+  </div>
+</section>
+
+<section class="section section-paper-2 bp-section" id="org" aria-labelledby="org-title">
+  <div class="container fw-body">
+    <p class="eyebrow">Org structure</p>
+    <h2 id="org-title" class="h-sm">Agents are owned, not managed</h2>
+    <p class="lead">Agents appear on the org chart only as assets of a role. They have no reporting lines, no headcount and no place in spans of control. <span class="md-cite">Book, Ch 24</span></p>
+    <p>Each team page lists its people. Under the role that owns them, it lists that role&rsquo;s agents and their levels. The agent registry, not the HR system, is the agents&rsquo; record.</p>
+    <h3>New roles and where they sit</h3>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="New roles, scroll sideways">
+      <table class="fw-table">
+        <caption class="visually-hidden">Role catalog</caption>
+        <thead><tr><th scope="col">Role</th><th scope="col">Purpose</th><th scope="col">Reports to</th><th scope="col">Sizing driver (illustrative)</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Agent business owner</th><td>Accountable for one agent&rsquo;s outcomes, limits and risk</td><td>Process owner</td><td>One per agent, part-time</td></tr>
+          <tr><th scope="row">Agent supervisor</th><td>Runs the daily hand-off queue</td><td>Function manager</td><td>One per 3,000 to 6,000 exceptions a month</td></tr>
+          <tr><th scope="row">Agent instruction designer</th><td>Writes instructions, skills and test cases</td><td>Autonomy Office or product team</td><td>One per 8 to 12 agents in active change</td></tr>
+          <tr><th scope="row">AgentOps analyst</th><td>Monitors health, drift and cost</td><td>AgentOps</td><td>One per 15 to 25 agents in production</td></tr>
+          <tr><th scope="row">Evaluation engineer</th><td>Test sets, red team, regression</td><td>Autonomy Office</td><td>One per 15 to 20 agents in production</td></tr>
+          <tr><th scope="row">AI controls analyst</th><td>Controls over agents; audit evidence</td><td>Internal control</td><td>One per 20 to 30 financial agents</td></tr>
+          <tr><th scope="row">AI FinOps analyst</th><td>Meter data, forecasts, showback</td><td>FinOps</td><td>One per 4 to 6 vendor meters</td></tr>
+          <tr><th scope="row">Platform agent specialist</th><td>Agent features of one platform; never owns agents</td><td>Platform team</td><td>One per platform with live agents</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The Autonomy Office is the book&rsquo;s name for the company&rsquo;s AI center of excellence. It owns standards and the registry. It does not own business outcomes. <span class="md-cite">Book, Ch 25</span></p>
+    <h3>The agent business owner matters most</h3>
+    <ul class="fw-list">
+      <li>Approves the agent&rsquo;s specification, level, limits and escalation paths.</li>
+      <li>Signs promotions on evidence and reviews overrides at least monthly.</li>
+      <li>Owns the agent&rsquo;s risk and can stop the agent.</li>
+      <li>Is a business person, not IT. A cross-platform agent gets one owner for the whole outcome.</li>
+    </ul>
+    <p>A vendor survey cited in the book found that only 9.5% of companies name a person formally accountable for agent behavior. Read it as directional. <span class="md-cite">Book, Ch 22 and Ch 24</span></p>
+    <h3>Spans, layers and what managers do now</h3>
+    <ul class="fw-list">
+      <li><b>Managers.</b> Routine supervision shrinks. Reviewing agent output, handling exceptions and coaching grow.</li>
+      <li><b>Spans.</b> Size them by human decision load, not headcount. AP might widen from 1:10 to 1:14, but only after review load is measured at L2.</li>
+      <li><b>Reviewer capacity.</b> It sets how many agents a team can supervise. A higher hand-off rate needs more people, not a wider span.</li>
+      <li><b>Layers.</b> Remove a layer only if it just relayed information the trace store now shows. Keep every layer that holds a decision right or a control signature.</li>
+    </ul>
+    <h3>Team shapes: human-led, agent-operated pods</h3>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Pod shapes, scroll sideways">
+      <table class="fw-table">
+        <caption class="visually-hidden">Pod types</caption>
+        <thead><tr><th scope="col">Pod</th><th scope="col">People</th><th scope="col">Agents</th><th scope="col">Owns</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Run pod</th><td>Process lead (agent business owner), 3 to 8 exception analysts, a supervisor</td><td>The agents of one process slice</td><td>Daily outcome, hand-off queue, override review</td></tr>
+          <tr><th scope="row">Build pod</th><td>Product owner, agent and context engineers, an evaluator</td><td>Agents in build and shadow mode</td><td>Specifications, skills, test sets, releases</td></tr>
+          <tr><th scope="row">Control pod</th><td>AI controls analyst, evaluator, AgentOps analyst</td><td>Guardian agents</td><td>Seeded tests, trace completeness, control evidence</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Career paths</h3>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Career paths, scroll sideways">
+      <table class="fw-table">
+        <caption class="visually-hidden">Four new career paths</caption>
+        <thead><tr><th scope="col">Path</th><th scope="col">Comes from</th><th scope="col">Progression (illustrative)</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Agent business owner</th><td>Process leads, senior analysts</td><td>One agent, then an agent family, then process owner</td></tr>
+          <tr><th scope="row">AgentOps engineer</th><td>IT operations, site reliability, integration</td><td>Analyst, engineer, on-call lead, AgentOps lead</td></tr>
+          <tr><th scope="row">Context and knowledge engineer</th><td>Business analysts, data stewards, experienced role holders</td><td>Contributor, engineer, domain lead for a value stream</td></tr>
+          <tr><th scope="row">Evaluator</th><td>Quality assurance, internal audit, analysts with statistics</td><td>Evaluator, evaluation engineer, evaluation lead</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Pay and the junior pipeline</h3>
+    <ul class="fw-list">
+      <li><b>Agents are not span.</b> Owning ten agents is not managing ten people. Grade roles by decisions owned and risk carried.</li>
+      <li><b>Pay for outcomes owned.</b> Owners carry objectives on the agent&rsquo;s outcome and control record, not its usage.</li>
+      <li><b>Keep a dual ladder.</b> Context engineers and evaluators can reach senior grades without managing people.</li>
+      <li><b>Protect the junior pipeline.</b> Keep a fixed graduate intake, an apprenticeship on real exceptions and monthly rotation through manual cases.</li>
+      <li><b>Fill new roles from inside first.</b> Process knowledge matters more than AI knowledge.</li>
+    </ul>
+    <p class="fw-note">Book, Ch 24 and Ch 25. Sizing drivers and progressions are illustrative.</p>
+  </div>
+</section>
+
+<section class="section bp-section" id="storyboard" aria-labelledby="story-title">
+  <div class="container">
+    <p class="eyebrow">Storyboard</p>
+    <h2 id="story-title" class="h-sm">One AP team, redesigned over 30 months</h2>
+    <p class="md-intro">Follow the accounts payable team at Meridian, the book&rsquo;s fictional company. People move to new roles before the agent depends on them. <span class="md-cite">Book, Ch 24 and Ch 25</span></p>
+    <ol class="md-story">
+      <li class="md-panel">
+        <span class="md-panel-n" aria-hidden="true">1</span>
+        <p class="md-tag">Today</p>
+        <h3>A team buried in exceptions</h3>
+        <p>85 people process 900,000 invoices a year. About 432 exceptions a day, at 20 minutes each, need about 20 people.</p>
+      </li>
+      <li class="md-panel">
+        <span class="md-panel-n" aria-hidden="true">2</span>
+        <p class="md-tag">Month 3 &middot; Gate G0</p>
+        <h3>Owners first, promises in writing</h3>
+        <p>The Autonomy Office starts. Owners are named for the pilots. The job commitment is announced before pilots, and consultation begins.</p>
+      </li>
+      <li class="md-panel">
+        <span class="md-panel-n" aria-hidden="true">3</span>
+        <p class="md-tag">Task map</p>
+        <h3>The job is taken apart</h3>
+        <p>Clean matching is absorbed. Variances and supplier queries are augmented. Override review and root-cause work are new tasks.</p>
+      </li>
+      <li class="md-panel">
+        <span class="md-panel-n" aria-hidden="true">4</span>
+        <p class="md-tag">Month 13 &middot; Gate G1</p>
+        <h3>Role cards and the first run pod</h3>
+        <p>Role cards are published. The first cohort is trained before go-live. The first run pod forms for Americas AP.</p>
+      </li>
+      <li class="md-panel">
+        <span class="md-panel-n" aria-hidden="true">5</span>
+        <p class="md-tag">Month 16 &middot; Shadow</p>
+        <h3>The clerk judges the agent</h3>
+        <p>The agent runs on live cases but acts on none. The clerk settles disagreements. Shadow results stay out of performance reviews.</p>
+      </li>
+      <li class="md-panel">
+        <span class="md-panel-n" aria-hidden="true">6</span>
+        <p class="md-tag">Month 18 &middot; L2</p>
+        <h3>Approve, with a reason code</h3>
+        <p>The clerk approves each proposal and codes every override. Review load is measured before any span is widened.</p>
+      </li>
+      <li class="md-panel md-panel-key">
+        <span class="md-panel-n" aria-hidden="true">7</span>
+        <p class="md-tag">Month 22 &middot; L3 in one entity</p>
+        <h3>A new role before the agent acts</h3>
+        <p>The clerk becomes an AP exception analyst. The analyst approves up to USD 25,000 but cannot change agent limits or bank data.</p>
+      </li>
+      <li class="md-panel">
+        <span class="md-panel-n" aria-hidden="true">8</span>
+        <p class="md-tag">Months 26 to 33</p>
+        <h3>Pods, supervisors and the line in charge</h3>
+        <p>About 108 hand-offs a day need about three supervisors. Run, build and control pods form. The line takes over all pods.</p>
+      </li>
+    </ol>
+    <p class="fw-note">Illustrative figures from Meridian, the book&rsquo;s fictional company. About 49% of the clerk&rsquo;s time is released and absorbed by not refilling posts, not by redundancies. Everything outside the green band stays at L2. <span class="md-cite">Book, Ch 24</span></p>
+  </div>
+</section>
+
+<section class="section section-paper-2 bp-section" id="delegation" aria-labelledby="delegation-title">
+  <div class="container fw-body">
+    <p class="eyebrow">Delegation and decision-making</p>
+    <h2 id="delegation-title" class="h-sm">Agents change how much is decided, not who may decide it</h2>
+    <p class="lead">Every step has a level. People set it, on evidence, through a named body. Raising it needs a meeting; lowering it needs one person. <span class="md-cite">Book, Ch 01, Ch 24 and Ch 25</span></p>
+    <h3>The autonomy levels</h3>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <caption class="visually-hidden">Autonomy levels L0 to L5</caption>
+        <thead><tr><th scope="col">Level</th><th scope="col">Who decides</th><th scope="col">Human role</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">L0 Manual</th><td>Human</td><td>Does the work</td></tr>
+          <tr><th scope="row">L1 Assist</th><td>Human</td><td>Uses the agent&rsquo;s suggestions</td></tr>
+          <tr><th scope="row">L2 Approve</th><td>Agent proposes</td><td>Approves every action</td></tr>
+          <tr><th scope="row">L3 Act within limits</th><td>Agent</td><td>Handles exceptions above limits; samples</td></tr>
+          <tr><th scope="row">L4 Run and report</th><td>Agent</td><td>Audits, tunes limits and policies</td></tr>
+          <tr><th scope="row">L5 Full</th><td>Agent</td><td>Sets goals only. A boundary marker, not a target, for postings</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Levels are allowed levels, not capability. Capability sets what is possible. Governance sets what is allowed. The lower one applies. <span class="md-cite">Book, Ch 22</span> See <a href="/frameworks/#scale">the scale</a> and <a href="/frameworks/#ceiling">the default ceiling</a>.</p>
+    <h3>Who sets the level</h3>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Decision rights for autonomy changes, scroll sideways">
+      <table class="fw-table">
+        <caption class="visually-hidden">Decision rights for autonomy changes</caption>
+        <thead><tr><th scope="col">Change</th><th scope="col">Evidence (summary)</th><th scope="col">Decided by</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">L1 to L2</th><td>Evaluation report; registered; roles approved; shadow exit met</td><td>Process product owner</td></tr>
+          <tr><th scope="row">L2 to L3, non-financial step</th><td>3 months incl. a quarter-end; at least 1,000 actions; SLOs met; adoption gate</td><td>Owner and risk lead</td></tr>
+          <tr><th scope="row">L2 to L3, triggers a posting or payment</th><td>Same evidence over three closes; limits outside the model; controls tested; audit consulted</td><td>Autonomy council</td></tr>
+          <tr><th scope="row">L3 to L4</th><td>Two quarter-ends at L3; strong harness score; error below target; audit cycle passed</td><td>Autonomy council, endorsed by the risk council</td></tr>
+          <tr><th scope="row">Any downgrade</th><td>An incident or SLO breach</td><td>Owner or AgentOps, at once</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>A vendor&rsquo;s default setting is never the decision. <span class="md-cite">Book, Ch 25</span></p>
+    <h3>Decision rights by role</h3>
+    <ul class="fw-list">
+      <li><b>Process owners</b> set intent and the do-not-automate list.</li>
+      <li><b>Agent business owners</b> set limits within policy and stop their agents.</li>
+      <li><b>The autonomy council</b> changes levels.</li>
+      <li><b>Any on-call engineer</b> stops an agent, without a meeting.</li>
+      <li><b>The pod lead</b> may route any case to people without approval. Demand for human judgment never waits for a meeting.</li>
+    </ul>
+    <p>Ownership follows the layers. The CFO owns the limits. The CIO owns the harness and the inventory. The COO owns the boundary with physical operations. The CHRO owns role redesign. The chief risk officer and internal audit own the evidence standard. <span class="md-cite">Book, Ch 01</span></p>
+    <h3>Who answers when it goes wrong (RACI)</h3>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="RACI for agent controls, scroll sideways">
+      <table class="fw-table">
+        <caption class="visually-hidden">RACI: A accountable, R responsible, C consulted, I informed</caption>
+        <thead><tr><th scope="col">Activity</th><th scope="col">Accountable</th><th scope="col">Responsible</th><th scope="col">Consulted</th><th scope="col">Informed</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Register and classify</th><td>Agent owner</td><td>Autonomy Office</td><td>CISO, control, DPO</td><td>&ndash;</td></tr>
+          <tr><th scope="row">Identity and scopes</th><td>Agent owner</td><td>CISO / IAM</td><td>Autonomy Office, control</td><td>DPO</td></tr>
+          <tr><th scope="row">Segregation of duties review</th><td>Internal control</td><td>CISO / IAM</td><td>Owner, Autonomy Office</td><td>DPO</td></tr>
+          <tr><th scope="row">Security testing</th><td>CISO</td><td>CISO team</td><td>Autonomy Office</td><td>Owner, control, DPO</td></tr>
+          <tr><th scope="row">SOX control design</th><td>Internal control</td><td>Internal control</td><td>Owner, CISO</td><td>Autonomy Office, DPO</td></tr>
+          <tr><th scope="row">AI Act and GDPR assessment</th><td>DPO / legal</td><td>Autonomy Office</td><td>Owner</td><td>CISO, control</td></tr>
+          <tr><th scope="row">Monitoring and recertification</th><td>Agent owner</td><td>Autonomy Office</td><td>CISO, control</td><td>DPO</td></tr>
+          <tr><th scope="row">Kill switch and incident</th><td>Agent owner</td><td>Autonomy Office, CISO</td><td>Control, DPO</td><td>Steering</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Exactly one accountable person per row. For anything that changes a financial control, that person sits in the business or risk line, never in IT alone. <span class="md-cite">Book, Ch 22</span></p>
+    <h3>Make approval limits executable</h3>
+    <p>A delegation policy written for people is not a control for an agent. The harness checks each limit before the action, outside the model. <span class="md-cite">Book, Ch 24</span></p>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Policy text and executable rules, scroll sideways">
+      <table class="fw-table">
+        <caption class="visually-hidden">Policy text for people and executable rules for agents</caption>
+        <thead><tr><th scope="col">Policy for people</th><th scope="col">Rule for the agent (illustrative)</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Clerks may clear price variances up to tolerance</th><td>Release if under USD 500 and under 2% of line value; else route to the analyst queue</td></tr>
+          <tr><th scope="row">Managers approve invoices above USD 25,000</th><td>The agent may prepare, never release; a named human role approves</td></tr>
+          <tr><th scope="row">No payment to changed bank details without call-back</th><td>The agent cannot change or use bank data changed in the last 30 days</td></tr>
+          <tr><th scope="row">Escalate supplier disputes after 10 days</th><td>A timer on the case opens a service case at day 10</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Test each rule at the boundary (USD 499, 500, 501) before shadow mode and after every change.</p>
+    <h3>Escalation paths</h3>
+    <ul class="fw-list">
+      <li>Outside its limits, the agent escalates with an evidence pack to a named queue. <span class="md-cite">Book, Ch 01</span></li>
+      <li>Each step&rsquo;s target card names the escalation queue and its response time, for example one business day. <span class="md-cite">Book, Ch 01</span></li>
+      <li>Unanswered approvals go to a supervisor after one business day in the book&rsquo;s AP example. <span class="md-cite">Book, Ch 05</span></li>
+      <li>The person who approves an agent&rsquo;s actions may not change its limits, instructions or tools. <span class="md-cite">Book, Ch 24</span></li>
+    </ul>
+    <h3>One-way and two-way doors</h3>
+    <p>The book does not use the one-way and two-way door framing. It uses reversibility and materiality instead. Irreversible actions, such as payments and external messages, stay at L2. <span class="md-cite">Book, Ch 01 and Ch 22</span></p>
+    <p class="fw-note">Levels, limits and bodies are illustrative. Each company sets its own with internal audit.</p>
+  </div>
+</section>
+
+<section class="section bp-section" id="incomplete" aria-labelledby="incomplete-title">
+  <div class="container fw-body">
+    <p class="eyebrow">Decisions with incomplete information</p>
+    <h2 id="incomplete-title" class="h-sm">When the evidence is thin, route to a person</h2>
+    <p class="lead">Agents rarely have every fact. The book&rsquo;s answer: calibrate, set the threshold by cost, cite or say what is missing, and escalate when unsure. <span class="md-cite">Book, Ch 03, Ch 05 and Ch 07</span></p>
+    <h3>Act only above the threshold</h3>
+    <p>Act automatically only when expected gain beats expected loss. The threshold p* = L &divide; (G + L) rises with the amount at stake. <span class="md-cite">Book, Ch 03</span> The worked table is on <a href="/blueprints/design/#deterministic">Design choices</a>.</p>
+    <p>A raw score is not a probability until it is calibrated. Use calibrated scores to route, never to approve. <span class="md-cite">Book, Ch 07</span></p>
+    <h3>Uncertainty bands</h3>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <caption class="visually-hidden">Three confidence bands</caption>
+        <thead><tr><th scope="col">Band</th><th scope="col">Calibrated confidence (illustrative)</th><th scope="col">Route</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Green</th><td>0.95 or more, and all rails pass</td><td>Act at the step&rsquo;s permitted level</td></tr>
+          <tr><th scope="row">Amber</th><td>0.80 to 0.95, or one soft check fails</td><td>Confirm with the person, or send to a reviewer</td></tr>
+          <tr><th scope="row">Red</th><td>Below 0.80, or any hard check fails</td><td>Fall back; do not act</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Forecasts carry ranges, not single numbers. A cash buffer is set against the 10th percentile, not the median. <span class="md-cite">Book, Ch 04</span></p>
+    <h3>Cite, or say what is missing</h3>
+    <ul class="fw-list">
+      <li>Every factual claim needs a source. The output has a &ldquo;missing information&rdquo; field. An agent that cannot cite says what it lacks rather than guess. <span class="md-cite">Book, Ch 05 and Ch 09</span></li>
+      <li>A decision without the required evidence is &ldquo;not done&rdquo;, for example a variance not computed by a tool. <span class="md-cite">Book, Ch 05</span></li>
+      <li>A summary step that drops a missing-evidence flag is a control defect. <span class="md-cite">Book, Ch 05</span></li>
+      <li>If input data fails its quality gate, the step is capped at L2. <span class="md-cite">Book, Ch 01</span></li>
+    </ul>
+    <h3>The fallback ladder</h3>
+    <ol class="md-rules">
+      <li><b>Retry</b> with a tighter constraint.</li>
+      <li><b>Ask</b> the person a clarifying question. Agents tend to guess rather than ask, so make asking the cheaper path.</li>
+      <li><b>Use a safe default</b>, such as a promised call-back by a set time.</li>
+      <li><b>Hand off to a person</b> with the full context.</li>
+      <li><b>Stop safely:</b> no commit, and an open case.</li>
+    </ol>
+    <p class="fw-note">Book, Ch 07. A fallback that never fired in testing is a hypothesis.</p>
+    <h3>How a person decides on partial evidence</h3>
+    <p>The approval card puts the gaps in front of the approver. A weak card produces rubber-stamping. <span class="md-cite">Book, Ch 05</span></p>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Approval card fields, scroll sideways">
+      <table class="fw-table">
+        <caption class="visually-hidden">Approval card fields with an illustrative AP example</caption>
+        <thead><tr><th scope="col">Field</th><th scope="col">Illustrative AP example</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Proposed action</th><td>Release one invoice for EUR 12,480</td></tr>
+          <tr><th scope="row">Why</th><td>The contract allows an index adjustment up to 5%; the variance is 4.1%</td></tr>
+          <tr><th scope="row">Confidence and drivers</th><td>0.91: clause match, index source, two prior adjustments accepted</td></tr>
+          <tr><th scope="row">What is missing</th><td>The supplier has not confirmed the index month</td></tr>
+          <tr><th scope="row">Options</th><td>Approve; short-pay to the order price; ask the supplier; reassign</td></tr>
+          <tr><th scope="row">Reversibility</th><td>Reversible until the payment run</td></tr>
+          <tr><th scope="row">Deadline</th><td>Before the payment run; the discount expires in two days</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Reversible or irreversible</h3>
+    <p>Materiality and reversibility set the default ceiling. Small, easily reversed actions may reach L4. Irreversible ones stay at L2 or below. <span class="md-cite">Book, Ch 01</span></p>
+    <p>An action that commits the company to a third party loses one level for its first 90 days at a new level. <span class="md-cite">Book, Ch 01</span></p>
+    <h3>Prove it small before you scale</h3>
+    <ul class="fw-list">
+      <li><b>Shadow first.</b> The agent runs on live cases and acts on none. <span class="md-cite">Book, Ch 24</span></li>
+      <li><b>Pilots end in a decision.</b> Criteria are signed before the build and never changed after. A stop on evidence is a result. <span class="md-cite">Book, Ch 26</span></li>
+      <li><b>Enough cases.</b> About 300 clean cases show, with 95% confidence, an error rate below 1%. Below 0.3% needs about 1,000. <span class="md-cite">Book, Ch 26</span></li>
+      <li><b>Treat estimates as hypotheses.</b> Each has a baseline, a guardrail metric, a control group and a kill rule. <span class="md-cite">Book, Ch 21</span></li>
+      <li><b>Vendor numbers are claims to test.</b> Ask: production or demo, same baseline, review cost included? <span class="md-cite">Book, Ch 21</span></li>
+    </ul>
+    <h3>What the book does not cover</h3>
+    <p>The book has no general method for executive judgment under uncertainty. It treats incomplete information at the level of each step, through thresholds, evidence gates and pilots. It mentions value of information only as a routing rule: use the cheapest engine that clears the threshold. <span class="md-cite">Book, Ch 21</span></p>
+  </div>
+</section>
+
+<section class="section section-paper-2 bp-section" id="capability" aria-labelledby="capability-title">
+  <div class="container">
+    <p class="eyebrow">Capability matrix</p>
+    <h2 id="capability-title" class="h-sm">Who does what: agent, human or both</h2>
+    <p class="md-intro">Tasks the book places, with who does them, the level and the reason. Filter by who does the work. The counts come from the table rows.</p>
+    <div class="md-filter" data-cap-filter hidden></div>
+    <p class="md-count" data-cap-count role="status"></p>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Capability matrix, scroll sideways">
+      <table class="fw-table md-matrix cap-matrix">
+        <caption class="visually-hidden">Tasks by who does them, level, reason and chapter</caption>
+        <thead><tr><th scope="col">Task</th><th scope="col">Who</th><th scope="col">Level</th><th scope="col">Why</th><th scope="col">Source</th></tr></thead>
+        <tbody>
+          <tr data-who="Agent"><th scope="row">Three-way match on clean invoices</th><td>Agent</td><td>L3 to L4</td><td>Absorbed task. People audit samples.</td><td>Ch 24</td></tr>
+          <tr data-who="Agent"><th scope="row">Entry and validation of non-EDI invoices</th><td>Agent</td><td>L3 to L4</td><td>Absorbed task. Clerk time falls from 25% to 2%.</td><td>Ch 24</td></tr>
+          <tr data-who="Agent"><th scope="row">Price variance under USD 500 and under 2% of line</th><td>Agent</td><td>L3</td><td>Small and reversible. The limit sits in the harness, and releases are sampled.</td><td>Ch 01, Ch 06, Ch 24</td></tr>
+          <tr data-who="Agent"><th scope="row">Cash clearing above the confidence threshold</th><td>Agent</td><td>L3 from month 21</td><td>The agent decides; deterministic rules post.</td><td>Ch 24, Ch 30</td></tr>
+          <tr data-who="Agent"><th scope="row">Dispute credits up to USD 2,500 and under 5% of invoice</th><td>Agent</td><td>L3 from month 21</td><td>Within executable limits. USD 5,000 after 90 days per channel.</td><td>Ch 24, Ch 30</td></tr>
+          <tr data-who="Agent"><th scope="row">Incident triage, access requests, password resets</th><td>Agent</td><td>L3 (first candidates)</td><td>High volume, clear rules, reversible actions.</td><td>Ch 01</td></tr>
+          <tr data-who="Agent"><th scope="row">Read-only reporting and monitoring checks</th><td>Agent</td><td>L4</td><td>Read-only. People audit outcomes.</td><td>Ch 24, Ch 30</td></tr>
+          <tr data-who="Agent"><th scope="row">Stop, throttle or flag another agent</th><td>Agent</td><td>Guardian, own registry entry</td><td>Guardians may stop; never start, approve, edit or promote. The chain ends at a person.</td><td>Ch 25</td></tr>
+          <tr data-who="Agent proposes, human approves"><th scope="row">Price variance above tolerance</th><td>Agent proposes, human approves</td><td>L2</td><td>Augmented task. The person decides with the evidence.</td><td>Ch 24</td></tr>
+          <tr data-who="Agent proposes, human approves"><th scope="row">Invoices above USD 25,000</th><td>Agent proposes, human approves</td><td>L2</td><td>The agent prepares, never releases. A named human role approves.</td><td>Ch 24</td></tr>
+          <tr data-who="Agent proposes, human approves"><th scope="row">Journal entries and ledger postings</th><td>Agent proposes, human approves</td><td>L2 through month 30</td><td>No agent writes a journal entry.</td><td>Ch 24, Ch 30</td></tr>
+          <tr data-who="Agent proposes, human approves"><th scope="row">Credit memo above the L3 limit</th><td>Agent proposes, human approves</td><td>L2</td><td>Over the limit, a credit manager approves.</td><td>Ch 30</td></tr>
+          <tr data-who="Agent proposes, human approves"><th scope="row">Replies to supplier queries</th><td>Agent proposes, human approves</td><td>L2</td><td>Augmented task. The service agent drafts.</td><td>Ch 24</td></tr>
+          <tr data-who="Agent proposes, human approves"><th scope="row">Candidate screening</th><td>Agent proposes, human approves</td><td>Held at L2</td><td>The law reserves the decision to people.</td><td>Ch 22</td></tr>
+          <tr data-who="Human, agent assists"><th scope="row">Supplier relationship escalations</th><td>Human, agent assists</td><td>L0 to L1</td><td>Retained task. The judgment is the product.</td><td>Ch 22, Ch 24</td></tr>
+          <tr data-who="Human, agent assists"><th scope="row">Reviewing override reports and root causes</th><td>Human, agent assists</td><td>New task</td><td>New work. Every override becomes a test case.</td><td>Ch 06, Ch 24</td></tr>
+          <tr data-who="Human, agent assists"><th scope="row">Goodwill impairment decision</th><td>Human, agent assists</td><td>L0</td><td>Rare, high-judgment event.</td><td>Ch 01</td></tr>
+          <tr data-who="Human only"><th scope="row">Supplier bank data changes</th><td>Human only</td><td>Stays with people</td><td>Irreversible and unbounded. No limit outside the model caps the loss.</td><td>Ch 01, Ch 22</td></tr>
+          <tr data-who="Human only"><th scope="row">Supplier payment run release</th><td>Human only</td><td>Human gate</td><td>Irreversible. Two treasury releasers sign.</td><td>Ch 22, Ch 30</td></tr>
+          <tr data-who="Human only"><th scope="row">Quality release and test certificate</th><td>Human only</td><td>Human gate</td><td>Contract and regulation keep the inspector&rsquo;s signature.</td><td>Ch 30</td></tr>
+          <tr data-who="Human only"><th scope="row">Period-end close sign-off</th><td>Human only</td><td>Human gate</td><td>Accountability keeps the controller&rsquo;s sign-off.</td><td>Ch 30</td></tr>
+          <tr data-who="Human only"><th scope="row">Disciplinary decisions</th><td>Human only</td><td>L2 or below</td><td>The value lies in a person deciding and being seen to decide.</td><td>Ch 22</td></tr>
+          <tr data-who="Human only"><th scope="row">Setting or changing an agent&rsquo;s limits</th><td>Human only</td><td>Never the agent</td><td>No agent may propose changes to its own limits or permissions.</td><td>Ch 01, Ch 22</td></tr>
+          <tr data-who="Human only"><th scope="row">Raising an agent&rsquo;s autonomy level</th><td>Human only</td><td>Named body</td><td>Promotion is never automatic. It needs evidence and a body.</td><td>Ch 01, Ch 25</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fw-note">Levels are illustrative and follow Meridian, the book&rsquo;s fictional company. &ldquo;Human only&rdquo; means agents may prepare evidence but never make the decision. Each company sets its own levels.</p>
+  </div>
+</section>
+
+<section class="section bp-section" id="next" aria-labelledby="next-title">
+  <div class="container fw-body">
+    <p class="eyebrow">Running it</p>
+    <h2 id="next-title" class="h-sm">Audits, observability and reliability</h2>
+    <p>What to trace, which dashboards to read, the registry, the kill switch, SLOs, incidents and demotion rules are on the companion page.</p>
+    <p class="cta-row"><a class="btn btn-dark" href="/blueprints/operations/">Operating agents</a> <a class="btn btn-ghost" href="/controls/">Open the controls library</a> <a class="btn btn-ghost" href="/frameworks/#human-led">Human-led, agent-operated</a></p>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="brand" href="/" aria-label="The Autonomous Enterprise: human-led, agent-operated, home"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="3" fill="#F2622E"/><path fill="#141414" d="M5 23h3v4H5zM9.5 20h3v7h-3zM14 17h3v10h-3zM18.5 13h3v14h-3zM23 9h3v18h-3z"/></svg><span class="brand-text"><span class="brand-name">The Autonomous Enterprise</span> <span class="brand-sub">Human-led, agent-operated</span></span></a>
+      <p>Author, speaker and advisor on human-led, agent-operated enterprises.</p>
+      <p>&copy; 2026 Hemanth Reganti</p>
+      <p>We use your details only to respond to your request.</p>
+    </div>
+    <div>
+      <ul class="footer-links" aria-label="Site">
+        <li><a href="/book/">Book</a></li>
+        <li><a href="/frameworks/">Frameworks</a></li>
+        <li><a href="/blueprints/">Blueprints</a></li>
+        <li><a href="/ideas/">Ideas</a></li>
+        <li><a href="/speaking/">Speaking &amp; Advisory</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+      <ul class="footer-links footer-ext" aria-label="Elsewhere">
+        <li><a href="/contact/#press">Press kit</a></li>
+        <li><a href="https://www.amazon.com/dp/B0HS8HG6DP" rel="noopener" target="_blank">Amazon<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+        <li><a href="https://www.linkedin.com/in/hemanth-reganti-147153178/" rel="noopener" target="_blank">LinkedIn<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+<a class="guide-fab" href="/talk/" data-guide-open aria-haspopup="dialog"><span class="guide-fab-mark" aria-hidden="true"></span>Talk to the book</a>
+</body>
+</html>

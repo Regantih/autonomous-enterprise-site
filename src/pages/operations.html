@@ -1,0 +1,294 @@
+<section class="page-head bp-head" aria-labelledby="page-title">
+  <div class="container">
+    <p class="eyebrow">Blueprints &middot; Operations</p>
+    <h1 id="page-title">Operating agents: audits, observability, reliability</h1>
+    <p class="lead">Once agents run, someone must see what they do, prove it to an auditor and stop them fast. This page shows how, from the book.</p>
+    <ul class="sa-jump" aria-label="On this page">
+      <li><a href="#observe">What to trace</a></li>
+      <li><a href="#dashboards">Dashboards</a></li>
+      <li><a href="#registry">Registry</a></li>
+      <li><a href="#audits">Audits</a></li>
+      <li><a href="#guardians">Who watches</a></li>
+      <li><a href="#killswitch">Kill switch</a></li>
+      <li><a href="#reliability">Reliability</a></li>
+      <li><a href="/blueprints/organization/">Organization</a></li>
+    </ul>
+  </div>
+</section>
+{{BP_SUBNAV}}
+
+<section class="section bp-section" id="observe" aria-labelledby="observe-title">
+  <div class="container fw-body">
+    <p class="eyebrow">Observability</p>
+    <h2 id="observe-title" class="h-sm">What to log and trace</h2>
+    <p class="lead">One trace ID follows a case across every platform it touches. The trace must answer an auditor&rsquo;s seven questions. <span class="md-cite">Book, Ch 22</span></p>
+    <p>The seven questions are on <a href="/blueprints/design/#evals">Design choices: evals and audits</a>. This table lists the fields that answer them.</p>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Trace fields, scroll sideways">
+      <table class="fw-table">
+        <caption class="visually-hidden">Trace field groups</caption>
+        <thead><tr><th scope="col">Field group</th><th scope="col">Fields (illustrative)</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Identity</th><td>Agent ID, native ID per platform, on-behalf-of user, approver</td></tr>
+          <tr><th scope="row">Context</th><td>Trace ID, trigger, business keys, entity, period</td></tr>
+          <tr><th scope="row">Inputs</th><td>Source references with timestamps, hashed where sensitive</td></tr>
+          <tr><th scope="row">Policy</th><td>Rule IDs and versions, limits applied, data class checks</td></tr>
+          <tr><th scope="row">Model</th><td>Model ID and version, prompt and skill versions</td></tr>
+          <tr><th scope="row">Output</th><td>Proposed action, confidence, evidence cited</td></tr>
+          <tr><th scope="row">Guardrails</th><td>Checks run, results, blocked actions</td></tr>
+          <tr><th scope="row">Human step</th><td>Decision, change made, time spent</td></tr>
+          <tr><th scope="row">Outcome</th><td>Posted document number, status</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul class="fw-list">
+      <li><b>Integrity.</b> Store traces where agents cannot change them. <span class="md-cite">Book, Ch 22</span></li>
+      <li><b>Completeness.</b> Reconcile monthly: every agent posting has a trace, and every trace with a posting points to a document. <span class="md-cite">Book, Ch 22</span></li>
+      <li><b>Export daily.</b> Vendor retention can be short. Promotion and audit evidence must outlive it. <span class="md-cite">Book, Ch 25</span></li>
+      <li><b>A trace gap is a control failure</b> for agents that touch financial records. <span class="md-cite">Book, Ch 25</span></li>
+      <li><b>Swarms.</b> One trace ID per task; each worker run is a child entry. The trace shows which single writer changed which record. <span class="md-cite">Book, Ch 25</span></li>
+    </ul>
+    <p class="cta-row"><a class="btn btn-dark" href="/blueprints/trace/">Open the decision trace viewer</a></p>
+  </div>
+</section>
+
+<section class="section section-paper-2 bp-section" id="dashboards" aria-labelledby="dashboards-title">
+  <div class="container fw-body">
+    <p class="eyebrow">Dashboards and metrics</p>
+    <h2 id="dashboards-title" class="h-sm">Four dashboards, four audiences</h2>
+    <p class="lead">Every number needs a trend, a target and a traceable source. <span class="md-cite">Book, Ch 26</span></p>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <caption class="visually-hidden">Dashboards by audience and cadence</caption>
+        <thead><tr><th scope="col">Audience</th><th scope="col">Cadence</th><th scope="col">What it shows (from the book)</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Board</th><td>Quarterly</td><td>Outcomes such as DSO, close days and the share of decisions above L2</td></tr>
+          <tr><th scope="row">Steering committee</th><td>Monthly</td><td>Portfolio, benefits and roadmap</td></tr>
+          <tr><th scope="row">Autonomy council</th><td>Every two weeks</td><td>Agents by level and platform, promotions, demotions, cost per outcome</td></tr>
+          <tr><th scope="row">AgentOps</th><td>Daily</td><td>Health, drift, cost and the hand-off queue</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Signals that move before the damage</h3>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Key risk indicators, scroll sideways">
+      <table class="fw-table">
+        <caption class="visually-hidden">Illustrative key risk indicators</caption>
+        <thead><tr><th scope="col">Indicator</th><th scope="col">What it reads</th><th scope="col">Red (illustrative)</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Approval scrutiny</th><td>Share of L2 approvals reviewed over 20 seconds or edited</td><td>Under 10%</td></tr>
+          <tr><th scope="row">Override rate</th><td>Read only beside the sampled error rate</td><td>Falling while sampled error rises</td></tr>
+          <tr><th scope="row">Hand-off rate</th><td>Cases sent to people, against plan</td><td>Above plan; people still do most work</td></tr>
+          <tr><th scope="row">Regression pass rate</th><td>After any model, prompt or data change</td><td>Updates without a regression run</td></tr>
+          <tr><th scope="row">Fallback drill</th><td>Date and success of the last manual fallback drill</td><td>No drill before quarter-end</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Trust can be too low or too high. Calibrated trust means the override rate sits close to the agent&rsquo;s measured error. Review times falling to seconds signal over-trust. <span class="md-cite">Book, Ch 24 and Ch 26</span></p>
+    <p class="fw-note">Book, Ch 24, Ch 25 and Ch 26. Thresholds are illustrative.</p>
+  </div>
+</section>
+
+<section class="section bp-section" id="registry" aria-labelledby="registry-title">
+  <div class="container fw-body">
+    <p class="eyebrow">Agent inventory</p>
+    <h2 id="registry-title" class="h-sm">No registry, no run</h2>
+    <p class="lead">An agent missing from the enterprise registry is stopped, whatever its platform. The gateways accept calls only from active, registered versions. <span class="md-cite">Book, Ch 05 and Ch 25</span></p>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Registry records, scroll sideways">
+      <table class="fw-table">
+        <caption class="visually-hidden">Which system holds each record</caption>
+        <thead><tr><th scope="col">Record</th><th scope="col">System of record</th><th scope="col">Vendor platform&rsquo;s role</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Agent identity and owner</th><td>Enterprise registry</td><td>Mirror; issue platform credentials</td></tr>
+          <tr><th scope="row">Autonomy level and limits</th><td>Enterprise registry</td><td>Enforce locally where it can</td></tr>
+          <tr><th scope="row">Instructions, skills, versions</th><td>Platform or code repository</td><td>Store and run</td></tr>
+          <tr><th scope="row">Traces</th><td>Enterprise trace store</td><td>Produce; retain per vendor terms</td></tr>
+          <tr><th scope="row">Meter consumption</th><td>Enterprise cost data lake</td><td>Meter and invoice</td></tr>
+          <tr><th scope="row">Kill switch</th><td>Enterprise plane routes the command</td><td>Execute the stop</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Lifecycle states</h3>
+    <ul class="fw-list">
+      <li><b>Proposed:</b> use case approved for design. Nothing runs in production.</li>
+      <li><b>Built:</b> tests pass. Sandbox only.</li>
+      <li><b>Shadow:</b> runs on live triggers; read tools only; proposals logged.</li>
+      <li><b>Active at L1 or L2:</b> write tools only behind approval.</li>
+      <li><b>Active at L3 or L4:</b> write tools within limits; periodic review.</li>
+      <li><b>Suspended:</b> kill switch or demotion trigger; triggers queued.</li>
+      <li><b>Retired:</b> no actions; traces kept.</li>
+    </ul>
+    <p>Any change to model, tools, instructions or limits creates a new version. It starts in shadow unless the change is minor. Auditors read the agent contract first. <span class="md-cite">Book, Ch 05</span></p>
+    <p>The registry also keeps the &ldquo;do not automate&rdquo; list, with an owner, a reason and a review date. <span class="md-cite">Book, Ch 22</span></p>
+  </div>
+</section>
+
+<section class="section section-paper-2 bp-section" id="audits" aria-labelledby="audits-title">
+  <div class="container fw-body">
+    <p class="eyebrow">Audits</p>
+    <h2 id="audits-title" class="h-sm">The enterprise owns the rules, the evidence and the stop button</h2>
+    <p class="lead">Each vendor platform enforces rules locally. Only the enterprise sees across platforms. <span class="md-cite">Book, Ch 22</span></p>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <caption class="visually-hidden">Five control objectives</caption>
+        <thead><tr><th scope="col">Objective</th><th scope="col">Question it answers</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">C1 Know</th><td>Which agents exist, who owns them, what can they do?</td></tr>
+          <tr><th scope="row">C2 Limit</th><td>Can each agent do only what its task needs?</td></tr>
+          <tr><th scope="row">C3 Contain</th><td>Can bad input or a wrong decision cause only bounded harm?</td></tr>
+          <tr><th scope="row">C4 Prove</th><td>Can we show who did what, why and on whose authority?</td></tr>
+          <tr><th scope="row">C5 Stop</th><td>Can we stop one agent or all agents within minutes and fall back?</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Audit walkthroughs</h3>
+    <ul class="fw-list">
+      <li><b>Explainability pass.</b> Before L3, the owner and two reviewers explain the workflow without the vendor in the room. The result goes into the promotion file. <span class="md-cite">Book, Ch 22</span></li>
+      <li><b>Discernment pass.</b> Reviewers must show they know when AI should not be used before they get review authority. <span class="md-cite">Book, Ch 22</span></li>
+      <li><b>Decision-quality audit.</b> Each quarter, internal control re-performs a sample of approved and automatic decisions end to end. <span class="md-cite">Book, Ch 06</span></li>
+      <li><b>Recertification.</b> The agent owner recertifies scope and level every quarter. <span class="md-cite">Book, Ch 22</span></li>
+      <li><b>Early walkthroughs.</b> An auditor who rejects agent evidence is a named risk. Walk auditors through the trace design early. <span class="md-cite">Book, Ch 26</span></li>
+    </ul>
+    <p>A rule that must never break belongs in the application or the gateway, not in a prompt. Prompts are guidance; models can ignore them. <span class="md-cite">Book, Ch 22</span></p>
+    <p class="cta-row"><a class="btn btn-dark" href="/controls/">Open the controls library</a> <a class="btn btn-ghost" href="/blueprints/design/#evals">Evals and the seven questions</a></p>
+  </div>
+</section>
+
+<section class="section bp-section" id="guardians" aria-labelledby="guardians-title">
+  <div class="container fw-body">
+    <p class="eyebrow">Who watches the agents</p>
+    <h2 id="guardians-title" class="h-sm">Guardians may stop, never start</h2>
+    <p class="lead">Guardian agents review outputs, monitor actions or block them. A guardian may stop, throttle or flag. It may never start, approve, edit or promote. <span class="md-cite">Book, Ch 25</span></p>
+    <h3>The chain ends at a person</h3>
+    <ol class="md-rules">
+      <li><b>Seeded cases.</b> Known-bad cases are planted each week. Each guardian&rsquo;s catch rate is measured.</li>
+      <li><b>Independence.</b> A guardian uses a different model family from the agents it watches, with code rules beside it.</li>
+      <li><b>Human samples.</b> The guardian&rsquo;s owner reviews a sample of its stops and its silences every month.</li>
+      <li><b>Its own record.</b> Each guardian is registered with an owner, a level and SLOs. No guardian watches itself.</li>
+    </ol>
+    <h3>Escalation and demotion path</h3>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Escalation and demotion path, scroll sideways">
+      <table class="fw-table">
+        <caption class="visually-hidden">Signals, automatic actions, human decisions and demotions</caption>
+        <thead><tr><th scope="col">Signal</th><th scope="col">Automatic action</th><th scope="col">Human decision</th><th scope="col">Demotion</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Swarm exceeds width, depth or budget</th><td>Supervisor stopped</td><td>Owner within 1 business day</td><td>To the previous version</td></tr>
+          <tr><th scope="row">Two workers write the same record</th><td>Writes blocked; task stopped</td><td>Owner and AgentOps lead, same day</td><td>To L1 (read-only)</td></tr>
+          <tr><th scope="row">Wrong output above materiality</th><td>Task paused; case to the hand-off queue</td><td>Owner within 4 hours</td><td>One level</td></tr>
+          <tr><th scope="row">Guardian catches under 90% of seeded cases</th><td>Guardian marked degraded</td><td>AgentOps lead within 1 week</td><td>Watched swarms frozen at current level</td></tr>
+          <tr><th scope="row">Trace gap on any task</th><td>Treated as a Sev 1 control breach</td><td>On-call engineer at once</td><td>To shadow</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fw-note">Book, Ch 25. Timings are illustrative.</p>
+  </div>
+</section>
+
+<section class="section section-paper-2 bp-section" id="killswitch" aria-labelledby="killswitch-title">
+  <div class="container fw-body">
+    <p class="eyebrow">Kill switch</p>
+    <h2 id="killswitch-title" class="h-sm">Stop narrowly, stop fast, practice it</h2>
+    <p class="lead">The kill switch has five levels. K1 to K3 stop one agent or scope. K4 and K5 stop many. <span class="md-cite">Book, Ch 05</span></p>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Kill switch levels, scroll sideways">
+      <table class="fw-table">
+        <caption class="visually-hidden">Kill switch levels K1 to K5</caption>
+        <thead><tr><th scope="col">Level</th><th scope="col">Action</th><th scope="col">Who may trigger</th><th scope="col">Target (illustrative)</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">K1 Pause agent version</th><td>Registry status to suspended; new triggers queued</td><td>Agent owner or any on-call AgentOps engineer</td><td>5 minutes</td></tr>
+          <tr><th scope="row">K2 Revoke tool scope</th><td>Gateway disables one tool or scope for all agents</td><td>Tool owner, security operations</td><td>5 minutes</td></tr>
+          <tr><th scope="row">K3 Revoke identity</th><td>The agent&rsquo;s identity is disabled everywhere</td><td>Security operations</td><td>15 minutes</td></tr>
+          <tr><th scope="row">K4 Platform stop</th><td>All agents on one platform fall back to L1</td><td>CISO or named delegate</td><td>30 minutes</td></tr>
+          <tr><th scope="row">K5 Fleet stop</th><td>All agents on all platforms fall back to L1</td><td>Any two of CFO, CIO, CISO</td><td>60 minutes</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul class="fw-list">
+      <li>Test each level quarterly outside production and yearly in production. A kill switch never pulled is a hypothesis. <span class="md-cite">Book, Ch 05</span></li>
+      <li>A kill switch that works in one vendor console but not another is not a kill switch. <span class="md-cite">Book, Ch 25</span></li>
+      <li>Two trained people per team can take the full queue. Drill the manual fallback before each quarter-end. <span class="md-cite">Book, Ch 22 and Ch 24</span></li>
+    </ul>
+    <p>In the book&rsquo;s capstone, a K2 on one order-write scope kept all other traffic running while the defect was fixed. <span class="md-cite">Book, Ch 30</span></p>
+  </div>
+</section>
+
+<section class="section bp-section" id="reliability" aria-labelledby="reliability-title">
+  <div class="container fw-body">
+    <p class="eyebrow">Reliability</p>
+    <h2 id="reliability-title" class="h-sm">Stop fast, change slowly</h2>
+    <p class="lead">Any on-call engineer may stop an agent at once. Every change runs a full regression and passes an approval gate sized to its risk. <span class="md-cite">Book, Ch 25</span></p>
+    <h3>Service level objectives</h3>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Service level objectives, scroll sideways">
+      <table class="fw-table">
+        <caption class="visually-hidden">Illustrative SLOs for an AP exception agent</caption>
+        <thead><tr><th scope="col">SLO</th><th scope="col">Definition</th><th scope="col">Target (illustrative)</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Proposal quality</th><td>L2 proposals approved without edit</td><td>90%</td></tr>
+          <tr><th scope="row">Hand-off rate</th><td>Cases sent to people</td><td>Below 25%</td></tr>
+          <tr><th scope="row">Post-action error</th><td>Executed actions later reversed</td><td>Below 0.5%</td></tr>
+          <tr><th scope="row">Cost per case</th><td>All meters plus hand-off time</td><td>At or below plan by month 6</td></tr>
+          <tr><th scope="row">Trace completeness</th><td>Actions with a full trace in the enterprise store</td><td>100%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The book does not define per-agent error budgets. It uses an auto-error budget only in its business-case model. For running agents it sets SLO targets and automatic demotion triggers. <span class="md-cite">Book, Ch 21 and Ch 25</span></p>
+    <h3>Incidents</h3>
+    <p>Five classes on every platform: outage, degradation, wrong action, control breach (including a missing trace) and cost anomaly. <span class="md-cite">Book, Ch 25</span></p>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Incident severity, scroll sideways">
+      <table class="fw-table">
+        <caption class="visually-hidden">Incident severity</caption>
+        <thead><tr><th scope="col">Severity</th><th scope="col">Example</th><th scope="col">First response</th><th scope="col">Who may stop the agent</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Sev 1</th><td>Control breach; material wrong postings; data exposure</td><td>15 minutes, around the clock</td><td>Any AgentOps on-call engineer, at once</td></tr>
+          <tr><th scope="row">Sev 2</th><td>Repeated wrong actions below materiality</td><td>1 hour</td><td>Product owner</td></tr>
+          <tr><th scope="row">Sev 3</th><td>Degradation in tolerance; cost anomaly</td><td>1 business day</td><td>Product owner</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Recovery playbook for wrong actions</h3>
+    <ol class="md-rules">
+      <li><b>Stop</b> the agent at the right level, without waiting for a meeting.</li>
+      <li><b>Start</b> the manual fallback for the queue.</li>
+      <li><b>Scope</b> with traces: every action since the last known-good state.</li>
+      <li><b>Correct</b> through normal procedures: reverse postings, reissue messages, notify customers.</li>
+      <li><b>Find the root cause:</b> data, rule, context, model, tool, timing or vendor change.</li>
+      <li><b>Decide:</b> recover, redesign or stop.</li>
+      <li><b>Restart</b> only after tests pass and the owner and control owner sign.</li>
+    </ol>
+    <p class="fw-note">Book, Ch 26.</p>
+    <h3>Demotion rules</h3>
+    <ul class="fw-list">
+      <li>To L2 after one critical error in the weekly sample, or value-weighted error above 0.2% in a month. <span class="md-cite">Book, Ch 24</span></li>
+      <li>To shadow after a control breach, missing traces or a vendor model change that fails regression. <span class="md-cite">Book, Ch 24</span></li>
+      <li>A readiness check that fails after go-live demotes the agent one level automatically. <span class="md-cite">Book, Ch 06</span></li>
+      <li>The autonomy council reviews every demotion within 10 working days. Promotion is never automatic. <span class="md-cite">Book, Ch 01 and Ch 24</span></li>
+    </ul>
+    <h3>Drift and change</h3>
+    <ul class="fw-list">
+      <li>Watch input, behavior and outcome drift. One past its band opens a rerun; two together freeze promotion. <span class="md-cite">Book, Ch 06</span></li>
+      <li>Treat every vendor update as a model change. Run the regression set and watch the SLOs for two weeks. <span class="md-cite">Book, Ch 25</span></li>
+      <li>A change an agent proposes to itself follows the same gate and is never self-approved. <span class="md-cite">Book, Ch 25</span></li>
+    </ul>
+    <h3>Workload under pressure</h3>
+    <ul class="fw-list">
+      <li><b>P1 interactive</b> keeps reserved capacity. If throttled, it routes to people, never to silence.</li>
+      <li><b>P2 deadline</b> work, such as close tasks, may preempt batch work at peaks.</li>
+      <li><b>P3 batch</b> runs off-peak. <b>P4 opportunistic</b> work pauses during close.</li>
+    </ul>
+    <p class="fw-note">Book, Ch 25. Priority classes are illustrative.</p>
+    <h3>Failure patterns to name early</h3>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Failure patterns, scroll sideways">
+      <table class="fw-table">
+        <caption class="visually-hidden">Failure patterns and their prevention</caption>
+        <thead><tr><th scope="col">Pattern</th><th scope="col">Symptom</th><th scope="col">Prevention</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Rubber stamp</th><td>Approval rates near 100% in seconds</td><td>Scrutiny indicator; seeded cases</td></tr>
+          <tr><th scope="row">Autonomy ratchet</th><td>Levels go up, never down</td><td>Automatic demotion triggers</td></tr>
+          <tr><th scope="row">Silent drift</th><td>Quality falls after vendor updates</td><td>Regression on every update</td></tr>
+          <tr><th scope="row">Cascade</th><td>One error spreads through a chain</td><td>Circuit breakers</td></tr>
+          <tr><th scope="row">Shadow sprawl</th><td>Agents outside the registry</td><td>No registry, no run</td></tr>
+          <tr><th scope="row">Harness last</th><td>Agents built before identity, traces and limits</td><td>Invest in sequence</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fw-note">Book, Ch 26. &ldquo;A bad system will beat a good person every time&rdquo;: fix the process, data, incentives or harness, not the person on duty. All figures on this page are illustrative.</p>
+    <p class="cta-row"><a class="btn btn-dark" href="/blueprints/organization/">Organization: humans and agents</a> <a class="btn btn-ghost" href="/blueprints/loops/">Self-improving loops</a></p>
+  </div>
+</section>

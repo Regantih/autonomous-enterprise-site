@@ -153,6 +153,20 @@ export const PAGES = [
     sitemap: true, priority: '0.7',
   },
   {
+    src: 'organization.html', out: 'blueprints/organization/index.html', path: '/blueprints/organization/', nav: 'BLUEPRINTS', bp: 'organization',
+    title: 'Organization: Humans and Agents, Delegation and the Capability Matrix | Human-Led Enterprise',
+    description:
+      'How the org chart changes when agents do the work, from the book: new roles, pods, spans, decision rights, autonomy levels, deciding with incomplete information and who does what.',
+    sitemap: true, priority: '0.8',
+  },
+  {
+    src: 'operations.html', out: 'blueprints/operations/index.html', path: '/blueprints/operations/', nav: 'BLUEPRINTS', bp: 'operations',
+    title: 'Operating Agents: Audits, Observability and Reliability | Human-Led Enterprise',
+    description:
+      'Running agents in production, from the book: what to trace, dashboards, the agent registry, audits, guardian agents, the five-level kill switch, SLOs, incidents and demotion rules.',
+    sitemap: true, priority: '0.7',
+  },
+  {
     src: 'leaders.html', out: 'leaders/index.html', path: '/leaders/',
     title: 'Questions Leaders Ask About AI Agents | Human-Led Enterprise',
     description:
@@ -349,7 +363,7 @@ export function build() {
   for (const f of readdirSync(join(SRC, 'static'))) cpSync(join(SRC, 'static', f), join(DIST, f), { recursive: true });
 
   const layout = read(join(SRC, 'partials', 'layout.html'));
-  const assetVersion = hash(['styles.css', 'site.js', 'guide.js', 'blueprints.js', 'graphs.js', 'graphs.css', 'intake.js', 'intake.css', 'models.js', 'models.css', ...BP_DATA_FILES].map((f) => read(join(SRC, 'assets', f))).join(''));
+  const assetVersion = hash(['styles.css', 'site.js', 'guide.js', 'blueprints.js', 'graphs.js', 'graphs.css', 'intake.js', 'intake.css', 'models.js', 'models.css', 'org.js', ...BP_DATA_FILES].map((f) => read(join(SRC, 'assets', f))).join(''));
 
   const bpVars = blueprintVars(join(SRC, 'assets'));
   const recording = writeRecording();
@@ -376,6 +390,8 @@ export function build() {
           : page.bp ? bpScripts + (page.src === 'trace.html' ? `<link rel="stylesheet" href="${assetUrl('trace.css')}">\n<script src="${assetUrl('trace-core.js')}" defer></script>\n<script src="${assetUrl('trace.js')}" defer></script>\n`
             : page.src === 'graphs.html' ? `<link rel="stylesheet" href="${assetUrl('graphs.css')}">\n<script src="${graphsData}" defer></script>\n<script src="${assetUrl('graphs.js')}" defer></script>\n`
             : ['models.html', 'design.html'].includes(page.src) ? `<link rel="stylesheet" href="${assetUrl('models.css')}">\n<script src="${assetUrl('models.js')}" defer></script>\n`
+            : page.src === 'organization.html' ? `<link rel="stylesheet" href="${assetUrl('models.css')}">\n<script src="${assetUrl('org.js')}" defer></script>\n`
+            : page.src === 'operations.html' ? `<link rel="stylesheet" href="${assetUrl('models.css')}">\n`
             : page.src === 'loops.html' ? `<link rel="stylesheet" href="${assetUrl('loops.css')}">\n<script src="${assetUrl('loops-live.js')}" defer></script>\n<script src="${recording.url}" defer></script>\n<script src="${assetUrl('loops.js')}" defer></script>\n` : '')
             : ['contact.html', 'speaking.html'].includes(page.src)
               ? `<link rel="stylesheet" href="${assetUrl('intake.css')}">\n<script src="${assetUrl('intake.js')}" defer></script>\n`

@@ -26,6 +26,8 @@ export const SUBNAV = [
   ['graphs', '/blueprints/graphs/', 'Graphs'],
   ['models', '/blueprints/models/', 'Models'],
   ['design', '/blueprints/design/', 'Design choices'],
+  ['organization', '/blueprints/organization/', 'Organization'],
+  ['operations', '/blueprints/operations/', 'Operations'],
 ];
 
 export function subnav(current) {

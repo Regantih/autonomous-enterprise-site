@@ -37,9 +37,9 @@
 <script src="/assets/blueprints.js?v=dc77177432" defer></script>
 <link rel="stylesheet" href="/assets/models.css?v=6255f8512e">
 <script src="/assets/models.js?v=ae133c964e" defer></script>
-<link rel="stylesheet" href="/assets/styles.css?v=b017ebdfba">
-<script src="/assets/site.js?v=b017ebdfba" defer></script>
-<script src="/assets/guide.js?v=b017ebdfba" defer></script>
+<link rel="stylesheet" href="/assets/styles.css?v=e5ac018add">
+<script src="/assets/site.js?v=e5ac018add" defer></script>
+<script src="/assets/guide.js?v=e5ac018add" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -87,6 +87,8 @@
       <li><a href="/blueprints/graphs/">Graphs</a></li>
       <li><a href="/blueprints/models/">Models</a></li>
       <li><a href="/blueprints/design/" aria-current="page">Design choices</a></li>
+      <li><a href="/blueprints/organization/">Organization</a></li>
+      <li><a href="/blueprints/operations/">Operations</a></li>
     </ul>
   </div>
 </nav>
@@ -250,6 +252,7 @@
       <li>The trace is written before the commit returns. If the trace store is down, the agent does not post. <span class="md-cite">Book, Ch 05</span></li>
       <li>Store traces where agents cannot change them. Reconcile monthly: every agent posting has a trace. <span class="md-cite">Book, Ch 22</span></li>
     </ul>
+    <p>Dashboards, the agent registry, audit walkthroughs, the kill switch and reliability rules are on <a href="/blueprints/operations/">Operating agents</a>.</p>
     <p class="cta-row"><a class="btn btn-dark" href="/controls/">Open the controls library</a> <a class="btn btn-ghost" href="/blueprints/trace/">Open the decision trace viewer</a></p>
   </div>
 </section>

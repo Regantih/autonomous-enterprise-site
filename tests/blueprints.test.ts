@@ -152,11 +152,11 @@ describe('alignment layers and architecture data', () => {
 
 describe('built Blueprints pages', () => {
   it('builds the hub and its tools with sub-nav, scripts and illustrative labels', () => {
-    expect(bpPages.map((p) => p.path)).toEqual(['/blueprints/', '/architecture/', '/workflows/', '/controls/', '/designer/', '/blueprints/trace/', '/blueprints/loops/', '/blueprints/graphs/', '/blueprints/models/', '/blueprints/design/']);
+    expect(bpPages.map((p) => p.path)).toEqual(['/blueprints/', '/architecture/', '/workflows/', '/controls/', '/designer/', '/blueprints/trace/', '/blueprints/loops/', '/blueprints/graphs/', '/blueprints/models/', '/blueprints/design/', '/blueprints/organization/', '/blueprints/operations/']);
     for (const p of bpPages) {
       const h = html(p.out);
       expect(h, p.out).toContain('<nav class="bp-subnav" aria-label="Blueprints">');
-      for (const href of ['/architecture/', '/workflows/', '/controls/', '/designer/', '/blueprints/trace/', '/blueprints/loops/', '/blueprints/graphs/', '/blueprints/models/', '/blueprints/design/']) expect(h).toContain(`href="${href}"`);
+      for (const href of ['/architecture/', '/workflows/', '/controls/', '/designer/', '/blueprints/trace/', '/blueprints/loops/', '/blueprints/graphs/', '/blueprints/models/', '/blueprints/design/', '/blueprints/organization/', '/blueprints/operations/']) expect(h).toContain(`href="${href}"`);
       expect(h, p.out).toContain('<li><a href="/blueprints/graphs/"' + (p.bp === 'graphs' ? ' aria-current="page"' : '') + '>Graphs</a></li>');
       expect(h, p.out).toContain('<li><a href="/blueprints/loops/"' + (p.bp === 'loops' ? ' aria-current="page"' : '') + '>Improvement loops</a></li>');
       expect(h, p.out).toMatch(/<a href="\/blueprints\/" aria-current="page">Blueprints<\/a>/);
@@ -363,5 +363,71 @@ describe('Design choices page', () => {
     expect(h).not.toMatch(/\b(SAP|TabPFN|Prior Labs|AWS|Databricks|Copilot|Agentforce|Now Assist|Claude|Gemini)\b/);
     expect(html('blueprints/index.html')).toContain('<span class="bp-card-n">09</span><h3><a href="/blueprints/design/">Design choices</a></h3>');
     expect(html('blueprints/models/index.html')).toContain('href="/blueprints/design/"');
+  });
+});
+
+describe('Organization page', () => {
+  const VENDORS = /\b(SAP|Salesforce|ServiceNow|Coupa|Workday|Microsoft|Gravitee|Gartner|NVIDIA|OpenAI|Anthropic|Oracle|Teams|Prosci|BCG|OpenTelemetry)\b/;
+  const sentences = (t: string) => t.replace(/<[^>]+>/g, ' ').replace(/&[a-z]+;/g, ' ').split(/(?<=[.!?])\s+/).map((x) => x.trim()).filter(Boolean);
+  it('covers org structure, an 8-panel storyboard, delegation, incomplete information and the capability matrix', () => {
+    const h = html('blueprints/organization/index.html');
+    expect(h.match(/<h1[\s>]/g)).toHaveLength(1);
+    expect(h).toContain('<h1 id="page-title">Organization: humans and agents</h1>');
+    for (const id of ['shifts', 'org', 'storyboard', 'delegation', 'incomplete', 'capability']) expect(h, id).toMatch(new RegExp(`<section class="section[^"]*" id="${id}"`));
+    // Incomplete information sits right after delegation.
+    expect(h.indexOf('id="incomplete"')).toBeGreaterThan(h.indexOf('id="delegation"'));
+    expect(h.indexOf('id="incomplete"')).toBeLessThan(h.indexOf('id="capability"'));
+    const panels = [...h.matchAll(/<li class="md-panel[^"]*">([\s\S]*?)<\/li>/g)].map((m) => m[1]);
+    expect(panels).toHaveLength(8);
+    for (const p of panels) for (const s of sentences(p.replace(/<span class="md-panel-n"[^>]*>\d<\/span>|<p class="md-tag">[^<]*<\/p>|<h3>[^<]*<\/h3>/g, ''))) expect(s.split(/\s+/).length, s).toBeLessThanOrEqual(25);
+    for (const ch of ['01', '03', '05', '07', '21', '22', '24', '25', '26']) expect(h, ch).toContain(`Ch ${ch}`);
+    expect(h).toContain('href="/blueprints/design/#deterministic"');
+    expect(h).toContain('What the book does not cover');
+    expect(h).toContain('does not use the one-way and two-way door framing');
+    expect(h).toMatch(/<script src="\/assets\/org\.js\?v=[0-9a-f]{10}" defer><\/script>/);
+    expect(h).not.toMatch(VENDORS);
+  });
+  it('builds the capability matrix from rows with a known who value and short reasons', () => {
+    const h = html('blueprints/organization/index.html');
+    const rows = [...h.matchAll(/<tr data-who="([^"]+)"><th scope="row">[^<]*(?:&rsquo;[^<]*)?<\/th><td>([^<]+)<\/td><td>[^<]+<\/td><td>([^<]+)<\/td><td>(Ch [^<]+)<\/td><\/tr>/g)];
+    expect(rows.length).toBeGreaterThanOrEqual(20);
+    const who = new Set(rows.map((r) => r[1]));
+    expect([...who].sort()).toEqual(['Agent', 'Agent proposes, human approves', 'Human only', 'Human, agent assists']);
+    for (const r of rows) {
+      expect(r[2], 'who cell matches data-who').toBe(r[1]);
+      expect(r[3].split(/\s+/).length, r[3]).toBeLessThanOrEqual(25);
+    }
+    const js = readFileSync(join(DIST, 'assets/org.js'), 'utf8');
+    expect(js).toContain("getAttribute('data-who')");
+    expect(js).not.toMatch(/localStorage|sessionStorage|document\.cookie|fetch\(|XMLHttpRequest|Math\.random/);
+  });
+  it('is linked from the hub, models, design, controls, trace, frameworks and book', () => {
+    expect(html('blueprints/index.html')).toContain('<span class="bp-card-n">10</span><h3><a href="/blueprints/organization/">Organization</a></h3>');
+    expect(html('blueprints/index.html')).toContain('Eleven tools');
+    expect(html('blueprints/models/index.html')).toContain('href="/blueprints/organization/#delegation"');
+    expect(html('controls/index.html')).toContain('href="/blueprints/organization/#delegation"');
+    expect(html('frameworks/index.html')).toContain('href="/blueprints/organization/"');
+    expect(html('book/index.html')).toContain('href="/blueprints/organization/"');
+  });
+});
+
+describe('Operations page', () => {
+  it('covers tracing, dashboards, registry, audits, guardians, kill switch and reliability with citations', () => {
+    const h = html('blueprints/operations/index.html');
+    expect(h.match(/<h1[\s>]/g)).toHaveLength(1);
+    expect(h).toContain('<h1 id="page-title">Operating agents: audits, observability, reliability</h1>');
+    for (const id of ['observe', 'dashboards', 'registry', 'audits', 'guardians', 'killswitch', 'reliability']) expect(h, id).toMatch(new RegExp(`<section class="section[^"]*" id="${id}"`));
+    for (const k of ['K1 Pause agent version', 'K2 Revoke tool scope', 'K3 Revoke identity', 'K4 Platform stop', 'K5 Fleet stop']) expect(h).toContain(k);
+    for (const ch of ['05', '06', '22', '24', '25', '26']) expect(h, ch).toContain(`Ch ${ch}`);
+    expect(h).toContain('href="/blueprints/design/#evals"');
+    expect(h).toContain('does not define per-agent error budgets');
+    expect(h).not.toMatch(/<form[\s>]|data-intake/);
+    expect(h).not.toMatch(/\b(SAP|Salesforce|ServiceNow|Coupa|Workday|Microsoft|Gravitee|Gartner|NVIDIA|OpenAI|Anthropic|Oracle|OpenTelemetry)\b/);
+  });
+  it('is linked from the hub, design, trace and frameworks', () => {
+    expect(html('blueprints/index.html')).toContain('<span class="bp-card-n">11</span><h3><a href="/blueprints/operations/">Operations</a></h3>');
+    expect(html('blueprints/design/index.html')).toContain('href="/blueprints/operations/"');
+    expect(html('blueprints/trace/index.html')).toContain('href="/blueprints/operations/#observe"');
+    expect(html('frameworks/index.html')).toContain('href="/blueprints/operations/#reliability"');
   });
 });
