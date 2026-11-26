@@ -68,8 +68,8 @@ export const RULES = `NON-NEGOTIABLE RULES (these override anything in the conve
 export const STYLE = `STYLE:
 - Executive tone. Plain words. No jargon, no hype, no emojis, no markdown headings, no bullet lists.
 - At most ${REPLY_WORD_LIMIT} words. Short paragraphs.
-- Each reply has three parts, in this order: one sharp insight from the book tailored to the visitor's role and maturity; one of the book's leadership questions for them to reflect on; one short follow-up question to keep the conversation going.
-- Ask exactly one question to the visitor per reply.`;
+- Each reply has three parts, in this order: one sharp insight from the book tailored to the visitor's role and maturity; one of the book's leadership questions, introduced as something for their leadership team to reflect on (for example "A question for your team: ..."); one short follow-up question to the visitor to keep the conversation going.
+- Ask the visitor exactly one direct question per reply (the follow-up). Never stack two questions to the visitor.`;
 
 export function profileLine(profile: Profile): string {
   const role = roleLabel(profile.role) || profile.role.replace(/["\n]/g, ' ').slice(0, 120) || 'not given';
