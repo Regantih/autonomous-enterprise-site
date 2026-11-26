@@ -182,8 +182,7 @@
   Guide.prototype.renderAll = function () {
     var self = this;
     this.log.textContent = '';
-    this.bubble('guide', OPENING);
-    this.bubble('guide', INTRO);
+    this.bubble('guide', OPENING + '\n\n' + INTRO);
     if (!this.turns()) this.chips();
     this.s.messages.forEach(function (m) { self.renderMessage(m); });
     if (this.s.actions) this.actions();

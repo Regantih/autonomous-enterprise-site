@@ -6,7 +6,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 // @ts-expect-error plain JS build script
 import { PAGES, build } from '../scripts/build.mjs';
 // @ts-expect-error plain JS build script
-import { loadBlueprintData } from '../scripts/blueprints-static.mjs';
+import { TRACKS, loadBlueprintData } from '../scripts/blueprints-static.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const DIST = join(ROOT, 'dist');
@@ -157,9 +157,11 @@ describe('built Blueprints pages', () => {
       const h = html(p.out);
       expect(h, p.out).toContain('<nav class="bp-subnav" aria-label="Blueprints">');
       for (const href of ['/architecture/', '/workflows/', '/controls/', '/designer/', '/blueprints/trace/', '/blueprints/loops/', '/blueprints/graphs/', '/blueprints/models/', '/blueprints/design/', '/blueprints/organization/', '/blueprints/operations/']) expect(h).toContain(`href="${href}"`);
-      expect(h, p.out).toContain('<li><a href="/blueprints/graphs/"' + (p.bp === 'graphs' ? ' aria-current="page"' : '') + '>Graphs</a></li>');
-      expect(h, p.out).toContain('<li><a href="/blueprints/loops/"' + (p.bp === 'loops' ? ' aria-current="page"' : '') + '>Improvement loops</a></li>');
-      expect(h, p.out).toMatch(/<a href="\/blueprints\/" aria-current="page">Blueprints<\/a>/);
+      if (p.bp !== 'hub') {
+        expect(h, p.out).toContain('<li><a href="/blueprints/graphs/"' + (p.bp === 'graphs' ? ' aria-current="page"' : '') + '>Graphs</a></li>');
+        expect(h, p.out).toContain('<li><a href="/blueprints/loops/"' + (p.bp === 'loops' ? ' aria-current="page"' : '') + '>Improvement loops</a></li>');
+        expect(h, p.out).toMatch(/<a class="bp-subnav-home" href="\/blueprints\/">Blueprints<\/a>/);
+      } else expect(h, p.out).toMatch(/<a class="bp-subnav-home" href="\/blueprints\/" aria-current="page">Blueprints<\/a>/);
       for (const f of ['data/controls.js', 'data/layers.js', 'data/workflows.js', 'data/architecture.js', 'blueprints.js']) expect(h, p.out).toMatch(new RegExp(`<script src="/assets/${f}\\?v=[0-9a-f]{10}" defer></script>`));
       // Every tool is labelled: illustrative everywhere except the loops room, which runs real agents on sample data.
       if (p.bp === 'loops') expect(h, p.out).toContain('Real AI agents. Real computation on sample AP data.');
@@ -341,7 +343,7 @@ describe('Models page', () => {
     expect(h).not.toMatch(/\b(SAP|RPT-1|TabPFN|Prior Labs|AWS|Databricks|Mitra|Kumo|Gemini|Claude|Llama)\b/);
   });
   it('is linked from the hub, the architecture page and the graphs page', () => {
-    expect(html('blueprints/index.html')).toContain('<span class="bp-card-n">08</span><h3><a href="/blueprints/models/">Models</a></h3>');
+    expect(html('blueprints/index.html')).toMatch(/<h4><a href="\/blueprints\/models\/">[^<]+<\/a><\/h4>/);
     expect(html('architecture/index.html')).toContain('href="/blueprints/models/"');
     expect(html('architecture/index.html')).toContain('href="/blueprints/models/#llm"');
     const g = html('blueprints/graphs/index.html');
@@ -361,7 +363,7 @@ describe('Design choices page', () => {
     expect(h).toContain('p* = L &divide; (G + L)');
     expect(h).not.toMatch(/<form[\s>]|download|data-intake/);
     expect(h).not.toMatch(/\b(SAP|TabPFN|Prior Labs|AWS|Databricks|Copilot|Agentforce|Now Assist|Claude|Gemini)\b/);
-    expect(html('blueprints/index.html')).toContain('<span class="bp-card-n">09</span><h3><a href="/blueprints/design/">Design choices</a></h3>');
+    expect(html('blueprints/index.html')).toMatch(/<h4><a href="\/blueprints\/design\/">[^<]+<\/a><\/h4>/);
     expect(html('blueprints/models/index.html')).toContain('href="/blueprints/design/"');
   });
 });
@@ -421,7 +423,7 @@ describe('Organization page', () => {
     expect(k).toContain('/blueprints/organization/#trust');
   });
   it('is linked from the hub, models, design, controls, trace, frameworks and book', () => {
-    expect(html('blueprints/index.html')).toContain('<span class="bp-card-n">10</span><h3><a href="/blueprints/organization/">Organization</a></h3>');
+    expect(html('blueprints/index.html')).toMatch(/<h4><a href="\/blueprints\/organization\/">[^<]+<\/a><\/h4>/);
     expect(html('blueprints/index.html')).toContain('Eleven tools');
     expect(html('blueprints/models/index.html')).toContain('href="/blueprints/organization/#delegation"');
     expect(html('controls/index.html')).toContain('href="/blueprints/organization/#delegation"');
@@ -450,9 +452,102 @@ describe('Operations page', () => {
     expect(h).not.toMatch(/\b(SAP|Salesforce|ServiceNow|Coupa|Workday|Microsoft|Gravitee|Gartner|NVIDIA|OpenAI|Anthropic|Oracle|OpenTelemetry)\b/);
   });
   it('is linked from the hub, design, trace and frameworks', () => {
-    expect(html('blueprints/index.html')).toContain('<span class="bp-card-n">11</span><h3><a href="/blueprints/operations/">Operations</a></h3>');
+    expect(html('blueprints/index.html')).toMatch(/<h4><a href="\/blueprints\/operations\/">[^<]+<\/a><\/h4>/);
     expect(html('blueprints/design/index.html')).toContain('href="/blueprints/operations/"');
     expect(html('blueprints/trace/index.html')).toContain('href="/blueprints/operations/#observe"');
     expect(html('frameworks/index.html')).toContain('href="/blueprints/operations/#reliability"');
+  });
+});
+
+describe('Blueprints journey: tracks, breadcrumbs and previous/next', () => {
+  type Track = { id: string; name: string; purpose: string; tools: string[] };
+  const tracks = TRACKS as Track[];
+  const tools = bpPages.filter((p) => p.bp !== 'hub');
+  const pageOf = (k: string) => tools.find((p) => p.bp === k)!;
+  const crumb = (h: string) => h.match(/<nav class="crumbs" aria-label="Breadcrumb">[\s\S]*?<\/nav>/)?.[0];
+  const pagerOf = (h: string) => h.match(/<nav class="bp-pager"[\s\S]*?<\/nav>/)?.[0];
+
+  it('puts all eleven tools in exactly one of three tracks: Decide, Build, Run', () => {
+    expect(tracks.map((t) => t.name)).toEqual(['Decide', 'Build', 'Run']);
+    expect(tracks.map((t) => t.tools)).toEqual([
+      ['organization', 'design', 'models'],
+      ['architecture', 'workflows', 'designer', 'graphs'],
+      ['controls', 'operations', 'trace', 'loops'],
+    ]);
+    expect(tracks.flatMap((t) => t.tools).sort()).toEqual(tools.map((p) => p.bp).sort());
+    for (const t of tracks) expect(t.purpose.split(/\s+/).length, t.name).toBeLessThanOrEqual(15);
+  });
+
+  it('shows the three tracks on the hub, each with a one-line purpose and Start here on its first tool', () => {
+    const hub = html('blueprints/index.html');
+    expect(hub.indexOf('id="tracks"')).toBeLessThan(hub.indexOf('id="flow"'));
+    for (const t of tracks) {
+      const sec = hub.split(`<section class="bp-trackcard" id="${t.id}"`)[1].split('</section>')[0];
+      expect(sec).toContain(`<p>${t.purpose}</p>`);
+      const hrefs = [...sec.matchAll(/<h4><a href="([^"]+)">/g)].map((m) => m[1]);
+      expect(hrefs).toEqual(t.tools.map((k) => pageOf(k).path));
+      expect(sec.match(/Start here/g)).toHaveLength(1);
+      expect(sec.indexOf('Start here')).toBeLessThan(sec.indexOf(`href="${pageOf(t.tools[0]).path}"`));
+      expect(hub).toContain(`<li><a href="#${t.id}">${t.name}</a></li>`);
+    }
+  });
+
+  it('gives every tool page a breadcrumb: Blueprints, its track, then the page', () => {
+    for (const t of tracks) for (const k of t.tools) {
+      const p = pageOf(k);
+      const c = crumb(html(p.out));
+      expect(c, p.out).toBeTruthy();
+      const parts = [...c!.matchAll(/<li>(?:<a href="([^"]+)">([^<]+)<\/a>|<span aria-current="page">([^<]+)<\/span>)<\/li>/g)];
+      expect(parts.map((m) => m[1] ?? 'current'), p.out).toEqual(['/blueprints/', `/blueprints/#${t.id}`, 'current']);
+      expect(parts[1][2]).toBe(t.name);
+      // The crumb sits in the page head, above the one h1.
+      expect(html(p.out).indexOf('class="crumbs"'), p.out).toBeLessThan(html(p.out).indexOf('<h1'));
+    }
+    expect(crumb(html('blueprints/index.html'))).toBeUndefined();
+  });
+
+  it('ends every tool page with previous and next inside its track, then on to the next track, plus Ask the book', () => {
+    const all = tracks.flatMap((t) => t.tools);
+    for (const [ti, t] of tracks.entries()) for (const [i, k] of t.tools.entries()) {
+      const p = pageOf(k);
+      const nav = pagerOf(html(p.out));
+      expect(nav, p.out).toBeTruthy();
+      const links = [...nav!.matchAll(/<a class="bp-pager-link [^"]+" href="([^"]+)"(?: rel="(prev|next)")?>/g)].map((m) => [m[1], m[2] ?? '']);
+      const prev = i > 0 ? [pageOf(t.tools[i - 1]).path, 'prev'] : ['/blueprints/#tracks', ''];
+      const next = i < t.tools.length - 1 ? [pageOf(t.tools[i + 1]).path, 'next']
+        : ti < tracks.length - 1 ? [pageOf(tracks[ti + 1].tools[0]).path, ''] : ['/blueprints/#tracks', ''];
+      expect(links, p.out).toEqual([prev, next]);
+      if (i === t.tools.length - 1 && ti < tracks.length - 1) expect(nav, p.out).toContain(`Next track: ${tracks[ti + 1].name}`);
+      expect(nav, p.out).toContain('<a class="more" href="/talk/" data-guide-open>Ask the book about this</a>');
+      // After the content, before the footer.
+      const h = html(p.out);
+      expect(h.indexOf('class="bp-pager"'), p.out).toBeGreaterThan(h.lastIndexOf('</section>'));
+      expect(h.indexOf('class="bp-pager"'), p.out).toBeLessThan(h.indexOf('</main>'));
+    }
+    expect(all).toHaveLength(11);
+  });
+
+  it('groups the sub-nav chips by track and highlights the current page and track', () => {
+    for (const p of tools) {
+      const nav = html(p.out).match(/<nav class="bp-subnav"[\s\S]*?<\/nav>/)![0];
+      const groups = [...nav.matchAll(/<div class="bp-track( is-current)?">\s*<a class="bp-track-name" href="\/blueprints\/#([a-z]+)">/g)];
+      expect(groups.map((g) => g[2]), p.out).toEqual(['decide', 'build', 'run']);
+      expect(groups.filter((g) => g[1]).map((g) => g[2]), p.out).toEqual([tracks.find((t) => t.tools.includes(p.bp!))!.id]);
+      expect(nav.match(/aria-current="page"/g), p.out).toHaveLength(1);
+      expect(nav, p.out).toContain(`<li><a href="${p.path}" aria-current="page">`);
+    }
+  });
+
+  it('keeps long pages\' jump links, inside an On this page disclosure, and only for anchors on that page', () => {
+    for (const k of ['models', 'design', 'organization', 'operations']) {
+      const h = html(pageOf(k).out);
+      const box = h.match(/<details class="onpage" data-onpage>\s*<summary>On this page<\/summary>[\s\S]*?<\/details>/)![0];
+      const hrefs = [...box.matchAll(/href="([^"]+)"/g)].map((m) => m[1]);
+      expect(hrefs.length, k).toBeGreaterThan(3);
+      for (const href of hrefs) {
+        expect(href, k).toMatch(/^#/);
+        expect(h, `${k} ${href}`).toContain(`id="${href.slice(1)}"`);
+      }
+    }
   });
 });

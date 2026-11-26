@@ -12,7 +12,7 @@
 .md-panel-key { border: 2px solid var(--ink); }
 .md-panel-n { position: absolute; top: -0.9rem; left: 1rem; width: 2rem; height: 2rem; display: grid; place-items: center; background: var(--orange); color: var(--ink); font-family: var(--font-display); font-weight: 700; border-radius: 2px; }
 .md-panel-key .md-panel-n { background: var(--ink); color: var(--paper); }
-.md-tag { margin: 0.6rem 0 0.25rem; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--orange-text); }
+.md-tag { margin: 0.6rem 0 0.25rem; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.01em; color: var(--orange-text); }
 .md-panel h3 { font-size: 1.15rem; margin: 0 0 0.4rem; }
 .md-panel p:last-child { margin: 0; }
 
@@ -20,11 +20,11 @@
 .md-fams { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr)); margin-top: 1.5rem; }
 .md-fam { background: var(--white); border: 1px solid var(--line); border-top: 4px solid var(--orange); border-radius: var(--radius); padding: 1.3rem; min-width: 0; scroll-margin-top: 5rem; }
 .md-fam:target { outline: 3px solid var(--orange); outline-offset: 2px; }
-.md-n { margin: 0 0 0.3rem; font-family: var(--font-display); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.85rem; color: var(--orange-text); }
+.md-n { margin: 0 0 0.3rem; font-family: var(--font-display); font-weight: 700; letter-spacing: 0.01em; font-size: 0.85rem; color: var(--orange-text); }
 .md-fam h3 { margin: 0 0 0.5rem; font-size: 1.25rem; }
 .md-sum { color: var(--muted); margin: 0 0 0.9rem; }
 .md-dl { margin: 0; display: grid; gap: 0.7rem; }
-.md-dl dt { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.md-dl dt { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.01em; }
 .md-dl dd { margin: 0.15rem 0 0; }
 
 /* Matrix filter (built from the table rows by models.js) */

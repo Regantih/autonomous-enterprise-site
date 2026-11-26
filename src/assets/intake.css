@@ -10,7 +10,7 @@
 .ik-log { list-style: none; margin: 0; padding: 0.6rem; display: grid; gap: 0.5rem; max-height: 22rem; min-height: 6rem; overflow-y: auto; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; }
 .ik-log:empty::before { content: "The conversation appears here."; color: var(--muted); font-size: 0.9rem; }
 .ik-m { display: grid; gap: 0.15rem; padding: 0.5rem 0.7rem; border-radius: 8px; background: var(--white); border: 1px solid var(--line); font-size: 0.95rem; overflow-wrap: anywhere; }
-.ik-m b { font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.ik-m b { font-size: 0.72rem; letter-spacing: 0.01em; color: var(--muted); }
 .ik-you { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .ik-you b { color: var(--muted-on-ink); }
 .ik-stop { border-left: 4px solid #d9a33a; }

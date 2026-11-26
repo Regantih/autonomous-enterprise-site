@@ -30,16 +30,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/assets/fonts/oswald-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/styles.css?v=474e4e9283">
-<script src="/assets/site.js?v=474e4e9283" defer></script>
-<script src="/assets/guide.js?v=474e4e9283" defer></script>
+<link rel="stylesheet" href="/assets/styles.css?v=8c9a9973f2">
+<script src="/assets/site.js?v=8c9a9973f2" defer></script>
+<script src="/assets/guide.js?v=8c9a9973f2" defer></script>
 </head>
-<body>
+<body class="has-fab">
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header">
   <div class="container header-inner">
     <a class="brand" href="/" aria-label="The Autonomous Enterprise: human-led, agent-operated, home"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="3" fill="#F2622E"/><path fill="#141414" d="M5 23h3v4H5zM9.5 20h3v7h-3zM14 17h3v10h-3zM18.5 13h3v14h-3zM23 9h3v18h-3z"/></svg><span class="brand-text"><span class="brand-name">The Autonomous Enterprise</span> <span class="brand-sub">Human-led, agent-operated</span></span></a>
-    <nav class="site-nav" aria-label="Main">
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden><span class="nav-toggle-bars" aria-hidden="true"></span><span class="nav-toggle-label">Menu</span></button>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
       <ul>
         <li><a href="/book/" aria-current="page">Book</a></li>
         <li><a href="/blueprints/">Blueprints</a></li>
@@ -48,7 +49,7 @@
         <li><a href="/about/">About</a></li>
       </ul>
     </nav>
-    <a class="btn btn-primary header-cta" href="/contact/">Talk to the book</a>
+    <a class="btn btn-primary header-cta" href="/talk/" data-guide-open>Talk to the book</a>
   </div>
 </header>
 <main id="main" tabindex="-1">
@@ -189,7 +190,7 @@
       <li>Risk and audit</li>
       <li>Transformation leaders</li>
     </ul>
-    <p class="cta-row"><a class="btn btn-primary" href="/leaders/">Questions leaders ask</a></p>
+    <p class="cta-row"><a class="btn btn-ghost" href="/leaders/">Questions leaders ask</a></p>
   </div>
 </section>
 

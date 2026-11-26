@@ -23,7 +23,7 @@
 .gr-q:focus-visible, .gr-askq:focus-visible { outline: 3px solid var(--orange); outline-offset: 1px; }
 .gr-zoom { display: flex; gap: 0.3rem; flex-wrap: wrap; }
 .gr-types { border: 0; margin: 0.6rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.3rem 0.9rem; font-size: 0.88rem; }
-.gr-types legend { font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.3rem; padding: 0; }
+.gr-types legend { font-weight: 700; font-size: 0.8rem; letter-spacing: 0.01em; margin-bottom: 0.3rem; padding: 0; }
 .gr-type { display: inline-flex; align-items: center; gap: 0.3rem; cursor: pointer; }
 .gr-hits { min-height: 1.3em; margin: 0.4rem 0; font-size: 0.88rem; color: var(--muted); }
 .gr-main { display: grid; gap: 0.85rem; grid-template-columns: minmax(0, 1fr); }
@@ -35,7 +35,7 @@
 .gr-svg.dragging { cursor: grabbing; }
 .gr-panel { font-size: 0.92rem; min-width: 0; max-height: 36rem; overflow: auto; }
 .gr-panel h3 { margin: 0.2rem 0 0.5rem; font-size: 1.15rem; overflow-wrap: anywhere; }
-.gr-panel h4 { margin: 0.8rem 0 0.25rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.gr-panel h4 { margin: 0.8rem 0 0.25rem; font-size: 0.8rem; letter-spacing: 0.01em; }
 .gr-kicker { margin: 0; font-size: 0.82rem; color: var(--muted); display: flex; align-items: center; gap: 0.35rem; }
 .gr-hint { color: var(--muted); }
 .gr-dl { display: grid; gap: 0.35rem; margin: 0.5rem 0; }
@@ -98,7 +98,7 @@
 /* Ask panel */
 .gr-ask { background: var(--white); border: 1px solid var(--line); border-radius: 10px; padding: 1rem; margin-bottom: 1.25rem; min-width: 0; }
 .gr-ask-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1rem; align-items: baseline; }
-.gr-k { font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; margin: 0; }
+.gr-k { font-family: var(--font-display); letter-spacing: 0.01em; font-weight: 700; margin: 0; }
 .gr-meter { margin: 0; font-size: 0.85rem; color: var(--muted); }
 .gr-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.75rem 0; }
 .gr-chips .pill { white-space: normal; text-align: left; }
@@ -111,7 +111,7 @@
 .gr-answer p { margin: 0.35rem 0; overflow-wrap: anywhere; }
 .gr-cites { display: flex; flex-wrap: wrap; gap: 0.3rem; align-items: center; }
 .gr-callm, .gr-lat { font-size: 0.85rem; color: var(--muted); }
-.gr-live { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; background: var(--ink); color: var(--paper); border-radius: 999px; padding: 0.1rem 0.45rem; margin-right: 0.3rem; }
+.gr-live { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.01em; background: var(--ink); color: var(--paper); border-radius: 999px; padding: 0.1rem 0.45rem; margin-right: 0.3rem; }
 .gr-route { display: grid; gap: 0.6rem; padding-left: 1.4rem; margin: 0; }
 .gr-route > li > div { overflow-wrap: anywhere; }
 .gr-fams, .gr-ctl, .gr-evals { list-style: none; padding: 0; margin: 0.3rem 0 0; display: grid; gap: 0.3rem; font-size: 0.92rem; }

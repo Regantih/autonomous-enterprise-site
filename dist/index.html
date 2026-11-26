@@ -30,10 +30,10 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/assets/fonts/oswald-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" as="image" type="image/webp" imagesrcset="/assets/images/cover-400.webp?v=bcc3859aee 400w, /assets/images/cover-800.webp?v=625dab5aaa 800w, /assets/images/cover-1200.webp?v=9c58bbd2d0 1200w" imagesizes="(min-width: 56rem) 30rem, 82vw" fetchpriority="high">
-<link rel="stylesheet" href="/assets/styles.css?v=474e4e9283">
-<script src="/assets/site.js?v=474e4e9283" defer></script>
-<script src="/assets/guide.js?v=474e4e9283" defer></script>
+<link rel="preload" as="image" type="image/webp" imagesrcset="/assets/images/cover-400.webp?v=bcc3859aee 400w, /assets/images/cover-800.webp?v=625dab5aaa 800w, /assets/images/cover-1200.webp?v=9c58bbd2d0 1200w" imagesizes="(min-width: 56rem) 20rem, 11rem" fetchpriority="high">
+<link rel="stylesheet" href="/assets/styles.css?v=8c9a9973f2">
+<script src="/assets/site.js?v=8c9a9973f2" defer></script>
+<script src="/assets/guide.js?v=8c9a9973f2" defer></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Book","@id":"https://humanledenterprise.com/#book","name":"The Autonomous Enterprise","alternativeHeadline":"How Leaders Build, Govern, and Scale the Agent-Run Company","description":"Frameworks like LangChain solve the engineering problem of AI agents. This book solves the management problem.","author":{"@id":"https://humanledenterprise.com/#author"},"inLanguage":"en","bookEdition":"First edition","datePublished":"2026-11","image":"https://humanledenterprise.com/assets/images/cover-800.jpg","url":"https://humanledenterprise.com/","workExample":[{"@type":"Book","bookFormat":"https://schema.org/Paperback","isbn":"9798142205612","numberOfPages":742,"offers":{"@type":"Offer","price":"59.99","priceCurrency":"USD","url":"https://www.amazon.com/dp/B0HS8HG6DP","availability":"https://schema.org/InStock"}},{"@type":"Book","bookFormat":"https://schema.org/EBook","offers":{"@type":"Offer","price":"12.99","priceCurrency":"USD","url":"https://www.amazon.com/dp/B0HS8C4WLL","availability":"https://schema.org/InStock"}}]},{"@type":"Person","@id":"https://humanledenterprise.com/#author","name":"Hemanth Reganti","jobTitle":"Author, speaker and advisor","knowsAbout":["Human-led, agent-operated enterprises","AI agent governance","Enterprise autonomy"],"description":"Author of \"The Autonomous Enterprise\" and speaker and advisor on human-led, agent-operated enterprises.","url":"https://humanledenterprise.com/about/","image":{"@type":"ImageObject","url":"https://humanledenterprise.com/assets/images/portrait-960.jpg","width":960,"height":1200,"caption":"Hemanth Reganti"},"sameAs":["https://www.linkedin.com/in/hemanth-reganti-147153178/"],"alumniOf":[{"@type":"EducationalOrganization","name":"Harvard Business School"}]},{"@type":"WebSite","@id":"https://humanledenterprise.com/#website","name":"Human-Led Enterprise","url":"https://humanledenterprise.com/","publisher":{"@id":"https://humanledenterprise.com/#author"}}]}</script>
 </head>
 <body>
@@ -41,7 +41,8 @@
 <header class="site-header">
   <div class="container header-inner">
     <a class="brand" href="/" aria-label="The Autonomous Enterprise: human-led, agent-operated, home"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="3" fill="#F2622E"/><path fill="#141414" d="M5 23h3v4H5zM9.5 20h3v7h-3zM14 17h3v10h-3zM18.5 13h3v14h-3zM23 9h3v18h-3z"/></svg><span class="brand-text"><span class="brand-name">The Autonomous Enterprise</span> <span class="brand-sub">Human-led, agent-operated</span></span></a>
-    <nav class="site-nav" aria-label="Main">
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden><span class="nav-toggle-bars" aria-hidden="true"></span><span class="nav-toggle-label">Menu</span></button>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
       <ul>
         <li><a href="/book/">Book</a></li>
         <li><a href="/blueprints/">Blueprints</a></li>
@@ -50,17 +51,16 @@
         <li><a href="/about/">About</a></li>
       </ul>
     </nav>
-    <a class="btn btn-primary header-cta" href="/contact/">Talk to the book</a>
+    <a class="btn btn-primary header-cta" href="/talk/" data-guide-open>Talk to the book</a>
   </div>
 </header>
 <main id="main" tabindex="-1">
 <section class="hero" aria-labelledby="hero-title">
   <div class="container hero-grid">
-    <div>
+    <div class="hero-text">
       <p class="eyebrow">The new book by Hemanth Reganti</p>
       <h1 id="hero-title">The Autonomous Enterprise</h1>
       <p class="subtitle">How Leaders Build, Govern, and Scale the Agent-Run Company</p>
-      <p class="tagline">Human-led, agent-operated.</p>
       <p class="pitch">Frameworks like LangChain solve the engineering problem of AI agents. <strong>This book solves the management problem.</strong></p>
       <div class="btn-row">
         <a class="btn btn-primary ext" href="https://www.amazon.com/dp/B0HS8HG6DP" rel="noopener" target="_blank">Buy on Amazon<span class="visually-hidden"> (opens in a new tab)</span></a>
@@ -69,111 +69,80 @@
     </div>
     <div class="hero-cover">
       <picture>
-        <source type="image/webp" srcset="/assets/images/cover-400.webp?v=bcc3859aee 400w, /assets/images/cover-800.webp?v=625dab5aaa 800w, /assets/images/cover-1200.webp?v=9c58bbd2d0 1200w" sizes="(min-width: 56rem) 30rem, 82vw">
-        <img class="cover-img" src="/assets/images/cover-800.jpg?v=1a2506e444" srcset="/assets/images/cover-400.jpg?v=61441e688d 400w, /assets/images/cover-800.jpg?v=1a2506e444 800w, /assets/images/cover-1200.jpg?v=aa8039a892 1200w" sizes="(min-width: 56rem) 30rem, 82vw" width="800" height="1280" alt="Cover of The Autonomous Enterprise: How Leaders Build, Govern, and Scale the Agent-Run Company, by Hemanth Reganti" fetchpriority="high" decoding="async">
+        <source type="image/webp" srcset="/assets/images/cover-400.webp?v=bcc3859aee 400w, /assets/images/cover-800.webp?v=625dab5aaa 800w, /assets/images/cover-1200.webp?v=9c58bbd2d0 1200w" sizes="(min-width: 56rem) 20rem, 11rem">
+        <img class="cover-img" src="/assets/images/cover-800.jpg?v=1a2506e444" srcset="/assets/images/cover-400.jpg?v=61441e688d 400w, /assets/images/cover-800.jpg?v=1a2506e444 800w, /assets/images/cover-1200.jpg?v=aa8039a892 1200w" sizes="(min-width: 56rem) 20rem, 11rem" width="800" height="1280" alt="Cover of The Autonomous Enterprise: How Leaders Build, Govern, and Scale the Agent-Run Company, by Hemanth Reganti" fetchpriority="high" decoding="async">
       </picture>
     </div>
   </div>
 </section>
 
-<section class="section section-paper-2 thesis" id="thesis" aria-labelledby="thesis-title">
+<section class="section section-paper-2" id="start" aria-labelledby="start-title">
   <div class="container">
-    <h2 id="thesis-title" class="eyebrow">The thesis</h2>
-    <div class="quote-card quote-thesis">
-        <figure>
-          <blockquote><p>Autonomy is earned when value compounds faster than risk.</p></blockquote>
-          <figcaption>&mdash; <cite>The Autonomous Enterprise</cite></figcaption>
-        </figure>
-        <a class="share" href="https://www.linkedin.com/sharing/share-offsite/?url=https://humanledenterprise.com/ideas" rel="noopener" target="_blank">Share on LinkedIn<span class="visually-hidden">: &ldquo;Autonomy is earned when value compounds faster than risk.&rdquo; (opens in a new tab)</span></a>
-      </div>
-  </div>
-</section>
-
-<section class="section author-band" id="author" aria-labelledby="author-title">
-  <div class="container author-grid">
-    <div class="author-photo">
-      <picture>
-        <source type="image/webp" srcset="/assets/images/portrait-480.webp?v=e58060c698 480w, /assets/images/portrait-960.webp?v=8760a308d0 960w" sizes="(min-width: 56rem) 34rem, 90vw">
-        <img class="portrait-img" src="/assets/images/portrait-960.jpg?v=b054b472d0" srcset="/assets/images/portrait-480.jpg?v=a83ecabcbc 480w, /assets/images/portrait-960.jpg?v=b054b472d0 960w" sizes="(min-width: 56rem) 34rem, 90vw" width="960" height="1200" alt="Hemanth Reganti, author of The Autonomous Enterprise, in a blue suit, speaking at a podium" loading="lazy" decoding="async">
-      </picture>
-    </div>
-    <div>
-      <p class="eyebrow">The author</p>
-      <h2 id="author-title">Hemanth Reganti</h2>
-      <p class="lead">Author, speaker and advisor on human-led, agent-operated enterprises.</p>
-      <p>He helps leadership teams decide where agents act, who owns the outcome and how autonomy is earned.</p>
-      <div class="btn-row">
-        <a class="btn btn-dark" href="/contact/#speaking">Request a talk</a>
-        <a class="btn btn-ghost" href="/contact/#advisory">Book an advisory call</a>
-      </div>
-      <p><a class="more" href="/about/">About Hemanth</a></p>
-    </div>
-  </div>
-</section>
-
-<section class="section section-orange on-orange" id="rules" aria-labelledby="rules-title">
-  <div class="container">
-    <p class="eyebrow">Three rules</p>
-    <h2 id="rules-title">The rules the book is built on</h2>
-    <ol class="rules">
-      <li class="rule"><p>The harness, not the model, sets the autonomy ceiling.</p></li>
-      <li class="rule"><p>Agents decide; deterministic rules post.</p></li>
-      <li class="rule"><p>Autonomy is earned with evidence and can be withdrawn automatically.</p></li>
-    </ol>
-    <p class="cta-row"><a class="btn btn-dark" href="/blueprints/">Explore the blueprints</a> <a class="btn btn-ghost" href="/leaders/">Questions leaders ask</a></p>
-  </div>
-</section>
-
-<section class="section section-ink" id="ideas" aria-labelledby="ideas-title">
-  <div class="container">
-    <div class="strip-head">
-      <div>
-        <p class="eyebrow">Ideas</p>
-        <h2 id="ideas-title">Ideas from the book</h2>
-      </div>
-      <a class="btn btn-ghost" href="/ideas/">All ideas</a>
-    </div>
-    <ul class="quote-strip" tabindex="0" aria-label="Quotes from the book, scroll sideways for more">
-      <li class="quote-card">
-        <figure>
-          <blockquote><p>Human-led, agent-operated: people set intent, own outcomes and decide where not to automate.</p></blockquote>
-          <figcaption>&mdash; <cite>The Autonomous Enterprise</cite></figcaption>
-        </figure>
-        <a class="share" href="https://www.linkedin.com/sharing/share-offsite/?url=https://humanledenterprise.com/ideas" rel="noopener" target="_blank">Share on LinkedIn<span class="visually-hidden">: &ldquo;Human-led, agent-operated: people set intent, own outcomes and decide where not to automate.&rdquo; (opens in a new tab)</span></a>
+    <p class="eyebrow">Where to begin</p>
+    <h2 id="start-title">Start from your role</h2>
+    <p class="lead">Three steps for each reader. Each one opens a page on this site.</p>
+    <ul class="roles">
+      <li class="role-card">
+        <h3>CEO or board</h3>
+        <ol class="role-steps">
+          <li><a href="/frameworks/#human-led">Human-led, agent-operated</a></li>
+          <li><a href="/leaders/#q-01">How much should we fund?</a></li>
+          <li><a href="/blueprints/organization/">Who sets autonomy and who answers for it</a></li>
+        </ol>
       </li>
-      <li class="quote-card">
-        <figure>
-          <blockquote><p>A board that funds agents first and data second pays twice.</p></blockquote>
-          <figcaption>&mdash; <cite>The Autonomous Enterprise</cite></figcaption>
-        </figure>
-        <a class="share" href="https://www.linkedin.com/sharing/share-offsite/?url=https://humanledenterprise.com/ideas" rel="noopener" target="_blank">Share on LinkedIn<span class="visually-hidden">: &ldquo;A board that funds agents first and data second pays twice.&rdquo; (opens in a new tab)</span></a>
+      <li class="role-card">
+        <h3>CFO or finance</h3>
+        <ol class="role-steps">
+          <li><a href="/frameworks/#cost">Compare in cost per completed outcome</a></li>
+          <li><a href="/leaders/#q-02">How do we build the business case?</a></li>
+          <li><a href="/workflows/">Reimagined workflows</a></li>
+        </ol>
       </li>
-      <li class="quote-card">
-        <figure>
-          <blockquote><p>An agent can act thousands of times before a monthly review.</p></blockquote>
-          <figcaption>&mdash; <cite>The Autonomous Enterprise</cite></figcaption>
-        </figure>
-        <a class="share" href="https://www.linkedin.com/sharing/share-offsite/?url=https://humanledenterprise.com/ideas" rel="noopener" target="_blank">Share on LinkedIn<span class="visually-hidden">: &ldquo;An agent can act thousands of times before a monthly review.&rdquo; (opens in a new tab)</span></a>
+      <li class="role-card">
+        <h3>CIO or technology</h3>
+        <ol class="role-steps">
+          <li><a href="/architecture/">Reference architecture</a></li>
+          <li><a href="/frameworks/#harness">The harness, not the model, sets the ceiling</a></li>
+          <li><a href="/blueprints/models/">Models in the solution framework</a></li>
+        </ol>
       </li>
-      <li class="quote-card">
-        <figure>
-          <blockquote><p>The agent removes the investigation, not the person.</p></blockquote>
-          <figcaption>&mdash; <cite>The Autonomous Enterprise</cite></figcaption>
-        </figure>
-        <a class="share" href="https://www.linkedin.com/sharing/share-offsite/?url=https://humanledenterprise.com/ideas" rel="noopener" target="_blank">Share on LinkedIn<span class="visually-hidden">: &ldquo;The agent removes the investigation, not the person.&rdquo; (opens in a new tab)</span></a>
+      <li class="role-card">
+        <h3>Risk or audit</h3>
+        <ol class="role-steps">
+          <li><a href="/controls/">Controls library</a></li>
+          <li><a href="/leaders/#q-09">How do we manage risk, regulators and auditors?</a></li>
+          <li><a href="/blueprints/trace/">Decision trace viewer</a></li>
+        </ol>
       </li>
-      <li class="quote-card">
-        <figure>
-          <blockquote><p>The weakest maturity dimension caps the autonomy allowed.</p></blockquote>
-          <figcaption>&mdash; <cite>The Autonomous Enterprise</cite></figcaption>
-        </figure>
-        <a class="share" href="https://www.linkedin.com/sharing/share-offsite/?url=https://humanledenterprise.com/ideas" rel="noopener" target="_blank">Share on LinkedIn<span class="visually-hidden">: &ldquo;The weakest maturity dimension caps the autonomy allowed.&rdquo; (opens in a new tab)</span></a>
+      <li class="role-card">
+        <h3>Operations</h3>
+        <ol class="role-steps">
+          <li><a href="/workflows/">Reimagined workflows</a></li>
+          <li><a href="/designer/">Design your own workflow</a></li>
+          <li><a href="/blueprints/operations/">Operating agents</a></li>
+        </ol>
+      </li>
+      <li class="role-card">
+        <h3>Investor</h3>
+        <ol class="role-steps">
+          <li><a href="/frameworks/#flywheel">The value-risk flywheel</a></li>
+          <li><a href="/leaders/#q-17">How do we scale from pilot to portfolio?</a></li>
+          <li><a href="/book/">What&rsquo;s inside the book</a></li>
+        </ol>
+      </li>
+      <li class="role-card">
+        <h3>New to agents</h3>
+        <ol class="role-steps">
+          <li><a href="/frameworks/#scale">The autonomy scale, L0 to L5</a></li>
+          <li><a href="/book/">What&rsquo;s inside the book</a></li>
+          <li><a href="/talk/">Ask the book a question</a></li>
+        </ol>
       </li>
     </ul>
   </div>
 </section>
 
-<section class="section section-paper-2" id="book" aria-labelledby="book-title">
+<section class="section" id="book" aria-labelledby="book-title">
   <div class="container book-grid">
     <div class="book-cover">
       <picture>
@@ -183,8 +152,21 @@
     </div>
     <div>
       <p class="eyebrow">The book</p>
-      <h2 id="book-title">The Autonomous Enterprise</h2>
-      <p class="lead">How Leaders Build, Govern, and Scale the Agent-Run Company</p>
+      <h2 id="book-title">What&rsquo;s inside the book</h2>
+      <div class="quote-card quote-thesis">
+        <figure>
+          <blockquote><p>Autonomy is earned when value compounds faster than risk.</p></blockquote>
+          <figcaption>&mdash; <cite>The Autonomous Enterprise</cite></figcaption>
+        </figure>
+        <a class="share" href="https://www.linkedin.com/sharing/share-offsite/?url=https://humanledenterprise.com/ideas" rel="noopener" target="_blank">Share on LinkedIn<span class="visually-hidden">: &ldquo;Autonomy is earned when value compounds faster than risk.&rdquo; (opens in a new tab)</span></a>
+      </div>
+      <ul class="inside-list">
+        <li><b>The autonomy scale, L0 to L5.</b> Evidence-based promotion and automatic demotion.</li>
+        <li><b>Guardrails.</b> The controls every agent runs inside: identity, policy, limits, evaluation and the kill switch.</li>
+        <li><b>Domain chapters.</b> Nine domains, from finance and procurement to legal, risk and insurance.</li>
+        <li><b>The case and the plan.</b> Business-case models, operating-model changes, a 30-month roadmap and a risk register.</li>
+        <li><b>Meridian Industries.</b> One fictional company runs through every chapter.</li>
+      </ul>
       <dl class="facts">
         <div><dt>Chapters</dt><dd>31</dd></div>
         <div><dt>Pages</dt><dd>742</dd></div>
@@ -200,10 +182,49 @@
         <div class="edition">
           <h3>Kindle</h3>
           <p class="price">$12.99</p>
-          <a class="btn btn-primary ext" href="https://www.amazon.com/dp/B0HS8C4WLL" rel="noopener" target="_blank">Buy Kindle edition<span class="visually-hidden"> on Amazon (opens in a new tab)</span></a>
+          <a class="btn btn-ghost ext" href="https://www.amazon.com/dp/B0HS8C4WLL" rel="noopener" target="_blank">Buy Kindle edition<span class="visually-hidden"> on Amazon (opens in a new tab)</span></a>
         </div>
       </div>
       <p class="isbn">ISBN 979-8142205612</p>
+    </div>
+  </div>
+</section>
+
+<section class="section section-paper-2" id="blueprints" aria-labelledby="blueprints-title">
+  <div class="container">
+    <p class="eyebrow">Blueprints</p>
+    <h2 id="blueprints-title">Put the frameworks to work</h2>
+    <p class="lead">Eleven tools turn the frameworks of the book into designs you can use, in three tracks.</p>
+    <ul class="track-teasers">
+      <li class="track-teaser"><h3>Decide</h3><p>Who owns each decision, which design choices hold and which models fit.</p><a class="more" href="/blueprints/organization/">Start with Organization</a></li>
+      <li class="track-teaser"><h3>Build</h3><p>Lay out the stack, reimagine the workflows and design your own.</p><a class="more" href="/architecture/">Start with Architecture</a></li>
+      <li class="track-teaser"><h3>Run</h3><p>Control, operate, trace and improve agents once they are live.</p><a class="more" href="/controls/">Start with Controls</a></li>
+    </ul>
+    <p class="cta-row"><a class="btn btn-dark" href="/blueprints/">Explore the blueprints</a> <a class="more" href="/leaders/">Questions leaders ask</a></p>
+  </div>
+</section>
+
+<section class="section section-ink" id="speaking" aria-labelledby="speaking-title">
+  <div class="container">
+    <p class="eyebrow">Speaking &amp; Advisory</p>
+    <h2 id="speaking-title">The management view of AI agents, from the author</h2>
+    <p class="lead">Talks for boards, leadership teams and conferences, and advisory for teams starting or scaling AI agents. In person (Dallas&ndash;Fort Worth) or virtual.</p>
+    <p class="cta-row"><a class="btn btn-ghost" href="/speaking/">Speaking &amp; Advisory</a> <a class="more" href="/contact/">Send a request</a></p>
+  </div>
+</section>
+
+<section class="section section-tight author-line" id="author" aria-labelledby="author-title">
+  <div class="container author-line-grid">
+    <div class="author-line-photo">
+      <picture>
+        <source type="image/webp" srcset="/assets/images/portrait-480.webp?v=e58060c698 480w, /assets/images/portrait-960.webp?v=8760a308d0 960w" sizes="(min-width: 40rem) 11rem, 7rem">
+        <img class="portrait-img" src="/assets/images/portrait-960.jpg?v=b054b472d0" srcset="/assets/images/portrait-480.jpg?v=a83ecabcbc 480w, /assets/images/portrait-960.jpg?v=b054b472d0 960w" sizes="(min-width: 40rem) 11rem, 7rem" width="960" height="1200" alt="Hemanth Reganti, author of The Autonomous Enterprise, in a blue suit, speaking at a podium" loading="lazy" decoding="async">
+      </picture>
+    </div>
+    <div>
+      <h2 id="author-title" class="h-sm">About Hemanth Reganti</h2>
+      <p>Author, speaker and advisor on human-led, agent-operated enterprises. He helps leadership teams decide where agents act, who owns the outcome and how autonomy is earned.</p>
+      <p><a class="more" href="/about/">About Hemanth</a></p>
     </div>
   </div>
 </section>
@@ -234,6 +255,6 @@
     </div>
   </div>
 </footer>
-<a class="guide-fab" href="/talk/" data-guide-open aria-haspopup="dialog"><span class="guide-fab-mark" aria-hidden="true"></span>Talk to the book</a>
+
 </body>
 </html>

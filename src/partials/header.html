@@ -1,7 +1,8 @@
 <header class="site-header">
   <div class="container header-inner">
     <a class="brand" href="/" aria-label="The Autonomous Enterprise: human-led, agent-operated, home">{{> brand}}</a>
-    <nav class="site-nav" aria-label="Main">
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden><span class="nav-toggle-bars" aria-hidden="true"></span><span class="nav-toggle-label">Menu</span></button>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
       <ul>
         <li><a href="/book/"{{NAV_BOOK}}>Book</a></li>
         <li><a href="/blueprints/"{{NAV_BLUEPRINTS}}>Blueprints</a></li>
@@ -10,6 +11,6 @@
         <li><a href="/about/"{{NAV_ABOUT}}>About</a></li>
       </ul>
     </nav>
-    <a class="btn btn-primary header-cta" href="/contact/">Talk to the book</a>
+    <a class="btn btn-primary header-cta" href="/talk/" data-guide-open{{NAV_TALK}}>Talk to the book</a>
   </div>
 </header>

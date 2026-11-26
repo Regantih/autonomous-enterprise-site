@@ -1,10 +1,9 @@
 <section class="hero" aria-labelledby="hero-title">
   <div class="container hero-grid">
-    <div>
+    <div class="hero-text">
       <p class="eyebrow">The new book by Hemanth Reganti</p>
       <h1 id="hero-title">The Autonomous Enterprise</h1>
       <p class="subtitle">How Leaders Build, Govern, and Scale the Agent-Run Company</p>
-      <p class="tagline">Human-led, agent-operated.</p>
       <p class="pitch">Frameworks like LangChain solve the engineering problem of AI agents. <strong>This book solves the management problem.</strong></p>
       <div class="btn-row">
         <a class="btn btn-primary ext" href="https://www.amazon.com/dp/B0HS8HG6DP" rel="noopener" target="_blank">Buy on Amazon<span class="visually-hidden"> (opens in a new tab)</span></a>
@@ -17,52 +16,88 @@
   </div>
 </section>
 
-<section class="section section-paper-2 thesis" id="thesis" aria-labelledby="thesis-title">
+<section class="section section-paper-2" id="start" aria-labelledby="start-title">
   <div class="container">
-    <h2 id="thesis-title" class="eyebrow">The thesis</h2>
-    {{THESIS}}
-  </div>
-</section>
-
-{{> author-band}}
-
-<section class="section section-orange on-orange" id="rules" aria-labelledby="rules-title">
-  <div class="container">
-    <p class="eyebrow">Three rules</p>
-    <h2 id="rules-title">The rules the book is built on</h2>
-    <ol class="rules">
-      <li class="rule"><p>The harness, not the model, sets the autonomy ceiling.</p></li>
-      <li class="rule"><p>Agents decide; deterministic rules post.</p></li>
-      <li class="rule"><p>Autonomy is earned with evidence and can be withdrawn automatically.</p></li>
-    </ol>
-    <p class="cta-row"><a class="btn btn-dark" href="/blueprints/">Explore the blueprints</a> <a class="btn btn-ghost" href="/leaders/">Questions leaders ask</a></p>
-  </div>
-</section>
-
-<section class="section section-ink" id="ideas" aria-labelledby="ideas-title">
-  <div class="container">
-    <div class="strip-head">
-      <div>
-        <p class="eyebrow">Ideas</p>
-        <h2 id="ideas-title">Ideas from the book</h2>
-      </div>
-      <a class="btn btn-ghost" href="/ideas/">All ideas</a>
-    </div>
-    <ul class="quote-strip" tabindex="0" aria-label="Quotes from the book, scroll sideways for more">
-      {{QUOTES_STRIP}}
+    <p class="eyebrow">Where to begin</p>
+    <h2 id="start-title">Start from your role</h2>
+    <p class="lead">Three steps for each reader. Each one opens a page on this site.</p>
+    <ul class="roles">
+      <li class="role-card">
+        <h3>CEO or board</h3>
+        <ol class="role-steps">
+          <li><a href="/frameworks/#human-led">Human-led, agent-operated</a></li>
+          <li><a href="/leaders/#q-01">How much should we fund?</a></li>
+          <li><a href="/blueprints/organization/">Who sets autonomy and who answers for it</a></li>
+        </ol>
+      </li>
+      <li class="role-card">
+        <h3>CFO or finance</h3>
+        <ol class="role-steps">
+          <li><a href="/frameworks/#cost">Compare in cost per completed outcome</a></li>
+          <li><a href="/leaders/#q-02">How do we build the business case?</a></li>
+          <li><a href="/workflows/">Reimagined workflows</a></li>
+        </ol>
+      </li>
+      <li class="role-card">
+        <h3>CIO or technology</h3>
+        <ol class="role-steps">
+          <li><a href="/architecture/">Reference architecture</a></li>
+          <li><a href="/frameworks/#harness">The harness, not the model, sets the ceiling</a></li>
+          <li><a href="/blueprints/models/">Models in the solution framework</a></li>
+        </ol>
+      </li>
+      <li class="role-card">
+        <h3>Risk or audit</h3>
+        <ol class="role-steps">
+          <li><a href="/controls/">Controls library</a></li>
+          <li><a href="/leaders/#q-09">How do we manage risk, regulators and auditors?</a></li>
+          <li><a href="/blueprints/trace/">Decision trace viewer</a></li>
+        </ol>
+      </li>
+      <li class="role-card">
+        <h3>Operations</h3>
+        <ol class="role-steps">
+          <li><a href="/workflows/">Reimagined workflows</a></li>
+          <li><a href="/designer/">Design your own workflow</a></li>
+          <li><a href="/blueprints/operations/">Operating agents</a></li>
+        </ol>
+      </li>
+      <li class="role-card">
+        <h3>Investor</h3>
+        <ol class="role-steps">
+          <li><a href="/frameworks/#flywheel">The value-risk flywheel</a></li>
+          <li><a href="/leaders/#q-17">How do we scale from pilot to portfolio?</a></li>
+          <li><a href="/book/">What&rsquo;s inside the book</a></li>
+        </ol>
+      </li>
+      <li class="role-card">
+        <h3>New to agents</h3>
+        <ol class="role-steps">
+          <li><a href="/frameworks/#scale">The autonomy scale, L0 to L5</a></li>
+          <li><a href="/book/">What&rsquo;s inside the book</a></li>
+          <li><a href="/talk/">Ask the book a question</a></li>
+        </ol>
+      </li>
     </ul>
   </div>
 </section>
 
-<section class="section section-paper-2" id="book" aria-labelledby="book-title">
+<section class="section" id="book" aria-labelledby="book-title">
   <div class="container book-grid">
     <div class="book-cover">
       {{COVER_BOOK}}
     </div>
     <div>
       <p class="eyebrow">The book</p>
-      <h2 id="book-title">The Autonomous Enterprise</h2>
-      <p class="lead">How Leaders Build, Govern, and Scale the Agent-Run Company</p>
+      <h2 id="book-title">What&rsquo;s inside the book</h2>
+      {{THESIS}}
+      <ul class="inside-list">
+        <li><b>The autonomy scale, L0 to L5.</b> Evidence-based promotion and automatic demotion.</li>
+        <li><b>Guardrails.</b> The controls every agent runs inside: identity, policy, limits, evaluation and the kill switch.</li>
+        <li><b>Domain chapters.</b> Nine domains, from finance and procurement to legal, risk and insurance.</li>
+        <li><b>The case and the plan.</b> Business-case models, operating-model changes, a 30-month roadmap and a risk register.</li>
+        <li><b>Meridian Industries.</b> One fictional company runs through every chapter.</li>
+      </ul>
       <dl class="facts">
         <div><dt>Chapters</dt><dd>31</dd></div>
         <div><dt>Pages</dt><dd>742</dd></div>
@@ -78,10 +113,44 @@
         <div class="edition">
           <h3>Kindle</h3>
           <p class="price">$12.99</p>
-          <a class="btn btn-primary ext" href="https://www.amazon.com/dp/B0HS8C4WLL" rel="noopener" target="_blank">Buy Kindle edition<span class="visually-hidden"> on Amazon (opens in a new tab)</span></a>
+          <a class="btn btn-ghost ext" href="https://www.amazon.com/dp/B0HS8C4WLL" rel="noopener" target="_blank">Buy Kindle edition<span class="visually-hidden"> on Amazon (opens in a new tab)</span></a>
         </div>
       </div>
       <p class="isbn">ISBN 979-8142205612</p>
+    </div>
+  </div>
+</section>
+
+<section class="section section-paper-2" id="blueprints" aria-labelledby="blueprints-title">
+  <div class="container">
+    <p class="eyebrow">Blueprints</p>
+    <h2 id="blueprints-title">Put the frameworks to work</h2>
+    <p class="lead">Eleven tools turn the frameworks of the book into designs you can use, in three tracks.</p>
+    <ul class="track-teasers">
+      {{BP_HOME_TRACKS}}
+    </ul>
+    <p class="cta-row"><a class="btn btn-dark" href="/blueprints/">Explore the blueprints</a> <a class="more" href="/leaders/">Questions leaders ask</a></p>
+  </div>
+</section>
+
+<section class="section section-ink" id="speaking" aria-labelledby="speaking-title">
+  <div class="container">
+    <p class="eyebrow">Speaking &amp; Advisory</p>
+    <h2 id="speaking-title">The management view of AI agents, from the author</h2>
+    <p class="lead">Talks for boards, leadership teams and conferences, and advisory for teams starting or scaling AI agents. In person (Dallas&ndash;Fort Worth) or virtual.</p>
+    <p class="cta-row"><a class="btn btn-ghost" href="/speaking/">Speaking &amp; Advisory</a> <a class="more" href="/contact/">Send a request</a></p>
+  </div>
+</section>
+
+<section class="section section-tight author-line" id="author" aria-labelledby="author-title">
+  <div class="container author-line-grid">
+    <div class="author-line-photo">
+      {{PORTRAIT_LINE}}
+    </div>
+    <div>
+      <h2 id="author-title" class="h-sm">About Hemanth Reganti</h2>
+      <p>Author, speaker and advisor on human-led, agent-operated enterprises. He helps leadership teams decide where agents act, who owns the outcome and how autonomy is earned.</p>
+      <p><a class="more" href="/about/">About Hemanth</a></p>
     </div>
   </div>
 </section>

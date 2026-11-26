@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { BP_DATA_FILES, blueprintVars, subnav } from './blueprints-static.mjs';
+import { BP_DATA_FILES, blueprintVars, breadcrumb, pager, subnav } from './blueprints-static.mjs';
 import { graphsVars } from './graphs-static.mjs';
 import { buildGraphs, writeGraphs } from '../tools/build-graphs.mjs';
 
@@ -217,6 +217,9 @@ export const PAGES = [
   },
 ];
 
+// Pages that already show a Talk to the book button in view get no floating one.
+export const NO_FAB = ['/', '/talk/', '/contact/'];
+
 const read = (p) => readFileSync(p, 'utf8');
 const hash = (buf) => createHash('sha256').update(buf).digest('hex').slice(0, 10);
 
@@ -224,13 +227,15 @@ function assetUrl(rel) {
   return `/assets/${rel}?v=${hash(readFileSync(join(SRC, 'assets', rel)))}`;
 }
 
-function coverPicture({ priority }) {
+function coverPicture({ priority, sizes = '(min-width: 56rem) 30rem, 82vw' }) {
   const loading = priority ? 'fetchpriority="high" decoding="async"' : 'loading="lazy" decoding="async"';
   return `<picture>
-        <source type="image/webp" srcset="${assetUrl('images/cover-400.webp')} 400w, ${assetUrl('images/cover-800.webp')} 800w, ${assetUrl('images/cover-1200.webp')} 1200w" sizes="(min-width: 56rem) 30rem, 82vw">
-        <img class="cover-img" src="${assetUrl('images/cover-800.jpg')}" srcset="${assetUrl('images/cover-400.jpg')} 400w, ${assetUrl('images/cover-800.jpg')} 800w, ${assetUrl('images/cover-1200.jpg')} 1200w" sizes="(min-width: 56rem) 30rem, 82vw" width="800" height="1280" alt="Cover of The Autonomous Enterprise: How Leaders Build, Govern, and Scale the Agent-Run Company, by Hemanth Reganti" ${loading}>
+        <source type="image/webp" srcset="${assetUrl('images/cover-400.webp')} 400w, ${assetUrl('images/cover-800.webp')} 800w, ${assetUrl('images/cover-1200.webp')} 1200w" sizes="${sizes}">
+        <img class="cover-img" src="${assetUrl('images/cover-800.jpg')}" srcset="${assetUrl('images/cover-400.jpg')} 400w, ${assetUrl('images/cover-800.jpg')} 800w, ${assetUrl('images/cover-1200.jpg')} 1200w" sizes="${sizes}" width="800" height="1280" alt="Cover of The Autonomous Enterprise: How Leaders Build, Govern, and Scale the Agent-Run Company, by Hemanth Reganti" ${loading}>
       </picture>`;
 }
+
+const HERO_COVER_SIZES = '(min-width: 56rem) 20rem, 11rem';
 
 const PORTRAIT_ALT = 'Hemanth Reganti, author of The Autonomous Enterprise, in a blue suit, speaking at a podium';
 
@@ -384,7 +389,7 @@ export function build() {
       ASSET_VERSION: assetVersion,
       JSONLD: page.jsonld ? jsonLd() : '',
       HEAD_EXTRA: page.src === 'index.html'
-        ? `<link rel="preload" as="image" type="image/webp" imagesrcset="${assetUrl('images/cover-400.webp')} 400w, ${assetUrl('images/cover-800.webp')} 800w, ${assetUrl('images/cover-1200.webp')} 1200w" imagesizes="(min-width: 56rem) 30rem, 82vw" fetchpriority="high">\n`
+        ? `<link rel="preload" as="image" type="image/webp" imagesrcset="${assetUrl('images/cover-400.webp')} 400w, ${assetUrl('images/cover-800.webp')} 800w, ${assetUrl('images/cover-1200.webp')} 1200w" imagesizes="${HERO_COVER_SIZES}" fetchpriority="high">\n`
         : page.src === 'frameworks.html'
           ? `<script src="${assetUrl('frameworks.js')}" defer></script>\n`
           : page.bp ? bpScripts + (page.src === 'trace.html' ? `<link rel="stylesheet" href="${assetUrl('trace.css')}">\n<script src="${assetUrl('trace-core.js')}" defer></script>\n<script src="${assetUrl('trace.js')}" defer></script>\n`
@@ -402,17 +407,23 @@ export function build() {
       NAV_IDEAS: page.nav === 'IDEAS' ? ' aria-current="page"' : '',
       NAV_BLUEPRINTS: page.nav === 'BLUEPRINTS' ? ' aria-current="page"' : '',
       BP_SUBNAV: page.bp ? subnav(page.bp) : '',
+      BP_CRUMB: page.bp ? breadcrumb(page.bp) : '',
+      BP_PAGER: page.bp ? pager(page.bp) : '',
       ...bpVars,
       ...grVars,
       GRAPHS_JSON_URL: assetUrl('data/graphs.json'),
       NAV_BOOK: page.nav === 'BOOK' ? ' aria-current="page"' : '',
       NAV_ABOUT: page.nav === 'ABOUT' ? ' aria-current="page"' : '',
-      GUIDE_FAB: page.nav === 'TALK' ? '' : read(join(SRC, 'partials', 'guide-fab.html')).trimEnd(),
+      // The floating button only where no Talk to the book button is already in view on arrival.
+      GUIDE_FAB: NO_FAB.includes(page.path) ? '' : read(join(SRC, 'partials', 'guide-fab.html')).trimEnd(),
+      BODY_CLASS: NO_FAB.includes(page.path) ? '' : ' class="has-fab"',
+      NAV_TALK: page.nav === 'TALK' ? ' aria-current="page"' : '',
       PORTRAIT_BAND: portraitPicture('(min-width: 56rem) 34rem, 90vw'),
+      PORTRAIT_LINE: portraitPicture('(min-width: 40rem) 11rem, 7rem'),
       PORTRAIT_SPEAKING: portraitPicture('(min-width: 56rem) 26rem, 90vw'),
       PORTRAIT_ABOUT: portraitPicture('(min-width: 56rem) 32rem, 90vw'),
       PORTRAIT_THUMB: assetUrl('images/portrait-480.jpg'),
-      COVER_HERO: coverPicture({ priority: true }),
+      COVER_HERO: coverPicture({ priority: true, sizes: HERO_COVER_SIZES }),
       COVER_BOOK: coverPicture({ priority: false }),
       COVER_THUMB: assetUrl('images/cover-400.jpg'),
       SITE_NAME,

@@ -185,12 +185,11 @@ describe('built site', () => {
     expect(h).not.toMatch(/platform\.linkedin\.com|<script[^>]+linkedin/i);
   });
 
-  it('features the thesis and a scrollable strip of five quotes on the home page', () => {
+  it('features the thesis inside the book section on the home page, with the full set on /ideas', () => {
     const h = html(pages[0]);
-    const thesis = h.match(/<section class="section section-paper-2 thesis"[\s\S]*?<\/section>/)![0];
-    expect(thesis).toContain('Autonomy is earned when value compounds faster than risk.');
-    const strip = h.match(/<ul class="quote-strip" tabindex="0"[\s\S]*?<\/ul>/)![0];
-    expect(strip.match(/class="quote-card"/g)).toHaveLength(5);
+    const book = h.match(/<section class="section" id="book"[\s\S]*?<\/section>/)![0];
+    expect(book).toContain('Autonomy is earned when value compounds faster than risk.');
+    expect(book).toContain('What&rsquo;s inside the book');
     expect(h).toContain('href="/ideas/"');
   });
 
@@ -319,17 +318,41 @@ describe('portrait, real cover and guide', () => {
     expect(css).not.toMatch(/\.portrait-img[^}]*border-radius:\s*50%/);
   });
 
-  it('puts an author band with both CTAs right after the thesis on home', () => {
+  it('lays home out as one journey: pitch, start from your role, the book, blueprints, speaking and advisory, the author', () => {
     const h = home();
-    const thesis = h.indexOf('id="thesis"');
-    const author = h.indexOf('id="author"');
-    expect(thesis).toBeGreaterThan(0);
-    expect(author).toBeGreaterThan(thesis);
-    expect(h.slice(thesis, author).match(/<section /g)).toHaveLength(1);
-    const band = h.slice(author, h.indexOf('</section>', author));
+    const order = ['hero-title', 'id="start"', 'id="book"', 'id="blueprints"', 'id="speaking"', 'id="author"'].map((k) => h.indexOf(k));
+    for (const i of order) expect(i).toBeGreaterThan(0);
+    expect([...order].sort((a, b) => a - b)).toEqual(order);
+    const band = h.slice(order[5], h.indexOf('</section>', order[5]));
     expect(band).toContain('Author, speaker and advisor on human-led, agent-operated enterprises.');
-    expect(band).toContain('>Request a talk</a>');
-    expect(band).toContain('>Book an advisory call</a>');
+    expect(band).toContain('href="/about/"');
+  });
+
+  it('gives each role on home a card with three numbered steps that open existing pages', () => {
+    const h = home();
+    const start = h.match(/<section class="section section-paper-2" id="start"[\s\S]*?<\/section>/)![0];
+    const cards = [...start.matchAll(/<li class="role-card">\s*<h3>([^<]+)<\/h3>\s*<ol class="role-steps">([\s\S]*?)<\/ol>/g)];
+    expect(cards.map((c) => c[1])).toEqual(['CEO or board', 'CFO or finance', 'CIO or technology', 'Risk or audit', 'Operations', 'Investor', 'New to agents']);
+    const built = new Set(pages.map((p) => p.path));
+    for (const [, role, steps] of cards) {
+      const hrefs = [...steps.matchAll(/<li><a href="([^"]+)">/g)].map((m) => m[1]);
+      expect(hrefs, role).toHaveLength(3);
+      for (const href of hrefs) {
+        const [path, hash] = href.split('#');
+        expect(built.has(path), `${role}: ${href}`).toBe(true);
+        if (hash) expect(html(pages.find((p) => p.path === path)!), `${role}: ${href}`).toContain(`id="${hash}"`);
+      }
+    }
+  });
+
+  it('keeps one primary action in each page body, and Buy on Amazon as the one on home', () => {
+    for (const p of pages) {
+      const main = html(p).split('<main')[1].split('</main>')[0];
+      expect((main.match(/class="btn btn-primary/g) ?? []).length, p.out).toBeLessThanOrEqual(1);
+    }
+    const main = home().split('<main')[1].split('</main>')[0];
+    expect(main.match(/class="btn btn-primary[^"]*"[^>]*>([^<]+)/)![1]).toBe('Buy on Amazon');
+    expect((main.match(/>Talk to the book</g) ?? []).length).toBe(1);
   });
 
   it('keeps home to six sections and moves the detail to /book', () => {
@@ -342,23 +365,55 @@ describe('portrait, real cover and guide', () => {
     expect(home()).toMatch(/<a class="btn btn-ghost" href="\/talk\/" data-guide-open>Talk to the book<\/a>/);
   });
 
-  it('has one primary header CTA, Talk to the book, going to /contact/, on every page', () => {
+  it('has one primary header CTA, Talk to the book, going to /talk/, on every page', () => {
     for (const p of pages) {
       const header = html(p).split('<header')[1].split('</header>')[0];
       expect(header.match(/btn-primary/g), p.out).toHaveLength(1);
-      expect(header, p.out).toContain('<a class="btn btn-primary header-cta" href="/contact/">Talk to the book</a>');
+      expect(header, p.out).toContain(`<a class="btn btn-primary header-cta" href="/talk/" data-guide-open${p.path === '/talk/' ? ' aria-current="page"' : ''}>Talk to the book</a>`);
     }
   });
 
-  it('adds the floating Talk to the book button to every page except /talk, which embeds the chat', () => {
+  it('shows the floating Talk to the book button only where none is already in view: not on home, /talk or /contact', () => {
     for (const p of pages) {
       const h = html(p);
       expect(h, p.out).toContain('<script src="/assets/guide.js?v=');
-      if (p.out === 'talk/index.html') {
-        expect(h).not.toContain('class="guide-fab"');
-        expect(h).toContain('data-guide-embed');
-      } else expect(h, p.out).toContain('<a class="guide-fab" href="/talk/" data-guide-open');
+      if (['/', '/talk/', '/contact/'].includes(p.path)) {
+        expect(h, p.out).not.toContain('class="guide-fab"');
+        expect(h, p.out).toContain('<body>');
+      } else {
+        expect(h, p.out).toContain('<a class="guide-fab" href="/talk/" data-guide-open');
+        expect(h, p.out).toContain('<body class="has-fab">');
+      }
     }
+    expect(html(byOut('talk/index.html'))).toContain('data-guide-embed');
+    const css = readFileSync(join(DIST, 'assets/styles.css'), 'utf8');
+    expect(css).toMatch(/\.has-fab main \{ padding-bottom: [\d.]+rem; \}/);
+  });
+
+  it('has a compact, accessible menu button for small screens that needs no inline script', () => {
+    for (const p of pages) {
+      const header = html(p).split('<header')[1].split('</header>')[0];
+      expect(header, p.out).toContain('<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>');
+      expect(header, p.out).toContain('<nav class="site-nav" id="site-nav" aria-label="Main">');
+    }
+    const js = readFileSync(join(DIST, 'assets/site.js'), 'utf8');
+    expect(js).toContain("btn.setAttribute('aria-expanded', open ? 'true' : 'false')");
+    expect(js).toContain("e.key === 'Escape'");
+    const css = readFileSync(join(DIST, 'assets/styles.css'), 'utf8');
+    expect(css).toContain('.nav-ready .site-nav { display: none; }');
+    expect(css).toContain('.nav-ready .site-nav.is-open { display: block;');
+  });
+
+  it('keeps focused fields and anchors clear of the sticky header (scroll padding equals the header height)', () => {
+    const css = readFileSync(join(DIST, 'assets/styles.css'), 'utf8');
+    expect(css).toMatch(/html \{ scroll-padding-top: calc\(var\(--header-h\) \+ [\d.]+rem\); \}/);
+    expect(css).toMatch(/:root \{ --header-h: [\d.]+rem; \}/);
+  });
+
+  it('greets once on /talk/: the thesis and the intro in a single bubble', () => {
+    const js = readFileSync(join(DIST, 'assets/guide.js'), 'utf8');
+    expect(js).toContain("this.bubble('guide', OPENING + '\\n\\n' + INTRO);");
+    expect(js.match(/this\.bubble\('guide', (OPENING|INTRO)\)/g)).toBeNull();
   });
 
   it('keeps guide state in sessionStorage only and calls only the same-origin API', () => {

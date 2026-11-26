@@ -9,14 +9,14 @@
 /* room frame */
 .or { background: var(--white); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; box-shadow: 0 18px 50px -28px rgba(0, 0, 0, 0.45); }
 .or-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.75rem 1rem; background: var(--ink); color: var(--paper); padding: 0.85rem 1.1rem; }
-.or-k { font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; margin: 0; font-size: 1.05rem; }
+.or-k { font-family: var(--font-display); letter-spacing: 0.01em; font-weight: 700; margin: 0; font-size: 1.05rem; }
 .or-k-dark { color: var(--ink); font-size: 0.95rem; }
 .or-label { margin: 0.1rem 0 0; font-size: 0.85rem; color: var(--muted-on-ink); }
 .or-ctl { display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center; }
 .or-top .pill, .or-top .seg { background: transparent; color: var(--paper); border-color: var(--line-on-ink); }
 .or-top .or-start { background: var(--orange); color: var(--ink); border-color: var(--orange); font-weight: 700; min-width: 6rem; }
 .or-top .seg[aria-pressed="true"] { background: var(--paper); color: var(--ink); border-color: var(--paper); }
-.or-status { font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; padding: 0.3rem 0.65rem; border-radius: 999px; border: 1px solid var(--line-on-ink); color: var(--muted-on-ink); }
+.or-status { font-size: 0.8rem; letter-spacing: 0.01em; font-weight: 700; padding: 0.3rem 0.65rem; border-radius: 999px; border: 1px solid var(--line-on-ink); color: var(--muted-on-ink); }
 .or-status.or-run { color: #9fe0b5; border-color: #2f7a4c; }
 .or-status.or-wait { color: var(--ink); background: #ffcf6e; border-color: #ffcf6e; animation: orPulse 1.4s ease-in-out infinite; }
 .or-status.or-done { color: var(--ink); background: var(--paper); }
@@ -47,7 +47,7 @@
 @media (max-width: 40rem) { .or-stream { min-height: 28rem; padding: 0.75rem; } }
 .or-empty { margin: auto; max-width: 30rem; text-align: center; color: var(--muted); }
 .or-empty b { color: var(--ink); }
-.or-phase { display: flex; align-items: center; gap: 0.6rem; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: var(--orange-text); margin-top: 0.4rem; }
+.or-phase { display: flex; align-items: center; gap: 0.6rem; font-size: 0.72rem; letter-spacing: 0.01em; font-weight: 700; color: var(--orange-text); margin-top: 0.4rem; }
 .or-phase::before, .or-phase::after { content: ""; flex: 1; height: 1px; background: var(--line); }
 .or-msg { display: grid; grid-template-columns: 2.1rem minmax(0, 1fr); gap: 0.55rem; align-items: start; animation: orIn 0.25s ease-out; }
 .or-msg-b { background: var(--white); border: 1px solid var(--line); border-radius: 4px 12px 12px 12px; padding: 0.5rem 0.75rem; min-width: 0; }
@@ -65,7 +65,7 @@
 .or-tool[open] summary::after { content: "\2212"; }
 .or-tool summary:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
 .or-tool .or-av { width: 1.5rem; height: 1.5rem; font-size: 0.7rem; }
-.or-tool-k { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: #f2a07f; font-weight: 700; }
+.or-tool-k { font-size: 0.7rem; letter-spacing: 0.01em; color: #f2a07f; font-weight: 700; }
 .or-tool code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.8rem; overflow-wrap: anywhere; }
 .or-tool pre { margin: 0.5rem 0 0.2rem; white-space: pre-wrap; font-size: 0.8rem; color: #e9e6df; border-top: 1px solid var(--line-on-ink); padding-top: 0.45rem; overflow-wrap: anywhere; }
 .or-checks { margin-left: 2.65rem; display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; animation: orIn 0.25s ease-out; }
@@ -77,7 +77,7 @@
 .or-chip-c.bad { background: #fbe0dc; border-color: #e3a196; color: var(--danger); }
 .or-dec { margin: 0.4rem 0 0.4rem 2.65rem; background: var(--white); border: 2px solid var(--orange); border-radius: 10px; padding: 0.9rem 1rem; box-shadow: 0 12px 30px -18px rgba(178, 58, 11, 0.7); animation: orSlide 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2); }
 .or-dec-scorer { border-color: var(--danger); }
-.or-dec-to { margin: 0; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: var(--orange-text); display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+.or-dec-to { margin: 0; font-size: 0.75rem; letter-spacing: 0.01em; font-weight: 700; color: var(--orange-text); display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
 .or-dec-door { background: var(--ink); color: var(--paper); border-radius: 999px; padding: 0.1rem 0.5rem; letter-spacing: 0.04em; }
 .or-dec-t { margin: 0.35rem 0 0.2rem; font-family: var(--font-display); font-size: 1.3rem; line-height: 1.2; text-transform: none; }
 .or-dec-b { margin: 0 0 0.6rem; color: var(--muted); }
@@ -94,7 +94,7 @@
 
 /* instruction bar */
 .or-input { border-top: 1px solid var(--line); padding: 0.75rem 1rem 0.9rem; background: var(--white); }
-.or-input-k { margin: 0 0 0.45rem; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
+.or-input-k { margin: 0 0 0.45rem; font-size: 0.75rem; letter-spacing: 0.01em; font-weight: 700; color: var(--muted); }
 .or-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; }
 .or-chip { font-size: 0.84rem; }
 .or-form { display: flex; gap: 0.4rem; margin-top: 0.55rem; }
@@ -109,7 +109,7 @@
 .or-edge-back { stroke: var(--orange); stroke-dasharray: 5 4; }
 .or-arrh { fill: var(--ink); }
 .or-ring-k { font-family: var(--font-display); font-size: 12px; letter-spacing: 0.14em; fill: var(--orange-text); font-weight: 700; }
-.or-ring-t { font-family: var(--font-display); font-size: 19px; fill: var(--ink); text-transform: uppercase; font-weight: 700; }
+.or-ring-t { font-family: var(--font-display); font-size: 19px; fill: var(--ink); font-weight: 700; }
 .or-rn { cursor: pointer; outline: none; }
 .or-rn circle { fill: var(--white); stroke: var(--ink); stroke-width: 2; transition: fill 0.25s, stroke 0.25s; }
 .or-rn-h circle { stroke: var(--orange); stroke-width: 2.5; }
@@ -124,7 +124,7 @@
 .or-step-e { color: var(--muted); font-size: 0.8rem; }
 .or-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.4rem; }
 .or-m { border: 1px solid var(--line); border-top: 3px solid var(--ink); border-radius: var(--radius); padding: 0.45rem 0.5rem; display: grid; gap: 0.1rem; min-width: 0; }
-.or-m span { font-size: 0.66rem; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
+.or-m span { font-size: 0.66rem; letter-spacing: 0.01em; font-weight: 700; color: var(--muted); }
 .or-m b { font-family: var(--font-display); font-size: 1.25rem; line-height: 1.1; overflow-wrap: anywhere; }
 .or-m small { font-size: 0.7rem; color: var(--muted); }
 .or-m.bad { border-top-color: var(--danger); background: #fdf1ef; }
@@ -177,7 +177,7 @@
 .lp-card { background: var(--white); border: 1px solid var(--line); border-top: 4px solid var(--ink); border-radius: var(--radius); padding: 1rem 1.1rem; display: grid; gap: 0.4rem; align-content: start; font-size: 0.95rem; }
 .lp-card h3 { margin: 0; font-size: 1.1rem; }
 .lp-card p { margin: 0; }
-.lp-card-tag { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--orange-text); }
+.lp-card-tag { font-size: 0.72rem; letter-spacing: 0.01em; font-weight: 700; color: var(--orange-text); }
 .lp-src { font-size: 0.85rem; color: var(--muted); }
 .lp-seats { display: grid; gap: 0.5rem; padding-left: 1.2rem; max-width: 68ch; margin: 1rem 0; }
 .cta-row .more { margin-left: 0.5rem; }
@@ -211,7 +211,7 @@
 .or-dec-goal { border-color: var(--ink); }
 .or-input-k small { text-transform: none; letter-spacing: 0; font-weight: 400; margin-left: 0.3rem; }
 .or-rails { display: flex; flex-wrap: wrap; gap: 0.3rem; }
-.or-rails-k { flex-basis: 100%; margin: 0; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
+.or-rails-k { flex-basis: 100%; margin: 0; font-size: 0.72rem; letter-spacing: 0.01em; font-weight: 700; color: var(--muted); }
 .or-rails-k small { text-transform: none; letter-spacing: 0; font-weight: 400; }
 .or-dv { fill: var(--white); stroke: var(--ink); stroke-width: 1.5; }
 .or-dx { stroke: var(--danger); stroke-width: 2; }

@@ -1,19 +1,21 @@
 <section class="page-head bp-head" aria-labelledby="page-title">
   <div class="container">
-    <p class="eyebrow">Blueprints &middot; Operations</p>
+    {{BP_CRUMB}}
     <h1 id="page-title">Operating agents: audits, observability, reliability</h1>
     <p class="lead">Once agents run, someone must see what they do, prove it to an auditor and stop them fast. This page shows how, from the book, and how changes reach production.</p>
-    <ul class="sa-jump" aria-label="On this page">
-      <li><a href="#observe">What to trace</a></li>
-      <li><a href="#dashboards">Dashboards</a></li>
-      <li><a href="#registry">Registry</a></li>
-      <li><a href="#audits">Audits</a></li>
-      <li><a href="#guardians">Who watches</a></li>
-      <li><a href="#killswitch">Kill switch</a></li>
-      <li><a href="#reliability">Reliability</a></li>
-      <li><a href="#pipelines">Pipelines and work</a></li>
-      <li><a href="/blueprints/organization/">Organization</a></li>
-    </ul>
+    <details class="onpage" data-onpage>
+      <summary>On this page</summary>
+      <ul class="sa-jump" aria-label="On this page">
+        <li><a href="#observe">What to trace</a></li>
+        <li><a href="#dashboards">Dashboards</a></li>
+        <li><a href="#registry">Registry</a></li>
+        <li><a href="#audits">Audits</a></li>
+        <li><a href="#guardians">Who watches</a></li>
+        <li><a href="#killswitch">Kill switch</a></li>
+        <li><a href="#reliability">Reliability</a></li>
+        <li><a href="#pipelines">Pipelines and work</a></li>
+      </ul>
+    </details>
   </div>
 </section>
 {{BP_SUBNAV}}
@@ -404,3 +406,5 @@
     <p class="cta-row"><a class="btn btn-dark" href="/blueprints/loops/">See a bounded improvement loop</a> <a class="btn btn-ghost" href="/controls/">Open the controls library</a></p>
   </div>
 </section>
+
+{{BP_PAGER}}
