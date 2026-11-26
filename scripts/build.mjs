@@ -123,6 +123,13 @@ export const PAGES = [
     sitemap: true, priority: '0.7',
   },
   {
+    src: 'loops.html', out: 'blueprints/loops/index.html', path: '/blueprints/loops/', nav: 'BLUEPRINTS', bp: 'loops',
+    title: 'Self-Improving Loops for Agents and Workflows | Human-Led Enterprise',
+    description:
+      'How a human-led, agent-operated enterprise improves its own agents safely: expand, guard, decide, measure, contract, reframe. A live operations room where you make the calls.',
+    sitemap: true, priority: '0.7',
+  },
+  {
     src: 'leaders.html', out: 'leaders/index.html', path: '/leaders/',
     title: 'Questions Leaders Ask About AI Agents | Human-Led Enterprise',
     description:
@@ -310,7 +317,8 @@ export function build() {
         ? `<link rel="preload" as="image" type="image/webp" imagesrcset="${assetUrl('images/cover-400.webp')} 400w, ${assetUrl('images/cover-800.webp')} 800w, ${assetUrl('images/cover-1200.webp')} 1200w" imagesizes="(min-width: 56rem) 30rem, 82vw" fetchpriority="high">\n`
         : page.src === 'frameworks.html'
           ? `<script src="${assetUrl('frameworks.js')}" defer></script>\n`
-          : page.bp ? bpScripts + (page.src === 'trace.html' ? `<link rel="stylesheet" href="${assetUrl('trace.css')}">\n<script src="${assetUrl('trace-core.js')}" defer></script>\n<script src="${assetUrl('trace.js')}" defer></script>\n` : '')
+          : page.bp ? bpScripts + (page.src === 'trace.html' ? `<link rel="stylesheet" href="${assetUrl('trace.css')}">\n<script src="${assetUrl('trace-core.js')}" defer></script>\n<script src="${assetUrl('trace.js')}" defer></script>\n`
+            : page.src === 'loops.html' ? `<link rel="stylesheet" href="${assetUrl('loops.css')}">\n<script src="${assetUrl('loops-core.js')}" defer></script>\n<script src="${assetUrl('loops.js')}" defer></script>\n` : '')
             : page.src === 'leaders.html'
               ? `<link rel="stylesheet" href="${assetUrl('leaders.css')}">\n<script src="${assetUrl('leaders.js')}" defer></script>\n`
               : '',

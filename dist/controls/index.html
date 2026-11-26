@@ -30,14 +30,14 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/assets/fonts/oswald-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
-<script src="/assets/data/controls.js?v=19b5fa020b" defer></script>
+<script src="/assets/data/controls.js?v=e0d936f9ff" defer></script>
 <script src="/assets/data/layers.js?v=7c10827ab4" defer></script>
 <script src="/assets/data/workflows.js?v=357666b3fd" defer></script>
 <script src="/assets/data/architecture.js?v=ed9260c2c4" defer></script>
 <script src="/assets/blueprints.js?v=f2274eba03" defer></script>
-<link rel="stylesheet" href="/assets/styles.css?v=955cf713f8">
-<script src="/assets/site.js?v=955cf713f8" defer></script>
-<script src="/assets/guide.js?v=955cf713f8" defer></script>
+<link rel="stylesheet" href="/assets/styles.css?v=5dcafa399f">
+<script src="/assets/site.js?v=5dcafa399f" defer></script>
+<script src="/assets/guide.js?v=5dcafa399f" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -64,7 +64,7 @@
   <div class="container">
     <p class="eyebrow">Blueprints &middot; Controls</p>
     <h1 id="page-title">Controls library</h1>
-    <p class="lead">72 controls for agents, voice, IoT and physical AI. Each one names its purpose, how it works, the evidence an auditor asks for and its public framework mappings.</p>
+    <p class="lead">75 controls for agents, voice, IoT and physical AI. Each one names its purpose, how it works, the evidence an auditor asks for and its public framework mappings.</p>
   </div>
 </section>
 <nav class="bp-subnav" aria-label="Blueprints">
@@ -76,6 +76,7 @@
       <li><a href="/controls/" aria-current="page">Controls</a></li>
       <li><a href="/designer/">Designer</a></li>
       <li><a href="/blueprints/trace/">Trace viewer</a></li>
+      <li><a href="/blueprints/loops/">Improvement loops</a></li>
     </ul>
   </div>
 </nav>
@@ -260,6 +261,13 @@
   <dl class="ctl-dl"><div><dt>How it works</dt><dd>Log the agent decision and the human decision for the same case. Compare them before go-live.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Shadow comparison report signed by the owner.</dd></div><div><dt>Layers aligned</dt><dd>Operational, Application</dd></div></dl>
   <ul class="ctl-map"><li><b>NIST AI RMF</b> Measure</li><li><b>EU AI Act</b> Art. 9 Risk management</li></ul>
 </article>
+<article class="ctl" id="MR-10" data-cat="MR" data-type="preventive" data-part="H10" data-min="1" data-applies="agents voice iot physical" data-layers="app reg be">
+  <header><span class="ctl-id">MR-10</span><h3>Scorer isolation for improvement loops</h3></header>
+  <p class="ctl-purpose">An improvement loop may never change the scorer, the test set or the guardrails that judge it.</p>
+  <ul class="ctl-tags"><li>Model risk and evals</li><li class="t-preventive">preventive</li><li>Evaluation and kill switch</li><li>Required from L1</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The scorer and its test set live outside the loop, read-only, with their own owner and release path.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Scorer version per evaluation. Access list showing the loop has no write path to the scorer.</dd></div><div><dt>Layers aligned</dt><dd>Application, Regulatory and statutory, Technical: Backend</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Measure, Govern</li><li><b>SOX/COSO ITGC</b> SoD, Change management</li></ul>
+</article>
 <article class="ctl" id="PCS-01" data-cat="PCS" data-type="preventive" data-part="H6" data-min="1" data-applies="agents voice" data-layers="app be">
   <header><span class="ctl-id">PCS-01</span><h3>Untrusted content is data</h3></header>
   <p class="ctl-purpose">Treat emails, documents, web pages and transcripts as data. Never treat them as instructions.</p>
@@ -379,6 +387,13 @@
   <dl class="ctl-dl"><div><dt>How it works</dt><dd>The system measures time on card and approval rate per approver.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Approver analytics. Coaching records.</dd></div><div><dt>Layers aligned</dt><dd>Technical: Frontend, Operational</dd></div></dl>
   <ul class="ctl-map"><li><b>NIST AI RMF</b> Measure</li><li><b>EU AI Act</b> Art. 14 Human oversight</li></ul>
 </article>
+<article class="ctl" id="HO-06" data-cat="HO" data-type="preventive" data-part="H7" data-min="1" data-applies="agents voice iot physical" data-layers="reg ops fin">
+  <header><span class="ctl-id">HO-06</span><h3>Named approval for one-way-door changes</h3></header>
+  <p class="ctl-purpose">A named person approves any change that is hard to undo before it ships.</p>
+  <ul class="ctl-tags"><li>Human oversight</li><li class="t-preventive">preventive</li><li>Verification and approval</li><li>Required from L1</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The loop classifies each change by materiality and reversibility. One-way doors wait in an approval queue.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Change record with door type, approver name and date. Rollback plan for two-way doors.</dd></div><div><dt>Layers aligned</dt><dd>Regulatory and statutory, Operational, Financial</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Govern, Manage</li><li><b>EU AI Act</b> Art. 14 Human oversight</li><li><b>SOX/COSO ITGC</b> Change management</li></ul>
+</article>
 <article class="ctl" id="MON-01" data-cat="MON" data-type="detective" data-part="H10" data-min="3" data-applies="agents voice iot physical" data-layers="ops app">
   <header><span class="ctl-id">MON-01</span><h3>Online quality monitoring</h3></header>
   <p class="ctl-purpose">Track error, reversal and override rates for each step in production.</p>
@@ -434,6 +449,13 @@
   <ul class="ctl-tags"><li>Decision trace and audit</li><li class="t-detective">detective</li><li>Registry and lifecycle</li><li>Required from L1</li><li>Agents, Voice, IoT, Physical AI</li></ul>
   <dl class="ctl-dl"><div><dt>How it works</dt><dd>The registry records each change with author, reviewer, reason and release time.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Change log extract. Link from each change to its eval results.</dd></div><div><dt>Layers aligned</dt><dd>Application, Regulatory and statutory</dd></div></dl>
   <ul class="ctl-map"><li><b>NIST AI RMF</b> Govern</li><li><b>EU AI Act</b> Art. 12 Record-keeping</li><li><b>SOX/COSO ITGC</b> Change management</li></ul>
+</article>
+<article class="ctl" id="TRC-05" data-cat="TRC" data-type="detective" data-part="H9" data-min="1" data-applies="agents voice iot physical" data-layers="reg app data">
+  <header><span class="ctl-id">TRC-05</span><h3>Variant lineage and archive</h3></header>
+  <p class="ctl-purpose">Keep every variant an improvement loop proposed, with its parent, change, scores and decision.</p>
+  <ul class="ctl-tags"><li>Decision trace and audit</li><li class="t-detective">detective</li><li>Decision trace</li><li>Required from L1</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The archive is append-only. Losers are archived or retired, never deleted. Winners get a lineage review.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Lineage per champion. Lineage review records. Archive retention report.</dd></div><div><dt>Layers aligned</dt><dd>Regulatory and statutory, Application, Technical: Data</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Govern, Measure</li><li><b>EU AI Act</b> Art. 12 Record-keeping</li></ul>
 </article>
 <article class="ctl" id="RES-01" data-cat="RES" data-type="corrective" data-part="H10" data-min="2" data-applies="agents voice iot physical" data-layers="ops reg fe">
   <header><span class="ctl-id">RES-01</span><h3>Kill switch at three scopes</h3></header>

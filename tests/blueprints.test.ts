@@ -151,12 +151,13 @@ describe('alignment layers and architecture data', () => {
 });
 
 describe('built Blueprints pages', () => {
-  it('builds the hub and four tools with sub-nav, scripts and illustrative labels', () => {
-    expect(bpPages.map((p) => p.path)).toEqual(['/blueprints/', '/architecture/', '/workflows/', '/controls/', '/designer/', '/blueprints/trace/']);
+  it('builds the hub and its tools with sub-nav, scripts and illustrative labels', () => {
+    expect(bpPages.map((p) => p.path)).toEqual(['/blueprints/', '/architecture/', '/workflows/', '/controls/', '/designer/', '/blueprints/trace/', '/blueprints/loops/']);
     for (const p of bpPages) {
       const h = html(p.out);
       expect(h, p.out).toContain('<nav class="bp-subnav" aria-label="Blueprints">');
-      for (const href of ['/architecture/', '/workflows/', '/controls/', '/designer/']) expect(h).toContain(`href="${href}"`);
+      for (const href of ['/architecture/', '/workflows/', '/controls/', '/designer/', '/blueprints/trace/', '/blueprints/loops/']) expect(h).toContain(`href="${href}"`);
+      expect(h, p.out).toContain('<li><a href="/blueprints/loops/"' + (p.bp === 'loops' ? ' aria-current="page"' : '') + '>Improvement loops</a></li>');
       expect(h, p.out).toMatch(/<a href="\/blueprints\/" aria-current="page">Blueprints<\/a>/);
       for (const f of ['data/controls.js', 'data/layers.js', 'data/workflows.js', 'data/architecture.js', 'blueprints.js']) expect(h, p.out).toMatch(new RegExp(`<script src="/assets/${f}\\?v=[0-9a-f]{10}" defer></script>`));
       expect(h, p.out).toMatch(/[Ii]llustrative/);
@@ -253,5 +254,158 @@ describe('decision trace viewer', () => {
     expect(html('blueprints/index.html')).toContain('href="/leaders/"');
     expect(html('leaders/index.html')).toContain('href="/blueprints/trace/"');
     expect(AE.componentById.H9.link.href).toBe('/blueprints/trace/');
+  });
+});
+
+describe('self-improving loops: live operations room', () => {
+  const ctx: { window: Record<string, unknown> } = { window: {} };
+  vm.createContext(ctx);
+  vm.runInContext(readFileSync(join(ROOT, 'src/assets/loops-core.js'), 'utf8'), ctx);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const Lp: any = (ctx.window.AE as { loops: unknown }).loops;
+  type D = { kind: string };
+  const policy = (m: Record<string, string>) => (d: D) => m[d.kind] || 'reject';
+  const strip = (r: { log: unknown[] }) => JSON.stringify(r.log);
+
+  it('builds /blueprints/loops/ with its own CSS and scripts, sub-nav, label and static fallback', () => {
+    const h = html('blueprints/loops/index.html');
+    expect(h).toMatch(/<link rel="stylesheet" href="\/assets\/loops\.css\?v=[0-9a-f]{10}">/);
+    expect(h).toMatch(/<script src="\/assets\/loops-core\.js\?v=[0-9a-f]{10}" defer><\/script>/);
+    expect(h).toMatch(/<script src="\/assets\/loops\.js\?v=[0-9a-f]{10}" defer><\/script>/);
+    expect(h).toContain('<h1 id="page-title">Self-improving loops</h1>');
+    expect(h).toContain('<a href="/blueprints/loops/" aria-current="page">Improvement loops</a>');
+    expect(h).toContain('data-lp="room"');
+    expect(h).toContain('Simulated agents, illustrative numbers.');
+    expect(h).toContain('<noscript>');
+    expect(h.match(/<ol class="lp-steps-static">([\s\S]*?)<\/ol>/)![1].match(/<li>/g)).toHaveLength(6);
+    expect(h).toContain('href="/frameworks/#ceiling"');
+    for (const href of ['/leaders/', '/controls/#MR-10', '/blueprints/trace/']) expect(h).toContain(`href="${href}"`);
+    expect(h).not.toMatch(/<(select|input|textarea)\b/);
+  });
+
+  it('links out only to the allowed citation sources, in a new tab with noopener', () => {
+    const h = html('blueprints/loops/index.html').split('<main')[1].split('</main>')[0];
+    const ext = [...h.matchAll(/<a [^>]*href="(https?:[^"]+)"[^>]*>/g)].filter((m) => !m[1].startsWith('https://humanledenterprise.com') && !m[1].includes('linkedin.com'));
+    const allowed = ['https://sakana.ai/dgm/', 'https://arxiv.org/abs/2609.31186', 'https://s2.q4cdn.com/299287126/files/doc_financials/annual/2015-Letter-to-Shareholders.PDF',
+      'https://evolutionaryarchitecture.com/precis.html', 'https://deepmind.google/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms'];
+    expect(ext.map((m) => m[1]).sort()).toEqual([...allowed].sort());
+    for (const m of ext) { expect(m[0]).toContain('rel="noopener"'); expect(m[0]).toContain('target="_blank"'); }
+  });
+
+  it('is linked from the hub, the sub-nav and the leaders page; its controls exist in the library', () => {
+    expect(html('blueprints/index.html')).toContain('href="/blueprints/loops/"');
+    expect(html('leaders/index.html')).toContain('href="/blueprints/loops/"');
+    for (const id of ['MR-10', 'TRC-05', 'HO-06']) expect(AE.controlById[id], id).toBeTruthy();
+    for (const s of Lp.STEPS) for (const id of s.controls) expect(AE.controlById[id], `${s.id} ${id}`).toBeTruthy();
+    expect(Lp.STEPS.map((s: { name: string }) => s.name)).toEqual(['Expand', 'Guard', 'Decide', 'Measure', 'Contract', 'Reframe']);
+    for (const s of Lp.STEPS) for (const sentence of `${s.what} ${s.evidence}`.split(/(?<=\.)\s/)) expect(words(sentence), sentence).toBeLessThanOrEqual(25);
+  });
+
+  it('is deterministic: same seed and same choices give the same event stream', () => {
+    const a = Lp.play(7, policy({ door: 'approve' })), b = Lp.play(7, policy({ door: 'approve' }));
+    expect(strip(a)).toBe(strip(b));
+    expect(a.done).toBe(true);
+    expect(a.gen).toBe(Lp.MAX_GEN);
+    expect(strip(Lp.play(8, policy({ door: 'approve' })))).not.toBe(strip(a));
+    const types = new Set(a.log.map((e: { t: string }) => e.t));
+    for (const t of ['msg', 'tool', 'checks', 'phase', 'variant', 'metric', 'decision', 'end']) expect(types.has(t), t).toBe(true);
+    const agents = new Set(a.log.filter((e: { t: string }) => e.t === 'msg').map((e: { a: string }) => e.a));
+    for (const ag of ['proposer', 'harness', 'supervisor', 'evaluator', 'archivist', 'you']) expect(agents.has(ag), ag).toBe(true);
+  });
+
+  it('brings one-way doors to the visitor as decision cards, and the answer changes what happens', () => {
+    for (const seed of [7, 42, 2026]) {
+      const yes = Lp.play(seed, policy({ door: 'approve' })), no = Lp.play(seed, policy({}));
+      const card = yes.log.find((e: { t: string; kind: string; title: string }) => e.t === 'decision' && e.kind === 'door' && /auto-approve/.test(e.title));
+      expect(card.door).toBe('one-way');
+      expect(card.title).toMatch(/^Approve: raise the auto-approve limit to \$5,000\?$/);
+      expect(card.options.map((o: { id: string }) => o.id)).toEqual(['approve', 'reject', 'why']);
+      expect(yes.byId[card.variant].status).not.toBe('rejected');
+      expect(no.byId[card.variant].status).toBe('rejected');
+      expect(strip(yes)).not.toBe(strip(no));
+    }
+  });
+
+  it('streams reasoning and evidence when the visitor asks why, then asks again', () => {
+    const r = Lp.create(7);
+    let d = null; let guard = 0;
+    while (!d && guard++ < 500) { Lp.next(r); d = r.waiting; }
+    const before = r.log.length;
+    Lp.answer(r, 'why');
+    const after: { t: string; a?: string; text?: string; again?: boolean; options?: { id: string }[] }[] = [];
+    let e; while ((e = Lp.next(r))) after.push(e);
+    expect(r.log.length).toBeGreaterThan(before);
+    expect(after.filter((x) => x.t === 'msg').some((x) => /Reasoning/.test(x.text!))).toBe(true);
+    expect(after.filter((x) => x.t === 'msg').some((x) => /Evidence/.test(x.text!))).toBe(true);
+    const again = after[after.length - 1];
+    expect(again.t).toBe('decision'); expect(again.again).toBe(true);
+    expect(again.options!.map((o) => o.id)).toEqual(['approve', 'reject']);
+  });
+
+  it('blocks the evaluator edit by default; overriding it lifts the score, sinks the real outcome, and lineage review reverts it', () => {
+    for (const seed of [7, 42, 2026]) {
+      const locked = Lp.play(seed, policy({ door: 'approve' }));
+      const card = locked.log.find((e: { t: string; kind: string }) => e.t === 'decision' && e.kind === 'scorer');
+      expect(card, String(seed)).toBeTruthy();
+      expect(locked.byId[card.variant].status).toBe('blocked');
+      expect(locked.caught).toBe(false);
+      expect(locked.log.some((e: { t: string; items?: { id: string; pass: boolean }[] }) => e.t === 'checks' && e.items!.some((i) => i.id === 'scorer' && !i.pass))).toBe(true);
+
+      const hacked = Lp.play(seed, policy({ door: 'approve', scorer: 'approve' }));
+      expect(hacked.caught).toBe(true);
+      const h = hacked.history.filter((x: { goal: string }) => x.goal === 'cost');
+      const at = h.findIndex((x: { gen: number }) => x.gen === hacked.hackAt);
+      const rev = h.findIndex((x: { note: string }) => x.note === 'Reverted');
+      expect(rev, String(seed)).toBeGreaterThan(at);
+      const pre = h[at - 1], peak = h[rev - 1];
+      expect(peak.score, `score improves (cost falls) ${seed}`).toBeLessThan(pre.score);
+      expect(peak.real, `real outcome worsens (cost rises) ${seed}`).toBeGreaterThan(pre.real);
+      expect(Math.abs(h[rev].score - h[rev].real)).toBeLessThan(0.3);
+      expect(hacked.log.some((e: { t: string; name: string }) => e.t === 'tool' && e.name === 'lineage_review')).toBe(true);
+    }
+  });
+
+  it('lets the visitor reframe the goal in the monthly meeting and by instruction', () => {
+    const keep = Lp.play(7, policy({})), sw = Lp.play(7, policy({ reframe: 'switch' }));
+    expect(keep.log.some((e: { t: string; step: string }) => e.t === 'phase' && e.step === 'reframe')).toBe(true);
+    expect(keep.goal).toBe('cost');
+    expect(sw.goal).toBe('fpr');
+    const r = Lp.create(7);
+    for (let i = 0; i < 20; i++) Lp.next(r);
+    expect(Lp.instruct(r, 'Reframe the goal to first-pass resolution')).toBe('goal');
+    expect(r.goal).toBe('fpr');
+    const ev = Lp.next(r);
+    expect(ev.t).toBe('msg'); expect(ev.a).toBe('you');
+  });
+
+  it('answers the instruction chips in real time and changes later behaviour', () => {
+    expect(Lp.CHIPS.map((c: { id: string }) => c.id)).toEqual(['cheaper', 'fairness', 'goal', 'lineage']);
+    expect(Lp.match('try something cheaper')).toBe('cheaper');
+    expect(Lp.match('tighten fairness please')).toBe('fairness');
+    expect(Lp.match('show lineage')).toBe('lineage');
+    expect(Lp.match('make coffee')).toBeNull();
+    const r = Lp.create(7);
+    for (let i = 0; i < 6; i++) Lp.next(r);
+    Lp.instruct(r, 'cheaper');
+    const reply = [Lp.next(r), Lp.next(r)];
+    expect(reply[0].a).toBe('you'); expect(reply[1].a).toBe('proposer');
+    let g = 0; while (r.gen < 1 && g++ < 200) { if (!Lp.next(r) && r.waiting) Lp.answer(r, 'reject'); }
+    while (Lp.next(r)) { /* drain */ }
+    expect(r.variants.some((v: { mutation: string }) => v.mutation === 'small')).toBe(true);
+    const f = Lp.create(7); Lp.next(f);
+    Lp.instruct(f, 'fairness');
+    expect(f.settings.fairMax).toBeLessThan(3);
+    const u = Lp.create(7); Lp.next(u);
+    Lp.instruct(u, 'make coffee');
+    const msgs = [Lp.next(u), Lp.next(u)];
+    expect(msgs[1].a).toBe('supervisor');
+  });
+
+  it('makes no network calls, model calls or storage, and writes no inline styles', () => {
+    for (const f of ['loops-core.js', 'loops.js']) {
+      const js = readFileSync(join(ROOT, 'src/assets', f), 'utf8');
+      expect(js, f).not.toMatch(/fetch\(|XMLHttpRequest|sendBeacon|WebSocket|EventSource|localStorage|sessionStorage|indexedDB|document\.cookie|import\(|https?:\/\/(?!www\.w3\.org\/2000\/svg)/);
+      expect(js, f).not.toMatch(/style="/);
+    }
   });
 });

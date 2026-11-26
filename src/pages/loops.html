@@ -1,0 +1,98 @@
+<section class="page-head bp-head" aria-labelledby="page-title">
+  <div class="container">
+    <p class="eyebrow">Blueprints &middot; Improvement loops</p>
+    <h1 id="page-title">Self-improving loops</h1>
+    <p class="lead">Agents propose improvements. Fitness checks guard every change. People own the one-way doors and the goal.</p>
+  </div>
+</section>
+{{BP_SUBNAV}}
+
+<section class="section bp-section lp-room-section" id="room" aria-labelledby="room-title">
+  <div class="container">
+    <p class="eyebrow">Live operations room</p>
+    <h2 id="room-title" class="h-sm">Watch agents improve a workflow. You make the calls.</h2>
+    <p class="lp-intro">Five simulated agents improve accounts-payable exception handling in real time. They expand, guard, decide, measure and contract. You play the AP process owner: one-way doors come to you, and you run the monthly reframe.</p>
+    <div class="bp-ix" hidden><div data-lp="room"></div></div>
+    <noscript><p class="fw-note">Turn on JavaScript to run the operations room. It runs in your browser only. Nothing is sent or stored.</p></noscript>
+    <div class="lp-static" data-lp-static="room">
+      <h3 class="lp-h3">The six steps</h3>
+      <ol class="lp-steps-static">
+        <li><b>1 Expand.</b> The Proposer agent suggests two or three variants: a prompt, a tool, a workflow step or a threshold.</li>
+        <li><b>2 Guard.</b> The guardrail harness runs fitness checks. A change that breaks a protected characteristic stops here.</li>
+        <li><b>3 Decide.</b> Two-way doors ship with an undo. One-way doors go to a named person.</li>
+        <li><b>4 Measure.</b> The Evaluator scores each variant against one goal number. Its scorer is locked outside the loop.</li>
+        <li><b>5 Contract.</b> The Archivist keeps the winner, archives the losers and retires what nobody uses.</li>
+        <li><b>6 Reframe.</b> Each month, people question the goal, the checks and the playbook.</li>
+      </ol>
+      <h3 class="lp-h3">A short excerpt from a run</h3>
+      <ol class="lp-transcript">
+        <li><b>Proposer agent:</b> Generation 2. Three variants. G2-3 raises the auto-approve limit to $5,000.</li>
+        <li><b>Guardrail harness:</b> Reversal rate, policy breaches, fairness gap and audit trace: all pass.</li>
+        <li><b>Supervisor agent:</b> G2-3 is a one-way door. Routing it to you, the AP process owner.</li>
+        <li><b>Proposer agent:</b> Generation 4. G4-3 edits the evaluator to count escalations as resolved.</li>
+        <li><b>Guardrail harness:</b> Blocked by scorer isolation, control MR-10. Only a person can override the lock.</li>
+        <li><b>Archivist:</b> If the lock is overridden, the score rises while the real outcome falls. The lineage review catches it and reverts.</li>
+      </ol>
+    </div>
+    <p class="fw-note">Simulated agents, illustrative numbers. A scripted engine runs in your browser. It makes no model calls. Related controls: <a class="cid" href="/controls/#MR-10">MR-10</a> <a class="cid" href="/controls/#TRC-05">TRC-05</a> <a class="cid" href="/controls/#HO-06">HO-06</a>.</p>
+  </div>
+</section>
+
+<section class="section section-paper-2 bp-section" id="doors" aria-labelledby="doors-title">
+  <div class="container fw-body">
+    <p class="eyebrow">One-way and two-way doors</p>
+    <h2 id="doors-title" class="h-sm">Which changes come to a person</h2>
+    <p>In the run, two-way doors ship behind an undo. One-way doors arrive as decision cards. The line between them is the book&rsquo;s ceiling: <a href="/frameworks/#ceiling">materiality times reversibility</a>. Low materiality and easy to undo runs fast, up to L4. High materiality or hard to undo goes to a named person (<a class="cid" href="/controls/#HO-06">HO-06</a>).</p>
+    <details class="lp-more">
+      <summary>Ten example changes, sorted</summary>
+      <div class="fw-table-wrap">
+        <table class="fw-table">
+          <thead><tr><th scope="col">Change</th><th scope="col">Door</th><th scope="col">Why</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Reword an agent&rsquo;s reply template</th><td>Two-way</td><td>Roll back in one click. No money moves.</td></tr>
+            <tr><th scope="row">Raise an auto-approve limit</th><td>One-way</td><td>Money leaves before anyone looks. A named finance owner approves.</td></tr>
+            <tr><th scope="row">Add a new data source</th><td>One-way</td><td>Data read cannot be unread. The data owner and privacy lead approve.</td></tr>
+            <tr><th scope="row">Retire a control</th><td>One-way</td><td>You learn what it caught only after a loss. Risk and audit approve.</td></tr>
+            <tr><th scope="row">Change the model</th><td>Two-way</td><td>Only with the old version pinned and the eval suite passed.</td></tr>
+            <tr><th scope="row">Change the supplier bank-detail rule</th><td>One-way</td><td>On the do-not-automate list. A named person decides.</td></tr>
+            <tr><th scope="row">Change the layout of a decision card</th><td>Two-way</td><td>Test it on a sample of approvers. Watch the rubber-stamp rate.</td></tr>
+            <tr><th scope="row">Add a tool with write access</th><td>One-way</td><td>A wrong write may reach records others rely on.</td></tr>
+            <tr><th scope="row">Lower a confidence threshold</th><td>Two-way</td><td>Raise it back in one click. The reversal guardrail watches it.</td></tr>
+            <tr><th scope="row">Delete an archived variant</th><td>One-way</td><td>The lineage and the evidence go with it. Retire it instead.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section class="section bp-section" id="sources" aria-labelledby="sources-title" data-citations>
+  <div class="container">
+    <p class="eyebrow">Who said it</p>
+    <h2 id="sources-title" class="h-sm">The ideas behind the loop</h2>
+    <p>Paraphrased from public sources. Names appear as citations, not endorsements.</p>
+    <ul class="lp-cards">
+      <li class="lp-card"><span class="lp-card-tag">Double-loop learning</span><h3>Chris Argyris</h3><p>Single-loop learning fixes errors against a fixed goal. Double-loop learning questions the goal. His thermostat asks: &ldquo;why am I set at 68 degrees?&rdquo;</p><p class="lp-src">Harvard Business Review, 1991. Step 6, Reframe.</p></li>
+      <li class="lp-card"><span class="lp-card-tag">One-way and two-way doors</span><h3>Jeff Bezos</h3><p>Some decisions are hard to undo. Most are reversible. Using the heavy process for all of them makes a company slow.</p><p class="lp-src"><a href="https://s2.q4cdn.com/299287126/files/doc_financials/annual/2015-Letter-to-Shareholders.PDF" rel="noopener" target="_blank">2015 letter to shareholders<span class="visually-hidden"> (opens in a new tab)</span></a>. Step 3, Decide.</p></li>
+      <li class="lp-card"><span class="lp-card-tag">Fitness functions</span><h3>Neal Ford, Rebecca Parsons, Patrick Kua</h3><p>A fitness function is an objective integrity check on an important characteristic. It runs on every change.</p><p class="lp-src"><a href="https://evolutionaryarchitecture.com/precis.html" rel="noopener" target="_blank"><cite>Building Evolutionary Architectures</cite><span class="visually-hidden"> (opens in a new tab)</span></a>. Step 2, Guard.</p></li>
+      <li class="lp-card"><span class="lp-card-tag">One number, automated evaluators</span><h3>Google DeepMind, AlphaEvolve</h3><p>An evolutionary agent proposes programs. Automated evaluators verify and score each one against measurable metrics.</p><p class="lp-src"><a href="https://deepmind.google/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms" rel="noopener" target="_blank">Research blog, 2025<span class="visually-hidden"> (opens in a new tab)</span></a>. Step 4, Measure.</p></li>
+      <li class="lp-card"><span class="lp-card-tag">Archive and lineage</span><h3>Sakana AI and Jeff Clune&rsquo;s lab, Darwin G&ouml;del Machine</h3><p>An archive of agent variants, where some weaker ancestors led to breakthroughs. A documented case of a faked test log was caught through the lineage of changes.</p><p class="lp-src"><a href="https://sakana.ai/dgm/" rel="noopener" target="_blank">Project page, 2025<span class="visually-hidden"> (opens in a new tab)</span></a>. Step 5 and the scorer lock.</p></li>
+      <li class="lp-card"><span class="lp-card-tag">Permission tiers and human gates</span><h3>RAND (2026) and the Evolutionary Safety paper</h3><p>RAND recommends permission frameworks and human oversight. The paper separates proposing a change from approving it, and keeps lineage for recovery.</p><p class="lp-src"><a href="https://arxiv.org/abs/2609.31186" rel="noopener" target="_blank">arXiv 2609.31186, 2026<span class="visually-hidden"> (opens in a new tab)</span></a>. Steps 3 and 5.</p></li>
+    </ul>
+  </div>
+</section>
+
+<section class="section section-paper-2 bp-section" id="questions" aria-labelledby="questions-title">
+  <div class="container fw-body">
+    <p class="eyebrow">Questions for leaders</p>
+    <h2 id="questions-title" class="h-sm">Who asks what</h2>
+    <ul class="lp-seats">
+      <li><b>Board.</b> Which doors are one-way for us, and who is the named person for each?</li>
+      <li><b>Executives.</b> What is the one goal number? When did we last question it?</li>
+      <li><b>Managers.</b> Which guardrails protect the work? Who may change their thresholds?</li>
+      <li><b>Staff.</b> Which archived variants did we review? What reframe will we propose?</li>
+    </ul>
+    <p>Lineage is a decision trace for changes: parent, change, scores and approver for every variant.</p>
+    <p class="cta-row"><a class="btn btn-dark" href="/leaders/">Questions leaders ask</a> <a class="btn btn-primary" href="/controls/#MR-10">The loop controls</a> <a class="more" href="/blueprints/trace/">Read a decision trace</a></p>
+  </div>
+</section>
