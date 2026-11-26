@@ -173,8 +173,9 @@ describe('intake: client', () => {
     const js = readFileSync(join(ROOT, 'src/assets/intake.js'), 'utf8');
     expect(js.match(/fetch\(/g)).toHaveLength(2);
     expect(js).toContain("var API = '/api/intake'");
-    expect(js).not.toMatch(/localStorage|sessionStorage|document\.cookie|<form|createElement\('form'\)|\.style\.|style="|mailto:/);
+    expect(js).not.toMatch(/localStorage|sessionStorage|document\.cookie|<form|createElement\('form'\)|\.style\.|style="|mailto:(?!regantih@gmail\.com)/);
     expect(js).not.toMatch(/simulat|scripted|\bfake|Math\.random/i);
-    expect(js.match(/https?:\/\/[^'" ]+/g)).toEqual(['https://www.linkedin.com/in/hemanth-reganti-147153178/']);
+    expect(js.match(/https?:\/\/[^'" ]+/g)).toBeNull();
+    expect(js).toContain('mailto:regantih@gmail.com');
   });
 });

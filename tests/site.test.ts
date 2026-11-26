@@ -114,12 +114,12 @@ describe('built site', () => {
     expect(readFileSync(join(DIST, 'assets/site.js'), 'utf8')).not.toMatch(/cookie|localStorage/i);
   });
 
-  it('never names a software vendor other than LangChain, and never uses mailto', () => {
+  it('never names a software vendor other than LangChain, and uses mailto only for the owner address', () => {
     const vendors = /\b(NVIDIA|Nvidia|Meta|Siemens|Rockwell|Alexa|Siri|Kafka|Kubernetes|Neo4j|Pinecone|Palantir|Tesla|Boston Dynamics|Mistral|Cohere|SAP|Oracle|Microsoft|Salesforce|Workday|ServiceNow|IBM|Google|Amazon Web Services|AWS|Azure|OpenAI|Anthropic|Coupa|Ariba|NetSuite|Infor|Epicor|UiPath|Snowflake|Databricks|MuleSoft|Boomi|Kyriba|BlackLine|Dynamics|Copilot|ChatGPT|Gemini|Claude|Llama|CrewAI|AutoGen)\b/;
     for (const f of walk(DIST).filter((f) => /\.(html|xml|txt|js|webmanifest)$/.test(f))) {
       const t = withoutCitations(f, readFileSync(f, 'utf8'));
       expect(t.match(vendors)?.[0], f).toBeUndefined();
-      expect(t).not.toContain('mailto:');
+      expect(t.replace(/mailto:regantih@gmail\.com/g, '')).not.toContain('mailto:');
       expect(t.match(/\bGPT(?!-class)/)?.[0], f).toBeUndefined();
     }
     expect(html(pages[0]).match(/LangChain/g)?.length).toBeGreaterThan(0);
@@ -131,7 +131,7 @@ describe('built site', () => {
       const h = html(byOut(out));
       expect(h, out).toContain('<div class="ik" data-intake hidden></div>');
       expect(h, out).toMatch(/<script src="\/assets\/intake\.js\?v=[0-9a-f]{10}" defer><\/script>/);
-      expect(h, out).toContain('href="https://www.linkedin.com/in/hemanth-reganti-147153178/" rel="noopener" target="_blank">Message Hemanth on LinkedIn');
+      expect(h, out).toContain('href="mailto:regantih@gmail.com">Email Hemanth at regantih@gmail.com');
     }
     const contact = html(byOut('contact/index.html'));
     for (const id of ['speaking', 'advisory', 'media']) expect(contact).toContain(`<li id="${id}">`);
