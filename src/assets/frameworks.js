@@ -138,8 +138,9 @@
       '<div class="lx-chart" aria-hidden="true"></div><p class="lx-note"></p>';
     var chart = $('.lx-chart', root);
     D.slice(0, 5).forEach(function (d, i) {
-      var b = el('div', 'lx-bar', '<i style="height:' + (d[5] / 36000 * 100) + '%"></i><span>' + (d[5] / 1000).toFixed(1).replace('.0', '') + 'k h</span><em>' + LEVELS[i] + '</em>');
+      var b = el('div', 'lx-bar', '<i data-h="' + (d[5] / 36000 * 7).toFixed(2) + '"></i><span>' + (d[5] / 1000).toFixed(1).replace('.0', '') + 'k h</span><em>' + LEVELS[i] + '</em>');
       chart.appendChild(b);
+      $('i', b).style.height = $('i', b).dataset.h + 'rem';
     });
     var r = $('.ix-range', root);
     function upd() {
@@ -254,7 +255,7 @@
       var min = Math.min.apply(null, state);
       $$('.ch-link', root).forEach(function (li, i) { $('select', li).value = state[i]; li.dataset.l = state[i]; li.classList.toggle('weak', state[i] === min); });
       var weak = links.filter(function (_, i) { return state[i] === min; }).map(function (l) { return l[0]; });
-      $('.ch-out', root).innerHTML = 'The whole chain runs at <b>L' + min + '</b>, held there by: ' + weak.join(', ') + '. Fund this link first.';
+      $('.ch-out', root).innerHTML = 'The whole chain runs at <b>L' + min + '</b>, held there by: ' + weak.join(', ') + (weak.length === links.length ? '. Every link is level, so raise them together.' : weak.length > 1 ? '. Fund these links first.' : '. Fund this link first.');
     }
     draw();
   }
@@ -289,7 +290,7 @@
     $$('.dn-yn button', root).forEach(function (b) { b.addEventListener('click', function () {
       a[+b.dataset.i] = +b.dataset.v; $$('[data-i="' + b.dataset.i + '"]', root).forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); upd(); }); });
     function upd() { var n = a.reduce(function (s, x) { return s + x; }, 0);
-      $('.dn-out', root).innerHTML = n ? '<b>Keep a person deciding (L2 or below).</b> ' + n + ' condition' + (n > 1 ? 's' : '') + ' apply. Put this step on your do-not-automate list and review it like any control.'
+      $('.dn-out', root).innerHTML = n ? '<b>Keep a person deciding (L2 or below).</b> ' + n + ' condition' + (n > 1 ? 's apply.' : ' applies.') + ' Put this step on your do-not-automate list and review it like any control.'
         : '<b>No red flags.</b> This step can be a candidate for autonomy. Now find its ceiling and earn each level with evidence.'; }
     upd();
   }

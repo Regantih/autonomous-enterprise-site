@@ -692,3 +692,6 @@ fieldset.field legend { padding: 0; margin-bottom: 0.35rem; }
 @keyframes flSpin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .fl-v, .fl-r, .fl-v span, .fl-r span { animation: none; } }
 .fl-red { display: block; font-size: 0.95rem; }
+.lx-chart { height: auto; }
+.ix input[type="checkbox"] { accent-color: var(--orange); width: 1.05rem; height: 1.05rem; vertical-align: -0.15rem; }
+.ix, [id] { scroll-margin-top: 6rem; }
