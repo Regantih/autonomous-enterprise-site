@@ -925,7 +925,7 @@ fieldset.field legend { padding: 0; margin-bottom: 0.35rem; }
 .cf-count { margin: 0; font-weight: 600; }
 .ctl-list { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr)); margin-top: 1rem; }
 .ctl { background: var(--white); border: 1px solid var(--line); border-top: 3px solid var(--ink); border-radius: var(--radius); padding: 1rem 1.1rem; font-size: 0.92rem; scroll-margin-top: 7rem; }
-.ctl[hidden] { display: none; }
+.ctl[hidden], .ctl-list[hidden], .cf-alt[hidden] { display: none; }
 .ctl.flash, .ctl:target { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(242, 98, 46, 0.35); }
 .ctl header { display: flex; gap: 0.6rem; align-items: baseline; margin-bottom: 0.4rem; }
 .ctl-id { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-weight: 700; color: var(--orange-text); font-size: 0.85rem; }
