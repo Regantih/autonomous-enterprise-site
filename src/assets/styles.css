@@ -169,6 +169,10 @@ p { margin: 0 0 1em; }
   .site-header .brand-sub { display: none; }
   .header-cta { padding-inline: 0.8rem; font-size: 0.85rem; }
 }
+@media (max-width: 22.5rem) {
+  .site-header .brand-mark { display: none; }
+  .site-header .brand { font-size: 1rem; }
+}
 @media (min-width: 60rem) {
   .site-nav { order: 0; width: auto; margin: 0; }
   .site-nav ul { padding: 0; }
