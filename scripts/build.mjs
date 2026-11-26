@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { BP_DATA_FILES, blueprintVars, breadcrumb, pager, subnav } from './blueprints-static.mjs';
 import { graphsVars } from './graphs-static.mjs';
 import { buildGraphs, writeGraphs } from '../tools/build-graphs.mjs';
+import vm from 'node:vm';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SRC = join(ROOT, 'src');
@@ -87,6 +88,13 @@ export const PAGES = [
     title: 'Blueprints for the Human-Led, Agent-Operated Enterprise | Human-Led Enterprise',
     description:
       'Blueprints to reimagine enterprise work with AI agents: a reference architecture, workflow swimlanes, a controls library and a designer, all aligned across every layer.',
+    sitemap: true, priority: '0.9',
+  },
+  {
+    src: 'reimagine.html', out: 'reimagine/index.html', path: '/reimagine/', nav: 'BLUEPRINTS',
+    title: 'Reimagine Your Operations: Apply the Book to Your Estate | Human-Led Enterprise',
+    description:
+      'Describe your core systems, value streams and readiness. The rules of The Autonomous Enterprise show your archetype, foundations gate, engine routing, phases, first pilots and top risks.',
     sitemap: true, priority: '0.9',
   },
   {
@@ -218,7 +226,7 @@ export const PAGES = [
 ];
 
 // Pages that already show a Talk to the book button in view get no floating one.
-export const NO_FAB = ['/', '/talk/', '/contact/'];
+export const NO_FAB = ['/', '/talk/', '/contact/', '/reimagine/'];
 
 const read = (p) => readFileSync(p, 'utf8');
 const hash = (buf) => createHash('sha256').update(buf).digest('hex').slice(0, 10);
@@ -359,6 +367,33 @@ function writeGraphsScript() {
   return `/assets/graphs-data.js?v=${hash(js)}`;
 }
 
+// The Reimagine tool's rule engine, run at build time so the page ships the Meridian result as static HTML.
+export function loadReimagine() {
+  const ctx = { window: {} };
+  vm.createContext(ctx);
+  vm.runInContext(read(join(SRC, 'assets', 'reimagine-core.js')), ctx, { filename: 'reimagine-core.js' });
+  return ctx.window.AE.reimagine;
+}
+
+function reimagineVars() {
+  const R = loadReimagine();
+  const r = R.compute(R.MERIDIAN);
+  const g = r.foundations.gate;
+  const home = `<ul class="rm-home-facts">
+        <li><b>Closest archetype</b> ${R.esc(r.archetype.a.name)}: the hardest estate, with two legacy ERPs, a mainframe and 620 interfaces.</li>
+        <li><b>Invest first in</b> ${R.esc(g ? g.name.toLowerCase() : 'agents')}. A board that funds agents first and data second pays twice.</li>
+        <li><b>First three pilots</b> ${R.esc(r.pilots.map((p) => p.d.d).join('; '))}.</li>
+        <li><b>Top risk</b> ${R.esc(r.risks[0].id)} ${R.esc(r.risks[0].name.toLowerCase())}.</li>
+      </ul>`;
+  return {
+    RM_INPUTS: R.renderInputs(R.MERIDIAN),
+    RM_RESULTS: R.renderResults(r),
+    RM_STRIP: R.esc(R.strip(r)),
+    RM_TALK: `/talk/?q=${encodeURIComponent(R.summary(r))}`,
+    RM_HOME: home,
+  };
+}
+
 export function build() {
   rmSync(DIST, { recursive: true, force: true });
   mkdirSync(DIST, { recursive: true });
@@ -368,12 +403,13 @@ export function build() {
   for (const f of readdirSync(join(SRC, 'static'))) cpSync(join(SRC, 'static', f), join(DIST, f), { recursive: true });
 
   const layout = read(join(SRC, 'partials', 'layout.html'));
-  const assetVersion = hash(['styles.css', 'site.js', 'guide.js', 'blueprints.js', 'graphs.js', 'graphs.css', 'intake.js', 'intake.css', 'models.js', 'models.css', 'org.js', ...BP_DATA_FILES].map((f) => read(join(SRC, 'assets', f))).join(''));
+  const assetVersion = hash(['styles.css', 'site.js', 'guide.js', 'blueprints.js', 'graphs.js', 'graphs.css', 'intake.js', 'intake.css', 'models.js', 'models.css', 'org.js', 'reimagine-core.js', 'reimagine.js', 'reimagine.css', ...BP_DATA_FILES].map((f) => read(join(SRC, 'assets', f))).join(''));
 
   const bpVars = blueprintVars(join(SRC, 'assets'));
   const recording = writeRecording();
   const graphsData = writeGraphsScript();
   const grVars = graphsVars(buildGraphs());
+  const rmVars = reimagineVars();
   const bpScripts = [...BP_DATA_FILES, 'blueprints.js'].map((f) => `<script src="${assetUrl(f)}" defer></script>\n`).join('');
 
   for (const page of PAGES) {
@@ -390,6 +426,8 @@ export function build() {
       JSONLD: page.jsonld ? jsonLd() : '',
       HEAD_EXTRA: page.src === 'index.html'
         ? `<link rel="preload" as="image" type="image/webp" imagesrcset="${assetUrl('images/cover-400.webp')} 400w, ${assetUrl('images/cover-800.webp')} 800w, ${assetUrl('images/cover-1200.webp')} 1200w" imagesizes="${HERO_COVER_SIZES}" fetchpriority="high">\n`
+        : page.src === 'reimagine.html'
+          ? `<link rel="stylesheet" href="${assetUrl('reimagine.css')}">\n<script src="${assetUrl('reimagine-core.js')}" defer></script>\n<script src="${assetUrl('reimagine.js')}" defer></script>\n`
         : page.src === 'frameworks.html'
           ? `<script src="${assetUrl('frameworks.js')}" defer></script>\n`
           : page.bp ? bpScripts + (page.src === 'trace.html' ? `<link rel="stylesheet" href="${assetUrl('trace.css')}">\n<script src="${assetUrl('trace-core.js')}" defer></script>\n<script src="${assetUrl('trace.js')}" defer></script>\n`
@@ -406,11 +444,12 @@ export function build() {
       NAV_SPEAKING: page.nav === 'SPEAKING' ? ' aria-current="page"' : '',
       NAV_IDEAS: page.nav === 'IDEAS' ? ' aria-current="page"' : '',
       NAV_BLUEPRINTS: page.nav === 'BLUEPRINTS' ? ' aria-current="page"' : '',
-      BP_SUBNAV: page.bp ? subnav(page.bp) : '',
+      BP_SUBNAV: page.bp ? subnav(page.bp) : page.src === 'reimagine.html' ? subnav('reimagine') : '',
       BP_CRUMB: page.bp ? breadcrumb(page.bp) : '',
       BP_PAGER: page.bp ? pager(page.bp) : '',
       ...bpVars,
       ...grVars,
+      ...rmVars,
       GRAPHS_JSON_URL: assetUrl('data/graphs.json'),
       NAV_BOOK: page.nav === 'BOOK' ? ' aria-current="page"' : '',
       NAV_ABOUT: page.nav === 'ABOUT' ? ' aria-current="page"' : '',

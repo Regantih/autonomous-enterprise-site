@@ -68,6 +68,7 @@ export function subnav(current) {
   if (current === 'hub') return `<nav class="bp-subnav" aria-label="Blueprints">
   <div class="container">
     <a class="bp-subnav-home" href="/blueprints/" aria-current="page">Blueprints</a>
+    <a class="bp-subnav-start" href="/reimagine/">Start here</a>
     <ul class="bp-subnav-jump" aria-label="Tracks on this page">
 ${TRACKS.map((t) => `      <li><a href="#${t.id}">${t.name}</a></li>`).join('\n')}
     </ul>
@@ -85,6 +86,7 @@ ${t.tools.map((k) => `        <li><a href="${TOOL[k].href}"${k === current ? ' a
   return `<nav class="bp-subnav" aria-label="Blueprints">
   <div class="container">
     <a class="bp-subnav-home" href="/blueprints/"${current === 'hub' ? ' aria-current="page"' : ''}>Blueprints</a>
+    <a class="bp-subnav-start" href="/reimagine/"${current === 'reimagine' ? ' aria-current="page"' : ''}>Start here</a>
     <div class="bp-tracks">
 ${tracks}
     </div>

@@ -318,12 +318,12 @@ describe('portrait, real cover and guide', () => {
     expect(css).not.toMatch(/\.portrait-img[^}]*border-radius:\s*50%/);
   });
 
-  it('lays home out as one journey: pitch, start from your role, the book, blueprints, speaking and advisory, the author', () => {
+  it('lays home out as one journey: pitch, reimagine your operations, start from your role, the book, blueprints, speaking and advisory, the author', () => {
     const h = home();
-    const order = ['hero-title', 'id="start"', 'id="book"', 'id="blueprints"', 'id="speaking"', 'id="author"'].map((k) => h.indexOf(k));
+    const order = ['hero-title', 'id="reimagine"', 'id="start"', 'id="book"', 'id="blueprints"', 'id="speaking"', 'id="author"'].map((k) => h.indexOf(k));
     for (const i of order) expect(i).toBeGreaterThan(0);
     expect([...order].sort((a, b) => a - b)).toEqual(order);
-    const band = h.slice(order[5], h.indexOf('</section>', order[5]));
+    const band = h.slice(order[6], h.indexOf('</section>', order[6]));
     expect(band).toContain('Author, speaker and advisor on human-led, agent-operated enterprises.');
     expect(band).toContain('href="/about/"');
   });
@@ -355,9 +355,9 @@ describe('portrait, real cover and guide', () => {
     expect((main.match(/>Talk to the book</g) ?? []).length).toBe(1);
   });
 
-  it('keeps home to six sections and moves the detail to /book', () => {
+  it('keeps home to seven sections (Reimagine your operations after the pitch) and moves the detail to /book', () => {
     const main = home().split('<main')[1].split('</main>')[0];
-    expect(main.match(/<section /g)).toHaveLength(6);
+    expect(main.match(/<section /g)).toHaveLength(7);
     for (const id of ['problem', 'inside', 'audience']) {
       expect(main).not.toContain(`id="${id}"`);
       expect(html(byOut('book/index.html'))).toContain(`id="${id}"`);
@@ -373,11 +373,11 @@ describe('portrait, real cover and guide', () => {
     }
   });
 
-  it('shows the floating Talk to the book button only where none is already in view: not on home, /talk or /contact', () => {
+  it('shows the floating Talk to the book button only where none is already in view: not on home, /talk, /contact or /reimagine (Discuss this with the book)', () => {
     for (const p of pages) {
       const h = html(p);
       expect(h, p.out).toContain('<script src="/assets/guide.js?v=');
-      if (['/', '/talk/', '/contact/'].includes(p.path)) {
+      if (['/', '/talk/', '/contact/', '/reimagine/'].includes(p.path)) {
         expect(h, p.out).not.toContain('class="guide-fab"');
         expect(h, p.out).toContain('<body>');
       } else {
