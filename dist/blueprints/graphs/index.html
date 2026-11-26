@@ -36,11 +36,11 @@
 <script src="/assets/data/architecture.js?v=f634c57d9f" defer></script>
 <script src="/assets/blueprints.js?v=dc77177432" defer></script>
 <link rel="stylesheet" href="/assets/graphs.css?v=1046dd304e">
-<script src="/assets/graphs-data.js?v=000c1bac5f" defer></script>
+<script src="/assets/graphs-data.js?v=7b2458483b" defer></script>
 <script src="/assets/graphs.js?v=c88a487310" defer></script>
-<link rel="stylesheet" href="/assets/styles.css?v=0489f12596">
-<script src="/assets/site.js?v=0489f12596" defer></script>
-<script src="/assets/guide.js?v=0489f12596" defer></script>
+<link rel="stylesheet" href="/assets/styles.css?v=ba2aeaf1e8">
+<script src="/assets/site.js?v=ba2aeaf1e8" defer></script>
+<script src="/assets/guide.js?v=ba2aeaf1e8" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -977,7 +977,7 @@
 <tr><td>POL-confidence</td><td>enforced by</td><td><a class="cid" href="/controls/#MR-07">MR-07</a></td></tr>
 </tbody></table></div>
     </details>
-    <p class="fw-note">Sample data: synthetic, not real suppliers, invoices or people. <a href="/assets/data/ap-sample.json?v=9d2e57beb0">Download the sample (JSON)</a> or <a href="/assets/data/graphs.json?v=63fc6cdcd3">the graphs (JSON)</a>.</p>
+    <p class="fw-note">Sample data: synthetic, not real suppliers, invoices or people. <a href="/assets/data/ap-sample.json?v=9d2e57beb0">Download the sample (JSON)</a> or <a href="/assets/data/graphs.json?v=34f25c1346">the graphs (JSON)</a>.</p>
   </div>
 </section>
 
@@ -988,7 +988,7 @@
     <p class="gr-intro">Each agent on this site appears here with its skills, tools, data, controls and autonomy level. Limits come from the site&rsquo;s own code: the action whitelist, the scorer lock, the do-not-automate list and the call budget. Pick an agent to see what it can and cannot do.</p>
     <div class="bp-ix" hidden><div data-gr="skills"></div></div>
     <noscript><p class="fw-note">Turn on JavaScript to explore the graph. The table below lists every agent.</p></noscript>
-    <ul class="gr-stats"><li><b>73</b> nodes</li><li><b>135</b> edges</li><li><b>26</b> controls, all from the library</li><li><b>8</b> agents</li></ul>
+    <ul class="gr-stats"><li><b>78</b> nodes</li><li><b>160</b> edges</li><li><b>26</b> controls, all from the library</li><li><b>9</b> agents</li></ul>
     <div class="fw-table-wrap" tabindex="0" role="region" aria-label="What each agent can and cannot do"><table class="fw-table gr-table"><caption>What each agent can and cannot do</caption><thead><tr><th scope="col">Agent</th><th scope="col">Can (autonomy level)</th><th scope="col">Cannot (blocked by)</th></tr></thead><tbody>
 <tr><th scope="row">Proposer (AI)</th><td>Propose policy variants (L1)</td><td>Change the scorer, goal or test set (<a class="cid" href="/controls/#MR-10">MR-10</a>); Ship a one-way-door change (<a class="cid" href="/controls/#HO-06">HO-06</a> <a class="cid" href="/controls/#SOD-03">SOD-03</a>); Automate a bank-detail change (<a class="cid" href="/controls/#TAL-05">TAL-05</a> <a class="cid" href="/controls/#TAL-07">TAL-07</a>); Loosen a guardrail cap (<a class="cid" href="/controls/#SOD-01">SOD-01</a>); Write to the requests table (<a class="cid" href="/controls/#IAM-03">IAM-03</a>); Exceed the model-call budget (<a class="cid" href="/controls/#CST-03">CST-03</a> <a class="cid" href="/controls/#TAL-04">TAL-04</a>)</td></tr>
 <tr><th scope="row">Guardrail harness (code)</th><td>Run a policy over the sample (L4); Check fitness rules and block (L4); Ship a two-way-door change (L3)</td><td>Automate a bank-detail change (<a class="cid" href="/controls/#TAL-05">TAL-05</a> <a class="cid" href="/controls/#TAL-07">TAL-07</a>)</td></tr>
@@ -996,11 +996,12 @@
 <tr><th scope="row">Evaluator (code)</th><td>Score the goal number (L4)</td><td>&ndash;</td></tr>
 <tr><th scope="row">Archivist (code)</th><td>Archive variants and lineage (L4)</td><td>&ndash;</td></tr>
 <tr><th scope="row">Room voices (AI)</th><td>Answer room instructions (L1)</td><td>Change the scorer, goal or test set (<a class="cid" href="/controls/#MR-10">MR-10</a>); Ship a one-way-door change (<a class="cid" href="/controls/#HO-06">HO-06</a> <a class="cid" href="/controls/#SOD-03">SOD-03</a>); Automate a bank-detail change (<a class="cid" href="/controls/#TAL-05">TAL-05</a> <a class="cid" href="/controls/#TAL-07">TAL-07</a>); Loosen a guardrail cap (<a class="cid" href="/controls/#SOD-01">SOD-01</a>); Take an action outside the whitelist (<a class="cid" href="/controls/#TAL-03">TAL-03</a> <a class="cid" href="/controls/#IAM-03">IAM-03</a>); Write to the requests table (<a class="cid" href="/controls/#IAM-03">IAM-03</a>); Exceed the model-call budget (<a class="cid" href="/controls/#CST-03">CST-03</a> <a class="cid" href="/controls/#TAL-04">TAL-04</a>)</td></tr>
-<tr><th scope="row">Book guide (AI)</th><td>Answer from the book (L1); Pass a consented lead to Hemanth (L1)</td><td>Take an action outside the whitelist (<a class="cid" href="/controls/#TAL-03">TAL-03</a> <a class="cid" href="/controls/#IAM-03">IAM-03</a>); Exceed the model-call budget (<a class="cid" href="/controls/#CST-03">CST-03</a> <a class="cid" href="/controls/#TAL-04">TAL-04</a>)</td></tr>
+<tr><th scope="row">Book guide (AI)</th><td>Answer from the book (L1); Pass a consented lead to Hemanth (L1)</td><td>Take an action outside the whitelist (<a class="cid" href="/controls/#TAL-03">TAL-03</a> <a class="cid" href="/controls/#IAM-03">IAM-03</a>); Send a request without the visitor’s consent (<a class="cid" href="/controls/#HO-01">HO-01</a> <a class="cid" href="/controls/#PRV-04">PRV-04</a>); Exceed the model-call budget (<a class="cid" href="/controls/#CST-03">CST-03</a> <a class="cid" href="/controls/#TAL-04">TAL-04</a>)</td></tr>
 <tr><th scope="row">Graph agent (AI)</th><td>Answer from a code-selected subgraph (L1)</td><td>Change the scorer, goal or test set (<a class="cid" href="/controls/#MR-10">MR-10</a>); Take an action outside the whitelist (<a class="cid" href="/controls/#TAL-03">TAL-03</a> <a class="cid" href="/controls/#IAM-03">IAM-03</a>); Write to the requests table (<a class="cid" href="/controls/#IAM-03">IAM-03</a>); Exceed the model-call budget (<a class="cid" href="/controls/#CST-03">CST-03</a> <a class="cid" href="/controls/#TAL-04">TAL-04</a>)</td></tr>
+<tr><th scope="row">Intake agent (AI)</th><td>Fill a request card by conversation (L1); Store a request the visitor confirmed (L1)</td><td>Take an action outside the whitelist (<a class="cid" href="/controls/#TAL-03">TAL-03</a> <a class="cid" href="/controls/#IAM-03">IAM-03</a>); Send a request without the visitor’s consent (<a class="cid" href="/controls/#HO-01">HO-01</a> <a class="cid" href="/controls/#PRV-04">PRV-04</a>); Exceed the model-call budget (<a class="cid" href="/controls/#CST-03">CST-03</a> <a class="cid" href="/controls/#TAL-04">TAL-04</a>)</td></tr>
 </tbody></table></div>
     <details class="gr-alt">
-      <summary>All 73 nodes of the skill graph, as a table</summary>
+      <summary>All 78 nodes of the skill graph, as a table</summary>
       <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Nodes of the skill graph"><table class="fw-table gr-table"><thead><tr><th scope="col">ID</th><th scope="col">Type</th><th scope="col">Label</th><th scope="col">Facts</th></tr></thead><tbody>
 <tr><th scope="row">AG-proposer</th><td>Agent</td><td>Proposer (AI)</td><td><b>kind:</b> AI agent; <b>does:</b> Proposes two policy variants per generation.; <b>source:</b> functions/api/loop/step.ts</td></tr>
 <tr><th scope="row">AG-harness</th><td>Agent</td><td>Guardrail harness (code)</td><td><b>kind:</b> Code; <b>does:</b> Runs each variant over the sample and checks the fitness rules.; <b>source:</b> lib/loop.ts</td></tr>
@@ -1010,6 +1011,7 @@
 <tr><th scope="row">AG-room</th><td>Agent</td><td>Room voices (AI)</td><td><b>kind:</b> AI agent; <b>does:</b> Answers visitor instructions in the operations room.; <b>source:</b> functions/api/agents.ts</td></tr>
 <tr><th scope="row">AG-guide</th><td>Agent</td><td>Book guide (AI)</td><td><b>kind:</b> AI agent; <b>does:</b> Answers questions from the book knowledge pack.; <b>source:</b> functions/api/guide.ts</td></tr>
 <tr><th scope="row">AG-graph</th><td>Agent</td><td>Graph agent (AI)</td><td><b>kind:</b> AI agent; <b>does:</b> Answers from a subgraph that code selected.; <b>source:</b> functions/api/graph/ask.ts</td></tr>
+<tr><th scope="row">AG-intake</th><td>Agent</td><td>Intake agent (AI)</td><td><b>kind:</b> AI agent; <b>does:</b> Asks short questions and fills a request card.; <b>source:</b> functions/api/intake.ts</td></tr>
 <tr><th scope="row">SK-propose</th><td>Skill</td><td>Propose policy variants</td><td><b>autonomy:</b> L1; <b>why:</b> Suggests only. Code tests every variant and decides what ships.; <b>controls:</b> MR-10 PCS-02 TRC-05 CST-03</td></tr>
 <tr><th scope="row">SK-runpolicy</th><td>Skill</td><td>Run a policy over the sample</td><td><b>autonomy:</b> L4; <b>why:</b> Deterministic code. It runs and reports every time.; <b>controls:</b> MR-01 TAL-05</td></tr>
 <tr><th scope="row">SK-guard</th><td>Skill</td><td>Check fitness rules and block</td><td><b>autonomy:</b> L4; <b>why:</b> Blocks failing variants and any scorer change, in code.; <b>controls:</b> MR-10 SOD-02 SOD-01</td></tr>
@@ -1021,18 +1023,22 @@
 <tr><th scope="row">SK-guide</th><td>Skill</td><td>Answer from the book</td><td><b>autonomy:</b> L1; <b>why:</b> Answers only from the knowledge pack.; <b>controls:</b> MR-04 PCS-01 PCS-05 TAL-04</td></tr>
 <tr><th scope="row">SK-lead</th><td>Skill</td><td>Pass a consented lead to Hemanth</td><td><b>autonomy:</b> L1; <b>why:</b> Stores a lead only when the visitor submits it.; <b>controls:</b> PRV-01 PRV-04 TAL-04</td></tr>
 <tr><th scope="row">SK-graph</th><td>Skill</td><td>Answer from a code-selected subgraph</td><td><b>autonomy:</b> L1; <b>why:</b> Read only. Cited node IDs are checked in code.; <b>controls:</b> MR-04 PCS-01 PCS-02 CST-03 TAL-04</td></tr>
+<tr><th scope="row">SK-intake</th><td>Skill</td><td>Fill a request card by conversation</td><td><b>autonomy:</b> L1; <b>why:</b> Asks and extracts only. Code checks every field.; <b>controls:</b> PCS-01 PCS-02 PRV-01 PRV-04 CST-03 TAL-04</td></tr>
+<tr><th scope="row">SK-submit</th><td>Skill</td><td>Store a request the visitor confirmed</td><td><b>autonomy:</b> L1; <b>why:</b> Code stores it only after the visitor ticks consent and presses Send.; <b>controls:</b> HO-01 PRV-01 TAL-04</td></tr>
 <tr><th scope="row">DENY-scorer</th><td>Cannot do</td><td>Cannot: Change the scorer, goal or test set</td><td><b>how:</b> Any proposed key matching /scor|evaluat|metric|goal|grader|reward|test.?set|benchmark|measure|judge/i is blocked before it runs.; <b>controls:</b> MR-10</td></tr>
 <tr><th scope="row">DENY-oneway</th><td>Cannot do</td><td>Cannot: Ship a one-way-door change</td><td><b>how:</b> Code flags one-way doors (for example an auto-approve limit above $5,000) and sends them to a person.; <b>controls:</b> HO-06 SOD-03</td></tr>
 <tr><th scope="row">DENY-bank</th><td>Cannot do</td><td>Cannot: Automate a bank-detail change</td><td><b>how:</b> Hard-coded do-not-automate list: bank_detail_change. Not a setting.; <b>controls:</b> TAL-05 TAL-07</td></tr>
 <tr><th scope="row">DENY-loosen</th><td>Cannot do</td><td>Cannot: Loosen a guardrail cap</td><td><b>how:</b> Caps can only tighten. Looser values are clamped in code.; <b>controls:</b> SOD-01</td></tr>
 <tr><th scope="row">DENY-actions</th><td>Cannot do</td><td>Cannot: Take an action outside the whitelist</td><td><b>how:</b> Unknown action types become none. Extra fields are dropped.; <b>controls:</b> TAL-03 IAM-03</td></tr>
-<tr><th scope="row">DENY-requests</th><td>Cannot do</td><td>Cannot: Write to the requests table</td><td><b>how:</b> Only the lead path writes requests, after the visitor submits.; <b>controls:</b> IAM-03</td></tr>
+<tr><th scope="row">DENY-unconsented</th><td>Cannot do</td><td>Cannot: Send a request without the visitor’s consent</td><td><b>how:</b> The submit path refuses any request without explicit consent. The model cannot call it.; <b>controls:</b> HO-01 PRV-04</td></tr>
+<tr><th scope="row">DENY-requests</th><td>Cannot do</td><td>Cannot: Write to the requests table</td><td><b>how:</b> Only the guide and intake submit paths write requests, after the visitor confirms.; <b>controls:</b> IAM-03</td></tr>
 <tr><th scope="row">DENY-budget</th><td>Cannot do</td><td>Cannot: Exceed the model-call budget</td><td><b>how:</b> Calls are counted in the rate-limit table: 120 per day site-wide.; <b>controls:</b> CST-03 TAL-04</td></tr>
 <tr><th scope="row">TOOL-model</th><td>Tool or API</td><td>Model gateway</td><td><b>what:</b> One GPT-class model, with a smaller fallback model.</td></tr>
 <tr><th scope="row">TOOL-loop</th><td>Tool or API</td><td>POST /api/loop/step</td><td><b>what:</b> Actions: decide, generation, reframe, start, why.</td></tr>
 <tr><th scope="row">TOOL-agents</th><td>Tool or API</td><td>POST /api/agents</td><td><b>what:</b> Whitelisted actions: propose_variant, tighten_guardrail, request_decision, reframe_goal, none.</td></tr>
 <tr><th scope="row">TOOL-guide</th><td>Tool or API</td><td>POST /api/guide</td><td><b>what:</b> Chat and consented lead capture.</td></tr>
 <tr><th scope="row">TOOL-graph</th><td>Tool or API</td><td>POST /api/graph/ask</td><td><b>what:</b> Graph traversal in code, then one model call.</td></tr>
+<tr><th scope="row">TOOL-intake</th><td>Tool or API</td><td>POST /api/intake</td><td><b>what:</b> One model call per turn; submit only with consent.</td></tr>
 <tr><th scope="row">TOOL-runner</th><td>Tool or API</td><td>Policy runner</td><td><b>what:</b> Runs a policy over all sample exceptions. Deterministic.</td></tr>
 <tr><th scope="row">TOOL-caps</th><td>Tool or API</td><td>Call budget</td><td><b>what:</b> 10 calls per loop run; 120 model calls per day, site-wide.</td></tr>
 <tr><th scope="row">DATA-sample</th><td>Data</td><td>Sample AP exceptions</td><td><b>what:</b> 150 synthetic exceptions. Read only.</td></tr>
@@ -1078,7 +1084,7 @@
 </tbody></table></div>
     </details>
     <details class="gr-alt">
-      <summary>All 135 edges of the skill graph, as a table</summary>
+      <summary>All 160 edges of the skill graph, as a table</summary>
       <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Edges of the skill graph"><table class="fw-table gr-table"><thead><tr><th scope="col">From</th><th scope="col">Relation</th><th scope="col">To</th></tr></thead><tbody>
 <tr><td>AG-proposer</td><td>has skill</td><td>SK-propose</td></tr>
 <tr><td>SK-propose</td><td>uses</td><td>TOOL-model</td></tr>
@@ -1179,6 +1185,25 @@
 <tr><td>SK-graph</td><td>gated by</td><td><a class="cid" href="/controls/#CST-03">CST-03</a></td></tr>
 <tr><td>SK-graph</td><td>gated by</td><td><a class="cid" href="/controls/#TAL-04">TAL-04</a></td></tr>
 <tr><td>SK-graph</td><td>runs at</td><td>LVL-1</td></tr>
+<tr><td>AG-intake</td><td>has skill</td><td>SK-intake</td></tr>
+<tr><td>SK-intake</td><td>uses</td><td>TOOL-model</td></tr>
+<tr><td>SK-intake</td><td>uses</td><td>TOOL-intake</td></tr>
+<tr><td>SK-intake</td><td>uses</td><td>TOOL-caps</td></tr>
+<tr><td>SK-intake</td><td>writes</td><td>DATA-ratelimits</td></tr>
+<tr><td>SK-intake</td><td>gated by</td><td><a class="cid" href="/controls/#PCS-01">PCS-01</a></td></tr>
+<tr><td>SK-intake</td><td>gated by</td><td><a class="cid" href="/controls/#PCS-02">PCS-02</a></td></tr>
+<tr><td>SK-intake</td><td>gated by</td><td><a class="cid" href="/controls/#PRV-01">PRV-01</a></td></tr>
+<tr><td>SK-intake</td><td>gated by</td><td><a class="cid" href="/controls/#PRV-04">PRV-04</a></td></tr>
+<tr><td>SK-intake</td><td>gated by</td><td><a class="cid" href="/controls/#CST-03">CST-03</a></td></tr>
+<tr><td>SK-intake</td><td>gated by</td><td><a class="cid" href="/controls/#TAL-04">TAL-04</a></td></tr>
+<tr><td>SK-intake</td><td>runs at</td><td>LVL-1</td></tr>
+<tr><td>AG-intake</td><td>has skill</td><td>SK-submit</td></tr>
+<tr><td>SK-submit</td><td>uses</td><td>TOOL-intake</td></tr>
+<tr><td>SK-submit</td><td>writes</td><td>DATA-requests</td></tr>
+<tr><td>SK-submit</td><td>gated by</td><td><a class="cid" href="/controls/#HO-01">HO-01</a></td></tr>
+<tr><td>SK-submit</td><td>gated by</td><td><a class="cid" href="/controls/#PRV-01">PRV-01</a></td></tr>
+<tr><td>SK-submit</td><td>gated by</td><td><a class="cid" href="/controls/#TAL-04">TAL-04</a></td></tr>
+<tr><td>SK-submit</td><td>runs at</td><td>LVL-1</td></tr>
 <tr><td>AG-proposer</td><td>cannot</td><td>DENY-scorer</td></tr>
 <tr><td>AG-supervisor</td><td>cannot</td><td>DENY-scorer</td></tr>
 <tr><td>AG-room</td><td>cannot</td><td>DENY-scorer</td></tr>
@@ -1201,8 +1226,13 @@
 <tr><td>AG-room</td><td>cannot</td><td>DENY-actions</td></tr>
 <tr><td>AG-graph</td><td>cannot</td><td>DENY-actions</td></tr>
 <tr><td>AG-guide</td><td>cannot</td><td>DENY-actions</td></tr>
+<tr><td>AG-intake</td><td>cannot</td><td>DENY-actions</td></tr>
 <tr><td>DENY-actions</td><td>blocked by</td><td><a class="cid" href="/controls/#TAL-03">TAL-03</a></td></tr>
 <tr><td>DENY-actions</td><td>blocked by</td><td><a class="cid" href="/controls/#IAM-03">IAM-03</a></td></tr>
+<tr><td>AG-intake</td><td>cannot</td><td>DENY-unconsented</td></tr>
+<tr><td>AG-guide</td><td>cannot</td><td>DENY-unconsented</td></tr>
+<tr><td>DENY-unconsented</td><td>blocked by</td><td><a class="cid" href="/controls/#HO-01">HO-01</a></td></tr>
+<tr><td>DENY-unconsented</td><td>blocked by</td><td><a class="cid" href="/controls/#PRV-04">PRV-04</a></td></tr>
 <tr><td>AG-proposer</td><td>cannot</td><td>DENY-requests</td></tr>
 <tr><td>AG-supervisor</td><td>cannot</td><td>DENY-requests</td></tr>
 <tr><td>AG-room</td><td>cannot</td><td>DENY-requests</td></tr>
@@ -1213,6 +1243,7 @@
 <tr><td>AG-room</td><td>cannot</td><td>DENY-budget</td></tr>
 <tr><td>AG-guide</td><td>cannot</td><td>DENY-budget</td></tr>
 <tr><td>AG-graph</td><td>cannot</td><td>DENY-budget</td></tr>
+<tr><td>AG-intake</td><td>cannot</td><td>DENY-budget</td></tr>
 <tr><td>DENY-budget</td><td>blocked by</td><td><a class="cid" href="/controls/#CST-03">CST-03</a></td></tr>
 <tr><td>DENY-budget</td><td>blocked by</td><td><a class="cid" href="/controls/#TAL-04">TAL-04</a></td></tr>
 </tbody></table></div>
@@ -1260,7 +1291,7 @@
 <tr><th scope="row">SIG-robot</th><td>Signal</td><td>Robots and machines</td><td><b>status:</b> not connected; <b>what:</b> Not connected in this demo.</td></tr>
 <tr><th scope="row">BR-router</th><td>Router</td><td>Brain router</td><td><b>what:</b> Rules in code read the question, pick the graph and the model family.; <b>rules:</b> 10</td></tr>
 <tr><th scope="row">BR-kg</th><td>Graph lookup</td><td>Knowledge graph lookup</td><td><b>what:</b> Traverses the AP knowledge graph in code.; <b>nodes:</b> 227; <b>edges:</b> 637</td></tr>
-<tr><th scope="row">BR-skills</th><td>Graph lookup</td><td>Skill graph lookup</td><td><b>what:</b> Traverses the skill graph in code.; <b>nodes:</b> 73; <b>edges:</b> 135</td></tr>
+<tr><th scope="row">BR-skills</th><td>Graph lookup</td><td>Skill graph lookup</td><td><b>what:</b> Traverses the skill graph in code.; <b>nodes:</b> 78; <b>edges:</b> 160</td></tr>
 <tr><th scope="row">MF-llm</th><td>Model family</td><td>GPT-class LLM</td><td><b>status:</b> run: composes the answer from the subgraph; <b>good at:</b> Language, drafting, explanation, flexible reasoning; <b>evals:</b> Task accuracy, groundedness, injection, refusal; <b>mandatory controls:</b> PCS-01 PCS-02 MR-04 PRV-02; <b>typical ceiling:</b> L3 in a strong harness</td></tr>
 <tr><th scope="row">MF-slm</th><td>Model family</td><td>Small model</td><td><b>status:</b> routed to, not run in this demo; <b>good at:</b> Narrow classification and extraction at low cost; <b>evals:</b> Accuracy per class, robustness to new inputs; <b>mandatory controls:</b> MR-01 PCS-02; <b>typical ceiling:</b> L3 to L4 for narrow tasks</td></tr>
 <tr><th scope="row">MF-rag</th><td>Model family</td><td>Retrieval (RAG)</td><td><b>status:</b> routed to, not run in this demo; <b>good at:</b> Grounded answers from documents; <b>evals:</b> Retrieval recall, citation accuracy, access leaks; <b>mandatory controls:</b> PCS-04 MR-04; <b>typical ceiling:</b> L3 with citations</td></tr>

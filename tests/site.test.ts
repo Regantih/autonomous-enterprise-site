@@ -125,18 +125,17 @@ describe('built site', () => {
     expect(html(pages[0]).match(/LangChain/g)?.length).toBeGreaterThan(0);
   });
 
-  it('puts all three request forms on /contact behind tabs, each posting to /api/request with a honeypot', () => {
+  it('has no static forms anywhere: /contact, /speaking and /advisory use the intake agent with a plain link fallback', () => {
+    for (const p of pages) expect(html(p), p.out).not.toMatch(/<form[\s>]/);
+    for (const out of ['contact/index.html', 'speaking/index.html', 'advisory/index.html']) {
+      const h = html(byOut(out));
+      expect(h, out).toContain('<div class="ik" data-intake hidden></div>');
+      expect(h, out).toMatch(/<script src="\/assets\/intake\.js\?v=[0-9a-f]{10}" defer><\/script>/);
+      expect(h, out).toContain('href="https://www.linkedin.com/in/hemanth-reganti-147153178/" rel="noopener" target="_blank">Message Hemanth on LinkedIn');
+    }
     const contact = html(byOut('contact/index.html'));
-    for (const type of ['speaking', 'consultation', 'media']) {
-      expect(contact).toContain(`<input type="hidden" name="type" value="${type}">`);
-    }
-    expect(contact.match(/<form class="request-form" action="\/api\/request" method="post"/g)).toHaveLength(3);
-    expect(contact.match(/name="website" tabindex="-1"/g)).toHaveLength(3);
-    for (const [id, label] of [['speaking', 'Speaking'], ['advisory', 'Advisory'], ['media', 'Media &amp; podcasts']]) {
-      expect(contact).toContain(`<a class="tab" id="tab-${id}" href="#${id}" aria-controls="${id}">${label}</a>`);
-      expect(contact).toContain(`<div class="tabpanel" id="${id}" aria-labelledby="tab-${id}">`);
-    }
-    for (const f of ['name', 'email', 'outlet', 'topic', 'deadline', 'message']) expect(contact).toContain(`id="me-${f}" name="${f}"`);
+    for (const id of ['speaking', 'advisory', 'media']) expect(contact).toContain(`<li id="${id}">`);
+    for (const f of ['speaking-form', 'advisory-form', 'media-form']) expect(existsSync(join(DIST, '..', 'src', 'partials', `${f}.html`)), f).toBe(false);
   });
 
   it('uses the Human-Led Enterprise brand on humanledenterprise.com', () => {
@@ -199,7 +198,7 @@ describe('built site', () => {
     expect(h).toContain(BIO_LONG);
     expect(Math.abs(wordCount(BIO_SHORT) - 50)).toBeLessThanOrEqual(5);
     expect(Math.abs(wordCount(BIO_LONG) - 120)).toBeLessThanOrEqual(5);
-    expect(h).toContain('<input type="hidden" name="type" value="speaking">');
+    expect(h).toContain('<div class="ik" data-intake hidden></div>');
   });
 
   it('serves advisory at /advisory with the engagement steps, no prices, and redirects /consulting', () => {
@@ -207,7 +206,7 @@ describe('built site', () => {
     for (const s of ['Intro call', 'Readiness assessment', 'Roadmap and guardrails', 'How an engagement works']) expect(h).toContain(s);
     const main = h.match(/<main[\s\S]*?<\/main>/)![0].replace(/<section class="section section-orange[\s\S]*?<\/section>/, '');
     expect(main).not.toMatch(/\$\s?\d/);
-    expect(h).toContain('<input type="hidden" name="type" value="consultation">');
+    expect(h).toContain('<div class="ik" data-intake hidden></div>');
     expect(existsSync(join(DIST, 'consulting'))).toBe(false);
     const redirects = readFileSync(join(DIST, '_redirects'), 'utf8');
     expect(redirects).toContain('/consulting /advisory/ 301');

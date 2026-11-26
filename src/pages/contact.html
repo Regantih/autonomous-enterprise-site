@@ -2,28 +2,18 @@
   <div class="container">
     <p class="eyebrow">Contact</p>
     <h1 id="page-title">Work with Hemanth</h1>
-    <p class="lead">Choose the request that fits. Hemanth replies to the email address you give.</p>
+    <p class="lead">Tell the intake agent what you need. It asks a few questions and fills the card. Hemanth replies by email.</p>
   </div>
 </section>
-<section class="section" aria-labelledby="forms-title">
+<section class="section" aria-labelledby="intake-title">
   <div class="container">
-    <h2 id="forms-title" class="visually-hidden">Request forms</h2>
-    <div class="tabs" data-tabs>
-      <nav class="tablist" aria-label="Request type">
-        <a class="tab" id="tab-speaking" href="#speaking" aria-controls="speaking">Speaking</a>
-        <a class="tab" id="tab-advisory" href="#advisory" aria-controls="advisory">Advisory</a>
-        <a class="tab" id="tab-media" href="#media" aria-controls="media">Media &amp; podcasts</a>
-      </nav>
-      <div class="tabpanel" id="speaking" aria-labelledby="tab-speaking">
-        {{> speaking-form}}
-      </div>
-      <div class="tabpanel" id="advisory" aria-labelledby="tab-advisory">
-        {{> advisory-form}}
-      </div>
-      <div class="tabpanel" id="media" aria-labelledby="tab-media">
-        {{> media-form}}
-      </div>
-    </div>
+    <h2 id="intake-title" class="visually-hidden">Send a request</h2>
+    <ul class="ik-kinds">
+      <li id="speaking"><b>A talk.</b> Keynotes, panels, fireside chats and workshops.</li>
+      <li id="advisory"><b>Advisory.</b> Readiness, governance, operating model and the business case.</li>
+      <li id="media"><b>Media or a podcast.</b> Interviews, podcasts and articles.</li>
+    </ul>
+    {{> intake}}
   </div>
 </section>
 {{> press-kit}}

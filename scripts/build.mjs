@@ -342,7 +342,7 @@ export function build() {
   for (const f of readdirSync(join(SRC, 'static'))) cpSync(join(SRC, 'static', f), join(DIST, f), { recursive: true });
 
   const layout = read(join(SRC, 'partials', 'layout.html'));
-  const assetVersion = hash(['styles.css', 'site.js', 'guide.js', 'blueprints.js', 'graphs.js', 'graphs.css', ...BP_DATA_FILES].map((f) => read(join(SRC, 'assets', f))).join(''));
+  const assetVersion = hash(['styles.css', 'site.js', 'guide.js', 'blueprints.js', 'graphs.js', 'graphs.css', 'intake.js', 'intake.css', ...BP_DATA_FILES].map((f) => read(join(SRC, 'assets', f))).join(''));
 
   const bpVars = blueprintVars(join(SRC, 'assets'));
   const recording = writeRecording();
@@ -369,6 +369,8 @@ export function build() {
           : page.bp ? bpScripts + (page.src === 'trace.html' ? `<link rel="stylesheet" href="${assetUrl('trace.css')}">\n<script src="${assetUrl('trace-core.js')}" defer></script>\n<script src="${assetUrl('trace.js')}" defer></script>\n`
             : page.src === 'graphs.html' ? `<link rel="stylesheet" href="${assetUrl('graphs.css')}">\n<script src="${graphsData}" defer></script>\n<script src="${assetUrl('graphs.js')}" defer></script>\n`
             : page.src === 'loops.html' ? `<link rel="stylesheet" href="${assetUrl('loops.css')}">\n<script src="${assetUrl('loops-live.js')}" defer></script>\n<script src="${recording.url}" defer></script>\n<script src="${assetUrl('loops.js')}" defer></script>\n` : '')
+            : ['contact.html', 'speaking.html', 'advisory.html'].includes(page.src)
+              ? `<link rel="stylesheet" href="${assetUrl('intake.css')}">\n<script src="${assetUrl('intake.js')}" defer></script>\n`
             : page.src === 'leaders.html'
               ? `<link rel="stylesheet" href="${assetUrl('leaders.css')}">\n<script src="${assetUrl('leaders.js')}" defer></script>\n`
               : '',

@@ -96,7 +96,7 @@ describe('graphs: build', () => {
 
   it('shows what each agent can and cannot do, with levels L0 to L4', () => {
     const agents = SKILLS.nodes.filter((n) => n.type === 'agent').map((n) => n.id);
-    expect(agents).toEqual(['AG-proposer', 'AG-harness', 'AG-supervisor', 'AG-evaluator', 'AG-archivist', 'AG-room', 'AG-guide', 'AG-graph']);
+    expect(agents).toEqual(['AG-proposer', 'AG-harness', 'AG-supervisor', 'AG-evaluator', 'AG-archivist', 'AG-room', 'AG-guide', 'AG-graph', 'AG-intake']);
     for (const a of agents) expect(SKILLS.edges.some((e) => e.s === a && e.rel === 'has_skill'), a).toBe(true);
     for (const s of SKILLS.nodes.filter((n) => n.type === 'skill')) expect(String(s.facts.autonomy)).toMatch(/^L[0-4]$/);
     expect(SKILLS.edges).toContainEqual({ s: 'AG-proposer', t: 'DENY-scorer', rel: 'cannot' });

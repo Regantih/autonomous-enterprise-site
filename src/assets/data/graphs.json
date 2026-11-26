@@ -7116,7 +7116,7 @@
      "source": "functions/api/loop/step.ts"
     },
     "x": 70,
-    "y": 88.8
+    "y": 82.2
    },
    {
     "id": "AG-harness",
@@ -7128,7 +7128,7 @@
      "source": "lib/loop.ts"
     },
     "x": 70,
-    "y": 206.3
+    "y": 186.7
    },
    {
     "id": "AG-supervisor",
@@ -7140,7 +7140,7 @@
      "source": "functions/api/loop/step.ts"
     },
     "x": 70,
-    "y": 323.8
+    "y": 291.1
    },
    {
     "id": "AG-evaluator",
@@ -7152,7 +7152,7 @@
      "source": "lib/loop.ts"
     },
     "x": 70,
-    "y": 441.3
+    "y": 395.6
    },
    {
     "id": "AG-archivist",
@@ -7164,7 +7164,7 @@
      "source": "lib/loop.ts"
     },
     "x": 70,
-    "y": 558.8
+    "y": 500
    },
    {
     "id": "AG-room",
@@ -7176,7 +7176,7 @@
      "source": "functions/api/agents.ts"
     },
     "x": 70,
-    "y": 676.3
+    "y": 604.4
    },
    {
     "id": "AG-guide",
@@ -7188,7 +7188,7 @@
      "source": "functions/api/guide.ts"
     },
     "x": 70,
-    "y": 793.8
+    "y": 708.9
    },
    {
     "id": "AG-graph",
@@ -7200,7 +7200,19 @@
      "source": "functions/api/graph/ask.ts"
     },
     "x": 70,
-    "y": 911.3
+    "y": 813.3
+   },
+   {
+    "id": "AG-intake",
+    "type": "agent",
+    "label": "Intake agent (AI)",
+    "facts": {
+     "kind": "AI agent",
+     "does": "Asks short questions and fills a request card.",
+     "source": "functions/api/intake.ts"
+    },
+    "x": 70,
+    "y": 917.8
    },
    {
     "id": "SK-propose",
@@ -7212,7 +7224,7 @@
      "controls": "MR-10 PCS-02 TRC-05 CST-03"
     },
     "x": 300,
-    "y": 56.1
+    "y": 52.4
    },
    {
     "id": "SK-runpolicy",
@@ -7224,7 +7236,7 @@
      "controls": "MR-01 TAL-05"
     },
     "x": 300,
-    "y": 108.3
+    "y": 97.1
    },
    {
     "id": "SK-guard",
@@ -7236,7 +7248,7 @@
      "controls": "MR-10 SOD-02 SOD-01"
     },
     "x": 300,
-    "y": 160.6
+    "y": 141.9
    },
    {
     "id": "SK-ship",
@@ -7248,7 +7260,7 @@
      "controls": "TAL-02 TAL-06 TRC-01"
     },
     "x": 300,
-    "y": 212.8
+    "y": 186.7
    },
    {
     "id": "SK-explain",
@@ -7260,7 +7272,7 @@
      "controls": "HO-01 HO-06 PCS-02 CST-03"
     },
     "x": 300,
-    "y": 265
+    "y": 231.4
    },
    {
     "id": "SK-score",
@@ -7272,7 +7284,7 @@
      "controls": "MR-10 MR-09"
     },
     "x": 300,
-    "y": 317.2
+    "y": 276.2
    },
    {
     "id": "SK-archive",
@@ -7284,7 +7296,7 @@
      "controls": "TRC-05 TRC-04"
     },
     "x": 300,
-    "y": 369.4
+    "y": 321
    },
    {
     "id": "SK-room",
@@ -7296,7 +7308,7 @@
      "controls": "TAL-03 PCS-01 PCS-03 TAL-04 CST-03"
     },
     "x": 300,
-    "y": 421.7
+    "y": 365.7
    },
    {
     "id": "SK-guide",
@@ -7308,7 +7320,7 @@
      "controls": "MR-04 PCS-01 PCS-05 TAL-04"
     },
     "x": 300,
-    "y": 473.9
+    "y": 410.5
    },
    {
     "id": "SK-lead",
@@ -7320,7 +7332,7 @@
      "controls": "PRV-01 PRV-04 TAL-04"
     },
     "x": 300,
-    "y": 526.1
+    "y": 455.2
    },
    {
     "id": "SK-graph",
@@ -7332,7 +7344,31 @@
      "controls": "MR-04 PCS-01 PCS-02 CST-03 TAL-04"
     },
     "x": 300,
-    "y": 578.3
+    "y": 500
+   },
+   {
+    "id": "SK-intake",
+    "type": "skill",
+    "label": "Fill a request card by conversation",
+    "facts": {
+     "autonomy": "L1",
+     "why": "Asks and extracts only. Code checks every field.",
+     "controls": "PCS-01 PCS-02 PRV-01 PRV-04 CST-03 TAL-04"
+    },
+    "x": 300,
+    "y": 544.8
+   },
+   {
+    "id": "SK-submit",
+    "type": "skill",
+    "label": "Store a request the visitor confirmed",
+    "facts": {
+     "autonomy": "L1",
+     "why": "Code stores it only after the visitor ticks consent and presses Send.",
+     "controls": "HO-01 PRV-01 TAL-04"
+    },
+    "x": 300,
+    "y": 589.5
    },
    {
     "id": "TOOL-model",
@@ -7342,7 +7378,7 @@
      "what": "One GPT-class model, with a smaller fallback model."
     },
     "x": 540,
-    "y": 59.4
+    "y": 57.6
    },
    {
     "id": "TOOL-loop",
@@ -7352,7 +7388,7 @@
      "what": "Actions: decide, generation, reframe, start, why."
     },
     "x": 540,
-    "y": 118.1
+    "y": 112.9
    },
    {
     "id": "TOOL-agents",
@@ -7362,7 +7398,7 @@
      "what": "Whitelisted actions: propose_variant, tighten_guardrail, request_decision, reframe_goal, none."
     },
     "x": 540,
-    "y": 176.9
+    "y": 168.2
    },
    {
     "id": "TOOL-guide",
@@ -7372,7 +7408,7 @@
      "what": "Chat and consented lead capture."
     },
     "x": 540,
-    "y": 235.6
+    "y": 223.5
    },
    {
     "id": "TOOL-graph",
@@ -7382,7 +7418,17 @@
      "what": "Graph traversal in code, then one model call."
     },
     "x": 540,
-    "y": 294.4
+    "y": 278.8
+   },
+   {
+    "id": "TOOL-intake",
+    "type": "tool",
+    "label": "POST /api/intake",
+    "facts": {
+     "what": "One model call per turn; submit only with consent."
+    },
+    "x": 540,
+    "y": 334.1
    },
    {
     "id": "TOOL-runner",
@@ -7392,7 +7438,7 @@
      "what": "Runs a policy over all sample exceptions. Deterministic."
     },
     "x": 540,
-    "y": 353.1
+    "y": 389.4
    },
    {
     "id": "TOOL-caps",
@@ -7402,7 +7448,7 @@
      "what": "10 calls per loop run; 120 model calls per day, site-wide."
     },
     "x": 540,
-    "y": 411.9
+    "y": 444.7
    },
    {
     "id": "DATA-sample",
@@ -7412,7 +7458,7 @@
      "what": "150 synthetic exceptions. Read only."
     },
     "x": 540,
-    "y": 470.6
+    "y": 500
    },
    {
     "id": "DATA-metrics",
@@ -7422,7 +7468,7 @@
      "what": "Goal number and guardrail readings per variant."
     },
     "x": 540,
-    "y": 529.4
+    "y": 555.3
    },
    {
     "id": "DATA-policy",
@@ -7432,7 +7478,7 @@
      "what": "Six settings: auto_approve_limit, match_tolerance_pct, senior_review_above, small_supplier_protection, confidence_floor, audit_trace."
     },
     "x": 540,
-    "y": 588.1
+    "y": 610.6
    },
    {
     "id": "DATA-scorer",
@@ -7442,7 +7488,7 @@
      "what": "Outside the loop. No agent may edit it."
     },
     "x": 540,
-    "y": 646.9
+    "y": 665.9
    },
    {
     "id": "DATA-archive",
@@ -7452,7 +7498,7 @@
      "what": "Kept in the visitor’s browser for the run."
     },
     "x": 540,
-    "y": 705.6
+    "y": 721.2
    },
    {
     "id": "DATA-knowledge",
@@ -7462,7 +7508,7 @@
      "what": "The guide’s source text."
     },
     "x": 540,
-    "y": 764.4
+    "y": 776.5
    },
    {
     "id": "DATA-requests",
@@ -7472,7 +7518,7 @@
      "what": "Leads a visitor submits with consent."
     },
     "x": 540,
-    "y": 823.1
+    "y": 831.8
    },
    {
     "id": "DATA-graphs",
@@ -7482,7 +7528,7 @@
      "what": "Built from committed files at build time."
     },
     "x": 540,
-    "y": 881.9
+    "y": 887.1
    },
    {
     "id": "DATA-ratelimits",
@@ -7492,7 +7538,7 @@
      "what": "Counts calls for the caps. No content."
     },
     "x": 540,
-    "y": 940.6
+    "y": 942.4
    },
    {
     "id": "DENY-scorer",
@@ -7503,7 +7549,7 @@
      "controls": "MR-10"
     },
     "x": 300,
-    "y": 630.6
+    "y": 634.3
    },
    {
     "id": "DENY-oneway",
@@ -7514,7 +7560,7 @@
      "controls": "HO-06 SOD-03"
     },
     "x": 300,
-    "y": 682.8
+    "y": 679
    },
    {
     "id": "DENY-bank",
@@ -7525,7 +7571,7 @@
      "controls": "TAL-05 TAL-07"
     },
     "x": 300,
-    "y": 735
+    "y": 723.8
    },
    {
     "id": "DENY-loosen",
@@ -7536,7 +7582,7 @@
      "controls": "SOD-01"
     },
     "x": 300,
-    "y": 787.2
+    "y": 768.6
    },
    {
     "id": "DENY-actions",
@@ -7547,18 +7593,29 @@
      "controls": "TAL-03 IAM-03"
     },
     "x": 300,
-    "y": 839.4
+    "y": 813.3
+   },
+   {
+    "id": "DENY-unconsented",
+    "type": "denied",
+    "label": "Cannot: Send a request without the visitor’s consent",
+    "facts": {
+     "how": "The submit path refuses any request without explicit consent. The model cannot call it.",
+     "controls": "HO-01 PRV-04"
+    },
+    "x": 300,
+    "y": 858.1
    },
    {
     "id": "DENY-requests",
     "type": "denied",
     "label": "Cannot: Write to the requests table",
     "facts": {
-     "how": "Only the lead path writes requests, after the visitor submits.",
+     "how": "Only the guide and intake submit paths write requests, after the visitor confirms.",
      "controls": "IAM-03"
     },
     "x": 300,
-    "y": 891.7
+    "y": 902.9
    },
    {
     "id": "DENY-budget",
@@ -7569,7 +7626,7 @@
      "controls": "CST-03 TAL-04"
     },
     "x": 300,
-    "y": 943.9
+    "y": 947.6
    },
    {
     "id": "CST-03",
@@ -8431,6 +8488,101 @@
     "rel": "runs_at"
    },
    {
+    "s": "AG-intake",
+    "t": "SK-intake",
+    "rel": "has_skill"
+   },
+   {
+    "s": "SK-intake",
+    "t": "TOOL-model",
+    "rel": "uses"
+   },
+   {
+    "s": "SK-intake",
+    "t": "TOOL-intake",
+    "rel": "uses"
+   },
+   {
+    "s": "SK-intake",
+    "t": "TOOL-caps",
+    "rel": "uses"
+   },
+   {
+    "s": "SK-intake",
+    "t": "DATA-ratelimits",
+    "rel": "writes"
+   },
+   {
+    "s": "SK-intake",
+    "t": "PCS-01",
+    "rel": "gated_by"
+   },
+   {
+    "s": "SK-intake",
+    "t": "PCS-02",
+    "rel": "gated_by"
+   },
+   {
+    "s": "SK-intake",
+    "t": "PRV-01",
+    "rel": "gated_by"
+   },
+   {
+    "s": "SK-intake",
+    "t": "PRV-04",
+    "rel": "gated_by"
+   },
+   {
+    "s": "SK-intake",
+    "t": "CST-03",
+    "rel": "gated_by"
+   },
+   {
+    "s": "SK-intake",
+    "t": "TAL-04",
+    "rel": "gated_by"
+   },
+   {
+    "s": "SK-intake",
+    "t": "LVL-1",
+    "rel": "runs_at"
+   },
+   {
+    "s": "AG-intake",
+    "t": "SK-submit",
+    "rel": "has_skill"
+   },
+   {
+    "s": "SK-submit",
+    "t": "TOOL-intake",
+    "rel": "uses"
+   },
+   {
+    "s": "SK-submit",
+    "t": "DATA-requests",
+    "rel": "writes"
+   },
+   {
+    "s": "SK-submit",
+    "t": "HO-01",
+    "rel": "gated_by"
+   },
+   {
+    "s": "SK-submit",
+    "t": "PRV-01",
+    "rel": "gated_by"
+   },
+   {
+    "s": "SK-submit",
+    "t": "TAL-04",
+    "rel": "gated_by"
+   },
+   {
+    "s": "SK-submit",
+    "t": "LVL-1",
+    "rel": "runs_at"
+   },
+   {
     "s": "AG-proposer",
     "t": "DENY-scorer",
     "rel": "cannot"
@@ -8541,6 +8693,11 @@
     "rel": "cannot"
    },
    {
+    "s": "AG-intake",
+    "t": "DENY-actions",
+    "rel": "cannot"
+   },
+   {
     "s": "DENY-actions",
     "t": "TAL-03",
     "rel": "blocked_by"
@@ -8548,6 +8705,26 @@
    {
     "s": "DENY-actions",
     "t": "IAM-03",
+    "rel": "blocked_by"
+   },
+   {
+    "s": "AG-intake",
+    "t": "DENY-unconsented",
+    "rel": "cannot"
+   },
+   {
+    "s": "AG-guide",
+    "t": "DENY-unconsented",
+    "rel": "cannot"
+   },
+   {
+    "s": "DENY-unconsented",
+    "t": "HO-01",
+    "rel": "blocked_by"
+   },
+   {
+    "s": "DENY-unconsented",
+    "t": "PRV-04",
     "rel": "blocked_by"
    },
    {
@@ -8601,6 +8778,11 @@
     "rel": "cannot"
    },
    {
+    "s": "AG-intake",
+    "t": "DENY-budget",
+    "rel": "cannot"
+   },
+   {
     "s": "DENY-budget",
     "t": "CST-03",
     "rel": "blocked_by"
@@ -8612,26 +8794,26 @@
    }
   ],
   "stats": {
-   "nodes": 73,
-   "edges": 135,
+   "nodes": 78,
+   "edges": 160,
    "nodes_by_type": {
-    "agent": 8,
+    "agent": 9,
     "control": 26,
     "data": 9,
-    "denied": 7,
+    "denied": 8,
     "level": 5,
-    "skill": 11,
-    "tool": 7
+    "skill": 13,
+    "tool": 8
    },
    "edges_by_relation": {
-    "blocked_by": 11,
-    "cannot": 25,
-    "gated_by": 37,
-    "has_skill": 11,
+    "blocked_by": 13,
+    "cannot": 29,
+    "gated_by": 46,
+    "has_skill": 13,
     "reads": 13,
-    "runs_at": 11,
-    "uses": 20,
-    "writes": 7
+    "runs_at": 13,
+    "uses": 24,
+    "writes": 9
    },
    "controls_used": [
     "CST-03",
@@ -8668,6 +8850,11 @@
      "degree": 12
     },
     {
+     "id": "SK-intake",
+     "label": "Fill a request card by conversation",
+     "degree": 12
+    },
+    {
      "id": "SK-room",
      "label": "Answer room instructions",
      "degree": 12
@@ -8680,11 +8867,6 @@
     {
      "id": "SK-explain",
      "label": "Explain results and draft decision cards",
-     "degree": 10
-    },
-    {
-     "id": "SK-guide",
-     "label": "Answer from the book",
      "degree": 10
     }
    ]
@@ -8837,8 +9019,8 @@
     "label": "Skill graph lookup",
     "facts": {
      "what": "Traverses the skill graph in code.",
-     "nodes": 73,
-     "edges": 135
+     "nodes": 78,
+     "edges": 160
     },
     "x": 310,
     "y": 430

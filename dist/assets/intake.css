@@ -1,0 +1,43 @@
+/* The conversational intake agent on /contact/, /speaking/ and /advisory/. */
+.ik-wrap { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(1rem, 3.5vw, 2rem); box-shadow: 0 20px 50px -30px rgba(0, 0, 0, 0.35); min-width: 0; }
+.ik-wrap h3 { font-size: 1.6rem; margin-top: 0; }
+.ik-kinds { display: grid; gap: 0.4rem; padding-left: 1.2rem; margin: 0 0 1.5rem; max-width: 60ch; }
+.ik-fallback { font-size: 0.92rem; color: var(--muted); margin: 1rem 0 0; }
+.ik-intents { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.75rem 0 0.25rem; }
+.ik-hint { font-size: 0.92rem; color: var(--muted); margin: 0.4rem 0 0.9rem; }
+.ik-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); align-items: start; }
+.ik-chat, .ik-card { min-width: 0; }
+.ik-log { list-style: none; margin: 0; padding: 0.6rem; display: grid; gap: 0.5rem; max-height: 22rem; min-height: 6rem; overflow-y: auto; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; }
+.ik-log:empty::before { content: "The conversation appears here."; color: var(--muted); font-size: 0.9rem; }
+.ik-m { display: grid; gap: 0.15rem; padding: 0.5rem 0.7rem; border-radius: 8px; background: var(--white); border: 1px solid var(--line); font-size: 0.95rem; overflow-wrap: anywhere; }
+.ik-m b { font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.ik-you { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.ik-you b { color: var(--muted-on-ink); }
+.ik-stop { border-left: 4px solid #d9a33a; }
+.ik-callm { font-size: 0.78rem; color: var(--muted); }
+.ik-dots { color: var(--muted); }
+.ik-row { display: flex; gap: 0.4rem; margin-top: 0.6rem; min-width: 0; }
+.ik-text { flex: 1 1 auto; min-width: 0; font: inherit; font-size: 1rem; padding: 0.5rem 0.75rem; border: 1px solid var(--line); border-radius: 999px; background: var(--white); color: var(--ink); }
+.ik-text:focus-visible { outline: 3px solid var(--orange); outline-offset: 1px; }
+.ik-meter { font-size: 0.82rem; color: var(--muted); margin: 0.4rem 0 0; }
+.ik-card { border: 1px solid var(--line); border-radius: 8px; padding: 0.8rem 1rem; }
+.ik-card h3 { font-size: 1.2rem; margin: 0 0 0.2rem; }
+.ik-card-sub { font-size: 0.9rem; color: var(--muted); margin: 0 0 0.6rem; }
+.ik-fields { display: grid; gap: 0.35rem; margin: 0 0 0.8rem; }
+.ik-f { display: grid; grid-template-columns: minmax(0, 8.5rem) minmax(0, 1fr); gap: 0.5rem; padding: 0.3rem 0; border-bottom: 1px solid var(--line); font-size: 0.93rem; }
+.ik-f dt { font-weight: 700; }
+.ik-f dd { margin: 0; overflow-wrap: anywhere; }
+.ik-req { font-weight: 400; font-size: 0.75rem; color: var(--orange-text); }
+.ik-empty { color: var(--muted); }
+.ik-new .ik-v { background: #fff1c9; }
+.ik-err { background: #fdecea; }
+.ik-errmsg { display: block; color: var(--danger); font-size: 0.85rem; }
+.ik-edit { font: inherit; font-size: 0.8rem; border: 0; background: none; color: var(--orange-text); text-decoration: underline; cursor: pointer; padding: 0 0.2rem; }
+.ik-edit:focus-visible, .ik-consent input:focus-visible { outline: 3px solid var(--orange); outline-offset: 1px; }
+.ik-f dd input, .ik-f dd select, .ik-f dd textarea { font: inherit; width: 100%; max-width: 100%; padding: 0.35rem 0.5rem; border: 1px solid var(--line); border-radius: 4px; }
+.ik-opts { border: 0; padding: 0; margin: 0; display: grid; gap: 0.2rem; }
+.ik-editbtns { display: flex; gap: 0.3rem; margin-top: 0.35rem; }
+.ik-consent { display: flex; gap: 0.5rem; align-items: flex-start; font-size: 0.93rem; margin: 0.6rem 0; }
+.ik-consent input { margin-top: 0.25rem; }
+.ik-status { min-height: 1.2em; font-size: 0.92rem; }
+.ik-bad { color: var(--danger); }

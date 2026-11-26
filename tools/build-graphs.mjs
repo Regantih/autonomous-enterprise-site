@@ -248,6 +248,7 @@ export function buildSkillGraph(AE, facts) {
     { id: 'AG-room', label: 'Room voices (AI)', kind: 'AI agent', where: 'functions/api/agents.ts', does: 'Answers visitor instructions in the operations room.' },
     { id: 'AG-guide', label: 'Book guide (AI)', kind: 'AI agent', where: 'functions/api/guide.ts', does: 'Answers questions from the book knowledge pack.' },
     { id: 'AG-graph', label: 'Graph agent (AI)', kind: 'AI agent', where: 'functions/api/graph/ask.ts', does: 'Answers from a subgraph that code selected.' },
+    { id: 'AG-intake', label: 'Intake agent (AI)', kind: 'AI agent', where: 'functions/api/intake.ts', does: 'Asks short questions and fills a request card.' },
   ];
   const TOOLS = [
     { id: 'TOOL-model', label: 'Model gateway', what: 'One GPT-class model, with a smaller fallback model.' },
@@ -255,6 +256,7 @@ export function buildSkillGraph(AE, facts) {
     { id: 'TOOL-agents', label: 'POST /api/agents', what: `Whitelisted actions: ${facts.actionTypes.join(', ')}.` },
     { id: 'TOOL-guide', label: 'POST /api/guide', what: 'Chat and consented lead capture.' },
     { id: 'TOOL-graph', label: 'POST /api/graph/ask', what: 'Graph traversal in code, then one model call.' },
+    { id: 'TOOL-intake', label: 'POST /api/intake', what: 'One model call per turn; submit only with consent.' },
     { id: 'TOOL-runner', label: 'Policy runner', what: 'Runs a policy over all sample exceptions. Deterministic.' },
     { id: 'TOOL-caps', label: 'Call budget', what: `${facts.callsPerRun} calls per loop run; ${facts.dailyCalls} model calls per day, site-wide.` },
   ];
@@ -293,6 +295,10 @@ export function buildSkillGraph(AE, facts) {
       why: 'Stores a lead only when the visitor submits it.' },
     { id: 'SK-graph', label: 'Answer from a code-selected subgraph', agent: 'AG-graph', level: 1, tools: ['TOOL-model', 'TOOL-graph', 'TOOL-caps'], reads: ['DATA-graphs'], writes: ['DATA-ratelimits'], controls: ['MR-04', 'PCS-01', 'PCS-02', 'CST-03', 'TAL-04'],
       why: 'Read only. Cited node IDs are checked in code.' },
+    { id: 'SK-intake', label: 'Fill a request card by conversation', agent: 'AG-intake', level: 1, tools: ['TOOL-model', 'TOOL-intake', 'TOOL-caps'], reads: [], writes: ['DATA-ratelimits'], controls: ['PCS-01', 'PCS-02', 'PRV-01', 'PRV-04', 'CST-03', 'TAL-04'],
+      why: 'Asks and extracts only. Code checks every field.' },
+    { id: 'SK-submit', label: 'Store a request the visitor confirmed', agent: 'AG-intake', level: 1, tools: ['TOOL-intake'], reads: [], writes: ['DATA-requests'], controls: ['HO-01', 'PRV-01', 'TAL-04'],
+      why: 'Code stores it only after the visitor ticks consent and presses Send.' },
   ];
   const DENY = [
     { id: 'DENY-scorer', label: 'Change the scorer, goal or test set', controls: ['MR-10'], agents: ['AG-proposer', 'AG-supervisor', 'AG-room', 'AG-graph'],
@@ -303,11 +309,13 @@ export function buildSkillGraph(AE, facts) {
       how: `Hard-coded do-not-automate list: ${facts.doNotAutomate.join(', ')}. Not a setting.` },
     { id: 'DENY-loosen', label: 'Loosen a guardrail cap', controls: ['SOD-01'], agents: ['AG-proposer', 'AG-supervisor', 'AG-room'],
       how: 'Caps can only tighten. Looser values are clamped in code.' },
-    { id: 'DENY-actions', label: 'Take an action outside the whitelist', controls: ['TAL-03', 'IAM-03'], agents: ['AG-room', 'AG-graph', 'AG-guide'],
+    { id: 'DENY-actions', label: 'Take an action outside the whitelist', controls: ['TAL-03', 'IAM-03'], agents: ['AG-room', 'AG-graph', 'AG-guide', 'AG-intake'],
       how: 'Unknown action types become none. Extra fields are dropped.' },
+    { id: 'DENY-unconsented', label: 'Send a request without the visitor\u2019s consent', controls: ['HO-01', 'PRV-04'], agents: ['AG-intake', 'AG-guide'],
+      how: 'The submit path refuses any request without explicit consent. The model cannot call it.' },
     { id: 'DENY-requests', label: 'Write to the requests table', controls: ['IAM-03'], agents: ['AG-proposer', 'AG-supervisor', 'AG-room', 'AG-graph'],
-      how: 'Only the lead path writes requests, after the visitor submits.' },
-    { id: 'DENY-budget', label: 'Exceed the model-call budget', controls: ['CST-03', 'TAL-04'], agents: ['AG-proposer', 'AG-supervisor', 'AG-room', 'AG-guide', 'AG-graph'],
+      how: 'Only the guide and intake submit paths write requests, after the visitor confirms.' },
+    { id: 'DENY-budget', label: 'Exceed the model-call budget', controls: ['CST-03', 'TAL-04'], agents: ['AG-proposer', 'AG-supervisor', 'AG-room', 'AG-guide', 'AG-graph', 'AG-intake'],
       how: `Calls are counted in the rate-limit table: ${facts.dailyCalls} per day site-wide.` },
   ];
   const LEVELS = [0, 1, 2, 3, 4].map((n) => ({ id: `LVL-${n}`, label: `L${n}`, meaning: ['Manual', 'Assist', 'Approve', 'Act within limits', 'Run and report'][n] }));
