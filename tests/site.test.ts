@@ -318,12 +318,12 @@ describe('portrait, real cover and guide', () => {
     expect(css).not.toMatch(/\.portrait-img[^}]*border-radius:\s*50%/);
   });
 
-  it('lays home out as one journey: pitch, reimagine your operations, start from your role, the book, blueprints, speaking and advisory, the author', () => {
+  it('lays home out as one journey: pitch, the management problem answered, reimagine your operations, start from your role, the book, blueprints, speaking and advisory, the author', () => {
     const h = home();
-    const order = ['hero-title', 'id="reimagine"', 'id="start"', 'id="book"', 'id="blueprints"', 'id="speaking"', 'id="author"'].map((k) => h.indexOf(k));
+    const order = ['hero-title', 'id="management"', 'id="reimagine"', 'id="start"', 'id="book"', 'id="blueprints"', 'id="speaking"', 'id="author"'].map((k) => h.indexOf(k));
     for (const i of order) expect(i).toBeGreaterThan(0);
     expect([...order].sort((a, b) => a - b)).toEqual(order);
-    const band = h.slice(order[6], h.indexOf('</section>', order[6]));
+    const band = h.slice(order[7], h.indexOf('</section>', order[7]));
     expect(band).toContain('Author, speaker and advisor on human-led, agent-operated enterprises.');
     expect(band).toContain('href="/about/"');
   });
@@ -355,9 +355,34 @@ describe('portrait, real cover and guide', () => {
     expect((main.match(/>Talk to the book</g) ?? []).length).toBe(1);
   });
 
-  it('keeps home to seven sections (Reimagine your operations after the pitch) and moves the detail to /book', () => {
+  it('answers the management problem under the pitch: five decisions, each with a question, a book answer, a chapter cite and a link to an existing blueprint section; the same five on /book', () => {
+    const h = home();
+    const sec = h.match(/<section class="section section-paper-2 mgmt" id="management"[\s\S]*?<\/section>/)![0];
+    expect(sec).toContain('<h2 id="management-title">The management problem, answered</h2>');
+    const cards = [...sec.matchAll(/<li class="mgmt-card">([\s\S]*?)<\/li>/g)].map((m) => m[1]);
+    expect(cards).toHaveLength(5);
+    const titles = cards.map((c) => c.match(/<\/span> ([^<]+)<\/h3>/)![1]);
+    expect(titles).toEqual(['Where agents act', 'How far they&rsquo;re trusted', 'Who answers', 'How you stop them', 'Whether it pays']);
+    const words = (s: string) => s.replace(/<[^>]+>/g, '').trim().split(/\s+/).length;
+    const built = new Set(pages.map((p) => p.path));
+    const book = html(byOut('book/index.html'));
+    for (const c of cards) {
+      expect(words(c.match(/<p class="mgmt-q">([^<]+)<\/p>/)![1])).toBeLessThanOrEqual(20);
+      expect(words(c.match(/<p class="mgmt-a">([^<]+)<\/p>/)![1])).toBeLessThanOrEqual(25);
+      expect(c).toMatch(/<span class="md-cite">Book, Ch \d{2}\.\d+<\/span>/);
+      const href = c.match(/<a class="more" href="([^"]+)"/)![1];
+      const [path, hash] = href.split('#');
+      expect(built.has(path), href).toBe(true);
+      expect(html(pages.find((p) => p.path === path)!), href).toContain(`id="${hash}"`);
+      expect(book).toContain(`href="${href}"`);
+    }
+    expect(book).toContain('id="answer"');
+    expect([...book.matchAll(/<ol class="mgmt-list">([\s\S]*?)<\/ol>/g)][0][1].match(/<li>/g)).toHaveLength(5);
+  });
+
+  it('keeps home to eight sections (the management answer, then Reimagine your operations, after the pitch) and moves the detail to /book', () => {
     const main = home().split('<main')[1].split('</main>')[0];
-    expect(main.match(/<section /g)).toHaveLength(7);
+    expect(main.match(/<section /g)).toHaveLength(8);
     for (const id of ['problem', 'inside', 'audience']) {
       expect(main).not.toContain(`id="${id}"`);
       expect(html(byOut('book/index.html'))).toContain(`id="${id}"`);

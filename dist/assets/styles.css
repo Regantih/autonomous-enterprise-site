@@ -1256,3 +1256,18 @@ html { scroll-padding-top: calc(var(--header-h) + 0.75rem); }
 .bp-front-card h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); margin-top: 0.75rem; }
 .bp-front-card h2 a { text-decoration: none; }
 .bp-front-card h2 a:hover { text-decoration: underline; text-decoration-color: var(--orange); }
+
+/* The management problem, answered: five decisions (home) and the short list on /book */
+.mgmt-grid { list-style: none; margin: 2rem 0 0; padding: 0; display: grid; gap: 1rem; grid-template-columns: 1fr; }
+@media (min-width: 40rem) { .mgmt-grid { grid-template-columns: repeat(2, 1fr); } .mgmt-card:last-child { grid-column: 1 / -1; } }
+@media (min-width: 60rem) { .mgmt-grid { grid-template-columns: repeat(6, 1fr); } .mgmt-card, .mgmt-card:last-child { grid-column: span 2; } .mgmt-card:nth-child(n+4) { grid-column: span 3; } }
+.mgmt-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.25rem 1.25rem 1rem; display: flex; flex-direction: column; }
+.mgmt-card h3 { font-size: 1.3rem; margin-bottom: 0.6rem; display: flex; gap: 0.6rem; align-items: baseline; }
+.mgmt-num { flex: none; display: inline-grid; place-items: center; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--ink); color: var(--paper); font: 700 0.8rem/1 var(--font-body); transform: translateY(-0.1rem); }
+.mgmt-q { font-weight: 600; font-size: 1rem; line-height: 1.4; margin-bottom: 0.5rem; }
+.mgmt-a { font-size: 1rem; line-height: 1.45; margin-bottom: 0.75rem; }
+.mgmt-foot { margin: auto 0 0; font-size: 0.95rem; display: flex; flex-wrap: wrap; gap: 0.35rem 0.75rem; align-items: baseline; }
+.mgmt-close { margin-top: 1.75rem; max-width: 60ch; }
+.mgmt-book-title { margin-top: 2.5rem; }
+.mgmt-list { margin: 1rem 0 2rem; padding-left: 1.4rem; display: grid; gap: 0.6rem; max-width: 70ch; }
+.mgmt .md-cite, .mgmt-list .md-cite { display: inline-block; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em; color: var(--orange-text); white-space: nowrap; }

@@ -43,6 +43,16 @@ describe('knowledge pack and tools (code, no model)', () => {
     expect(chapterTags('Part I Foundations (Ch 1–11)')).toEqual(['Ch 01–11']);
   });
 
+  it('search_book answers who solves the management problem with the five decisions (Ch 01)', () => {
+    const hits = searchBook('who solves the management problem');
+    expect(hits.length).toBeGreaterThan(0);
+    expect(hits[0].section).toBe('The management problem, answered');
+    expect(hits[0].cites).toContain('Ch 01');
+    const all = PASSAGES.filter((p) => p.section === 'The management problem, answered');
+    expect(all).toHaveLength(7);
+    expect(all.flatMap((p) => p.cites)).toEqual(expect.arrayContaining(['Ch 01', 'Ch 21', 'Ch 05', 'Ch 24', 'Ch 25', 'Ch 26']));
+  });
+
   it('search_book finds the right passages and their chapters', () => {
     const hits = searchBook('how do we trust a supplier agent from outside');
     expect(hits.length).toBeGreaterThan(0);
