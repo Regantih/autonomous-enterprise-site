@@ -1,0 +1,282 @@
+<section class="page-head" aria-labelledby="page-title">
+  <div class="container">
+    <p class="eyebrow">Frameworks from the book</p>
+    <h1 id="page-title">How the agent-run company is managed</h1>
+    <p class="lead">The core ideas and frameworks of <cite>The Autonomous Enterprise</cite>, explained. Each one answers a question leaders face when agents start to act on the company&rsquo;s behalf.</p>
+  </div>
+</section>
+
+<section class="section" id="contents" aria-labelledby="contents-title">
+  <div class="container">
+    <h2 id="contents-title" class="visually-hidden">Contents</h2>
+    <ol class="fw-toc">
+      <li><a href="#human-led">Human-led, agent-operated</a></li>
+      <li><a href="#scale">The autonomy scale, L0 to L5</a></li>
+      <li><a href="#ceiling">Materiality and reversibility</a></li>
+      <li><a href="#earned">Earned on evidence, taken back by rule</a></li>
+      <li><a href="#harness">The harness sets the ceiling</a></li>
+      <li><a href="#pvrc">Propose, validate, route, commit</a></li>
+      <li><a href="#weakest-link">The weakest-link rule</a></li>
+      <li><a href="#cost">Cost per completed outcome</a></li>
+      <li><a href="#not-automate">When not to automate</a></li>
+      <li><a href="#maturity">Six-dimension maturity</a></li>
+      <li><a href="#flywheel">The value&ndash;risk flywheel</a></li>
+      <li><a href="#roadmap">Foundations first, then the 30-month plan</a></li>
+    </ol>
+  </div>
+</section>
+
+<section class="section section-paper-2 fw" id="human-led" aria-labelledby="f1">
+  <div class="container fw-body">
+    <p class="fw-num">01 &middot; The core idea</p>
+    <h2 id="f1">Human-led, agent-operated</h2>
+    <p class="lead">People set intent, own outcomes and decide where not to automate. Agents operate inside limits people set.</p>
+    <p>Neither half works alone. Agents without human intent automate the wrong work. Intent without agents leaves the value on the table. The book makes the idea testable: every agent has a named owner, every step has a level on one scale, and the controls that enforce both belong to the enterprise.</p>
+    <p>The book&rsquo;s thesis sits underneath every chapter: <strong>autonomy is earned when value compounds faster than risk.</strong> Some work adds risk faster than any agent adds value, so it stays with people.</p>
+    <h3>The ten-line charter</h3>
+    <ol class="fw-list">
+      <li>People set intent and own outcomes; agents operate inside limits people set.</li>
+      <li>Every agent has a named human owner with the authority to stop it. Accountability sits with executives, never with a model or a vendor.</li>
+      <li>Autonomy is set per step, earned on evidence and taken back by rule.</li>
+      <li>What an agent can do never decides what it may do. Irreversible and outward-facing actions stay behind human gates.</li>
+      <li>Use the simplest engine that works: rules before models, workflows before agents.</li>
+      <li>Every action leaves a trace: who acted, for whom, under which policy, with what evidence.</li>
+      <li>Every human override is a labeled error the program learns from.</li>
+      <li>People decide where not to automate, and that list is reviewed like any other control.</li>
+      <li>The enterprise owns its controls, context, definitions, skills and traces; models are replaceable parts.</li>
+      <li>Autonomy is earned when value compounds faster than risk, read each period on one page.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="section fw" id="scale" aria-labelledby="f2">
+  <div class="container fw-body">
+    <p class="fw-num">02 &middot; One shared language</p>
+    <h2 id="f2">The autonomy scale, L0 to L5</h2>
+    <p class="lead">Autonomy is set per step, not per agent or per process. One numbered scale gives the business, auditors and the program one language for targets, controls and evidence.</p>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <thead><tr><th scope="col">Level</th><th scope="col">Who decides</th><th scope="col">Who executes</th><th scope="col">Human role</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">L0 Manual</th><td>Human</td><td>Human</td><td>Does the work. Right for rare, high-judgment events.</td></tr>
+          <tr><th scope="row">L1 Assist</th><td>Human</td><td>Human</td><td>Uses the agent&rsquo;s suggestions. Risk: over-trust.</td></tr>
+          <tr><th scope="row">L2 Approve</th><td>Agent proposes</td><td>Agent, after approval</td><td>Approves every action with evidence in view. Risk: rubber-stamping.</td></tr>
+          <tr><th scope="row">L3 Act within limits</th><td>Agent</td><td>Agent</td><td>Handles exceptions above limits; samples in-limit actions.</td></tr>
+          <tr><th scope="row">L4 Run and report</th><td>Agent</td><td>Agent</td><td>Audits outcomes, tunes limits and policies.</td></tr>
+          <tr><th scope="row">L5 Full</th><td>Agent</td><td>Agent</td><td>Sets goals only. A boundary marker, not a target, for financial postings.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>L3 is the main target for high-volume transactional work, and most measurable value in the first years comes from moving work from L2 to L3. At L3 the limits on amount, risk score, counterparty class and confidence sit outside the model, never in the prompt, and the agent cannot change them.</p>
+    <p>One counter-intuitive finding: human hours can rise slightly from L2 to L3, because the items that escalate are the hardest ones. The value at L3 comes from speed and from freeing people for hard cases, not only from hours saved.</p>
+  </div>
+</section>
+
+<section class="section section-paper-2 fw" id="ceiling" aria-labelledby="f3">
+  <div class="container fw-body">
+    <p class="fw-num">03 &middot; Where each step should sit</p>
+    <h2 id="f3">Materiality and reversibility set the default ceiling</h2>
+    <p class="lead">Two properties decide how far a step can safely go: how much damage one wrong action can do, and how easily it can be caught and undone.</p>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <thead><tr><th scope="col">Materiality per action</th><th scope="col">Easily reversible</th><th scope="col">Hard to reverse</th><th scope="col">Irreversible</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Low (under $5,000)</th><td>Up to L4</td><td>Up to L3</td><td>Up to L2</td></tr>
+          <tr><th scope="row">Medium ($5,000 to $250,000)</th><td>Up to L3</td><td>Up to L2</td><td>L1 to L2</td></tr>
+          <tr><th scope="row">High (over $250,000) or regulatory</th><td>Up to L2</td><td>L1 to L2</td><td>L0 to L1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Then five modifiers lower it</h3>
+    <ol class="fw-list">
+      <li><strong>Data quality.</strong> If the input data fails its quality gate, cap the step at L2.</li>
+      <li><strong>Regulation.</strong> A high-risk use under law, or a key financial control, stays at L2 until legal and audit approve more.</li>
+      <li><strong>Evidence.</strong> No step rises until it meets the exit criteria of its current level.</li>
+      <li><strong>External counterparty.</strong> If the action commits the company to a third party, lower the ceiling one level for the first 90 days.</li>
+      <li><strong>Weakest link.</strong> A step that depends on a handoff between platforms cannot run above that handoff.</li>
+    </ol>
+    <p class="fw-note">Thresholds are illustrative. The book asks each company to set its own with internal audit.</p>
+  </div>
+</section>
+
+<section class="section fw" id="earned" aria-labelledby="f4">
+  <div class="container fw-body">
+    <p class="fw-num">04 &middot; Promotion and demotion</p>
+    <h2 id="f4">Earned on evidence, taken back by rule</h2>
+    <p class="lead">Every promotion needs evidence and a human gate. Demotion triggers move a step down automatically. Promotion is never automatic.</p>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <thead><tr><th scope="col">Move</th><th scope="col">Minimum evidence (illustrative)</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">L0 to L1</th><td>Data access approved; suggestions logged; users trained; four weeks of shadow running with error at or below the human baseline.</td></tr>
+          <tr><th scope="row">L1 to L2</th><td>Suggestions accepted at least 80% of the time over four weeks; agent identity and permissions in place.</td></tr>
+          <tr><th scope="row">L2 to L3</th><td>At least 95% approved without edits over 1,000+ actions and three months including a quarter-end; limits enforced outside the model; kill switch tested; reversals below 0.5%; audit sign-off.</td></tr>
+          <tr><th scope="row">L3 to L4</th><td>A strong control score; two quarter-ends at L3 with in-limit error below the human baseline; escalations within service level; drift monitoring live.</td></tr>
+          <tr><th scope="row">L4 to L5</th><td>Board-level risk acceptance. Normally not pursued for postings.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Automatic demotion triggers: an error above threshold, a failed data-quality gate, a change in the process or the model, or an audit finding. The book also separates duties: the person who approves an agent&rsquo;s actions may not change the agent&rsquo;s limits, instructions or tools.</p>
+  </div>
+</section>
+
+<section class="section section-paper-2 fw" id="harness" aria-labelledby="f5">
+  <div class="container fw-body">
+    <p class="fw-num">05 &middot; The first rule</p>
+    <h2 id="f5">The harness, not the model, sets the ceiling</h2>
+    <p class="lead">The model reasons; the harness governs. A modest model inside a strong harness can run a narrow step at L3 safely. A far better model next quarter would not raise the ceiling until the harness did.</p>
+    <p>That sets the order of design effort. Model choice is the easiest part to change later. Identity design, data contracts, interface boundaries and evidence stores are the hardest. Spend design effort in reverse order of changeability.</p>
+    <h3>The ten-part harness</h3>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">What it enforces</th><th scope="col">How it fails safe</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">1 Identity and delegation</th><td>One identity per agent, acting on behalf of an accountable person</td><td>No token, no call</td></tr>
+          <tr><th scope="row">2 Registry and lifecycle</th><td>Only registered, active agent versions run</td><td>Unregistered agent is blocked</td></tr>
+          <tr><th scope="row">3 Policy and limits</th><td>Thresholds, segregation of duties, blackout windows, outside the model</td><td>Missing rule means escalate</td></tr>
+          <tr><th scope="row">4 Tool gateway</th><td>Scopes, rate limits, read/write separation</td><td>Unknown tool is rejected</td></tr>
+          <tr><th scope="row">5 Model gateway</th><td>Routing, fallback, masking, quotas</td><td>Fallback model or drop to L1</td></tr>
+          <tr><th scope="row">6 Context and memory controls</th><td>What may enter context; memory write rules</td><td>Untrusted content treated as data</td></tr>
+          <tr><th scope="row">7 Verification and approval gates</th><td>Schema checks, a checker, approval cards</td><td>Failed check goes to a person</td></tr>
+          <tr><th scope="row">8 Operating envelope and cost</th><td>Deadlines, call budgets, retries, loop guards</td><td>Stop and escalate with trace</td></tr>
+          <tr><th scope="row">9 Decision trace</th><td>What was seen, decided and done</td><td>If the trace fails, the action fails</td></tr>
+          <tr><th scope="row">10 Evaluation, release and kill switch</th><td>Test sets before release; stop an agent, a scope or the fleet</td><td>Kill switch tested quarterly</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="section fw" id="pvrc" aria-labelledby="f6">
+  <div class="container fw-body">
+    <p class="fw-num">06 &middot; The second rule</p>
+    <h2 id="f6">Agents decide; deterministic rules post</h2>
+    <p class="lead">At L3 a step runs in four moves: propose, validate, route, commit.</p>
+    <ol class="fw-list">
+      <li><strong>Propose.</strong> The agent proposes an action. It never writes to the books itself.</li>
+      <li><strong>Validate.</strong> Deterministic checks test the proposal: schema, data freshness, business rules.</li>
+      <li><strong>Route.</strong> A policy table, not the agent, decides whether the action is inside limits.</li>
+      <li><strong>Commit.</strong> Inside limits, a released interface commits it. Outside, a person approves with an evidence pack. Every path ends in a decision trace.</li>
+    </ol>
+    <h3>When to act alone: the decision threshold</h3>
+    <p>The book gives one definition for when an agent may act without a person: act only when the expected gain beats the expected loss. If <em>G</em> is the gain when the action is right and <em>L</em> the loss when it is wrong, act when the agent&rsquo;s confidence is at least <strong>L &divide; (G + L)</strong>. Bigger stakes raise the bar automatically, so the same agent posts a small credit and routes a large one to a person.</p>
+  </div>
+</section>
+
+<section class="section section-paper-2 fw" id="weakest-link" aria-labelledby="f7">
+  <div class="container fw-body">
+    <p class="fw-num">07 &middot; Autonomy across many systems</p>
+    <h2 id="f7">A chain runs only as high as its weakest link</h2>
+    <p class="lead">Real work crosses ERPs, SaaS platforms, a mainframe and hundreds of interfaces. If any link needs a person to read, re-key or approve, the whole chain runs at that link&rsquo;s level.</p>
+    <p class="fw-formula">chain level = minimum (level of each step, ceiling of each handoff)</p>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <thead><tr><th scope="col">Handoff type</th><th scope="col">Ceiling</th><th scope="col">Why</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Manual or email</th><td>L1</td><td>A person must read and act</td></tr>
+          <tr><th scope="row">Scheduled file</th><td>L2</td><td>Hours of latency; no confirmation per record</td></tr>
+          <tr><th scope="row">Synchronous API</th><td>L3</td><td>Real-time, authenticated, auditable per call</td></tr>
+          <tr><th scope="row">Event</th><td>L3</td><td>Real-time; needs replay and ordering controls</td></tr>
+          <tr><th scope="row">Governed agent tool</th><td>L3</td><td>Typed, authorized, traced per call</td></tr>
+          <tr><th scope="row">Cross-agent contract</th><td>L3 to L4</td><td>Defines who decides, what evidence returns and what happens on failure</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Four decision rules follow. Fund the weakest link first. Never promise a chain level above its weakest handoff in a business case. Measure links, not only agents. Re-rate a chain whenever a link changes. The rule moves investment from agents to handoffs, which is why the book says many interfaces should be retired, not rebuilt.</p>
+  </div>
+</section>
+
+<section class="section fw" id="cost" aria-labelledby="f8">
+  <div class="container fw-body">
+    <p class="fw-num">08 &middot; The economics</p>
+    <h2 id="f8">Compare in cost per completed outcome</h2>
+    <p class="lead">Platforms now charge for agent work. A cheap action that leaves a person to finish the job is not cheap.</p>
+    <p class="fw-formula">cost per completed outcome = platform meter charges + model and runtime charges + review minutes &times; loaded rate + fallback share &times; fallback minutes &times; loaded rate</p>
+    <p>Comparing on this one basis puts agents, people and vendors side by side honestly. The book&rsquo;s worked examples show that delay, not the meter price, moves value most: faster decisions, fewer penalties and released working capital often outweigh hours saved.</p>
+  </div>
+</section>
+
+<section class="section section-paper-2 fw" id="not-automate" aria-labelledby="f9">
+  <div class="container fw-body">
+    <p class="fw-num">09 &middot; The decision programs skip</p>
+    <h2 id="f9">When not to automate</h2>
+    <p class="lead">Deciding where not to automate is a control, not a matter of taste. A capable agent kept at L2 beside a person is often the higher-value design, not the timid one.</p>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <thead><tr><th scope="col">Keep a person deciding when&hellip;</th><th scope="col">Why</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">The judgment is the product</th><td>The value lies in a person deciding and being seen to decide</td></tr>
+          <tr><th scope="row">Nobody can explain the workflow</th><td>Reviewers cannot challenge what they cannot describe</td></tr>
+          <tr><th scope="row">The error is irreversible and unbounded</th><td>No limit outside the model caps the loss</td></tr>
+          <tr><th scope="row">The process is about to change</th><td>Automation freezes the old design</td></tr>
+          <tr><th scope="row">The data cannot carry the decision</th><td>The quality gate failed or there is no data owner</td></tr>
+          <tr><th scope="row">The law reserves it to people</th><td>Some decisions about people must have human oversight</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Across every domain the pattern holds: agents investigate, match, draft and monitor; deterministic engines compute and post; named people sign, release money and decide about safety and about people. Autonomy grows fastest where decisions are frequent, small and reversible, and stops where an action cannot be undone or a law names the signatory.</p>
+  </div>
+</section>
+
+<section class="section fw" id="maturity" aria-labelledby="f10">
+  <div class="container fw-body">
+    <p class="fw-num">10 &middot; Readiness</p>
+    <h2 id="f10">The weakest dimension caps the company</h2>
+    <p class="lead">Score six dimensions from 1 to 5: core and interfaces, data and context, agents and platform, governance and controls, people and change, and value management.</p>
+    <p>The enterprise stage is the lowest score, not the average, because the weakest control sets the ceiling. Record evidence for each score and repeat every six months. The five stages run from experiments to approved autonomy, bounded autonomy and, for selected chains, autonomous operations.</p>
+    <p>The test is evidence, not ambition: a company claiming stage four with no reuse and a growing pile of open pilots is a stage-three company with more agents.</p>
+  </div>
+</section>
+
+<section class="section section-paper-2 fw" id="flywheel" aria-labelledby="f11">
+  <div class="container fw-body">
+    <p class="fw-num">11 &middot; The thesis as a scorecard</p>
+    <h2 id="f11">The value&ndash;risk flywheel</h2>
+    <p class="lead">Value and risk both compound. Raise a step&rsquo;s autonomy only when its value signal is rising faster than its risk signal.</p>
+    <ol class="fw-list">
+      <li><strong>Value signal.</strong> The measure that shows the step is paying off: faster decisions, cash released, cost per completed outcome falling.</li>
+      <li><strong>Risk counterweight.</strong> The measure that would hold promotion: errors, reversals, audit findings, drift. A red counterweight holds the whole agent family.</li>
+      <li><strong>Drag to remove.</strong> Some drag is good, such as a control that slows a risky action. Some is bad, such as a manual handoff that slows a safe one. Add good drag where risk leads; remove bad drag where value is blocked.</li>
+    </ol>
+    <p>Every chapter names its value signal, risk counterweight and drag. The book turns them into a one-page scorecard read monthly per agent family and at every program gate.</p>
+  </div>
+</section>
+
+<section class="section fw" id="roadmap" aria-labelledby="f12">
+  <div class="container fw-body">
+    <p class="fw-num">12 &middot; Making it happen</p>
+    <h2 id="f12">Foundations first, then a 30-month plan with gates</h2>
+    <p class="lead">&ldquo;A board that funds agents first and data second pays twice.&rdquo; Before a layer gets a bigger budget, show evidence that the layer beneath it is ready.</p>
+    <ol class="fw-list">
+      <li><strong>Data readiness.</strong> Source authority, lineage, freshness, ownership; golden records for supplier, customer and material.</li>
+      <li><strong>Platform stress test.</strong> Interfaces, events and trace stores load-tested before agents depend on them.</li>
+      <li><strong>Govern the agentic layer.</strong> Registry, identity, gateway and kill switch live before agents scale.</li>
+    </ol>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <thead><tr><th scope="col">Phase</th><th scope="col">Months</th><th scope="col">Purpose</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">0 Mobilize</th><td>1&ndash;3</td><td>Charter, team, baselines, architecture decisions, first shadow agents</td></tr>
+          <tr><th scope="row">1 Foundation and pilots</th><td>4&ndash;13</td><td>Platforms, data, governance plane, first interface wave, first agents to L2</td></tr>
+          <tr><th scope="row">2 First go-live</th><td>14&ndash;19</td><td>First region live; first core agents in shadow</td></tr>
+          <tr><th scope="row">3 Scale</th><td>20&ndash;30</td><td>Remaining waves; promotion and replication; decommission</td></tr>
+          <tr><th scope="row">4 Run</th><td>31&ndash;33</td><td>Handover to the line organization</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Each phase closes at a gate that passes on a scorecard reading, not only on delivery milestones, so value is booked only as fast as risk is shown to be under control. The book adds a 100-day starter plan, an agent contract template, promotion checklists and board questions in its toolkit.</p>
+    <p class="fw-note">Figures and thresholds on this page are illustrative frameworks from the book, built around a fictional company, Meridian Industries.</p>
+  </div>
+</section>
+
+<section class="section section-paper-2" id="next" aria-labelledby="next-title">
+  <div class="container">
+    <h2 id="next-title">Put the frameworks to work</h2>
+    <p class="lead">Read the full method, test where your company stands, or bring it to your leadership team.</p>
+    <p class="cta-row">
+      <a class="btn btn-primary ext" href="https://www.amazon.com/dp/B0HS8HG6DP" rel="noopener" target="_blank">Get the book<span class="visually-hidden"> (opens in a new tab)</span></a>
+      <a class="btn btn-dark" href="/talk/">Talk to the book</a>
+      <a class="btn btn-dark" href="/contact/#advisory">Talk with Hemanth</a>
+    </p>
+  </div>
+</section>

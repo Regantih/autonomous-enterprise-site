@@ -73,6 +73,13 @@ export const PAGES = [
     sitemap: true, priority: '0.8',
   },
   {
+    src: 'frameworks.html', out: 'frameworks/index.html', path: '/frameworks/', nav: 'FRAMEWORKS',
+    title: 'Frameworks from The Autonomous Enterprise | Human-Led Enterprise',
+    description:
+      'The core frameworks of The Autonomous Enterprise explained: the L0 to L5 autonomy scale, the harness, the weakest-link rule, cost per completed outcome, when not to automate and the 30-month plan.',
+    sitemap: true, priority: '0.9',
+  },
+  {
     src: 'ideas.html', out: 'ideas/index.html', path: '/ideas/', nav: 'IDEAS',
     title: 'Ideas from The Autonomous Enterprise | Human-Led Enterprise',
     description:
@@ -251,6 +258,7 @@ export function build() {
         : '',
       NAV_SPEAKING: page.nav === 'SPEAKING' ? ' aria-current="page"' : '',
       NAV_IDEAS: page.nav === 'IDEAS' ? ' aria-current="page"' : '',
+      NAV_FRAMEWORKS: page.nav === 'FRAMEWORKS' ? ' aria-current="page"' : '',
       NAV_ADVISORY: page.nav === 'ADVISORY' ? ' aria-current="page"' : '',
       NAV_CONTACT: page.nav === 'CONTACT' ? ' aria-current="page"' : '',
       NAV_BOOK: page.nav === 'BOOK' ? ' aria-current="page"' : '',

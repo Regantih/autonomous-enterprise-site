@@ -532,3 +532,25 @@ fieldset.field legend { padding: 0; margin-bottom: 0.35rem; }
   .guide-dialog { width: 100%; max-width: 100%; height: 100%; max-height: 100%; border-radius: 0; }
   .guide-dialog .guide-log { max-height: none; }
 }
+
+/* Frameworks page */
+.cta-row { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
+.fw-toc { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem 2rem; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); counter-reset: fw; }
+.fw-toc li { counter-increment: fw; border-top: 1px solid var(--line); padding-top: 0.6rem; }
+.fw-toc li::before { content: counter(fw, decimal-leading-zero); color: var(--orange-text); font-weight: 700; margin-right: 0.6rem; font-size: 0.9rem; letter-spacing: 0.08em; }
+.fw-toc a { color: var(--ink); text-decoration: none; font-weight: 600; }
+.fw-toc a:hover { text-decoration: underline; }
+.fw-body { max-width: 62rem; }
+.fw-body > p:not(.lead):not(.fw-num):not(.fw-formula) { max-width: 68ch; }
+.fw-body h3 { margin-top: 2rem; }
+.fw-num { font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange-text); font-weight: 700; margin-bottom: 0.5rem; }
+.fw-list { margin: 1rem 0 1.5rem; padding-left: 1.4rem; display: grid; gap: 0.55rem; max-width: 68ch; }
+.fw-table-wrap { overflow-x: auto; margin: 1.5rem 0; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); }
+.fw-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; min-width: 34rem; }
+.fw-table th, .fw-table td { text-align: left; vertical-align: top; padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--line); }
+.fw-table thead th { background: var(--ink); color: var(--paper); font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.fw-table tbody th { font-weight: 700; white-space: nowrap; }
+.fw-table tbody tr:last-child > * { border-bottom: 0; }
+.fw-formula { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--white); border-left: 4px solid var(--orange); padding: 0.9rem 1rem; margin: 1.25rem 0; font-size: 0.95rem; overflow-wrap: anywhere; }
+.fw-note { font-size: 0.9rem; color: #555; margin-top: 1rem; }
+@media (max-width: 40rem) { .fw-table tbody th { white-space: normal; } }

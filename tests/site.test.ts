@@ -144,12 +144,12 @@ describe('built site', () => {
     expect(readFileSync(join(DIST, 'robots.txt'), 'utf8')).toContain('Sitemap: https://humanledenterprise.com/sitemap.xml');
   });
 
-  it('has Book, Ideas, Speaking, Advisory, About, Contact in the header and footer of every page', () => {
+  it('has Book, Frameworks, Ideas, Speaking, Advisory, About, Contact in the header and footer of every page', () => {
     for (const p of pages) {
       const h = html(p);
       for (const part of [h.match(/<header[\s\S]*?<\/header>/)![0], h.match(/<footer[\s\S]*?<\/footer>/)![0]]) {
         const labels = [...part.matchAll(/<li><a href="(\/[^"]*)"[^>]*>([^<]+)<\/a><\/li>/g)].map((m) => m[2]);
-        expect(labels.slice(0, 6), p.out).toEqual(['Book', 'Ideas', 'Speaking', 'Advisory', 'About', 'Contact']);
+        expect(labels.slice(0, 7), p.out).toEqual(['Book', 'Frameworks', 'Ideas', 'Speaking', 'Advisory', 'About', 'Contact']);
       }
     }
   });
