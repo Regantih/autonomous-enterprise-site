@@ -1096,3 +1096,41 @@ fieldset.field legend { padding: 0; margin-bottom: 0.35rem; }
 @media (max-width: 30rem) { .guide-input textarea { min-height: 5rem; } }
 .guide-foot { gap: 1rem; }
 .guide-reset { white-space: nowrap; }
+
+/* Workflow steps table (Nov 26, 2026): wider than the text column on big screens, balanced columns,
+   layers and controls as wrapping chips, no fade over text, cards on phones. */
+.bp-steps-wrap, .bp-matrix-wrap { --bp-w: max(100%, min(100vw - 4rem, 84rem)); width: var(--bp-w); margin-inline: calc((100% - var(--bp-w)) / 2); }
+.x-hint + .bp-steps-wrap { margin-top: 1.4rem; }
+.bp-steps { min-width: 0; font-size: 0.92rem; line-height: 1.45; }
+.bp-steps th, .bp-steps td { padding: 0.75rem 0.7rem; vertical-align: top; text-align: left; }
+.bp-steps thead th { white-space: nowrap; vertical-align: bottom; }
+.bp-steps tbody th { white-space: normal; font-weight: 700; width: 30%; min-width: 11rem; max-width: 24rem; }
+.bp-steps td:nth-child(2) { min-width: 6.5rem; }
+.bp-steps td:nth-child(3) { white-space: nowrap; }
+.bp-steps td:nth-child(4) { min-width: 7rem; }
+.bp-steps td:nth-child(5) { min-width: 7rem; }
+.bp-steps td:nth-child(6) { min-width: 6.5rem; }
+.bp-steps td:nth-child(7) { min-width: 7.5rem; }
+.bp-chips { display: flex; flex-wrap: wrap; gap: 0.3rem 0.35rem; align-items: flex-start; }
+.bp-chips .cid, .bp-nb { white-space: nowrap; }
+.bp-chip { display: inline-block; padding: 0.05rem 0.45rem; border: 1px solid var(--line); border-radius: 999px; background: var(--paper); font-size: 0.8rem; font-weight: 600; line-height: 1.5; white-space: nowrap; }
+@media screen {
+  /* No fade mask over this table: the first column stays put and casts a shadow only once scrolled. */
+  .bp-steps-wrap.x-scroll.x-more, .bp-steps-wrap.x-scroll.x-less { -webkit-mask-image: none; mask-image: none; }
+  .bp-steps-wrap.x-scroll .bp-steps tbody th, .bp-steps-wrap.x-scroll .bp-steps thead th:first-child { position: sticky; left: 0; z-index: 1; }
+  .bp-steps-wrap.x-scroll .bp-steps tbody th { background: var(--white); }
+  .bp-steps-wrap.x-scroll .bp-steps thead th:first-child { background: var(--ink); z-index: 2; }
+  .bp-steps-wrap.x-less .bp-steps tbody th, .bp-steps-wrap.x-less .bp-steps thead th:first-child { box-shadow: 8px 0 10px -6px rgba(0, 0, 0, 0.3); }
+}
+/* Phones and small tablets: each step becomes a card, no sideways scrolling. */
+@media screen and (max-width: 55.99rem) {
+  .bp-steps-wrap { width: auto; margin-inline: 0; overflow: visible; border: 0; background: transparent; }
+  .bp-steps, .bp-steps tbody, .bp-steps tr, .bp-steps th, .bp-steps td { display: block; width: auto; min-width: 0; max-width: none; }
+  .bp-steps thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+  .bp-steps tbody { display: grid; gap: 0.75rem; }
+  .bp-steps tr { border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); padding: 0.85rem 0.95rem; display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: 0.45rem 0.75rem; }
+  .bp-steps tbody th { width: auto; min-width: 0; max-width: none; grid-column: 1 / -1; padding: 0 0 0.35rem; border-bottom: 1px solid var(--line); font-size: 1rem; }
+  .bp-steps td { display: contents; }
+  .bp-steps td::before { content: attr(data-label); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding-top: 0.15rem; }
+  .bp-steps tbody tr > th, .bp-steps tbody tr:last-child > th { border-bottom: 1px solid var(--line); }
+}

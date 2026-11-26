@@ -265,12 +265,28 @@
   var small = window.matchMedia && window.matchMedia('(max-width: 59.99rem)');
   if (fab && small) {
     var lastY = window.pageYOffset || 0;
-    window.addEventListener('scroll', function () {
+    /* Wider screens: the button also steps aside while it would sit on top of a wide table or diagram. */
+    var covers = function () {
+      var vw = document.documentElement.clientWidth, vh = window.innerHeight;
+      var fw = fab.offsetWidth, fh = fab.offsetHeight, gap = 24;
+      var left = vw - fw - gap, top = vh - fh - gap;
+      var ws = document.querySelectorAll(HINTED);
+      for (var i = 0; i < ws.length; i++) {
+        var r = ws[i].getBoundingClientRect();
+        if (r.width && r.right > left && r.bottom > top && r.top < vh) return true;
+      }
+      return false;
+    };
+    var goingDown = false;
+    var place = function () {
       var y = window.pageYOffset || 0, d = y - lastY;
-      if (Math.abs(d) < 8) return;
-      var away = small.matches && d > 0 && y > 240 && !fab.contains(document.activeElement);
+      if (Math.abs(d) >= 8) { goingDown = d > 0; lastY = y; }
+      var over = !small.matches && covers();
+      var away = !fab.contains(document.activeElement) && (over || (small.matches && goingDown && y > 240));
       fab.classList.toggle('fab-away', away);
-      lastY = y;
-    }, { passive: true });
+    };
+    window.addEventListener('scroll', place, { passive: true });
+    window.addEventListener('resize', place, { passive: true });
+    window.addEventListener('load', place);
   }
 })();
