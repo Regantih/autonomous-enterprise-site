@@ -1,0 +1,53 @@
+<section class="page-head bp-head" aria-labelledby="page-title">
+  <div class="container">
+    <p class="eyebrow">Blueprints &middot; Decision trace viewer</p>
+    <h1 id="page-title">Decision trace viewer</h1>
+    <p class="lead">See what a team of agents did, who decided, which control fired and why. Compare a normal run with a run that went wrong. Load your own trace; it never leaves your browser.</p>
+  </div>
+</section>
+{{BP_SUBNAV}}
+
+<section class="section bp-section" id="viewer" aria-labelledby="viewer-title">
+  <div class="container">
+    <h2 id="viewer-title" class="h-sm">One day of order-to-cash, traced</h2>
+    <p>Seven actors work 24 illustrative cases: an intake agent, a supervisor agent, a credit agent, a collections agent, the harness, an AR lead and the ledger. The decision trace is harness part 9: if the trace fails, the action fails. This view is how people keep oversight of agents that act thousands of times between reviews.</p>
+    <div class="bp-ix" hidden><div data-tv></div></div>
+    <noscript><p class="fw-note">Turn on JavaScript to explore the trace. The format and the metrics are described below.</p></noscript>
+  </div>
+</section>
+
+<section class="section section-paper-2 bp-section" id="format" aria-labelledby="format-title">
+  <div class="container fw-body">
+    <p class="eyebrow">Bring your own trace</p>
+    <h2 id="format-title" class="h-sm">The trace format</h2>
+    <p>Use JSON Lines: one event per line. Three fields are required: <code>t</code>, <code>agent</code> and <code>type</code>. The rest are optional. Add a <code>run</code> field with two values, such as baseline and fault-injected, to compare two runs.</p>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <thead><tr><th scope="col">Field</th><th scope="col">Meaning</th><th scope="col">Example</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">t</th><td>Time of the event, ISO 8601. Required.</td><td>2026-11-02T08:03:12Z</td></tr>
+          <tr><th scope="row">agent</th><td>Who acted: an agent, a person, the harness or a system. Required.</td><td>credit</td></tr>
+          <tr><th scope="row">type</th><td>register, receive, handoff, check, propose, escalate, approve, reject, commit, block, reverse or demote. Required.</td><td>propose</td></tr>
+          <tr><th scope="row">run</th><td>Which run the event belongs to.</td><td>baseline</td></tr>
+          <tr><th scope="row">case</th><td>The case or correlation ID that joins a thread.</td><td>C-1008</td></tr>
+          <tr><th scope="row">to, from, target</th><td>The other party of a handoff, or the agent whose action is reversed or demoted.</td><td>supervisor</td></tr>
+          <tr><th scope="row">role, level</th><td>On register: agent, person, control plane or system, and its autonomy level.</td><td>agent, 3</td></tr>
+          <tr><th scope="row">control, result</th><td>The control that fired, and pass or fail.</td><td>DQ-01, fail</td></tr>
+          <tr><th scope="row">route</th><td>On commit: auto (inside limits) or person (after approval).</td><td>auto</td></tr>
+          <tr><th scope="row">amount, conf</th><td>The value at stake and the agent&rsquo;s confidence.</td><td>1200, 0.87</td></tr>
+          <tr><th scope="row">msg, evidence</th><td>What happened, and the evidence a reviewer sees.</td><td>Proof of delivery attached.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>How the headline numbers are counted</h3>
+    <ul class="fw-list">
+      <li><strong>Actions.</strong> Proposals made by agents.</li>
+      <li><strong>Auto-committed.</strong> Commits with route auto: inside limits, no person needed.</li>
+      <li><strong>Routed to a person.</strong> Escalations to a decision card.</li>
+      <li><strong>Blocked by a control.</strong> Actions a control stopped outright.</li>
+      <li><strong>Reversals.</strong> Committed actions later undone. Each one is a labeled error.</li>
+      <li><strong>Dropped handoffs.</strong> Handoffs sent but never received by the other agent in the same case.</li>
+    </ul>
+    <p class="fw-note">The sample trace is illustrative and not client data. Files you load are read in your browser only. Nothing is uploaded or stored. Related: <a href="/frameworks/#harness">the ten-part harness</a>, <a href="/controls/#TRC-01">control TRC-01</a> and <a href="/leaders/">questions leaders ask</a>.</p>
+  </div>
+</section>

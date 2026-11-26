@@ -21,6 +21,7 @@ export const SUBNAV = [
   ['workflows', '/workflows/', 'Workflows'],
   ['controls', '/controls/', 'Controls'],
   ['designer', '/designer/', 'Designer'],
+  ['trace', '/blueprints/trace/', 'Trace viewer'],
 ];
 
 export function subnav(current) {

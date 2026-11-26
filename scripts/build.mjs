@@ -98,7 +98,7 @@ export const PAGES = [
     src: 'workflows.html', out: 'workflows/index.html', path: '/workflows/', nav: 'BLUEPRINTS', bp: 'workflows',
     title: 'Reimagined Workflows as Swimlanes | Human-Led Enterprise',
     description:
-      'Eight enterprise workflows reimagined for agents: today versus reimagined swimlanes with autonomy levels, models, embedded controls and failure injection.',
+      'Nine enterprise workflows reimagined for agents: today versus reimagined swimlanes with autonomy levels, models, embedded controls and failure injection.',
     sitemap: true, priority: '0.8',
   },
   {
@@ -114,6 +114,13 @@ export const PAGES = [
     description:
       'Design an agentic workflow step by step: get the autonomy ceiling per step, the weakest link, the required controls, a swimlane and an exportable blueprint.',
     sitemap: true, priority: '0.8',
+  },
+  {
+    src: 'trace.html', out: 'blueprints/trace/index.html', path: '/blueprints/trace/', nav: 'BLUEPRINTS', bp: 'trace',
+    title: 'Decision Trace Viewer for Multi-Agent Work | Human-Led Enterprise',
+    description:
+      'Explore an illustrative multi-agent decision trace: which agent acted, which control fired, what went to a person. Compare a baseline with a fault-injected run, or load your own trace.',
+    sitemap: true, priority: '0.7',
   },
   {
     src: 'leaders.html', out: 'leaders/index.html', path: '/leaders/',
@@ -303,7 +310,7 @@ export function build() {
         ? `<link rel="preload" as="image" type="image/webp" imagesrcset="${assetUrl('images/cover-400.webp')} 400w, ${assetUrl('images/cover-800.webp')} 800w, ${assetUrl('images/cover-1200.webp')} 1200w" imagesizes="(min-width: 56rem) 30rem, 82vw" fetchpriority="high">\n`
         : page.src === 'frameworks.html'
           ? `<script src="${assetUrl('frameworks.js')}" defer></script>\n`
-          : page.bp ? bpScripts
+          : page.bp ? bpScripts + (page.src === 'trace.html' ? `<link rel="stylesheet" href="${assetUrl('trace.css')}">\n<script src="${assetUrl('trace-core.js')}" defer></script>\n<script src="${assetUrl('trace.js')}" defer></script>\n` : '')
             : page.src === 'leaders.html'
               ? `<link rel="stylesheet" href="${assetUrl('leaders.css')}">\n<script src="${assetUrl('leaders.js')}" defer></script>\n`
               : '',

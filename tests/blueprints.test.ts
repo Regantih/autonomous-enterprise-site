@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import vm from 'node:vm';
 import { beforeAll, describe, expect, it } from 'vitest';
 // @ts-expect-error plain JS build script
 import { PAGES, build } from '../scripts/build.mjs';
@@ -151,7 +152,7 @@ describe('alignment layers and architecture data', () => {
 
 describe('built Blueprints pages', () => {
   it('builds the hub and four tools with sub-nav, scripts and illustrative labels', () => {
-    expect(bpPages.map((p) => p.path)).toEqual(['/blueprints/', '/architecture/', '/workflows/', '/controls/', '/designer/']);
+    expect(bpPages.map((p) => p.path)).toEqual(['/blueprints/', '/architecture/', '/workflows/', '/controls/', '/designer/', '/blueprints/trace/']);
     for (const p of bpPages) {
       const h = html(p.out);
       expect(h, p.out).toContain('<nav class="bp-subnav" aria-label="Blueprints">');
@@ -193,5 +194,64 @@ describe('built Blueprints pages', () => {
     expect(js).not.toMatch(/localStorage|sessionStorage|document\.cookie|indexedDB|fetch\(|XMLHttpRequest/);
     expect(js.match(/https?:\/\/[^'" ]+/g)).toEqual(['http://www.w3.org/2000/svg']);
     expect(js).not.toMatch(/style="/);
+  });
+});
+
+describe('decision trace viewer', () => {
+  const ctx: { window: Record<string, unknown>; fetch?: unknown; XMLHttpRequest?: unknown } = { window: {} };
+  vm.createContext(ctx);
+  vm.runInContext(readFileSync(join(ROOT, 'src/assets/trace-core.js'), 'utf8'), ctx);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const T: any = (ctx.window.AE as { trace: unknown }).trace;
+
+  it('round-trips the illustrative sample through the JSONL parser without errors', () => {
+    const text = T.toJSONL(T.sample(false)) + T.toJSONL(T.sample(true));
+    const p = T.parse(text);
+    expect(p.errors).toEqual([]);
+    expect(p.events.length).toBeGreaterThan(300);
+    expect(T.runs(p.events)).toEqual(['baseline', 'fault-injected']);
+  });
+
+  it('computes headline metrics and finds the injected anomalies', () => {
+    const a = T.metrics(T.sample(false)), b = T.metrics(T.sample(true));
+    expect(a).toMatchObject({ agents: 7, cases: 24, actions: 24, blocked: 0, dropped: 0 });
+    expect(b.blocked).toBeGreaterThan(a.blocked);
+    expect(b.dropped).toBeGreaterThan(0);
+    expect(b.routed).toBeGreaterThan(a.routed);
+    expect(b.reversals).toBeGreaterThan(a.reversals);
+    const titles = T.compare(T.sample(false), T.sample(true)).notes.map((n: { title: string }) => n.title);
+    for (const t of ['More cases went to people', 'Controls blocked actions', 'Handoffs were dropped', 'Reversals rose', 'An agent was demoted']) expect(titles).toContain(t);
+    const credit = T.agentTable(T.sample(true)).find((r: { agent: string }) => r.agent === 'credit');
+    expect(credit.level).toBe(2);
+  });
+
+  it('reports bad lines instead of failing, and requires t, agent and type', () => {
+    const p = T.parse('{"t":"2026-11-02T08:00:00Z","agent":"a","type":"propose"}\nnot json\n{"agent":"a","type":"propose"}\n{"t":"2026-11-02T08:00:01Z","agent":"a","type":"dance"}\n');
+    expect(p.events).toHaveLength(1);
+    expect(p.errors.map((e: { line: number }) => e.line)).toEqual([2, 3, 4]);
+  });
+
+  it('uses only sample control IDs that exist in the library', () => {
+    const ids = new Set(AE.controls.map((c: { id: string }) => c.id));
+    for (const e of [...T.sample(false), ...T.sample(true)]) if (e.control) expect(ids.has(e.control), e.control).toBe(true);
+  });
+
+  it('makes no network calls and keeps no storage', () => {
+    for (const f of ['trace-core.js', 'trace.js']) {
+      const js = readFileSync(join(ROOT, 'src/assets', f), 'utf8');
+      expect(js, f).not.toMatch(/fetch\(|XMLHttpRequest|sendBeacon|WebSocket|EventSource|localStorage|sessionStorage|indexedDB|document\.cookie|https?:\/\//);
+    }
+  });
+
+  it('builds /blueprints/trace/ with its scripts and links it from the hub, the architecture data and the leaders page', () => {
+    const h = html('blueprints/trace/index.html');
+    expect(h).toMatch(/<script src="\/assets\/trace-core\.js\?v=[0-9a-f]+" defer><\/script>/);
+    expect(h).toMatch(/<script src="\/assets\/trace\.js\?v=[0-9a-f]+" defer><\/script>/);
+    expect(h).toContain('data-tv');
+    expect(h.toLowerCase()).toContain('illustrative');
+    expect(html('blueprints/index.html')).toContain('href="/blueprints/trace/"');
+    expect(html('blueprints/index.html')).toContain('href="/leaders/"');
+    expect(html('leaders/index.html')).toContain('href="/blueprints/trace/"');
+    expect(AE.componentById.H9.link.href).toBe('/blueprints/trace/');
   });
 });
