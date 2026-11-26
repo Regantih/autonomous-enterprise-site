@@ -1,8 +1,9 @@
 /* Live operations room UI for /blueprints/loops/. Plays the scripted engine in loops-core.js.
-   Runs in the browser only: no network, no storage. Simulated agents, illustrative numbers. */
+   Instructions go to live AI agents through loops-live.js when available, and fall back to the
+   scripted engine on any failure. No storage. Illustrative numbers. */
 (function () {
   'use strict';
-  var AE = window.AE, L = AE && AE.loops;
+  var AE = window.AE, L = AE && AE.loops, Live = AE && AE.loopsLive;
   var root = document.querySelector('[data-lp="room"]');
   if (!L || !root) return;
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -19,11 +20,12 @@
   root.innerHTML =
     '<div class="or">' +
     '<div class="or-top">' +
-      '<div class="or-title"><p class="or-k">Live operations room</p><p class="or-label">Simulated agents, illustrative numbers.</p></div>' +
+      '<div class="or-title"><p class="or-k">Live operations room</p><p class="or-label">Simulated run, live AI agents when you type. Illustrative numbers.</p></div>' +
       '<div class="or-ctl">' +
         '<button type="button" class="pill or-start" data-a="start">Start</button>' +
         '<span class="or-speed" role="group" aria-label="Speed"><button type="button" class="seg" data-speed="1" aria-pressed="true">1x</button><button type="button" class="seg" data-speed="2" aria-pressed="false">2x</button></span>' +
         '<button type="button" class="pill pill-ghost or-replay" data-a="replay">Replay</button>' +
+        (Live ? '<button type="button" class="seg or-live-t" data-a="live" aria-pressed="true" title="Typed instructions and chips are answered by live AI agents. Start, decisions and the run itself stay scripted.">Live agents (AI)</button>' : '') +
         '<span class="or-status" aria-live="polite">Ready</span>' +
       '</div>' +
     '</div>' +
@@ -37,7 +39,7 @@
         '<div class="or-input">' +
           '<p class="or-input-k">Instruct the agents</p>' +
           '<div class="or-chips">' + L.CHIPS.map(function (c) { return '<button type="button" class="pill or-chip" data-chip="' + c.id + '" disabled>' + esc(c.label) + '</button>'; }).join('') + '</div>' +
-          '<form class="or-form"><label class="visually-hidden" for="or-text">Instruction to the agents</label><input id="or-text" class="or-text" type="text" maxlength="80" autocomplete="off" placeholder="Or type a short instruction" disabled><button type="submit" class="pill pill-dark" disabled>Send</button></form>' +
+          '<form class="or-form"><label class="visually-hidden" for="or-text">Instruction to the agents</label><input id="or-text" class="or-text" type="text" maxlength="300" autocomplete="off" placeholder="Or type a short instruction" disabled><button type="submit" class="pill pill-dark" disabled>Send</button></form>' +
         '</div>' +
       '</div>' +
       '<div class="or-side">' +
@@ -91,10 +93,13 @@
 
   /* ---------- state ---------- */
   var run, playing = false, started = false, speed = 1, timer = null, pending = null, busy = false, token = 0;
+  var liveOn = !!Live, liveHold = false, liveReq = null;
   var vmap = {}, order = [], hist = [], sel = null, champ = null;
 
   function reset() {
     token++;
+    if (liveReq) { liveReq.abort(); liveReq = null; }
+    liveHold = false;
     if (timer) clearTimeout(timer);
     timer = null; pending = null; busy = false; playing = false; started = false;
     run = L.create(SEED);
@@ -109,7 +114,7 @@
     renderMetrics(); renderChart(); renderTree(); $('.or-node-info').textContent = 'Select a variant to read its lineage.';
   }
   function setStatus(t, cls) { statusEl.textContent = t; statusEl.className = 'or-status' + (cls ? ' ' + cls : ''); }
-  function enableInput(on) { $$('.or-chip, .or-text, .or-form button').forEach(function (b) { b.disabled = !on; }); }
+  function enableInput(on) { $$('.or-chip, .or-text, .or-form button').forEach(function (b) { b.disabled = !on || liveHold; }); }
 
   // Scheduler that respects pause. Stale callbacks from an old run are dropped by token.
   function later(fn, ms) {
@@ -117,12 +122,12 @@
     timer = setTimeout(function () {
       timer = null;
       if (my !== token) return;
-      if (!playing) { pending = fn; return; }
+      if (!playing || liveHold) { pending = fn; return; }
       fn();
     }, Math.max(0, (reduce ? Math.min(ms, 260) : ms) / speed));
   }
   function tick() {
-    if (!playing) { busy = false; return; }
+    if (!playing || liveHold) { busy = false; return; }
     var ev = L.next(run);
     if (!ev) {
       busy = false;
@@ -133,7 +138,7 @@
     setStatus('Running', 'or-run');
     show(ev, function (ms) { later(tick, ms); });
   }
-  function kick() { if (playing && !busy) tick(); }
+  function kick() { if (playing && !busy && !liveHold) tick(); }
 
   /* ---------- stream rendering ---------- */
   var follow = true;
@@ -316,13 +321,74 @@
     if (a === 'start') { if (playing) pause(); else start(); }
     else if (a === 'replay') { reset(); start(); }
     else if (b.hasAttribute('data-speed')) { speed = parseInt(b.getAttribute('data-speed'), 10); $$('[data-speed]').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); }
-    else if (b.hasAttribute('data-chip')) { L.instruct(run, b.getAttribute('data-chip')); refreshChips(); resume(); }
+    else if (a === 'live') { liveOn = !liveOn; b.setAttribute('aria-pressed', String(liveOn)); }
+    else if (b.hasAttribute('data-chip')) instruct(b.getAttribute('data-chip'), b.textContent);
   });
   $('.or-form').addEventListener('submit', function (e) {
     e.preventDefault();
-    var inp = $('.or-text'), v = inp.value.trim(); if (!v) return;
-    inp.value = ''; L.instruct(run, v); refreshChips(); resume();
+    var inp = $('.or-text'), v = inp.value.trim(); if (!v || liveHold) return;
+    inp.value = ''; instruct(v, v);
   });
+  function scripted(input) { L.instruct(run, input); refreshChips(); resume(); }
+
+  /* ---------- live AI agents ---------- */
+  function instruct(input, label) {
+    if (liveHold) return;
+    if (!liveOn || !Live) return scripted(input);
+    label = String(label || input).trim().slice(0, 300);
+    var my = token, state = L.liveState(run), group = [], cur = null, usage = null;
+    liveHold = true; enableInput(false);
+    var you = node('or-msg or-msg-you', who('you') + '<div class="or-msg-b"><p class="or-msg-n">' + esc(AG.you.name) + '</p><p class="or-msg-t"></p></div>');
+    $('.or-msg-t', you).textContent = label + (/[.?!]$/.test(label) ? '' : '.');
+    append(you); group.push(you); toBottom();
+    setStatus('Live agents', 'or-run');
+    function bubble(a) {
+      if (cur && cur.a === a && !cur.closed) return cur;
+      var el = node('or-msg or-msg-' + a + ' or-live', who(a) + '<div class="or-msg-b"><p class="or-msg-n">' + esc(AG[a].name) + ' <span class="or-live-b">LIVE</span></p><p class="or-msg-t typing"></p></div>');
+      el.setAttribute('data-a', a);
+      append(el); group.push(el); talking(a);
+      cur = { a: a, el: el, t: $('.or-msg-t', el), closed: false };
+      return cur;
+    }
+    function finish() {
+      liveReq = null; liveHold = false;
+      if (my !== token) return;
+      enableInput(true); refreshChips(); resume();
+    }
+    liveReq = Live.ask({ instruction: label, state: state }, {
+      delta: function (a, text) { if (my !== token) return; var b = bubble(a); b.t.textContent += text; if (follow) stream.scrollTop = stream.scrollHeight; },
+      turn: function (a, text) {
+        if (my !== token) return;
+        var b = bubble(a); b.t.classList.remove('typing'); b.t.innerHTML = linkCids(text); b.closed = true;
+        announce.textContent = AG[a].name + ': ' + text;
+      },
+      usage: function (u) { usage = u; },
+      action: function (type) {
+        if (my !== token) return;
+        L.note(run, 'you', label);
+        group.forEach(function (el) { var a = el.getAttribute('data-a'), t = el.querySelector('.or-msg-t'); if (a && t) L.note(run, a, t.textContent); });
+        if (usage) append(node('or-meter', '<span class="or-live-b">LIVE</span> ' + esc(Live.meter(usage))));
+        if (type === 'request_decision' && run.waiting) {
+          var cards = stream.querySelectorAll('.or-dec:not(.answered)'), card = cards[cards.length - 1];
+          if (card) { var btn = $('button', card); if (btn) btn.focus({ preventScroll: true }); }
+        }
+        if (type === 'none' && L.match(label) === 'lineage') type = 'show_lineage';
+        L.applyLive(run, type);
+      },
+      done: finish,
+      fallback: function (reason) {
+        liveReq = null; liveHold = false;
+        if (my !== token) return;
+        group.forEach(function (el) { el.remove(); });
+        if (reason === 'visitor_limit' || reason === 'daily_cap' || reason === 'limit') {
+          liveOn = false; var tg = $('[data-a="live"]'); if (tg) tg.setAttribute('aria-pressed', 'false');
+        }
+        append(node('or-note', esc(Live.NOTE)));
+        enableInput(true);
+        scripted(input);
+      }
+    });
+  }
   function refreshChips() {
     var g = $('[data-chip="goal"]'); if (g && run) g.textContent = 'Reframe the goal to ' + L.GOALS[run.goal === 'cost' ? 'fpr' : 'cost'].name.toLowerCase();
   }

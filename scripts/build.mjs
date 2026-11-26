@@ -318,7 +318,7 @@ export function build() {
         : page.src === 'frameworks.html'
           ? `<script src="${assetUrl('frameworks.js')}" defer></script>\n`
           : page.bp ? bpScripts + (page.src === 'trace.html' ? `<link rel="stylesheet" href="${assetUrl('trace.css')}">\n<script src="${assetUrl('trace-core.js')}" defer></script>\n<script src="${assetUrl('trace.js')}" defer></script>\n`
-            : page.src === 'loops.html' ? `<link rel="stylesheet" href="${assetUrl('loops.css')}">\n<script src="${assetUrl('loops-core.js')}" defer></script>\n<script src="${assetUrl('loops.js')}" defer></script>\n` : '')
+            : page.src === 'loops.html' ? `<link rel="stylesheet" href="${assetUrl('loops.css')}">\n<script src="${assetUrl('loops-core.js')}" defer></script>\n<script src="${assetUrl('loops-live.js')}" defer></script>\n<script src="${assetUrl('loops.js')}" defer></script>\n` : '')
             : page.src === 'leaders.html'
               ? `<link rel="stylesheet" href="${assetUrl('leaders.css')}">\n<script src="${assetUrl('leaders.js')}" defer></script>\n`
               : '',

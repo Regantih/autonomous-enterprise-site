@@ -192,3 +192,12 @@
   .or-stream { scroll-behavior: auto; }
 }
 @media print { .or-ctl, .or-input { display: none !important; } .or-stream { height: auto; overflow: visible; } }
+
+/* live AI agents */
+.or-top .or-live-t { font-size: 0.8rem; font-weight: 700; }
+.or-top .or-live-t[aria-pressed="true"] { background: #9fe0b5; color: var(--ink); border-color: #9fe0b5; }
+.or-live-b { display: inline-block; margin-left: 0.3rem; padding: 0 0.35rem; border-radius: 3px; background: #1d6b3a; color: var(--white); font-size: 0.62rem; letter-spacing: 0.1em; font-weight: 700; vertical-align: 1px; }
+.or-live .or-msg-b { border-color: #1d6b3a; }
+.or-meter { margin: -0.2rem 0 0 2.65rem; font-size: 0.75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.or-meter .or-live-b { margin-left: 0; margin-right: 0.3rem; }
+.or-note { margin: 0 0 0 2.65rem; font-size: 0.8rem; font-style: italic; color: var(--muted); }

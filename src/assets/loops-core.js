@@ -461,24 +461,11 @@
       run.cheaper = true;
       say(run, 'proposer', 'Understood. Next generation I will include a cheaper variant: a small model for routine matches, with the old model pinned for rollback.');
     } else if (id === 'fairness') {
-      var old = run.settings.fairMax; run.settings.fairMax = Math.max(1.5, old - 1);
-      say(run, 'harness', 'Fairness gap limit tightened from ' + old.toFixed(1) + ' to ' + run.settings.fairMax.toFixed(1) + ' points. Re-checking champion ' + run.champion.id + '.');
-      var item = checks(run.champion.t, run.settings)[2];
-      E(run, { t: 'checks', a: 'harness', variant: run.champion.id, items: [item] });
-      if (!item.pass) {
-        var back = null;
-        run.variants.forEach(function (v) { if (v.wasChampion && v !== run.champion && v.t.fair <= run.settings.fairMax && (!back || v.gen > back.gen)) back = v; });
-        if (back) {
-          run.champion.status = 'archived'; vev(run, run.champion);
-          run.champion = back; back.status = 'champion'; score(run, back); vev(run, back);
-          say(run, 'supervisor', 'Champion fails the tighter check. Rolled back to ' + back.id + ', the latest champion that passes.');
-        }
-      } else say(run, 'supervisor', 'Champion passes. Future variants face the tighter check.');
+      tighten(run, false);
     } else if (id === 'goal') {
       setGoal(run, other, 'you');
     } else if (id === 'lineage') {
-      E(run, { t: 'tool', a: 'archivist', name: 'read_lineage', args: '{ variant: "' + run.champion.id + '" }',
-        result: lineage(run, run.champion.id).map(function (v) { return v.id + ': ' + v.change + (v.approvedBy ? ' (approved by you)' : '') + (v.hack ? ' (edited the evaluator)' : ''); }).join('\n') });
+      lineageTool(run);
       say(run, 'archivist', 'Every step from V0 to ' + run.champion.id + ' is on record: parent, change, scores and approver.');
     } else {
       say(run, 'supervisor', 'In this simulation I act on four instructions: try a cheaper variant, tighten the fairness check, reframe the goal, or show the lineage.');
@@ -486,6 +473,62 @@
     run.urgent = run.urgent.concat(run.queue);
     run.queue = q;
     return id;
+  }
+
+  function tighten(run, quiet) {
+    var old = run.settings.fairMax; run.settings.fairMax = Math.max(1.5, old - 1);
+    if (!quiet) say(run, 'harness', 'Fairness gap limit tightened from ' + old.toFixed(1) + ' to ' + run.settings.fairMax.toFixed(1) + ' points. Re-checking champion ' + run.champion.id + '.');
+    var item = checks(run.champion.t, run.settings)[2];
+    E(run, { t: 'checks', a: 'harness', variant: run.champion.id, items: [item] });
+    if (!item.pass) {
+      var back = null;
+      run.variants.forEach(function (v) { if (v.wasChampion && v !== run.champion && v.t.fair <= run.settings.fairMax && (!back || v.gen > back.gen)) back = v; });
+      if (back) {
+        run.champion.status = 'archived'; vev(run, run.champion);
+        run.champion = back; back.status = 'champion'; score(run, back); vev(run, back);
+        say(run, 'supervisor', 'Champion fails the tighter check. Rolled back to ' + back.id + ', the latest champion that passes.');
+      }
+    } else if (!quiet) say(run, 'supervisor', 'Champion passes. Future variants face the tighter check.');
+  }
+  function lineageTool(run) {
+    E(run, { t: 'tool', a: 'archivist', name: 'read_lineage', args: '{ variant: "' + run.champion.id + '" }',
+      result: lineage(run, run.champion.id).map(function (v) { return v.id + ': ' + v.change + (v.approvedBy ? ' (approved by you)' : '') + (v.hack ? ' (edited the evaluator)' : ''); }).join('\n') });
+  }
+
+  /* ---------- live AI agents ---------- */
+
+  // Records a message that was already shown (a live AI turn or the visitor's instruction) so the run state sees it.
+  function note(run, a, text) {
+    var e = { t: 'msg', a: a, text: String(text || '').slice(0, 420), live: true };
+    run.log.push(e);
+    return e;
+  }
+
+  // Applies a validated live action to the engine. Messages the live agents already said are not repeated;
+  // engine facts (check results, rollbacks, the goal switch) still stream as events.
+  var LIVE_ACTIONS = ['propose_variant', 'tighten_guardrail', 'request_decision', 'reframe_goal', 'show_lineage', 'none'];
+  function applyLive(run, type) {
+    if (LIVE_ACTIONS.indexOf(type) < 0) type = 'none';
+    var q = run.queue; run.queue = [];
+    if (type === 'propose_variant') run.cheaper = true;
+    else if (type === 'tighten_guardrail') tighten(run, true);
+    else if (type === 'reframe_goal') setGoal(run, run.goal === 'cost' ? 'fpr' : 'cost', 'you');
+    else if (type === 'show_lineage') lineageTool(run);
+    run.urgent = run.urgent.concat(run.queue);
+    run.queue = q;
+    return type;
+  }
+
+  // The compact run state the live agents receive. Nothing else leaves the browser.
+  function liveState(run) {
+    var c = run.champion, rails = c && c.t ? checks(c.t, run.settings) : [];
+    var msgs = run.log.filter(function (e) { return e.t === 'msg'; }).slice(-6);
+    return {
+      generation: run.gen, goal: run.goal, champion: c ? c.id : 'V0',
+      guardrails: rails.map(function (r) { return { name: (r.name + ' ' + r.detail).slice(0, 40), status: r.pass ? 'pass' : 'fail' }; }),
+      pending: run.waiting ? { title: run.waiting.title, door: run.waiting.door || run.waiting.kind } : null,
+      events: msgs.map(function (e) { return { agent: e.a, text: String(e.text).slice(0, 220) }; })
+    };
   }
 
   function lineage(run, id) {
@@ -508,5 +551,5 @@
 
   AE.loops = { STEPS: STEPS, AGENTS: AGENTS, CHIPS: CHIPS, GOALS: GOALS, MUT: MUT, DEFAULTS: DEFAULTS, MAX_GEN: MAX_GEN,
     rng: rng, truth: truth, reported: reported, checks: checks, create: create, next: next, answer: answer, instruct: instruct,
-    match: match, lineage: lineage, play: play, fmt: fmt };
+    match: match, lineage: lineage, play: play, fmt: fmt, note: note, applyLive: applyLive, liveState: liveState, LIVE_ACTIONS: LIVE_ACTIONS };
 })(typeof window !== 'undefined' ? window : globalThis);

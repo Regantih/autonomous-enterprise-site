@@ -272,10 +272,14 @@ describe('self-improving loops: live operations room', () => {
     expect(h).toMatch(/<link rel="stylesheet" href="\/assets\/loops\.css\?v=[0-9a-f]{10}">/);
     expect(h).toMatch(/<script src="\/assets\/loops-core\.js\?v=[0-9a-f]{10}" defer><\/script>/);
     expect(h).toMatch(/<script src="\/assets\/loops\.js\?v=[0-9a-f]{10}" defer><\/script>/);
+    expect(h).toMatch(/<script src="\/assets\/loops-live\.js\?v=[0-9a-f]{10}" defer><\/script>/);
+    expect(h.indexOf('loops-core.js')).toBeLessThan(h.indexOf('loops-live.js'));
+    expect(h.indexOf('loops-live.js')).toBeLessThan(h.indexOf('/assets/loops.js'));
     expect(h).toContain('<h1 id="page-title">Self-improving loops</h1>');
     expect(h).toContain('<a href="/blueprints/loops/" aria-current="page">Improvement loops</a>');
     expect(h).toContain('data-lp="room"');
-    expect(h).toContain('Simulated agents, illustrative numbers.');
+    expect(h).toContain('Simulated run, live AI agents when you type. Illustrative numbers.');
+    expect(readFileSync(join(ROOT, 'src/assets/loops.js'), 'utf8')).toContain('Simulated run, live AI agents when you type. Illustrative numbers.');
     expect(h).toContain('<noscript>');
     expect(h.match(/<ol class="lp-steps-static">([\s\S]*?)<\/ol>/)![1].match(/<li>/g)).toHaveLength(6);
     expect(h).toContain('href="/frameworks/#ceiling"');
@@ -401,7 +405,7 @@ describe('self-improving loops: live operations room', () => {
     expect(msgs[1].a).toBe('supervisor');
   });
 
-  it('makes no network calls, model calls or storage, and writes no inline styles', () => {
+  it('keeps the engine and room free of network calls and storage (live calls live only in loops-live.js), and writes no inline styles', () => {
     for (const f of ['loops-core.js', 'loops.js']) {
       const js = readFileSync(join(ROOT, 'src/assets', f), 'utf8');
       expect(js, f).not.toMatch(/fetch\(|XMLHttpRequest|sendBeacon|WebSocket|EventSource|localStorage|sessionStorage|indexedDB|document\.cookie|import\(|https?:\/\/(?!www\.w3\.org\/2000\/svg)/);
