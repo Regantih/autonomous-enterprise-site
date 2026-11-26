@@ -299,7 +299,8 @@ export function recordingExcerpt(rec, max = 16) {
   for (const it of rec.transcript) {
     if (it.k === 'ev' && it.ev.t === 'say' && names[it.ev.agent]) out.push([names[it.ev.agent], it.ev.text]);
     else if (it.k === 'you') out.push(['You', it.text]);
-    else if (it.k === 'agents') { out.push(['You', it.instruction]); for (const t of it.turns || []) if (names[t.a]) out.push([names[t.a], t.text]); }
+    // Replies to an instruction come from the AI agents voicing each role, code roles included.
+    else if (it.k === 'agents') { out.push(['You', it.instruction]); for (const t of it.turns || []) if (names[t.a]) out.push([`${names[t.a].replace(/ \((AI|code)\)$/, '')} (AI reply)`, t.text]); }
   }
   return out.slice(0, max);
 }

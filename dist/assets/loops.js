@@ -314,6 +314,7 @@
   }
   function openReframe(monthly) {
     S.reframeOpen = true; lightStep('reframe');
+    if (S.mode === 'live') T.push({ k: 'reframe', monthly: !!monthly });
     var other = S.goal === 'cost' ? 'fpr' : 'cost';
     var el = node('or-dec or-dec-goal', '<p class="or-dec-to">To: you, AP process owner <span class="or-dec-door">Goal</span></p>' +
       '<p class="or-dec-t">' + (monthly ? 'Monthly reframe: which goal should the loop chase?' : 'Reframe: which goal should the loop chase?') + '</p>' +
@@ -388,12 +389,12 @@
       if (k !== '0' && k !== 'R') S.order.forEach(function (id) { var v = S.vmap[id]; if (v.gen === +k && v.metrics) { dots.push([i, gv(v.metrics, g), v.status === 'blocked', id]); vals.push(gv(v.metrics, g)); } });
     });
     if (!vals.length) { box.innerHTML = ''; return; }
-    var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals), pad = Math.max((hi - lo) * 0.15, g === 'fpr' ? 2 : 0.3); lo -= pad; hi += pad;
+    var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals), pad = Math.max((hi - lo) * 0.15, g === 'fpr' ? 2 : 0.3); lo = Math.max(0, lo - pad); hi += pad;
     function X(i) { return pl + (W - pl - pr) * i / 4; }
     function Y(v) { return pt + (H - pt - pb) * (1 - (v - lo) / (hi - lo)); }
     var s = '<svg class="or-chart-svg" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(GOALS[g].name) + ' of the champion by generation, computed on the sample data.">';
     for (var k = 0; k <= 3; k++) { var v = lo + (hi - lo) * k / 3, y = Y(v); s += '<line class="or-gl" x1="' + pl + '" x2="' + (W - pr) + '" y1="' + y.toFixed(1) + '" y2="' + y.toFixed(1) + '"/><text class="or-ax" x="' + (pl - 4) + '" y="' + (y + 3).toFixed(1) + '" text-anchor="end">' + (g === 'fpr' ? v.toFixed(0) + '%' : '$' + v.toFixed(2)) + '</text>'; }
-    ['Start', 'G1', 'G2', 'G3', 'Reframe'].forEach(function (t, i) { s += '<text class="or-ax" x="' + X(i).toFixed(1) + '" y="' + (H - 8) + '" text-anchor="middle">' + t + '</text>'; });
+    ['Start', 'G1', 'G2', 'G3', 'Reframe'].forEach(function (t, i) { s += '<text class="or-ax" x="' + X(i).toFixed(1) + '" y="' + (H - 8) + '" text-anchor="' + (i === 4 ? 'end' : 'middle') + '">' + t + '</text>'; });
     dots.forEach(function (d) {
       var x = X(d[0]) + (/-2$/.test(d[3]) ? 7 : -7), y = Y(d[1]);
       s += d[2] ? '<path class="or-dx" d="M' + (x - 4).toFixed(1) + ',' + (y - 4).toFixed(1) + ' l8,8 M' + (x + 4).toFixed(1) + ',' + (y - 4).toFixed(1) + ' l-8,8"><title>' + esc(d[3]) + ' blocked</title></path>'
@@ -511,7 +512,7 @@
     setStatus('Recording', 'or-run');
     (function nextItem() {
       if (my !== token) return;
-      if (i >= items.length) { setStatus('Recording ended', 'or-done'); append(node('or-end', '<p class="or-k">End of the recording</p><p class="or-halt-b"><button type="button" class="pill pill-dark" data-a="start">Start a live run</button></p>')); return; }
+      if (i >= items.length) { setStatus('Recording ended', 'or-done'); toBottom(); append(node('or-end', '<p class="or-k">End of the recording</p><p class="or-halt-b"><button type="button" class="pill pill-dark" data-a="start">Start a live run</button></p>')); return; }
       var it = items[i++], wait = 160;
       if (it.k === 'ev') {
         var ev = it.ev;
@@ -529,6 +530,10 @@
         if (/^(Switch|Keep)/.test(it.text) && S.gen >= 3) S.reframed = true;
         if (/^(Approve|Reject)/.test(it.text)) S.pending = null;
         you(it.text); T.pop(); wait = 700;
+      } else if (it.k === 'reframe') {
+        openReframe(it.monthly); S.reframeOpen = false;
+        $$('.or-dec-goal:not(.answered) button').forEach(function (x) { x.disabled = true; });
+        wait = 1400;
       } else if (it.k === 'agents') {
         you(it.instruction); T.pop();
         (it.turns || []).forEach(function (t) { bubble(t.a, t.text, 'model'); });

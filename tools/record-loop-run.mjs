@@ -18,6 +18,18 @@ const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 const offsite = [];
 page.on('request', (r) => { if (!r.url().startsWith(SITE)) offsite.push(r.url()); });
+// Behind an egress proxy the browser cannot reach the site directly; RECORD_VIA_NODE=1 fetches each request in Node.
+if (process.env.RECORD_VIA_NODE) {
+  await page.route('**/*', async (route) => {
+    const r = route.request();
+    if (!r.url().startsWith(SITE)) return route.abort();
+    const headers = { accept: r.headers().accept || '*/*' };
+    if (r.method() === 'POST') { headers['content-type'] = r.headers()['content-type'] || 'application/json'; headers.origin = SITE; }
+    const res = await fetch(r.url(), { method: r.method(), headers, body: r.method() === 'POST' ? r.postData() : undefined });
+    const body = Buffer.from(await res.arrayBuffer());
+    await route.fulfill({ status: res.status, headers: { 'content-type': res.headers.get('content-type') || 'application/octet-stream' }, body });
+  });
+}
 await page.goto(`${SITE}/blueprints/loops/`, { waitUntil: 'networkidle' });
 await page.waitForSelector('[data-a="start"]');
 const state = () => page.evaluate(() => window.AE.loopsRoom.state());
@@ -51,7 +63,6 @@ const all = [...usage, ...agentsUsage];
 const rec = {
   label: `Recorded real run, ${when} Central`,
   recorded_at: startedAt.toISOString(),
-  site: SITE,
   note: 'The event log the browser received from the production agents and code during one real run, replayed as recorded.',
   summary: {
     ended: final.ended, halted: final.halted, goal: final.goal, champion: final.champion,
