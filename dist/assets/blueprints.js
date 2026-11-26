@@ -241,7 +241,8 @@
         '<div><dt>Controls it enforces</dt><dd>' + (c.controls.length ? c.controls.map(function (x) { return cid(x) + ' ' + esc(cname(x)); }).join('<br>') : '&ndash;') + '</dd></div>' +
         '<div><dt>Main failure mode</dt><dd>' + esc(c.fail) + '</dd></div><div><dt>Autonomy ceiling hint</dt><dd>' + esc(c.ceil) + '</dd></div>' +
         '<div><dt>Layers aligned</dt><dd>' + layerStrip(c.layers, lf.get()) + '</dd></div>' +
-        '<div><dt>Related framework</dt><dd><a href="/frameworks/#' + c.fw + '">' + esc(AE.frameworkNames[c.fw]) + '</a></dd></div></dl>';
+        '<div><dt>Related framework</dt><dd><a href="/frameworks/#' + c.fw + '">' + esc(AE.frameworkNames[c.fw]) + '</a></dd></div></dl>' +
+        (c.link ? '<p class="ar-link"><a class="btn btn-dark" href="' + c.link.href + '">' + esc(c.link.label) + '</a></p>' : '');
     }
     function applyLayer(l) {
       $$('.ar-c', svg).forEach(function (g) {
@@ -434,11 +435,11 @@
       AE.failureTypes.forEach(function (ft) {
         var f = w.failures.filter(function (x) { return x.type === ft.id; })[0];
         if (!f) return;
-        var b = btn(esc(ft.name), 'pill pill-warn'); b.disabled = st.view !== 're';
+        var b = btn(esc(ft.name), 'pill pill-warn');
         b.addEventListener('click', function () { go(f); });
         fails.appendChild(b);
       });
-      if (st.view !== 're') fails.appendChild(el('span', 'muted wf-note', 'Switch to Reimagined to inject failures.'));
+      if (st.view !== 're') fails.appendChild(el('span', 'muted wf-note', 'Today there is no harness. Inject a failure to see who catches it.'));
       var m = w.metrics;
       $('.wf-metrics', root).innerHTML = '<p class="dcard-k">Before and after &middot; illustrative</p><table class="wf-mt"><thead><tr><th scope="col"></th><th scope="col">Today</th><th scope="col">Reimagined</th></tr></thead><tbody>' +
         '<tr><th scope="row">Cycle time</th><td>' + m.today.cycle + '</td><td>' + m.re.cycle + '</td></tr><tr><th scope="row">Touches per case</th><td>' + m.today.touches + '</td><td>' + m.re.touches + '</td></tr>' +
@@ -459,16 +460,29 @@
       var ss = steps(), w = AE.workflows[st.wf];
       log.innerHTML = ''; result.innerHTML = '';
       $$('.sl-step', lane.svg).forEach(function (g) { g.classList.remove('done', 'cur', 'hit'); });
-      var prev = null, main = ss.filter(function (s) { return !s.ex; });
+      var prev = null, main = ss.filter(function (s) { return !s.ex; }), t = 0, re = st.view === 're';
+      function stamp(s) {
+        t += re ? (s.lane === 'people' ? 600 : s.lane === 'outside' ? 0 : 4) : (s.ho === 'manual' ? 1.5 : s.ho === 'file' ? 0.5 : 0.1) * 86400;
+        if (!re) return '+' + (t / 86400).toFixed(1) + 'd';
+        return '+' + (t >= 60 ? Math.floor(t / 60) + 'm ' : '') + (t % 60) + 's';
+      }
       if (fail) line('wf-l-warn', '<b>Injected</b><span>' + esc(fail.what) + '</span>');
       for (var i = 0; i < main.length; i++) {
         var s = main[i], p = lane.pos[s.id], g = $('.sl-step[data-id="' + s.id + '"]', lane.svg);
         g.classList.add('cur');
+        host.scrollLeft = Math.max(0, p.cx - host.clientWidth / 2);
         await moveToken(tok, prev, [p.cx, p.cy], 550, live); if (!live()) return;
         prev = [p.cx, p.cy];
-        var li = line('wf-l-step', '<b>' + String(ss.indexOf(s) + 1).padStart(2, '0') + ' ' + esc(LANE_NAME[s.lane]) + ' &middot; ' + lvl(s.lvl) + '</b><span></span>');
+        select(s);
+        var li = line('wf-l-step', '<b>' + stamp(s) + ' &middot; ' + String(ss.indexOf(s) + 1).padStart(2, '0') + ' ' + esc(LANE_NAME[s.lane]) + ' &middot; ' + lvl(s.lvl) + '</b><span></span>');
         await typeInto($('span', li), st.view === 're' ? s.log : s.name, live); if (!live()) return;
         if (st.view !== 're' && s.ho === 'manual') line('wf-l-warn', '<b>Manual handoff</b><span>A person reads, re-keys or waits. Ceiling L1.</span>');
+        if (!re && fail && i === Math.min(2, main.length - 1)) {
+          await wait(300); if (!live()) return;
+          line('wf-l-stop', '<b>No control fires</b><span>' + esc(fail.what) + ' Nothing checks it. It is caught only if a person happens to notice.</span>');
+          result.innerHTML = '<div class="lr-result lr-r-stop"><b>Undetected today</b><span>The error moves on. It surfaces later as a reversal, a complaint or an audit finding. In the reimagined flow, ' + cid(fail.control) + ' catches it at the step where it starts.</span></div>';
+          return;
+        }
         for (var k = 0; k < s.controls.length; k++) {
           var c = s.controls[k];
           if (fail && fail.step === s.id && fail.control === c) break;

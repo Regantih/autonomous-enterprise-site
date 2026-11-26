@@ -30,14 +30,14 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/assets/fonts/oswald-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
-<script src="/assets/data/controls.js?v=1f7fc4dacc" defer></script>
+<script src="/assets/data/controls.js?v=19b5fa020b" defer></script>
 <script src="/assets/data/layers.js?v=7c10827ab4" defer></script>
-<script src="/assets/data/workflows.js?v=252848c49c" defer></script>
-<script src="/assets/data/architecture.js?v=9bb81a9cf9" defer></script>
-<script src="/assets/blueprints.js?v=131319b61e" defer></script>
-<link rel="stylesheet" href="/assets/styles.css?v=17ea52eacb">
-<script src="/assets/site.js?v=17ea52eacb" defer></script>
-<script src="/assets/guide.js?v=17ea52eacb" defer></script>
+<script src="/assets/data/workflows.js?v=357666b3fd" defer></script>
+<script src="/assets/data/architecture.js?v=ed9260c2c4" defer></script>
+<script src="/assets/blueprints.js?v=f2274eba03" defer></script>
+<link rel="stylesheet" href="/assets/styles.css?v=6f34aa7e5d">
+<script src="/assets/site.js?v=6f34aa7e5d" defer></script>
+<script src="/assets/guide.js?v=6f34aa7e5d" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -64,7 +64,7 @@
   <div class="container">
     <p class="eyebrow">Blueprints &middot; Controls</p>
     <h1 id="page-title">Controls library</h1>
-    <p class="lead">65 controls for agents, voice, IoT and physical AI. Each one names its purpose, how it works, the evidence an auditor asks for and its public framework mappings.</p>
+    <p class="lead">72 controls for agents, voice, IoT and physical AI. Each one names its purpose, how it works, the evidence an auditor asks for and its public framework mappings.</p>
   </div>
 </section>
 <nav class="bp-subnav" aria-label="Blueprints">
@@ -75,6 +75,7 @@
       <li><a href="/workflows/">Workflows</a></li>
       <li><a href="/controls/" aria-current="page">Controls</a></li>
       <li><a href="/designer/">Designer</a></li>
+      <li><a href="/blueprints/trace/">Trace viewer</a></li>
     </ul>
   </div>
 </nav>
@@ -230,6 +231,34 @@
   <ul class="ctl-tags"><li>Model risk and evals</li><li class="t-preventive">preventive</li><li>Evaluation and kill switch</li><li>Required from L2</li><li>IoT, Physical AI</li></ul>
   <dl class="ctl-dl"><div><dt>How it works</dt><dd>The policy must pass scenario tests in the twin, including rare and unsafe cases.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Twin test reports. Scenario coverage list.</dd></div><div><dt>Layers aligned</dt><dd>Operational, Regulatory and statutory</dd></div></dl>
   <ul class="ctl-map"><li><b>NIST AI RMF</b> Measure</li><li><b>EU AI Act</b> Art. 15 Accuracy, robustness and cybersecurity</li></ul>
+</article>
+<article class="ctl" id="MR-06" data-cat="MR" data-type="preventive" data-part="H3" data-min="3" data-applies="agents voice iot physical" data-layers="fin app">
+  <header><span class="ctl-id">MR-06</span><h3>Decision threshold p* = L / (G + L)</h3></header>
+  <p class="ctl-purpose">Let the agent act alone only when its confidence beats the threshold that the stakes set.</p>
+  <ul class="ctl-tags"><li>Model risk and evals</li><li class="t-preventive">preventive</li><li>Policy and limits</li><li>Required from L3</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Estimate gain and loss per action class. The policy table computes the threshold, not the model.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Threshold table by action class. Share of actions routed by the threshold.</dd></div><div><dt>Layers aligned</dt><dd>Financial, Application</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li><li><b>OWASP LLM 2025</b> LLM09 Misinformation</li></ul>
+</article>
+<article class="ctl" id="MR-07" data-cat="MR" data-type="detective" data-part="H10" data-min="3" data-applies="agents voice iot physical" data-layers="app data">
+  <header><span class="ctl-id">MR-07</span><h3>Calibration check</h3></header>
+  <p class="ctl-purpose">Check that stated confidence matches observed accuracy in every segment of the work.</p>
+  <ul class="ctl-tags"><li>Model risk and evals</li><li class="t-detective">detective</li><li>Evaluation and kill switch</li><li>Required from L3</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Compare predicted confidence with outcomes each month. Recalibrate when the gap leaves its band.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Calibration charts by step and by segment, refreshed monthly.</dd></div><div><dt>Layers aligned</dt><dd>Application, Technical: Data</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Measure</li><li><b>EU AI Act</b> Art. 15 Accuracy, robustness and cybersecurity</li></ul>
+</article>
+<article class="ctl" id="MR-08" data-cat="MR" data-type="detective" data-part="H10" data-min="1" data-applies="agents voice" data-layers="reg data">
+  <header><span class="ctl-id">MR-08</span><h3>Bias testing for decisions about people</h3></header>
+  <p class="ctl-purpose">Test decisions that affect people for unfair differences between groups.</p>
+  <ul class="ctl-tags"><li>Model risk and evals</li><li class="t-detective">detective</li><li>Evaluation and kill switch</li><li>Required from L1</li><li>Agents, Voice</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Test outcomes by group on held-out data. A person keeps deciding until the results pass.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Bias test results. Remediation log.</dd></div><div><dt>Layers aligned</dt><dd>Regulatory and statutory, Technical: Data</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Measure</li><li><b>EU AI Act</b> Art. 10 Data governance</li></ul>
+</article>
+<article class="ctl" id="MR-09" data-cat="MR" data-type="detective" data-part="H10" data-min="2" data-applies="agents voice" data-layers="ops app">
+  <header><span class="ctl-id">MR-09</span><h3>Shadow run before promotion</h3></header>
+  <p class="ctl-purpose">Run a new agent version beside people, with no effect, before it gains a level.</p>
+  <ul class="ctl-tags"><li>Model risk and evals</li><li class="t-detective">detective</li><li>Evaluation and kill switch</li><li>Required from L2</li><li>Agents, Voice</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Log the agent decision and the human decision for the same case. Compare them before go-live.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Shadow comparison report signed by the owner.</dd></div><div><dt>Layers aligned</dt><dd>Operational, Application</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Measure</li><li><b>EU AI Act</b> Art. 9 Risk management</li></ul>
 </article>
 <article class="ctl" id="PCS-01" data-cat="PCS" data-type="preventive" data-part="H6" data-min="1" data-applies="agents voice" data-layers="app be">
   <header><span class="ctl-id">PCS-01</span><h3>Untrusted content is data</h3></header>
@@ -434,6 +463,13 @@
   <dl class="ctl-dl"><div><dt>How it works</dt><dd>An owner runs a planned stop in production or a full copy. The team records results.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Drill records with stop times and fixes.</dd></div><div><dt>Layers aligned</dt><dd>Operational, Regulatory and statutory</dd></div></dl>
   <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li></ul>
 </article>
+<article class="ctl" id="RES-05" data-cat="RES" data-type="corrective" data-part="H10" data-min="1" data-applies="agents voice iot physical" data-layers="ops">
+  <header><span class="ctl-id">RES-05</span><h3>Manual runbook</h3></header>
+  <p class="ctl-purpose">Make sure people can run the step by hand if the agents stop.</p>
+  <ul class="ctl-tags"><li>Resilience and kill switch</li><li class="t-corrective">corrective</li><li>Evaluation and kill switch</li><li>Required from L1</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Keep a current runbook and trained staff. Rehearse it once a year.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Runbook version. Rehearsal record.</dd></div><div><dt>Layers aligned</dt><dd>Operational</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li></ul>
+</article>
 <article class="ctl" id="CST-01" data-cat="CST" data-type="preventive" data-part="H8" data-min="1" data-applies="agents voice iot physical" data-layers="fin ops be">
   <header><span class="ctl-id">CST-01</span><h3>Per-case cost budget</h3></header>
   <p class="ctl-purpose">Cap model and tool spend for each case. Stop and escalate when the budget runs out.</p>
@@ -475,6 +511,20 @@
   <ul class="ctl-tags"><li>Third-party and model supply chain</li><li class="t-detective">detective</li><li>Model gateway</li><li>Required from L1</li><li>Agents, Voice, IoT, Physical AI</li></ul>
   <dl class="ctl-dl"><div><dt>How it works</dt><dd>The model gateway pins versions. A version change opens a release ticket with evals.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Pinned version list. Re-evaluation records.</dd></div><div><dt>Layers aligned</dt><dd>Application, Regulatory and statutory</dd></div></dl>
   <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li><li><b>OWASP LLM 2025</b> LLM03 Supply chain</li><li><b>SOX/COSO ITGC</b> Change management</li></ul>
+</article>
+<article class="ctl" id="TPS-04" data-cat="TPS" data-type="preventive" data-part="H5" data-min="1" data-applies="agents voice iot physical" data-layers="app be">
+  <header><span class="ctl-id">TPS-04</span><h3>Exit and portability</h3></header>
+  <p class="ctl-purpose">Keep prompts, evals, traces and skills in formats the enterprise owns, so models stay replaceable.</p>
+  <ul class="ctl-tags"><li>Third-party and model supply chain</li><li class="t-preventive">preventive</li><li>Model gateway</li><li>Required from L1</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Put models behind the model gateway. Test a model swap once a year.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Swap test report. Inventory of enterprise-owned assets.</dd></div><div><dt>Layers aligned</dt><dd>Application, Technical: Backend</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Govern</li></ul>
+</article>
+<article class="ctl" id="TPS-05" data-cat="TPS" data-type="detective" data-part="H4" data-min="1" data-applies="agents voice iot physical" data-layers="be">
+  <header><span class="ctl-id">TPS-05</span><h3>Dependency and connector scanning</h3></header>
+  <p class="ctl-purpose">Scan agent frameworks, plugins and connectors for known weaknesses.</p>
+  <ul class="ctl-tags"><li>Third-party and model supply chain</li><li class="t-detective">detective</li><li>Tool gateway</li><li>Required from L1</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Scan on every build and weekly in production. Patch within agreed windows.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Scan reports. Patch records.</dd></div><div><dt>Layers aligned</dt><dd>Technical: Backend</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li><li><b>OWASP LLM 2025</b> LLM03 Supply chain</li></ul>
 </article>
 <article class="ctl" id="OT-01" data-cat="OT" data-type="preventive" data-part="H1" data-min="1" data-applies="iot physical" data-layers="be ops">
   <header><span class="ctl-id">OT-01</span><h3>Device identity and signed firmware</h3></header>

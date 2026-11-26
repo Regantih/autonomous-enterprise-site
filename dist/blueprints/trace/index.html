@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Decision Trace Viewer for Multi-Agent Work | Human-Led Enterprise</title>
+<meta name="description" content="Explore an illustrative multi-agent decision trace: which agent acted, which control fired, what went to a person. Compare a baseline with a fault-injected run, or load your own trace.">
+<meta name="author" content="Hemanth Reganti">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://humanledenterprise.com/blueprints/trace/">
+<meta name="theme-color" content="#141414">
+<meta name="color-scheme" content="light">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Human-Led Enterprise">
+<meta property="og:title" content="Decision Trace Viewer for Multi-Agent Work | Human-Led Enterprise">
+<meta property="og:description" content="Explore an illustrative multi-agent decision trace: which agent acted, which control fired, what went to a person. Compare a baseline with a fault-injected run, or load your own trace.">
+<meta property="og:url" content="https://humanledenterprise.com/blueprints/trace/">
+<meta property="og:image" content="https://humanledenterprise.com/assets/images/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Autonomous Enterprise by Hemanth Reganti: book cover on a dark background">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Decision Trace Viewer for Multi-Agent Work | Human-Led Enterprise">
+<meta name="twitter:description" content="Explore an illustrative multi-agent decision trace: which agent acted, which control fired, what went to a person. Compare a baseline with a fault-injected run, or load your own trace.">
+<meta name="twitter:image" content="https://humanledenterprise.com/assets/images/og-image.jpg">
+<meta name="twitter:image:alt" content="The Autonomous Enterprise by Hemanth Reganti: book cover on a dark background">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preload" href="/assets/fonts/oswald-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
+<script src="/assets/data/controls.js?v=19b5fa020b" defer></script>
+<script src="/assets/data/layers.js?v=7c10827ab4" defer></script>
+<script src="/assets/data/workflows.js?v=357666b3fd" defer></script>
+<script src="/assets/data/architecture.js?v=ed9260c2c4" defer></script>
+<script src="/assets/blueprints.js?v=f2274eba03" defer></script>
+<link rel="stylesheet" href="/assets/trace.css?v=91fe00b1e2">
+<script src="/assets/trace-core.js?v=512e70d7bc" defer></script>
+<script src="/assets/trace.js?v=a4820fa56d" defer></script>
+<link rel="stylesheet" href="/assets/styles.css?v=6f34aa7e5d">
+<script src="/assets/site.js?v=6f34aa7e5d" defer></script>
+<script src="/assets/guide.js?v=6f34aa7e5d" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="3" fill="#F2622E"/><path fill="#141414" d="M5 23h3v4H5zM9.5 20h3v7h-3zM14 17h3v10h-3zM18.5 13h3v14h-3zM23 9h3v18h-3z"/></svg><span class="brand-text"><span class="brand-name">Human-Led Enterprise</span> <span class="brand-sub">Hemanth Reganti</span></span></a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/book/">Book</a></li>
+        <li><a href="/frameworks/">Frameworks</a></li>
+        <li><a href="/blueprints/" aria-current="page">Blueprints</a></li>
+        <li><a href="/ideas/">Ideas</a></li>
+        <li><a href="/speaking/">Speaking</a></li>
+        <li><a href="/advisory/">Advisory</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn-primary header-cta" href="/contact/#advisory">Talk to the author</a>
+  </div>
+</header>
+<main id="main" tabindex="-1">
+<section class="page-head bp-head" aria-labelledby="page-title">
+  <div class="container">
+    <p class="eyebrow">Blueprints &middot; Decision trace viewer</p>
+    <h1 id="page-title">Decision trace viewer</h1>
+    <p class="lead">See what a team of agents did, who decided, which control fired and why. Compare a normal run with a run that went wrong. Load your own trace; it never leaves your browser.</p>
+  </div>
+</section>
+<nav class="bp-subnav" aria-label="Blueprints">
+  <div class="container">
+    <a class="bp-subnav-home" href="/blueprints/">Blueprints</a>
+    <ul>
+      <li><a href="/architecture/">Architecture</a></li>
+      <li><a href="/workflows/">Workflows</a></li>
+      <li><a href="/controls/">Controls</a></li>
+      <li><a href="/designer/">Designer</a></li>
+      <li><a href="/blueprints/trace/" aria-current="page">Trace viewer</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="section bp-section" id="viewer" aria-labelledby="viewer-title">
+  <div class="container">
+    <h2 id="viewer-title" class="h-sm">One day of order-to-cash, traced</h2>
+    <p>Seven actors work 24 illustrative cases: an intake agent, a supervisor agent, a credit agent, a collections agent, the harness, an AR lead and the ledger. The decision trace is harness part 9: if the trace fails, the action fails. This view is how people keep oversight of agents that act thousands of times between reviews.</p>
+    <div class="bp-ix" hidden><div data-tv></div></div>
+    <noscript><p class="fw-note">Turn on JavaScript to explore the trace. The format and the metrics are described below.</p></noscript>
+  </div>
+</section>
+
+<section class="section section-paper-2 bp-section" id="format" aria-labelledby="format-title">
+  <div class="container fw-body">
+    <p class="eyebrow">Bring your own trace</p>
+    <h2 id="format-title" class="h-sm">The trace format</h2>
+    <p>Use JSON Lines: one event per line. Three fields are required: <code>t</code>, <code>agent</code> and <code>type</code>. The rest are optional. Add a <code>run</code> field with two values, such as baseline and fault-injected, to compare two runs.</p>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <thead><tr><th scope="col">Field</th><th scope="col">Meaning</th><th scope="col">Example</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">t</th><td>Time of the event, ISO 8601. Required.</td><td>2026-11-02T08:03:12Z</td></tr>
+          <tr><th scope="row">agent</th><td>Who acted: an agent, a person, the harness or a system. Required.</td><td>credit</td></tr>
+          <tr><th scope="row">type</th><td>register, receive, handoff, check, propose, escalate, approve, reject, commit, block, reverse or demote. Required.</td><td>propose</td></tr>
+          <tr><th scope="row">run</th><td>Which run the event belongs to.</td><td>baseline</td></tr>
+          <tr><th scope="row">case</th><td>The case or correlation ID that joins a thread.</td><td>C-1008</td></tr>
+          <tr><th scope="row">to, from, target</th><td>The other party of a handoff, or the agent whose action is reversed or demoted.</td><td>supervisor</td></tr>
+          <tr><th scope="row">role, level</th><td>On register: agent, person, control plane or system, and its autonomy level.</td><td>agent, 3</td></tr>
+          <tr><th scope="row">control, result</th><td>The control that fired, and pass or fail.</td><td>DQ-01, fail</td></tr>
+          <tr><th scope="row">route</th><td>On commit: auto (inside limits) or person (after approval).</td><td>auto</td></tr>
+          <tr><th scope="row">amount, conf</th><td>The value at stake and the agent&rsquo;s confidence.</td><td>1200, 0.87</td></tr>
+          <tr><th scope="row">msg, evidence</th><td>What happened, and the evidence a reviewer sees.</td><td>Proof of delivery attached.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>How the headline numbers are counted</h3>
+    <ul class="fw-list">
+      <li><strong>Actions.</strong> Proposals made by agents.</li>
+      <li><strong>Auto-committed.</strong> Commits with route auto: inside limits, no person needed.</li>
+      <li><strong>Routed to a person.</strong> Escalations to a decision card.</li>
+      <li><strong>Blocked by a control.</strong> Actions a control stopped outright.</li>
+      <li><strong>Reversals.</strong> Committed actions later undone. Each one is a labeled error.</li>
+      <li><strong>Dropped handoffs.</strong> Handoffs sent but never received by the other agent in the same case.</li>
+    </ul>
+    <p class="fw-note">The sample trace is illustrative and not client data. Files you load are read in your browser only. Nothing is uploaded or stored. Related: <a href="/frameworks/#harness">the ten-part harness</a>, <a href="/controls/#TRC-01">control TRC-01</a> and <a href="/leaders/">questions leaders ask</a>.</p>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="brand" href="/"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="3" fill="#F2622E"/><path fill="#141414" d="M5 23h3v4H5zM9.5 20h3v7h-3zM14 17h3v10h-3zM18.5 13h3v14h-3zM23 9h3v18h-3z"/></svg><span class="brand-text"><span class="brand-name">Human-Led Enterprise</span> <span class="brand-sub">Hemanth Reganti</span></span></a>
+      <p>Author, speaker and advisor on human-led, agent-operated enterprises.</p>
+      <p>&copy; 2026 Hemanth Reganti</p>
+      <p>We use your details only to respond to your request.</p>
+    </div>
+    <div>
+      <ul class="footer-links" aria-label="Site">
+        <li><a href="/book/">Book</a></li>
+        <li><a href="/frameworks/">Frameworks</a></li>
+        <li><a href="/blueprints/">Blueprints</a></li>
+        <li><a href="/ideas/">Ideas</a></li>
+        <li><a href="/speaking/">Speaking</a></li>
+        <li><a href="/advisory/">Advisory</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+      <ul class="footer-links footer-ext" aria-label="Elsewhere">
+        <li><a href="/contact/#press">Press kit</a></li>
+        <li><a href="https://www.amazon.com/dp/B0HS8HG6DP" rel="noopener" target="_blank">Amazon<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+        <li><a href="https://www.linkedin.com/in/hemanth-reganti-147153178/" rel="noopener" target="_blank">LinkedIn<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+<a class="guide-fab" href="/talk/" data-guide-open aria-haspopup="dialog"><span class="guide-fab-mark" aria-hidden="true"></span>Talk to the book</a>
+</body>
+</html>

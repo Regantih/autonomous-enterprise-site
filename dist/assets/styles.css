@@ -175,7 +175,8 @@ p { margin: 0 0 1em; }
 }
 @media (min-width: 60rem) {
   .site-nav { order: 0; width: auto; margin: 0; }
-  .site-nav ul { padding: 0; }
+  .site-nav ul { padding: 0; gap: 0.1rem; }
+  .site-nav a { padding-inline: 0.5rem; font-size: 0.92rem; }
 }
 
 /* Hero */
@@ -989,3 +990,6 @@ fieldset.field legend { padding: 0; margin-bottom: 0.35rem; }
   .ar-panel { display: none; }
 }
 .fw-bp { margin-top: 1.25rem; font-weight: 600; }
+.bp-card-lead { background: var(--orange); border-color: var(--orange); }
+.bp-card-lead .bp-card-n, .bp-card-lead p { color: var(--ink); }
+.ar-link { margin: 1rem 0 0; }
