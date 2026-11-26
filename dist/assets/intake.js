@@ -151,7 +151,7 @@
   function renderMeter() {
     $('.ik-meter', root).textContent = 'This conversation: ' + S.calls + ' AI call' + (S.calls === 1 ? '' : 's') + ' \u00b7 ' + meter({ input_tokens: S.tokIn, output_tokens: S.tokOut });
   }
-  var FALLBACK = ' You can still edit the card yourself and send it, or <a href="https://www.linkedin.com/in/hemanth-reganti-147153178/" rel="noopener" target="_blank">message Hemanth on LinkedIn<span class="visually-hidden"> (opens in a new tab)</span></a>.';
+  var FALLBACK = ' You can still edit the card yourself and send it, or <a href="mailto:regantih@gmail.com">email Hemanth at regantih@gmail.com</a>.';
 
   function turn() {
     var t = String(text.value || '').trim();
