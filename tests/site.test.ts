@@ -313,3 +313,65 @@ describe('portrait, real cover and guide', () => {
     expect(person.image.url).toBe(`${SITE_URL}/assets/images/portrait-960.jpg`);
   });
 });
+
+describe('/leaders: Questions leaders ask', () => {
+  const lead = () => html(byOut('leaders/index.html'));
+
+  it('is a sitemap page that loads its own CSS and JS only on /leaders', () => {
+    expect(byOut('leaders/index.html')).toMatchObject({ path: '/leaders/', sitemap: true });
+    expect(lead()).toMatch(/<link rel="stylesheet" href="\/assets\/leaders\.css\?v=[0-9a-f]{10}">/);
+    expect(lead()).toMatch(/<script src="\/assets\/leaders\.js\?v=[0-9a-f]{10}" defer><\/script>/);
+    for (const p of pages.filter((x) => x.out !== 'leaders/index.html')) {
+      expect(html(p), p.out).not.toContain('leaders.js');
+      expect(html(p), p.out).not.toContain('leaders.css');
+    }
+  });
+
+  it('groups at least 12 numbered questions under the seven theme tabs', () => {
+    const h = lead();
+    const tabs = [...h.matchAll(/<a class="lq-tab" href="#t-([a-z]+)" data-theme="\1">([^<]+)</g)].map((m) => m[2]);
+    expect(tabs).toEqual(['Fund', 'Prioritize', 'Govern', 'People', 'Trust', 'Control', 'Scale']);
+    for (const t of ['fund', 'prioritize', 'govern', 'people', 'trust', 'control', 'scale']) expect(h).toContain(`<div class="lq-panel" id="t-${t}"`);
+    const rows = [...h.matchAll(/<details id="q-(\d\d)"/g)].map((m) => +m[1]);
+    expect(rows.length).toBeGreaterThanOrEqual(12);
+    expect(rows).toEqual(rows.map((_, i) => i + 1));
+    for (const q of ['How much should we fund?', 'What should we fund first?', 'How do we govern the change?', 'What is our hire and upskill plan?',
+      'How far can we trust an agent?', 'How do we stay in control?', 'Build, buy or partner?', 'How do we scale from pilot to portfolio?']) {
+      expect(h).toContain(`<span class="lq-q">${q}</span>`);
+    }
+  });
+
+  it('gives every question an answer, a Decide this checklist, a metric and framework links', () => {
+    const blocks = lead().split('<details id="q-').slice(1).map((b) => b.split('</details>')[0]);
+    for (const b of blocks) {
+      expect(b).toContain('<div class="lq-answer">');
+      expect(b).toContain('<h4>Decide this</h4>');
+      expect((b.match(/<ul class="lq-check">([\s\S]*?)<\/ul>/)![1].match(/<li>/g) ?? []).length).toBeGreaterThanOrEqual(3);
+      expect(b).toMatch(/<h4>Metric to watch<\/h4>\s*<p class="lq-metric">[^<]{10,}<\/p>/);
+      expect(b).toMatch(/href="\/frameworks\/#[a-z-]+"/);
+    }
+  });
+
+  it('mounts the seven tools, each labelled illustrative, with noscript fallbacks', () => {
+    const h = lead();
+    for (const t of ['funding', 'prioritizer', 'raci', 'planner', 'trust', 'threshold', 'control-room']) {
+      expect(h).toContain(`<div data-lx="${t}"></div>`);
+    }
+    expect(h.match(/&middot; illustrative numbers<\/p>/g)).toHaveLength(7);
+    expect(h.match(/<noscript>/g)?.length).toBeGreaterThanOrEqual(7);
+    expect(h).toContain('Every number, threshold and ratio on this page is illustrative.');
+  });
+
+  it('links to the blueprints, architecture and controls pages and is linked from home and /book', () => {
+    const h = lead();
+    for (const href of ['/blueprints/', '/architecture/', '/controls/']) expect(h).toContain(`href="${href}"`);
+    expect(html(byOut('index.html'))).toContain('href="/leaders/">Questions leaders ask</a>');
+    expect(html(byOut('book/index.html'))).toContain('href="/leaders/">Questions leaders ask</a>');
+  });
+
+  it('keeps tool code local: no storage, cookies or network calls', () => {
+    const js = readFileSync(join(DIST, 'assets/leaders.js'), 'utf8');
+    expect(js).not.toMatch(/localStorage|sessionStorage|document\.cookie|indexedDB|fetch\(|XMLHttpRequest/);
+    expect(js).not.toMatch(/https?:\/\//);
+  });
+});

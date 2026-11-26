@@ -116,6 +116,13 @@ export const PAGES = [
     sitemap: true, priority: '0.8',
   },
   {
+    src: 'leaders.html', out: 'leaders/index.html', path: '/leaders/',
+    title: 'Questions Leaders Ask About AI Agents | Human-Led Enterprise',
+    description:
+      'Practical answers for leaders: how much to fund, what to fund first, how to govern, hire and upskill, how far to trust an agent and how to stay in control. With tools.',
+    sitemap: true, priority: '0.9',
+  },
+  {
     src: 'ideas.html', out: 'ideas/index.html', path: '/ideas/', nav: 'IDEAS',
     title: 'Ideas from The Autonomous Enterprise | Human-Led Enterprise',
     description:
@@ -296,7 +303,10 @@ export function build() {
         ? `<link rel="preload" as="image" type="image/webp" imagesrcset="${assetUrl('images/cover-400.webp')} 400w, ${assetUrl('images/cover-800.webp')} 800w, ${assetUrl('images/cover-1200.webp')} 1200w" imagesizes="(min-width: 56rem) 30rem, 82vw" fetchpriority="high">\n`
         : page.src === 'frameworks.html'
           ? `<script src="${assetUrl('frameworks.js')}" defer></script>\n`
-          : page.bp ? bpScripts : '',
+          : page.bp ? bpScripts
+            : page.src === 'leaders.html'
+              ? `<link rel="stylesheet" href="${assetUrl('leaders.css')}">\n<script src="${assetUrl('leaders.js')}" defer></script>\n`
+              : '',
       NAV_SPEAKING: page.nav === 'SPEAKING' ? ' aria-current="page"' : '',
       NAV_IDEAS: page.nav === 'IDEAS' ? ' aria-current="page"' : '',
       NAV_BLUEPRINTS: page.nav === 'BLUEPRINTS' ? ' aria-current="page"' : '',
