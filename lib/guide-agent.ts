@@ -37,6 +37,10 @@ export const MIN_ANSWER_WORDS = 50;
 export const TARGET_WORDS = { min: 60, max: REPLY_WORD_LIMIT } as const;
 /** Length of an answer that hands the visitor to the intake agent. */
 export const INTAKE_WORDS = { min: 60, max: 120 } as const;
+/** A sentence longer than this is a run-on; the answer goes back once to be split. */
+export const MAX_SENTENCE_WORDS = 45;
+/** The line a handoff answer ends on, added in code when the model left it out. */
+export const INTAKE_LINE = 'The intake agent will ask about your audience, date and format, and sends nothing until you consent.';
 /** Page cards shown with one answer. */
 export const MAX_PAGES = 2;
 
@@ -323,6 +327,7 @@ export async function runTurn(
   let nudgedSearch = false;
   let nudgedGraph = false;
   let nudgedGround = false;
+  let nudgedLong = false;
   let infoRan = false;
   let searchRan = false;
   let graphRan = false;
@@ -445,6 +450,15 @@ export async function runTurn(
       continue;
     }
 
+    // Run-on check in code: one long sentence reads as a wall; it goes back once to be split into plain sentences.
+    const longest = Math.max(0, ...sentences(answer).map((x) => x.split(/\s+/).filter(Boolean).length));
+    if (!parsed.clarify && longest > MAX_SENTENCE_WORDS && !nudgedLong && retryable) {
+      nudgedLong = true;
+      nudge(`One sentence runs ${longest} words. Rewrite the whole answer as three to five plain sentences of at most 30 words each: the direct answer first, then the steps or rules from the passages. Keep the cites and the page suggestions.`);
+      again();
+      continue;
+    }
+
     // Copy and grounding checks in code: an answer may not lift the prompt's example, and each sentence that states a
     // fact must trace back to the CORE or this turn's tool results. One rewrite; then copying is withheld and
     // untraceable sentences are dropped.
@@ -470,7 +484,17 @@ export async function runTurn(
       if (rest.split(/\s+/).filter(Boolean).length < 30) return { ok: false, stop: 'ungrounded', ...base, steps: step + 1 };
       answer = rest;
     }
-    if (handingOff) answer = clampWords(answer, INTAKE_WORDS.max);
+    if (handingOff) {
+      // The handoff answer always ends on what the intake agent will do; code adds that line when the model left it out
+      // (in place of a closing question, since the request button follows).
+      if (!/\bintake agent\b/i.test(answer)) {
+        const lineWords = INTAKE_LINE.split(/\s+/).length;
+        const kept = sentences(answer).filter((x, i, all) => !(i === all.length - 1 && /\?\s*$/.test(x)));
+        while (kept.length > 1 && kept.join(' ').split(/\s+/).length + lineWords > INTAKE_WORDS.max) kept.pop();
+        answer = `${kept.join(' ')} ${INTAKE_LINE}`.trim();
+      }
+      answer = clampWords(answer, INTAKE_WORDS.max);
+    }
 
     for (const a of parsed.actions) record(runTool(a, visitorText), a.name);
 

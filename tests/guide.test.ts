@@ -18,7 +18,7 @@ import {
   type ChatMessage,
 } from '../lib/guide';
 import { misboundFigures } from '../lib/fact-check';
-import { CORE, EXAMPLE_ANSWER, INTAKE_WORDS, MAX_CALLS_PER_TURN, MAX_TOOL_STEPS, MIN_ANSWER_WORDS, buildSystemPrompt, copiesExample, dedupeSentences, normalizeCite, parseStep, unsupportedSentences } from '../lib/guide-agent';
+import { CORE, EXAMPLE_ANSWER, INTAKE_LINE, INTAKE_WORDS, MAX_CALLS_PER_TURN, MAX_TOOL_STEPS, MIN_ANSWER_WORDS, buildSystemPrompt, copiesExample, dedupeSentences, normalizeCite, parseStep, unsupportedSentences } from '../lib/guide-agent';
 import { HANDOFFS, KNOWN_CITES, PASSAGES, SITE_PAGES, chapterTags, graphIntent, intakeIntent, pagePlan, requestKind, runTool, searchBook } from '../lib/guide-tools';
 import { KNOWLEDGE } from '../lib/knowledge.generated';
 import { validateConversationLead } from '../lib/validate';
@@ -300,6 +300,24 @@ describe('POST /api/guide (agent loop)', () => {
     expect(labels).toEqual(['Handed off: intake agent (a workshop)']);
     expect((body.trace as { tool: string }[])[0].tool).toBe('search_book');
     expect(db.requests).toHaveLength(0);
+  });
+
+  it('adds the intake line in code when a handoff answer leaves it out, in place of a closing question', async () => {
+    const NO_LINE = `${INTAKE_ANSWER.split('. The intake agent')[0]}. What is the main goal for the session?`;
+    ai.run.mockReset().mockResolvedValueOnce(step({ answer: NO_LINE, cites: ['Ch 01'], tools: [{ name: 'start_intake', args: { intent: 'talk' } }] }));
+    const { body } = await call(chat([{ role: 'user', content: 'I want a workshop for my board' }]));
+    expect(body).toMatchObject({ ok: true, handoff: { kind: 'workshop' } });
+    expect(String(body.reply).endsWith(INTAKE_LINE)).toBe(true);
+    expect(String(body.reply)).not.toContain('What is the main goal');
+    expect(ai.run).toHaveBeenCalledTimes(1);
+  });
+
+  it('sends a run-on sentence back once to be split', async () => {
+    const RUNON = 'As a risk and audit leader you should know that the harness, not the model, sets the autonomy ceiling, and agents decide while deterministic rules post, and autonomy is earned with evidence and can be withdrawn automatically, and promotion needs evidence and a human gate while demotion triggers move a step down automatically for every agent.';
+    ai.run.mockReset().mockResolvedValueOnce(step({ answer: RUNON, cites: ['Ch 23'] })).mockResolvedValueOnce(ANSWER);
+    const { body } = await call(chat([{ role: 'user', content: 'Who answers when an agent goes wrong? I run risk and audit.' }]));
+    expect(body).toMatchObject({ ok: true });
+    expect((ai.run.mock.calls[1][1] as { messages: { content: string }[] }).messages.at(-1)!.content).toMatch(/One sentence runs \d+ words/);
   });
 
   it('shows one handoff line even when the model calls start_intake in a tool step and again in its answer', async () => {
