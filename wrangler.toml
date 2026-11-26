@@ -1,0 +1,8 @@
+name = "autonomous-enterprise-site"
+pages_build_output_dir = "dist"
+compatibility_date = "2025-11-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "autonomous-enterprise"
+database_id = "REPLACE_ME"

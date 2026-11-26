@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /thanks/
+
+Sitemap: https://autonomous-enterprise-site.pages.dev/sitemap.xml
