@@ -72,7 +72,7 @@ export const PAGES = [
     src: 'speaking.html', out: 'speaking/index.html', path: '/speaking/', nav: 'SPEAKING',
     title: 'Speaking & Advisory | Hemanth Reganti | Human-Led Enterprise',
     description:
-      'Book Hemanth Reganti for a keynote, panel, fireside chat or workshop, or bring him in to advise your leadership team on starting or scaling AI agents. In person (Dallas–Fort Worth) or virtual.',
+      'Book Hemanth Reganti for a keynote, panel, fireside chat or workshop, or bring him in to advise your leadership team on starting or scaling AI agents. In person anywhere, or virtual.',
     sitemap: true, priority: '0.8',
   },
   {
