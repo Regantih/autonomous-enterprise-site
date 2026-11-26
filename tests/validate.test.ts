@@ -26,6 +26,16 @@ const consultation = {
   timeline: '1-3-months',
 };
 
+const media = {
+  type: 'media',
+  name: 'Ana Ruiz',
+  email: 'ana@example.com',
+  outlet: 'Enterprise Weekly Podcast',
+  topic: 'Governing AI agents',
+  deadline: '2026-12-10',
+  message: 'A 40-minute recorded interview for our leadership audience.',
+};
+
 const today = new Date('2026-11-25T12:00:00Z');
 
 describe('validateRequest', () => {
@@ -120,5 +130,37 @@ describe('isHoneypotFilled', () => {
     expect(isHoneypotFilled({ website: 'http://spam' })).toBe(true);
     expect(isHoneypotFilled({ website: '  ' })).toBe(false);
     expect(isHoneypotFilled({})).toBe(false);
+  });
+});
+
+describe('validateRequest (media)', () => {
+  it('accepts a media request, storing the outlet as organization', () => {
+    const r = validateRequest(media, today);
+    expect(r).toEqual({
+      ok: true,
+      value: {
+        type: 'media', name: 'Ana Ruiz', email: 'ana@example.com', organization: 'Enterprise Weekly Podcast', role: null,
+        details: { topic: 'Governing AI agents', deadline: '2026-12-10', message: 'A 40-minute recorded interview for our leadership audience.' },
+      },
+    });
+  });
+
+  it('treats the deadline as optional and ignores organization/role fields', () => {
+    const r = validateRequest({ ...media, deadline: '', organization: 'Other', role: 'Host' }, today);
+    expect(r.ok && r.value).toMatchObject({ organization: 'Enterprise Weekly Podcast', role: null, details: { topic: 'Governing AI agents' } });
+    expect(r.ok && 'deadline' in r.value.details).toBe(false);
+  });
+
+  it('reports missing outlet, topic and message', () => {
+    const r = validateRequest({ type: 'media', name: 'Ana Ruiz', email: 'ana@example.com' }, today);
+    expect(r.ok).toBe(false);
+    expect(!r.ok && Object.keys(r.errors).sort()).toEqual(['message', 'outlet', 'topic']);
+  });
+
+  it('rejects past or malformed deadlines', () => {
+    const past = validateRequest({ ...media, deadline: '2026-01-01' }, today);
+    expect(!past.ok && past.errors.deadline).toBe('Deadline must be in the future.');
+    const bad = validateRequest({ ...media, deadline: 'soon' }, today);
+    expect(!bad.ok && bad.errors.deadline).toBe('Please enter a valid date.');
   });
 });

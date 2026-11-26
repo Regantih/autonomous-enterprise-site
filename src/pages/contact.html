@@ -2,17 +2,28 @@
   <div class="container">
     <p class="eyebrow">Contact</p>
     <h1 id="page-title">Work with Hemanth</h1>
-    <p class="lead">Choose the request that fits.</p>
-    <div class="choice-grid">
-      <a class="choice" href="#speaking-form"><strong>Book a talk</strong><span>Keynote, panel, fireside chat or workshop</span></a>
-      <a class="choice" href="#consulting-form"><strong>Request a consultation</strong><span>Advisory for leadership teams</span></a>
-    </div>
+    <p class="lead">Choose the request that fits. Hemanth replies to the email address you give.</p>
   </div>
 </section>
 <section class="section" aria-labelledby="forms-title">
-  <h2 id="forms-title" class="visually-hidden">Request forms</h2>
-  <div class="container engage">
-    {{> speaking-form}}
-    {{> consulting-form}}
+  <div class="container">
+    <h2 id="forms-title" class="visually-hidden">Request forms</h2>
+    <div class="tabs" data-tabs>
+      <nav class="tablist" aria-label="Request type">
+        <a class="tab" id="tab-speaking" href="#speaking" aria-controls="speaking">Speaking</a>
+        <a class="tab" id="tab-advisory" href="#advisory" aria-controls="advisory">Advisory</a>
+        <a class="tab" id="tab-media" href="#media" aria-controls="media">Media &amp; podcasts</a>
+      </nav>
+      <div class="tabpanel" id="speaking" aria-labelledby="tab-speaking">
+        {{> speaking-form}}
+      </div>
+      <div class="tabpanel" id="advisory" aria-labelledby="tab-advisory">
+        {{> advisory-form}}
+      </div>
+      <div class="tabpanel" id="media" aria-labelledby="tab-media">
+        {{> media-form}}
+      </div>
+    </div>
   </div>
 </section>
+{{> press-kit}}

@@ -1,5 +1,5 @@
 // Builds the static site from src/ into dist/. No dependencies; deterministic output.
-// SITE_URL sets canonical/Open Graph/sitemap URLs (default: the Cloudflare Pages domain).
+// SITE_URL sets canonical/Open Graph/sitemap URLs (default: https://humanledenterprise.com).
 import { createHash } from 'node:crypto';
 import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
@@ -8,11 +8,50 @@ import { fileURLToPath } from 'node:url';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SRC = join(ROOT, 'src');
 const DIST = join(ROOT, 'dist');
-export const SITE_URL = (process.env.SITE_URL || 'https://autonomous-enterprise-site.pages.dev').replace(/\/+$/, '');
+export const SITE_URL = (process.env.SITE_URL || 'https://humanledenterprise.com').replace(/\/+$/, '');
 
 const AMAZON_PAPERBACK = 'https://www.amazon.com/dp/B0HS8HG6DP';
 const AMAZON_KINDLE = 'https://www.amazon.com/dp/B0HS8C4WLL';
 const LINKEDIN = 'https://www.linkedin.com/in/hemanth-reganti-147153178/';
+export const SITE_NAME = 'Human-Led Enterprise';
+export const LINKEDIN_SHARE = 'https://www.linkedin.com/sharing/share-offsite/?url=https://humanledenterprise.com/ideas';
+
+// Verbatim from the book. QUOTES[0] is the thesis; STRIP picks the home-page strip.
+export const QUOTES = [
+  'Autonomy is earned when value compounds faster than risk.',
+  'The harness, not the model, sets the autonomy ceiling.',
+  'Agents decide; deterministic rules post.',
+  'Human-led, agent-operated: people set intent, own outcomes and decide where not to automate.',
+  'A board that funds agents first and data second pays twice.',
+  'A modest model inside a strong harness can run a narrow step at L3 safely.',
+  'The model is the most flexible part and the least trusted; the safety controller is the least flexible and the most trusted.',
+  'An agent optimizes its target harder and more literally than a person.',
+  'An agent can act thousands of times before a monthly review.',
+  'The unit that moves to an agent is a decision inside a task.',
+  'The agent removes the investigation, not the person.',
+  'The weakest maturity dimension caps the autonomy allowed.',
+  "The person who approves an agent's actions may not change the agent's limits, instructions or tools.",
+];
+const STRIP = [3, 4, 8, 10, 11];
+
+// Written only from the About facts.
+export const BIO_SHORT =
+  'Hemanth Reganti is an enterprise finance and solution architect and the author of The Autonomous Enterprise: How Leaders Build, Govern, and Scale the Agent-Run Company. He co-authored AI Powered Decision Making (Apress, 2026), is an alumnus of MIT Sloan and Harvard Business School Executive Education, and serves on the GoingVC investment committee.';
+export const BIO_LONG =
+  'Hemanth Reganti is an enterprise finance and solution architect and author who writes and speaks on the human-led, agent-operated enterprise. His book, The Autonomous Enterprise: How Leaders Build, Govern, and Scale the Agent-Run Company (first edition, November 2026), is a vendor-neutral guide for leaders deciding where AI agents can act, who owns their decisions and how autonomy is earned with evidence. He is co-author of AI Powered Decision Making (Apress, 2026). Hemanth is an alumnus of the MIT Sloan Executive Program in General Management and Harvard Business School Executive Education. He is a member of the GoingVC investment committee, where he evaluates AI and enterprise software companies. He speaks to and advises leadership teams starting or scaling AI agents.';
+export const wordCount = (t) => t.split(/\s+/).filter(Boolean).length;
+
+const esc = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/'/g, '&rsquo;');
+
+function quoteCard(i, { tag = 'li' } = {}) {
+  return `<${tag} class="quote-card${i === 0 ? ' quote-thesis' : ''}">
+        <figure>
+          <blockquote><p>${esc(QUOTES[i])}</p></blockquote>
+          <figcaption>&mdash; <cite>The Autonomous Enterprise</cite></figcaption>
+        </figure>
+        <a class="share" href="${LINKEDIN_SHARE}" rel="noopener" target="_blank">Share on LinkedIn<span class="visually-hidden">: &ldquo;${esc(QUOTES[i])}&rdquo; (opens in a new tab)</span></a>
+      </${tag}>`;
+}
 
 const BASE_DESCRIPTION =
   'The Autonomous Enterprise by Hemanth Reganti: how leaders build, govern, and scale the agent-run company. Human-led, agent-operated.';
@@ -28,31 +67,38 @@ export const PAGES = [
   },
   {
     src: 'speaking.html', out: 'speaking/index.html', path: '/speaking/', nav: 'SPEAKING',
-    title: 'Speaking | Hemanth Reganti, The Autonomous Enterprise',
+    title: 'Speaking | Hemanth Reganti | Human-Led Enterprise',
     description:
       'Book Hemanth Reganti for a keynote, panel, fireside chat or workshop on managing and governing the agent-run company. In person (Dallas–Fort Worth) or virtual.',
     sitemap: true, priority: '0.8',
   },
   {
-    src: 'consulting.html', out: 'consulting/index.html', path: '/consulting/', nav: 'CONSULTING',
-    title: 'Consulting | Hemanth Reganti, The Autonomous Enterprise',
+    src: 'ideas.html', out: 'ideas/index.html', path: '/ideas/', nav: 'IDEAS',
+    title: 'Ideas from The Autonomous Enterprise | Human-Led Enterprise',
+    description:
+      'Ideas from The Autonomous Enterprise by Hemanth Reganti: autonomy is earned when value compounds faster than risk. Human-led, agent-operated.',
+    sitemap: true, priority: '0.8',
+  },
+  {
+    src: 'advisory.html', out: 'advisory/index.html', path: '/advisory/', nav: 'ADVISORY',
+    title: 'Advisory | Hemanth Reganti | Human-Led Enterprise',
     description:
       'Advisory for leadership teams starting or scaling AI agents: autonomy readiness assessment, governance and guardrail design, operating-model changes, business case and 30-month roadmap.',
     sitemap: true, priority: '0.8',
   },
   {
     src: 'contact.html', out: 'contact/index.html', path: '/contact/', nav: 'CONTACT',
-    title: 'Contact | Hemanth Reganti, The Autonomous Enterprise',
-    description: 'Request a talk or a consultation with Hemanth Reganti, author of The Autonomous Enterprise.',
+    title: 'Contact | Hemanth Reganti | Human-Led Enterprise',
+    description: 'Book a talk, request advisory, or arrange a media or podcast interview with Hemanth Reganti, author of The Autonomous Enterprise. Press kit and bios.',
     sitemap: true, priority: '0.6',
   },
   {
     src: 'thanks.html', out: 'thanks/index.html', path: '/thanks/',
-    title: 'Thank you | The Autonomous Enterprise', description: BASE_DESCRIPTION, robots: 'noindex, follow',
+    title: 'Thank you | Human-Led Enterprise', description: BASE_DESCRIPTION, robots: 'noindex, follow',
   },
   {
     src: '404.html', out: '404.html', path: '/404.html',
-    title: 'Page not found | The Autonomous Enterprise', description: BASE_DESCRIPTION, robots: 'noindex, follow',
+    title: 'Page not found | Human-Led Enterprise', description: BASE_DESCRIPTION, robots: 'noindex, follow',
   },
 ];
 
@@ -77,6 +123,7 @@ function jsonLd() {
     '@id': `${SITE_URL}/#author`,
     name: 'Hemanth Reganti',
     jobTitle: 'Enterprise finance and solution architect',
+    knowsAbout: ['Human-led, agent-operated enterprises', 'AI agent governance', 'Enterprise autonomy'],
     description:
       'Enterprise finance and solution architect and author. Co-author of "AI Powered Decision Making" (Apress, 2026).',
     url: `${SITE_URL}/#about`,
@@ -115,7 +162,7 @@ function jsonLd() {
       },
     ],
   };
-  const site = { '@type': 'WebSite', '@id': `${SITE_URL}/#website`, name: 'The Autonomous Enterprise', url: `${SITE_URL}/` };
+  const site = { '@type': 'WebSite', '@id': `${SITE_URL}/#website`, name: SITE_NAME, url: `${SITE_URL}/`, publisher: { '@id': `${SITE_URL}/#author` } };
   const graph = { '@context': 'https://schema.org', '@graph': [book, person, site] };
   return `<script type="application/ld+json">${JSON.stringify(graph).replace(/</g, '\\u003c')}</script>\n`;
 }
@@ -140,7 +187,7 @@ export function build() {
   rmSync(DIST, { recursive: true, force: true });
   mkdirSync(DIST, { recursive: true });
   cpSync(join(SRC, 'assets'), join(DIST, 'assets'), { recursive: true });
-  for (const f of readdirSync(join(SRC, 'static'))) cpSync(join(SRC, 'static', f), join(DIST, f));
+  for (const f of readdirSync(join(SRC, 'static'))) cpSync(join(SRC, 'static', f), join(DIST, f), { recursive: true });
 
   const layout = read(join(SRC, 'partials', 'layout.html'));
   const assetVersion = hash(read(join(SRC, 'assets', 'styles.css')) + read(join(SRC, 'assets', 'site.js')));
@@ -161,10 +208,19 @@ export function build() {
         ? `<link rel="preload" as="image" type="image/webp" imagesrcset="${assetUrl('images/cover-400.webp')} 400w, ${assetUrl('images/cover-800.webp')} 800w" imagesizes="(min-width: 56rem) 22rem, 70vw" fetchpriority="high">\n`
         : '',
       NAV_SPEAKING: page.nav === 'SPEAKING' ? ' aria-current="page"' : '',
-      NAV_CONSULTING: page.nav === 'CONSULTING' ? ' aria-current="page"' : '',
+      NAV_IDEAS: page.nav === 'IDEAS' ? ' aria-current="page"' : '',
+      NAV_ADVISORY: page.nav === 'ADVISORY' ? ' aria-current="page"' : '',
       NAV_CONTACT: page.nav === 'CONTACT' ? ' aria-current="page"' : '',
       COVER_HERO: coverPicture({ priority: true }),
       COVER_BOOK: coverPicture({ priority: false }),
+      COVER_THUMB: assetUrl('images/cover-400.jpg'),
+      SITE_NAME,
+      THESIS: quoteCard(0, { tag: 'div' }),
+      QUOTES_ALL: QUOTES.map((_, i) => quoteCard(i)).join('\n      '),
+      QUOTES_STRIP: STRIP.map((i) => quoteCard(i)).join('\n      '),
+      BIO_SHORT, BIO_LONG,
+      BIO_SHORT_WORDS: String(wordCount(BIO_SHORT)),
+      BIO_LONG_WORDS: String(wordCount(BIO_LONG)),
     };
     const html = fill(expandPartials(layout).replace('{{BODY}}', body), vars);
     const outPath = join(DIST, page.out);

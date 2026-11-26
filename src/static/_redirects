@@ -1,0 +1,3 @@
+/consulting /advisory/ 301
+/consulting/ /advisory/ 301
+/consulting/* /advisory/ 301

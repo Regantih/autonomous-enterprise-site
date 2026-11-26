@@ -9,12 +9,19 @@
       <div class="btn-row">
         <a class="btn btn-primary ext" href="https://www.amazon.com/dp/B0HS8HG6DP" rel="noopener" target="_blank">Buy on Amazon<span class="visually-hidden"> (opens in a new tab)</span></a>
         <a class="btn btn-ghost" href="#speaking">Book a talk</a>
-        <a class="btn btn-ghost" href="#consulting">Request a consultation</a>
+        <a class="btn btn-ghost" href="#advisory">Request a consultation</a>
       </div>
     </div>
     <div class="hero-cover">
       {{COVER_HERO}}
     </div>
+  </div>
+</section>
+
+<section class="section section-paper-2 thesis" id="thesis" aria-labelledby="thesis-title">
+  <div class="container">
+    <h2 id="thesis-title" class="eyebrow">The thesis</h2>
+    {{THESIS}}
   </div>
 </section>
 
@@ -172,15 +179,30 @@
   </div>
 </section>
 
+<section class="section section-ink" id="ideas" aria-labelledby="ideas-title">
+  <div class="container">
+    <div class="strip-head">
+      <div>
+        <p class="eyebrow">Ideas</p>
+        <h2 id="ideas-title">Ideas from the book</h2>
+      </div>
+      <a class="btn btn-ghost" href="/ideas/">All ideas</a>
+    </div>
+    <ul class="quote-strip" tabindex="0" aria-label="Quotes from the book, scroll sideways for more">
+      {{QUOTES_STRIP}}
+    </ul>
+  </div>
+</section>
+
 <section class="section" id="speaking" aria-labelledby="speaking-title">
   <div class="container">
     {{> speaking-section}}
   </div>
 </section>
 
-<section class="section section-paper-2" id="consulting" aria-labelledby="consulting-title">
+<section class="section section-paper-2" id="advisory" aria-labelledby="advisory-title">
   <div class="container">
-    {{> consulting-section}}
+    {{> advisory-section}}
   </div>
 </section>
 

@@ -1,9 +1,11 @@
-export type RequestType = 'speaking' | 'consultation';
+export const REQUEST_TYPES = ['speaking', 'consultation', 'media'] as const;
+export type RequestType = (typeof REQUEST_TYPES)[number];
 
 export interface ValidRequest {
   type: RequestType;
   name: string;
   email: string;
+  /** Organization, or the outlet for media requests. */
   organization: string;
   role: string | null;
   details: Record<string, string | string[]>;
@@ -84,31 +86,41 @@ export function isHoneypotFilled(input: Input): boolean {
 export function validateRequest(input: Input, today: Date = new Date()): ValidationResult {
   const c = new Checker(input);
   const type = text(input, 'type');
-  if (type !== 'speaking' && type !== 'consultation') {
+  if (!(REQUEST_TYPES as readonly string[]).includes(type)) {
     return { ok: false, errors: { type: 'Unknown request type.' } };
   }
 
   const name = c.str('name', 'Name', { required: true, max: 120, min: 2 });
   const email = c.str('email', 'Email', { required: true, max: 254 });
   if (email && !c.errors.email && !EMAIL_RE.test(email)) c.errors.email = 'Please enter a valid email address.';
-  const organization = c.str('organization', 'Organization', { required: true, max: 160 });
-  const role = c.str('role', 'Role', { max: 120 });
+  const organization =
+    type === 'media'
+      ? c.str('outlet', 'Outlet', { required: true, max: 160 })
+      : c.str('organization', 'Organization', { required: true, max: 160 });
+  const role = type === 'media' ? '' : c.str('role', 'Role', { max: 120 });
 
   const details: Record<string, string | string[]> = {};
   const put = (k: string, v: string | string[]) => {
     if (Array.isArray(v) ? v.length : v) details[k] = v;
   };
 
-  if (type === 'speaking') {
+  const futureDate = (key: string, label: string): string => {
+    const date = c.str(key, label, { max: 10 });
+    if (!date) return '';
+    const parsed = new Date(`${date}T00:00:00Z`);
+    const startOfToday = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+    if (!DATE_RE.test(date) || Number.isNaN(parsed.getTime())) c.errors[key] = 'Please enter a valid date.';
+    else if (parsed.getTime() < startOfToday - 86_400_000) c.errors[key] = `${label} must be in the future.`;
+    return c.errors[key] ? '' : date;
+  };
+
+  if (type === 'media') {
+    put('topic', c.str('topic', 'Topic', { required: true, max: 200 }));
+    put('deadline', futureDate('deadline', 'Deadline'));
+    put('message', c.str('message', 'Message', { required: true, max: 4000, min: 10 }));
+  } else if (type === 'speaking') {
     put('event_name', c.str('event_name', 'Event name', { required: true, max: 160 }));
-    const date = c.str('event_date', 'Event date', { max: 10 });
-    if (date) {
-      const parsed = new Date(`${date}T00:00:00Z`);
-      const startOfToday = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
-      if (!DATE_RE.test(date) || Number.isNaN(parsed.getTime())) c.errors.event_date = 'Please enter a valid date.';
-      else if (parsed.getTime() < startOfToday - 86_400_000) c.errors.event_date = 'Event date must be in the future.';
-    }
-    put('event_date', c.errors.event_date ? '' : date);
+    put('event_date', futureDate('event_date', 'Event date'));
     put('delivery', c.choice('delivery', 'in person or virtual', SPEAKING_DELIVERY, true));
     put('location', c.str('location', 'Location', { max: 160 }));
     put('audience_size', c.choice('audience_size', 'an audience size', AUDIENCE_SIZES, false));
@@ -130,6 +142,6 @@ export function validateRequest(input: Input, today: Date = new Date()): Validat
   if (Object.keys(c.errors).length) return { ok: false, errors: c.errors };
   return {
     ok: true,
-    value: { type, name, email: email.toLowerCase(), organization, role: role || null, details },
+    value: { type: type as RequestType, name, email: email.toLowerCase(), organization, role: role || null, details },
   };
 }

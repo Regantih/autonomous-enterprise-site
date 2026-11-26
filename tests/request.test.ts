@@ -127,3 +127,24 @@ describe('POST /api/request', () => {
     expect(res.headers.get('allow')).toBe('POST');
   });
 });
+
+describe('POST /api/request (media)', () => {
+  it('stores a media request with type media and the outlet as organization', async () => {
+    const media = {
+      type: 'media', name: 'Ana Ruiz', email: 'ana@example.com', outlet: 'Enterprise Weekly',
+      topic: 'Governing AI agents', message: 'Interview for our leadership issue.',
+    };
+    const { res, body } = await call(post(JSON.stringify(media)));
+    expect(res.status).toBe(200);
+    expect(db.requests).toHaveLength(1);
+    expect(db.requests[0]).toMatchObject({ id: (body as { id: string }).id, type: 'media', organization: 'Enterprise Weekly', role: null, status: 'new' });
+    expect(JSON.parse(db.requests[0].details as string)).toEqual({ topic: 'Governing AI agents', message: 'Interview for our leadership issue.' });
+  });
+
+  it('returns field errors for an incomplete media request', async () => {
+    const { res, body } = await call(post(JSON.stringify({ type: 'media', name: 'Ana Ruiz', email: 'ana@example.com' })));
+    expect(res.status).toBe(400);
+    expect(Object.keys((body as { errors: object }).errors).sort()).toEqual(['message', 'outlet', 'topic']);
+    expect(db.requests).toHaveLength(0);
+  });
+});

@@ -16,8 +16,8 @@ STATIC = ROOT / "src/static"
 CHROME = shutil.which("google-chrome") or shutil.which("chromium") or shutil.which("chromium-browser")
 
 
-def shoot(html: pathlib.Path, out: pathlib.Path, w: int, h: int) -> None:
-    subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--hide-scrollbars", "--force-device-scale-factor=1",
+def shoot(html: pathlib.Path, out: pathlib.Path, w: int, h: int, scale: int = 1) -> None:
+    subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--hide-scrollbars", f"--force-device-scale-factor={scale}",
                     f"--window-size={w},{h}", "--virtual-time-budget=3000", f"--screenshot={out}", html.as_uri()],
                    check=True, capture_output=True)
 
@@ -28,7 +28,7 @@ def main() -> None:
     if len(sys.argv) > 1:
         cover = Image.open(sys.argv[1]).convert("RGB")
     else:
-        shoot(ROOT / "tools/cover-mock.html", tmp / "cover.png", 800, 1200)
+        shoot(ROOT / "tools/cover-mock.html", tmp / "cover.png", 800, 1200, scale=2)
         cover = Image.open(tmp / "cover.png").convert("RGB")
     # Normalise to 2:3 at 800x1200.
     w, h = cover.size
@@ -38,6 +38,11 @@ def main() -> None:
             nw = int(h * target); cover = cover.crop(((w - nw) // 2, 0, (w - nw) // 2 + nw, h))
         else:
             nh = int(w / target); cover = cover.crop((0, (h - nh) // 2, w, (h - nh) // 2 + nh))
+    # Press download: up to 1600x2400 (never upscaled beyond the source).
+    press = STATIC / "press"
+    press.mkdir(parents=True, exist_ok=True)
+    big = cover.resize((1600, 2400), Image.LANCZOS) if cover.size[0] >= 1600 else cover
+    big.save(press / "the-autonomous-enterprise-cover.jpg", "JPEG", quality=90, optimize=True, progressive=True)
     cover = cover.resize((800, 1200), Image.LANCZOS)
     for width in (400, 800):
         img = cover.resize((width, width * 3 // 2), Image.LANCZOS)

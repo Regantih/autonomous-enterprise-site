@@ -1,9 +1,11 @@
-# The Autonomous Enterprise — book site
+# Human-Led Enterprise — humanledenterprise.com
 
-Marketing site for *The Autonomous Enterprise: How Leaders Build, Govern, and Scale the Agent-Run Company* by Hemanth Reganti.
+Personal-brand site for Hemanth Reganti, author, speaker and advisor on human-led, agent-operated enterprises, built around his book *The Autonomous Enterprise: How Leaders Build, Govern, and Scale the Agent-Run Company*.
+
+Pages: `/` (book-led home with the thesis quote and an ideas strip), `/ideas/` (quote cards with LinkedIn share links), `/speaking/` (topics, why book Hemanth, speaker kit with bios), `/advisory/` (services, how an engagement works), `/contact/` (Speaking, Advisory, Media & podcasts tabs, plus the press kit with cover download and bios). `/consulting` redirects to `/advisory/` (301, `src/static/_redirects`).
 
 - Static HTML/CSS/JS in `dist/` (committed, so it deploys as-is), built from `src/` by a dependency-free script.
-- One Cloudflare Pages Function, `functions/api/request.ts`, receives the speaking and consultation forms, validates them server-side, drops honeypot submissions, rate-limits by hashed IP (5 per hour) and stores each request in Cloudflare D1 (binding `DB`).
+- One Cloudflare Pages Function, `functions/api/request.ts`, receives the speaking, advisory (`consultation`) and media forms, validates them server-side, drops honeypot submissions, rate-limits by hashed IP (5 per hour) and stores each request in Cloudflare D1 (binding `DB`).
 - No analytics, trackers, cookies or third-party requests. Strict CSP and security headers in `src/static/_headers`.
 
 ## Deploy to Cloudflare Pages
@@ -26,7 +28,7 @@ npx wrangler pages project create autonomous-enterprise-site --production-branch
 npx wrangler pages deploy
 ```
 
-`wrangler pages deploy` reads `wrangler.toml`: it uploads `dist/`, bundles `functions/` and attaches the D1 binding. The site is then live at `https://autonomous-enterprise-site.pages.dev`.
+`wrangler pages deploy` reads `wrangler.toml`: it uploads `dist/`, bundles `functions/` and attaches the D1 binding. The site is then live at `https://autonomous-enterprise-site.pages.dev`; attach `humanledenterprise.com` as below.
 
 Optional: set a secret salt for the rate-limit IP hash.
 
@@ -36,14 +38,9 @@ npx wrangler pages secret put RATE_LIMIT_SALT --project-name autonomous-enterpri
 
 ### Custom domain
 
-Add the domain in the Cloudflare dashboard (Workers & Pages → the project → Custom domains). Then rebuild so canonical, Open Graph and sitemap URLs use it, and redeploy:
+Canonical, Open Graph, sitemap, robots and JSON-LD URLs already point at `https://humanledenterprise.com` (the default `SITE_URL` in `scripts/build.mjs`). Add `humanledenterprise.com` (and optionally `www.humanledenterprise.com`) in the Cloudflare dashboard: Workers & Pages → the project → Custom domains.
 
-```sh
-SITE_URL=https://www.example.com npm run build
-npx wrangler pages deploy
-```
-
-Commit the rebuilt `dist/` so CI's freshness check passes (or change the default `SITE_URL` in `scripts/build.mjs`).
+To build for a different domain: `SITE_URL=https://www.example.com npm run build`, then commit `dist/` so CI's freshness check passes.
 
 ## Reading requests
 
@@ -61,7 +58,8 @@ npx wrangler d1 execute autonomous-enterprise --remote \
 | type | details keys |
 | --- | --- |
 | `speaking` | `event_name`, `event_date`, `delivery` (`in-person`/`virtual`), `location`, `audience_size`, `format`, `message` |
-| `consultation` | `company_size`, `goals` (array), `timeline`, `message` |
+| `consultation` (advisory form) | `company_size`, `goals` (array), `timeline`, `message` |
+| `media` | `topic`, `deadline`, `message` (the outlet is stored in the `organization` column; `role` is null) |
 
 The `rate_limits` table only holds salted SHA-256 hashes of IPs for one hour.
 
@@ -90,6 +88,8 @@ npm run check:dist    # fails if dist/ is stale
 | Header, footer, forms, shared sections | `src/partials/*.html` |
 | Styles, form script | `src/assets/styles.css`, `src/assets/site.js` |
 | Titles, descriptions, JSON-LD, sitemap | `scripts/build.mjs` |
+| Ideas quotes, home strip, speaker/press bios | `QUOTES`, `STRIP`, `BIO_SHORT`, `BIO_LONG` in `scripts/build.mjs` |
+| Redirects | `src/static/_redirects` |
 | Validation rules | `lib/validate.ts` |
 
 Run `npm run build` after any change and commit `dist/` with it.
@@ -103,7 +103,7 @@ python3 tools/make-images.py path/to/cover.jpg   # needs Pillow and Google Chrom
 npm run build
 ```
 
-This regenerates `cover-400/800` (WebP + JPEG), the 1200×630 Open Graph image and the icons.
+This regenerates `cover-400/800` (WebP + JPEG), the press download `src/static/press/the-autonomous-enterprise-cover.jpg` (1600×2400 when the source is that large), the 1200×630 Open Graph image and the icons.
 
 ## Licences
 

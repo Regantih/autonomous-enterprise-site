@@ -141,4 +141,71 @@
         });
     });
   });
+  // Contact tabs (ARIA tabs pattern; without JS the panels stay stacked with anchor links).
+  document.querySelectorAll('[data-tabs]').forEach(function (root) {
+    var list = root.querySelector('.tablist');
+    var tabs = Array.prototype.slice.call(root.querySelectorAll('.tab'));
+    var panels = tabs.map(function (t) { return document.getElementById(t.getAttribute('aria-controls')); });
+    list.setAttribute('role', 'tablist');
+    panels.forEach(function (p) { p.setAttribute('role', 'tabpanel'); p.tabIndex = -1; });
+    function select(i, focus) {
+      tabs.forEach(function (t, j) {
+        var on = i === j;
+        t.setAttribute('role', 'tab');
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.tabIndex = on ? 0 : -1;
+        panels[j].hidden = !on;
+      });
+      if (focus) tabs[i].focus();
+    }
+    function fromHash() {
+      var h = location.hash.slice(1);
+      if (!h) return 0;
+      for (var i = 0; i < panels.length; i++) {
+        if (panels[i].id === h || panels[i].querySelector('[id="' + h + '"]')) return i;
+      }
+      return -1;
+    }
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function (e) {
+        e.preventDefault();
+        select(i, false);
+        history.replaceState(null, '', '#' + panels[i].id);
+      });
+      t.addEventListener('keydown', function (e) {
+        var n = tabs.length, k = e.key, j = null;
+        if (k === 'ArrowRight') j = (i + 1) % n;
+        else if (k === 'ArrowLeft') j = (i - 1 + n) % n;
+        else if (k === 'Home') j = 0;
+        else if (k === 'End') j = n - 1;
+        if (j === null) return;
+        e.preventDefault();
+        select(j, true);
+        history.replaceState(null, '', '#' + panels[j].id);
+      });
+    });
+    var start = fromHash();
+    select(start < 0 ? 0 : start, false);
+    if (location.hash && start >= 0) list.scrollIntoView();
+    window.addEventListener('hashchange', function () { var i = fromHash(); if (i >= 0) select(i, false); });
+  });
+
+  // Copy-to-clipboard for bios.
+  document.querySelectorAll('.copy-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var target = document.getElementById(btn.getAttribute('data-copy'));
+      var text = target.textContent.trim();
+      function done(ok) {
+        btn.textContent = ok ? 'Copied' : 'Select and copy';
+        setTimeout(function () { btn.textContent = 'Copy'; }, 2000);
+      }
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
+      } else {
+        var r = document.createRange(); r.selectNodeContents(target);
+        var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+        done(false);
+      }
+    });
+  });
 })();

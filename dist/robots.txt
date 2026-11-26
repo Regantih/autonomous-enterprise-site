@@ -3,4 +3,4 @@ Allow: /
 Disallow: /api/
 Disallow: /thanks/
 
-Sitemap: https://autonomous-enterprise-site.pages.dev/sitemap.xml
+Sitemap: https://humanledenterprise.com/sitemap.xml
