@@ -206,6 +206,23 @@ describe('built Blueprints pages', () => {
     expect(js.match(/https?:\/\/[^'" ]+/g)).toEqual(['http://www.w3.org/2000/svg']);
     expect(js).not.toMatch(/style="/);
   });
+
+  it('lays swimlanes out to fit their box instead of forcing a minimum width', () => {
+    const js = readFileSync(join(DIST, 'assets/blueprints.js'), 'utf8');
+    const css = readFileSync(join(DIST, 'assets/styles.css'), 'utf8');
+    // No forced min-width on the diagram; it is drawn 1:1 for the width it gets and redraws on resize.
+    expect(js).not.toMatch(/svg\.style\.minWidth/);
+    expect(js).toContain("host.classList.toggle('sl-fit', Lo.fit)");
+    expect(js).toContain('new ResizeObserver');
+    // Lane labels sit in their own sticky column; the player and designer diagrams take the wide breakout.
+    expect(js).toContain("class: 'sl-lab'");
+    expect(css).toMatch(/\.sl-lab \{ position: sticky; left: 0;/);
+    expect(css).toMatch(/\.bp-ix \.sl-wrap, \.sl-wrap\.dz-sl \{ --bp-w: max\(100%, min\(100vw - 4rem, 84rem\)\)/);
+    // Text in the diagram stays at 12px or more.
+    for (const m of css.matchAll(/\.sl-(?:lname|name|num|badge-t) \{[^}]*font-size: ([\d.]+)px/g)) expect(Number(m[1])).toBeGreaterThanOrEqual(12);
+    // The workflows-by-layer matrix no longer forces 60rem on wider screens.
+    expect(css).toMatch(/@media screen and \(min-width: 56rem\) \{\s*\.bp-matrix \{ min-width: 0; \}/);
+  });
 });
 
 describe('decision trace viewer', () => {

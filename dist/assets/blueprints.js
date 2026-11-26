@@ -324,7 +324,10 @@
   }
 
   /* ---------- Shared: swimlane renderer ---------- */
-  var SL = { LW: 128, CW: 156, BW: 140, LH: 112, BH: 74 };
+  /* Laid out for the width it gets, drawn at 1:1 so text keeps its CSS size. When the steps fit (CW >= CWMIN)
+     the diagram fills its box with no sideways scroll; otherwise (phones, long designer flows) it scrolls
+     under a solid sticky lane-label column. Redraws itself when its box changes width, keeping step state. */
+  var SL = { LW: 128, CW: 156, BW: 140, LH: 112, BH: 74, CWMIN: 104, CWSCROLL: 136, NAME_PX: 13, LINE: 15 };
   function chainOf(steps) {
     var min = 5, weak = [];
     steps.forEach(function (s) { if (s.ex) return; if (s.lvl != null) min = Math.min(min, s.lvl); if (s.ho) min = Math.min(min, HO_CEIL[s.ho]); });
@@ -335,52 +338,118 @@
     });
     return { level: min, weak: weak };
   }
+  var measureCtx = null;
+  function textWidth(t, font) {
+    if (!measureCtx) { try { measureCtx = document.createElement('canvas').getContext('2d'); } catch (e) { measureCtx = false; } }
+    if (!measureCtx) return String(t).length * 7;
+    measureCtx.font = font; return measureCtx.measureText(t).width;
+  }
+  // Wrap text to a pixel width; the last allowed line ends with an ellipsis when text is cut.
+  function wrapPx(text, maxPx, max, font) {
+    var words = String(text).split(' '), lines = [], cur = '';
+    words.forEach(function (w) { var t = (cur + ' ' + w).trim(); if (cur && textWidth(t, font) > maxPx) { lines.push(cur); cur = w; } else cur = t; });
+    if (cur) lines.push(cur);
+    if (max && lines.length > max) {
+      lines = lines.slice(0, max);
+      var last = lines[max - 1];
+      while (last.indexOf(' ') > 0 && textWidth(last + '\u2026', font) > maxPx) last = last.replace(/\s*\S*$/, '');
+      lines[max - 1] = last + '\u2026';
+    }
+    return lines;
+  }
+  var slState = typeof WeakMap === 'function' ? new WeakMap() : null;
   function drawSwimlane(host, steps, opts) {
     opts = opts || {};
-    host.innerHTML = '';
-    var lanes = AE.lanes, W = SL.LW + steps.length * SL.CW + 10, H = lanes.length * SL.LH;
-    var svg = sv('svg', { viewBox: '0 0 ' + W + ' ' + H, class: 'sl-svg', role: 'group', 'aria-label': opts.label || 'Swimlane diagram' });
-    svg.style.minWidth = Math.round(W * 0.78) + 'px';
-    var defs = sv('defs', {}, svg), mk = sv('marker', { id: 'sl-arrow-' + (opts.key || 'a'), viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: 'auto-start-reverse' }, defs);
-    sv('path', { d: 'M0 0L10 5L0 10z', class: 'sl-arrowhead' }, mk);
-    var laneY = {};
-    lanes.forEach(function (L, i) {
-      var y = i * SL.LH; laneY[L.id] = y;
-      sv('rect', { x: 0, y: y, width: W, height: SL.LH, class: 'sl-lane' + (i % 2 ? ' alt' : '') + (L.id === 'harness' ? ' har' : '') }, svg);
-      textLines(svg, 12, y + SL.LH / 2 + 4 - (wrap(L.name, 12).length - 1) * 7, wrap(L.name, 12), { class: 'sl-lname' }, 14);
-    });
-    var gA = sv('g', {}, svg), gB = sv('g', {}, svg), pos = {};
-    steps.forEach(function (s, i) {
-      var bx = SL.LW + i * SL.CW + (SL.CW - SL.BW) / 2, by = laneY[s.lane] + 10;
-      pos[s.id] = { x: bx, y: by, cx: bx + SL.BW / 2, cy: by + SL.BH / 2, col: i };
-      var weak = opts.weak && opts.weak.indexOf(s.id) >= 0;
-      var al = opts.layer ? s.layers.indexOf(opts.layer) >= 0 : false;
-      var g = sv('g', { class: 'sl-step' + (s.ex ? ' ex' : '') + (weak ? ' weak' : '') + (s.lane === 'harness' ? ' har' : '') + (opts.layer ? (al ? ' al-on' : ' al-dim') : ''), tabindex: '0', role: 'button', 'data-id': s.id,
-        'aria-label': 'Step ' + (i + 1) + ': ' + s.name + ', ' + lvl(s.lvl) + (s.ex ? ', exception path' : '') }, gB);
-      sv('rect', { x: bx, y: by, width: SL.BW, height: SL.BH, rx: 8, class: 'sl-box' }, g);
-      sv('rect', { x: bx + 6, y: by + 6, width: 34, height: 16, rx: 8, class: 'sl-badge l' + (s.lvl == null ? 'r' : s.lvl) }, g);
-      var bt = sv('text', { x: bx + 23, y: by + 18, 'text-anchor': 'middle', class: 'sl-badge-t' }, g); bt.textContent = lvl(s.lvl);
-      var nt = sv('text', { x: bx + SL.BW - 8, y: by + 18, 'text-anchor': 'end', class: 'sl-num' }, g); nt.textContent = String(i + 1).padStart(2, '0');
-      textLines(g, bx + 8, by + 36, wrap(s.name, 19, 3), { class: 'sl-name' }, 14);
-      AE.layers.forEach(function (L, k) {
-        var on = s.layers.indexOf(L.id) >= 0;
-        sv('rect', { x: bx + k * 20, y: by + SL.BH + 5, width: 17.5, height: 7, rx: 2, class: 'sl-ls' + (on ? ' on' : '') + (opts.layer === L.id ? ' cur' : '') }, g);
-      });
-      g.addEventListener('click', function () { if (opts.onSelect) opts.onSelect(s, i); });
-      g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (opts.onSelect) opts.onSelect(s, i); } });
-    });
-    function arrow(a, b, dashed) {
-      var A = pos[a.id], B = pos[b.id], x1 = A.x + SL.BW, y1 = A.cy, x2 = B.x, y2 = B.cy, mx = (x1 + x2) / 2;
-      sv('path', { d: 'M' + x1 + ' ' + y1 + 'H' + mx + 'V' + y2 + 'H' + (x2 - 2), class: 'sl-arrow' + (dashed ? ' dash' : ''), 'marker-end': 'url(#sl-arrow-' + (opts.key || 'a') + ')' }, gA);
+    var prev = slState && slState.get(host);
+    if (prev && prev.ro) prev.ro.disconnect();
+    var api = { svg: null, pos: {}, laneY: {}, cw: SL.CW, lh: SL.LH, lw: SL.LW, fit: false };
+    var drawnFor = -1;
+    function layout(avail) {
+      var n = Math.max(1, steps.length), lw = avail && avail < 640 ? 90 : 104, pad = 8;
+      var cw = avail ? (avail - lw - pad) / n : 0, fit = cw >= SL.CWMIN;
+      if (!fit) cw = SL.CWSCROLL;
+      var bw = Math.min(cw - 10, 210), maxLines = bw < 120 ? 5 : 4;
+      var font = '400 ' + SL.NAME_PX + 'px ' + (getComputedStyle(host).fontFamily || 'sans-serif');
+      var names = steps.map(function (s) { return wrapPx(s.name, bw - 16, maxLines, font); });
+      var lines = Math.max.apply(null, names.map(function (l) { return l.length; }).concat([2]));
+      var bh = 34 + lines * SL.LINE;
+      return { n: n, lw: lw, cw: cw, bw: bw, bh: bh, lh: bh + 32, names: names, fit: fit, w: fit ? Math.floor(avail - lw) : Math.ceil(n * cw + pad) };
     }
-    var lastMain = null;
-    steps.forEach(function (s, i) {
-      if (s.ex) { if (lastMain) arrow(lastMain, s, true); var nx = steps.slice(i + 1).filter(function (x) { return !x.ex; })[0]; if (nx) arrow(s, nx, true); return; }
-      if (lastMain) arrow(lastMain, s, false);
-      lastMain = s;
-    });
-    host.appendChild(svg);
-    return { svg: svg, pos: pos, laneY: laneY };
+    function draw() {
+      var avail = host.clientWidth;
+      drawnFor = avail;
+      // Keep what the visitor or a running case left on the steps.
+      var keep = {}, tokEl = api.svg ? $('.tok', api.svg) : null;
+      if (api.svg) $$('.sl-step', api.svg).forEach(function (g) { keep[g.dataset.id] = ['sel', 'cur', 'done', 'hit'].filter(function (c) { return g.classList.contains(c); }); });
+      var Lo = layout(avail), lanes = AE.lanes, H = lanes.length * Lo.lh, W = Lo.w;
+      host.innerHTML = '';
+      host.classList.toggle('sl-fit', Lo.fit);
+      var row = el('div', 'sl-row');
+      var lab = sv('svg', { viewBox: '0 0 ' + Lo.lw + ' ' + H, width: Lo.lw, height: H, class: 'sl-lab', 'aria-hidden': 'true' });
+      var svg = sv('svg', { viewBox: '0 0 ' + W + ' ' + H, width: W, height: H, class: 'sl-svg', role: 'group', 'aria-label': opts.label || 'Swimlane diagram' });
+      var defs = sv('defs', {}, svg), mk = sv('marker', { id: 'sl-arrow-' + (opts.key || 'a'), viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: 'auto-start-reverse' }, defs);
+      sv('path', { d: 'M0 0L10 5L0 10z', class: 'sl-arrowhead' }, mk);
+      var laneY = {};
+      lanes.forEach(function (L, i) {
+        var y = i * Lo.lh, cls = 'sl-lane' + (i % 2 ? ' alt' : '') + (L.id === 'harness' ? ' har' : '');
+        laneY[L.id] = y;
+        sv('rect', { x: 0, y: y, width: Lo.lw, height: Lo.lh, class: cls }, lab);
+        sv('rect', { x: 0, y: y, width: W, height: Lo.lh, class: cls }, svg);
+        var ln = wrap(L.name, Lo.lw < 100 ? 9 : 10);
+        textLines(lab, 10, y + Lo.lh / 2 + 4 - (ln.length - 1) * 7.5, ln, { class: 'sl-lname' }, 15);
+      });
+      sv('line', { x1: Lo.lw - 0.5, y1: 0, x2: Lo.lw - 0.5, y2: H, class: 'sl-lab-edge' }, lab);
+      var gA = sv('g', {}, svg), gB = sv('g', {}, svg), pos = {}, nL = AE.layers.length, seg = Lo.bw / nL;
+      steps.forEach(function (s, i) {
+        var bx = i * Lo.cw + (Lo.cw - Lo.bw) / 2 + 3, by = laneY[s.lane] + 10;
+        pos[s.id] = { x: bx, y: by, cx: bx + Lo.bw / 2, cy: by + Lo.bh / 2, col: i };
+        var weak = opts.weak && opts.weak.indexOf(s.id) >= 0;
+        var al = opts.layer ? s.layers.indexOf(opts.layer) >= 0 : false;
+        var g = sv('g', { class: 'sl-step' + (s.ex ? ' ex' : '') + (weak ? ' weak' : '') + (s.lane === 'harness' ? ' har' : '') + (opts.layer ? (al ? ' al-on' : ' al-dim') : '') + (keep[s.id] && keep[s.id].length ? ' ' + keep[s.id].join(' ') : ''), tabindex: '0', role: 'button', 'data-id': s.id,
+          'aria-label': 'Step ' + (i + 1) + ': ' + s.name + ', ' + lvl(s.lvl) + (s.ex ? ', exception path' : '') }, gB);
+        sv('rect', { x: bx, y: by, width: Lo.bw, height: Lo.bh, rx: 8, class: 'sl-box' }, g);
+        sv('rect', { x: bx + 6, y: by + 6, width: 38, height: 19, rx: 9.5, class: 'sl-badge l' + (s.lvl == null ? 'r' : s.lvl) }, g);
+        var bt = sv('text', { x: bx + 25, y: by + 20, 'text-anchor': 'middle', class: 'sl-badge-t' }, g); bt.textContent = lvl(s.lvl);
+        var nt = sv('text', { x: bx + Lo.bw - 8, y: by + 20, 'text-anchor': 'end', class: 'sl-num' }, g); nt.textContent = String(i + 1).padStart(2, '0');
+        var tl = textLines(g, bx + 8, by + 42, Lo.names[i], { class: 'sl-name' }, SL.LINE);
+        if (Lo.names[i].join(' ') !== s.name) { var tt = sv('title', {}, g); tt.textContent = s.name; g.insertBefore(tt, g.firstChild); }
+        AE.layers.forEach(function (L, k) {
+          var on = s.layers.indexOf(L.id) >= 0;
+          sv('rect', { x: bx + k * seg, y: by + Lo.bh + 5, width: seg - 2.5, height: 7, rx: 2, class: 'sl-ls' + (on ? ' on' : '') + (opts.layer === L.id ? ' cur' : '') }, g);
+        });
+        g.addEventListener('click', function () { if (opts.onSelect) opts.onSelect(s, i); });
+        g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (opts.onSelect) opts.onSelect(s, i); } });
+      });
+      function arrow(a, b, dashed) {
+        var A = pos[a.id], B = pos[b.id], x1 = A.x + Lo.bw, y1 = A.cy, x2 = B.x, y2 = B.cy, mx = (x1 + x2) / 2;
+        sv('path', { d: 'M' + x1 + ' ' + y1 + 'H' + mx + 'V' + y2 + 'H' + (x2 - 2), class: 'sl-arrow' + (dashed ? ' dash' : ''), 'marker-end': 'url(#sl-arrow-' + (opts.key || 'a') + ')' }, gA);
+      }
+      var lastMain = null;
+      steps.forEach(function (s, i) {
+        if (s.ex) { if (lastMain) arrow(lastMain, s, true); var nx = steps.slice(i + 1).filter(function (x) { return !x.ex; })[0]; if (nx) arrow(s, nx, true); return; }
+        if (lastMain) arrow(lastMain, s, false);
+        lastMain = s;
+      });
+      row.appendChild(lab); row.appendChild(svg); host.appendChild(row);
+      if (tokEl) {
+        svg.appendChild(tokEl);
+        var cur = $('.sl-step.cur', svg) || $('.sl-step.hit', svg);
+        if (cur && pos[cur.dataset.id]) { tokEl.setAttribute('cx', pos[cur.dataset.id].cx); tokEl.setAttribute('cy', pos[cur.dataset.id].cy); }
+      }
+      api.svg = svg; api.pos = pos; api.laneY = laneY; api.cw = Lo.cw; api.lh = Lo.lh; api.lw = Lo.lw; api.fit = Lo.fit;
+    }
+    draw();
+    var st = { ro: null };
+    if (window.ResizeObserver) {
+      var q = false;
+      st.ro = new ResizeObserver(function () {
+        if (q) return; q = true;
+        (window.requestAnimationFrame || setTimeout)(function () { q = false; if (host.isConnected && host.clientWidth > 0 && Math.abs(host.clientWidth - drawnFor) > 1) draw(); });
+      });
+      st.ro.observe(host);
+    }
+    if (slState) slState.set(host, st);
+    return api;
   }
   function stepDetail(s, layer) {
     var ctls = s.controls;
@@ -404,7 +473,7 @@
     if (hash) AE.workflows.forEach(function (w, i) { if (w.id === hash[1]) st.wf = i; });
     var lf = layerFilter(function (l) { st.layer = l; render(); });
     root.innerHTML = '<div class="wf-tabs" role="group" aria-label="Workflows"></div><div class="wf-bar"><div class="wf-view" role="group" aria-label="View"></div><p class="wf-chain" aria-live="polite"></p></div>' +
-      '<div class="sl-wrap" tabindex="0" role="region" aria-label="Swimlane, scroll sideways on small screens"></div>' +
+      '<div class="sl-wrap" tabindex="0" role="region" aria-label="Swimlane diagram"></div>' +
       '<div class="wf-grid"><div><div class="wf-run"><div class="wf-run-btns"></div><p class="lf-label">Inject a failure</p><div class="wf-fails" role="group" aria-label="Failure injection"></div></div>' +
       '<div class="lr-console wf-console"><div class="lr-bar"><span></span><span></span><span></span><b class="wf-ctitle">Case console</b></div><ol class="wf-log" aria-live="polite"></ol><div class="wf-result" aria-live="polite"></div></div>' +
       '<div class="wf-metrics"></div></div><aside class="ar-side"><div class="ar-panel wf-panel" aria-live="polite"></div></aside></div>';
@@ -472,7 +541,7 @@
       for (var i = 0; i < main.length; i++) {
         var s = main[i], p = lane.pos[s.id], g = $('.sl-step[data-id="' + s.id + '"]', lane.svg);
         g.classList.add('cur');
-        host.scrollLeft = Math.max(0, p.cx - host.clientWidth / 2);
+        if (!lane.fit) host.scrollLeft = Math.max(0, p.cx + lane.lw - host.clientWidth / 2);
         await moveToken(tok, prev, [p.cx, p.cy], 550, live); if (!live()) return;
         prev = [p.cx, p.cy];
         select(s);
@@ -496,7 +565,7 @@
           g.classList.add('hit');
           line('wf-l-stop', '<b>Caught by ' + fail.control + '</b><span>' + esc(cname(fail.control)) + '</span>');
           var target = ss.filter(function (x) { return x.lane === fail.lane && ss.indexOf(x) > ss.indexOf(s); })[0];
-          var dest = target ? [lane.pos[target.id].cx, lane.pos[target.id].cy] : [p.cx + SL.CW / 2, lane.laneY[fail.lane] + SL.LH / 2];
+          var dest = target ? [lane.pos[target.id].cx, lane.pos[target.id].cy] : [p.cx + lane.cw / 2, lane.laneY[fail.lane] + lane.lh / 2];
           if (target) $('.sl-step[data-id="' + target.id + '"]', lane.svg).classList.add('cur');
           await moveToken(tok, prev, dest, 650, live); if (!live()) return;
           line('wf-l-route', '<b>Routed to ' + esc(LANE_NAME[fail.lane]) + '</b><span>' + esc(fail.route) + '</span>');

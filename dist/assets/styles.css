@@ -858,11 +858,11 @@ fieldset.field legend { padding: 0; margin-bottom: 0.35rem; }
 .bp-models td, .bp-models th { font-size: 0.9rem; }
 
 /* swimlanes */
-.sl-svg { display: block; width: 100%; height: auto; }
+.sl-svg, .sl-lab { display: block; flex: none; }
 .sl-lane { fill: #f7f4ee; }
 .sl-lane.alt { fill: #efe9df; }
 .sl-lane.har { fill: #fde8df; }
-.sl-lname { font-family: var(--font-display); font-size: 12.5px; font-weight: 600; letter-spacing: 0.05em; fill: var(--ink); }
+.sl-lname { font-family: var(--font-display); font-size: 12px; font-weight: 600; letter-spacing: 0.05em; fill: var(--ink); }
 .sl-arrow { fill: none; stroke: #6b665e; stroke-width: 1.6; }
 .sl-arrow.dash { stroke-dasharray: 5 4; stroke: #b28a47; }
 .sl-arrowhead { fill: #6b665e; }
@@ -879,11 +879,11 @@ fieldset.field legend { padding: 0; margin-bottom: 0.35rem; }
 .sl-step.hit .sl-box { fill: #fde4e0; stroke: var(--danger); stroke-width: 3; }
 .sl-step.al-dim { opacity: 0.3; }
 .sl-step.al-on .sl-box { stroke: var(--orange); stroke-width: 2; }
-.sl-name { font-size: 12.5px; fill: var(--ink); pointer-events: none; }
-.sl-num { font-size: 10px; fill: #8a857c; font-weight: 700; }
+.sl-name { font-size: 13px; fill: var(--ink); pointer-events: none; }
+.sl-num { font-size: 12px; fill: #6b665e; font-weight: 700; }
 .sl-badge { fill: #8a857c; }
 .sl-badge.l0 { fill: #6f6a63; } .sl-badge.l1 { fill: #9b7b45; } .sl-badge.l2 { fill: #c98a1b; } .sl-badge.l3 { fill: var(--orange); } .sl-badge.l4 { fill: #1d6b3a; } .sl-badge.lr { fill: #3d3a36; }
-.sl-badge-t { font-size: 10.5px; font-weight: 700; fill: var(--white); pointer-events: none; }
+.sl-badge-t { font-size: 12px; font-weight: 700; fill: var(--white); pointer-events: none; }
 .sl-ls { fill: #ddd6ca; }
 .sl-ls.on { fill: var(--ink); }
 .sl-ls.cur.on { fill: var(--orange); }
@@ -1310,3 +1310,24 @@ html { scroll-padding-top: calc(var(--header-h) + 0.75rem); }
   .bp-steps td::before { content: attr(data-label); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding-top: 0.15rem; }
   .bp-steps tbody tr > th, .bp-steps tbody tr:last-child > th { border-bottom: 1px solid var(--line); }
 }
+
+/* Swimlanes (Nov 26, 2026): laid out for the box they get and drawn 1:1, so they fit with no sideways scroll
+   when the steps fit (blueprints.js adds .sl-fit). Phones and long designer flows scroll under a solid sticky
+   lane-label column; no fade mask over the diagram. The workflows player takes the same wide breakout as the
+   steps table. */
+.sl-row { display: flex; width: max-content; min-width: 100%; }
+.sl-wrap.sl-fit .sl-row { width: 100%; }
+.sl-lab { position: sticky; left: 0; z-index: 1; }
+.sl-lab-edge { stroke: rgba(20, 20, 20, 0.14); stroke-width: 1; }
+.bp-ix .sl-wrap, .sl-wrap.dz-sl { --bp-w: max(100%, min(100vw - 4rem, 84rem)); width: var(--bp-w); margin-inline: calc((100% - var(--bp-w)) / 2); }
+@media screen {
+  .sl-wrap.x-scroll.x-more, .sl-wrap.x-scroll.x-less { -webkit-mask-image: none; mask-image: none; }
+  .sl-wrap.x-less .sl-lab { box-shadow: 8px 0 10px -6px rgba(0, 0, 0, 0.3); }
+}
+/* Workflows-by-layer matrix (the "model-family matrix" in QA notes): fits the wide box from 56rem up instead of forcing 60rem. */
+@media screen and (min-width: 56rem) {
+  .bp-matrix { min-width: 0; }
+  .bp-matrix th, .bp-matrix td { padding-inline: 0.5rem; }
+  .bp-matrix th[scope="row"] { min-width: 8.5rem; }
+}
+@media print { .sl-row { width: auto; } .sl-lab { position: static; } }
