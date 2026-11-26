@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { BP_DATA_FILES, blueprintVars, subnav } from './blueprints-static.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SRC = join(ROOT, 'src');
@@ -78,6 +79,41 @@ export const PAGES = [
     description:
       'The core frameworks of The Autonomous Enterprise explained: the L0 to L5 autonomy scale, the harness, the weakest-link rule, cost per completed outcome, when not to automate and the 30-month plan.',
     sitemap: true, priority: '0.9',
+  },
+  {
+    src: 'blueprints.html', out: 'blueprints/index.html', path: '/blueprints/', nav: 'BLUEPRINTS', bp: 'hub',
+    title: 'Blueprints for the Human-Led, Agent-Operated Enterprise | Human-Led Enterprise',
+    description:
+      'Blueprints to reimagine enterprise work with AI agents: a reference architecture, workflow swimlanes, a controls library and a designer, all aligned across every layer.',
+    sitemap: true, priority: '0.9',
+  },
+  {
+    src: 'architecture.html', out: 'architecture/index.html', path: '/architecture/', nav: 'BLUEPRINTS', bp: 'architecture',
+    title: 'Reference Architecture for Agent-Operated Work | Human-Led Enterprise',
+    description:
+      'An interactive layered reference architecture: channels, human command, orchestration, agents, the model portfolio, the ten-part harness, tools, data and assurance.',
+    sitemap: true, priority: '0.8',
+  },
+  {
+    src: 'workflows.html', out: 'workflows/index.html', path: '/workflows/', nav: 'BLUEPRINTS', bp: 'workflows',
+    title: 'Reimagined Workflows as Swimlanes | Human-Led Enterprise',
+    description:
+      'Eight enterprise workflows reimagined for agents: today versus reimagined swimlanes with autonomy levels, models, embedded controls and failure injection.',
+    sitemap: true, priority: '0.8',
+  },
+  {
+    src: 'controls.html', out: 'controls/index.html', path: '/controls/', nav: 'BLUEPRINTS', bp: 'controls',
+    title: 'Controls Library for AI Agents | Human-Led Enterprise',
+    description:
+      'A filterable library of controls for AI agents, voice, IoT and physical AI, mapped to NIST AI RMF, the EU AI Act, OWASP LLM Top 10, SOX ITGC, ISO/IEC 42001, IEC 62443 and ISO 10218.',
+    sitemap: true, priority: '0.8',
+  },
+  {
+    src: 'designer.html', out: 'designer/index.html', path: '/designer/', nav: 'BLUEPRINTS', bp: 'designer',
+    title: 'Workflow Designer: Autonomy Ceilings and Controls | Human-Led Enterprise',
+    description:
+      'Design an agentic workflow step by step: get the autonomy ceiling per step, the weakest link, the required controls, a swimlane and an exportable blueprint.',
+    sitemap: true, priority: '0.8',
   },
   {
     src: 'ideas.html', out: 'ideas/index.html', path: '/ideas/', nav: 'IDEAS',
@@ -239,7 +275,10 @@ export function build() {
   for (const f of readdirSync(join(SRC, 'static'))) cpSync(join(SRC, 'static', f), join(DIST, f), { recursive: true });
 
   const layout = read(join(SRC, 'partials', 'layout.html'));
-  const assetVersion = hash(['styles.css', 'site.js', 'guide.js'].map((f) => read(join(SRC, 'assets', f))).join(''));
+  const assetVersion = hash(['styles.css', 'site.js', 'guide.js', 'blueprints.js', ...BP_DATA_FILES].map((f) => read(join(SRC, 'assets', f))).join(''));
+
+  const bpVars = blueprintVars(join(SRC, 'assets'));
+  const bpScripts = [...BP_DATA_FILES, 'blueprints.js'].map((f) => `<script src="${assetUrl(f)}" defer></script>\n`).join('');
 
   for (const page of PAGES) {
     const body = expandPartials(read(join(SRC, 'pages', page.src)).trim());
@@ -257,9 +296,12 @@ export function build() {
         ? `<link rel="preload" as="image" type="image/webp" imagesrcset="${assetUrl('images/cover-400.webp')} 400w, ${assetUrl('images/cover-800.webp')} 800w, ${assetUrl('images/cover-1200.webp')} 1200w" imagesizes="(min-width: 56rem) 30rem, 82vw" fetchpriority="high">\n`
         : page.src === 'frameworks.html'
           ? `<script src="${assetUrl('frameworks.js')}" defer></script>\n`
-          : '',
+          : page.bp ? bpScripts : '',
       NAV_SPEAKING: page.nav === 'SPEAKING' ? ' aria-current="page"' : '',
       NAV_IDEAS: page.nav === 'IDEAS' ? ' aria-current="page"' : '',
+      NAV_BLUEPRINTS: page.nav === 'BLUEPRINTS' ? ' aria-current="page"' : '',
+      BP_SUBNAV: page.bp ? subnav(page.bp) : '',
+      ...bpVars,
       NAV_FRAMEWORKS: page.nav === 'FRAMEWORKS' ? ' aria-current="page"' : '',
       NAV_ADVISORY: page.nav === 'ADVISORY' ? ' aria-current="page"' : '',
       NAV_CONTACT: page.nav === 'CONTACT' ? ' aria-current="page"' : '',

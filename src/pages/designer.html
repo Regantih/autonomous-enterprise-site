@@ -1,0 +1,35 @@
+<section class="page-head bp-head" aria-labelledby="page-title">
+  <div class="container">
+    <p class="eyebrow">Blueprints &middot; Designer</p>
+    <h1 id="page-title">Workflow designer</h1>
+    <p class="lead">Describe each step of a workflow. Get the autonomy ceiling per step, the weakest link, the controls you need, a swimlane and a blueprint to export.</p>
+  </div>
+</section>
+{{BP_SUBNAV}}
+
+<section class="section bp-section" id="design" aria-labelledby="design-title">
+  <div class="container">
+    <h2 id="design-title" class="h-sm">Design your workflow</h2>
+    <p>One example is loaded: a customer dispute. Change it or add your own steps. Nothing leaves your browser. There is no storage and no cookies.</p>
+    <div class="bp-ix" hidden><div data-bp="designer"></div></div>
+    <noscript><p class="fw-note">Turn on JavaScript to use the designer. The rules it applies are below.</p></noscript>
+  </div>
+</section>
+
+<section class="section section-paper-2 bp-section" id="rules" aria-labelledby="rules-title">
+  <div class="container fw-body">
+    <p class="eyebrow">The rules it applies</p>
+    <h2 id="rules-title" class="h-sm">How the designer decides</h2>
+    <ol class="fw-list">
+      <li><strong>Default ceiling.</strong> Materiality and reversibility set the start point, from up to L4 for low and easily reversible to L0&ndash;L1 for high and irreversible. <a href="/frameworks/#ceiling">See the table</a>.</li>
+      <li><strong>Data quality.</strong> If the input data fails its gate, the step is capped at L2.</li>
+      <li><strong>Regulation.</strong> A regulated step or key financial control is capped at L2 until legal and audit approve more.</li>
+      <li><strong>Evidence.</strong> A step runs no higher than the level it has proven.</li>
+      <li><strong>External counterparty.</strong> A commitment to a third party lowers the ceiling one level for the first 90 days.</li>
+      <li><strong>Weakest link.</strong> A step cannot run above the handoff it depends on. The chain runs at its lowest step or handoff.</li>
+      <li><strong>Decision threshold.</strong> The agent acts alone only when confidence is at least L &divide; (G + L).</li>
+      <li><strong>Controls.</strong> The designer pulls every control that the step level, the model family and the step context require from the <a href="/controls/">library</a>.</li>
+    </ol>
+    <p class="fw-note">Thresholds are illustrative. Set your own with internal audit.</p>
+  </div>
+</section>

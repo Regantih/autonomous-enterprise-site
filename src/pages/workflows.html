@@ -1,0 +1,36 @@
+<section class="page-head bp-head" aria-labelledby="page-title">
+  <div class="container">
+    <p class="eyebrow">Blueprints &middot; Workflows</p>
+    <h1 id="page-title">Reimagined workflows</h1>
+    <p class="lead">{{BP_WORKFLOWS_COUNT}} enterprise workflows, redrawn for agents with every control in place. Compare today with the reimagined design, then run a case and break it.</p>
+  </div>
+</section>
+{{BP_SUBNAV}}
+
+<section class="section bp-section" id="player" aria-labelledby="player-title">
+  <div class="container">
+    <h2 id="player-title" class="h-sm">Swimlane player</h2>
+    <p>Lanes: outside party, channel, agents, harness controls, people and systems of record. Click a step for its level, model, controls, evidence and the decision card a person sees.</p>
+    <div class="bp-ix" hidden><div data-bp="workflows"></div></div>
+    <noscript><p class="fw-note">Turn on JavaScript for the swimlane player. Every workflow is listed below.</p></noscript>
+  </div>
+</section>
+
+<section class="section section-paper-2 bp-section" id="matrix" aria-labelledby="matrix-title">
+  <div class="container">
+    <p class="eyebrow">Alignment across every layer</p>
+    <h2 id="matrix-title" class="h-sm">Workflows by layer</h2>
+    <p>Each cell lists the controls that keep that workflow aligned at that layer. <a href="/blueprints/#alignment">What each layer means</a>.</p>
+    {{BP_MATRIX}}
+  </div>
+</section>
+
+<section class="section bp-section" id="all" aria-labelledby="all-title">
+  <div class="container fw-body">
+    <p class="eyebrow">In detail</p>
+    <h2 id="all-title" class="h-sm">Every workflow, step by step</h2>
+    <p>The chain level follows the weakest-link rule: the lowest level of any step or handoff on the main path. Exception paths do not set the chain level.</p>
+    {{BP_WORKFLOWS}}
+    <p class="fw-note">All metrics are illustrative, not client data. Limits such as $5,000 are illustrative; each company sets its own with internal audit.</p>
+  </div>
+</section>
