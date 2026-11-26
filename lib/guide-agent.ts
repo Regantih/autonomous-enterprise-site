@@ -163,10 +163,28 @@ function allJson(text: string): Record<string, unknown>[] {
   return out;
 }
 
+/**
+ * A reply cut off at the token limit leaves an unclosed JSON object. Keep the answer's complete sentences and any cites
+ * already written, so a long answer is not lost; anything less than two whole sentences stays unreadable.
+ */
+function salvage(text: string): Record<string, unknown> | null {
+  const m = text.match(/"answer"\s*:\s*"((?:[^"\\]|\\.)*)/);
+  if (!m) return null;
+  let raw = m[1];
+  if (raw.endsWith('\\')) raw = raw.slice(0, -1);
+  let answer = '';
+  try { answer = JSON.parse(`"${raw}"`) as string; } catch { return null; }
+  const whole = sentences(answer).filter((x) => /[.!?]$/.test(x));
+  if (whole.length < 2) return null;
+  const c = text.match(/"cites"\s*:\s*\[([^\]]*)\]/);
+  const cites = c ? [...c[1].matchAll(/"([^"]+)"/g)].map((x) => x[1]) : [];
+  return { answer: whole.join(' '), cites };
+}
+
 export function parseStep(text: string): Step {
   const objs = allJson(text);
   // Prefer the object that answers; keep tool calls from the others.
-  const o = objs.find((x) => typeof x.answer === 'string' && x.answer.trim()) ?? objs[0] ?? firstJson(text);
+  const o = objs.find((x) => typeof x.answer === 'string' && x.answer.trim()) ?? objs[0] ?? firstJson(text) ?? salvage(text);
   if (!o) return { kind: 'unreadable' };
   const calls = toolCalls([...(Array.isArray(o.tools) ? o.tools : []), ...objs.filter((x) => x !== o).flatMap((x) => (Array.isArray(x.tools) ? x.tools : []))]);
   if (typeof o.answer === 'string' && o.answer.trim()) {
@@ -363,7 +381,7 @@ export async function runTurn(
       const out = await call(messages, which, step);
       if (!out.ok) {
         if (out.stop === 'visitor_limit') return { ok: false, stop: 'visitor_limit', ...base, steps: step };
-        lastStop = 'ai_error';
+        if (lastStop !== 'unreadable') lastStop = 'ai_error';
         continue;
       }
       const p = parseStep(out.text);

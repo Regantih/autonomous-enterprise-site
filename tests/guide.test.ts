@@ -391,4 +391,11 @@ describe('parseStep with two objects in one reply', () => {
     }
     expect(parseStep('{"answer":"Use a brace } inside text.","cites":["Ch 01"]}').kind).toBe('answer');
   });
+
+  it('keeps the whole sentences of an answer cut off at the token limit', () => {
+    const cut = parseStep('{"answer":"The person who owns the outcome answers. Every agent has a named owner. And then the reply was cut');
+    expect(cut).toMatchObject({ kind: 'answer', answer: 'The person who owns the outcome answers. Every agent has a named owner.' });
+    const cut2 = parseStep('{"cites":["Ch 22"],"answer":"Only one sentence. And a cut');
+    expect(cut2.kind).toBe('unreadable');
+  });
 });
