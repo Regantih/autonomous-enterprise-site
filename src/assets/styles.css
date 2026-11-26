@@ -88,9 +88,8 @@ p { margin: 0 0 1em; }
   gap: 0.6rem;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 0.95rem;
-  letter-spacing: 0.14em;
-
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
   margin-bottom: 1rem;
   color: var(--muted);
 }
@@ -1134,7 +1133,7 @@ fieldset.field legend { padding: 0; margin-bottom: 0.35rem; }
 @media (min-width: 60rem) { .nav-toggle { display: none !important; } }
 
 /* Focus and anchors land below the sticky header (WCAG 2.2 Focus Not Obscured). */
-:root { --header-h: 4.25rem; }
+:root { --header-h: 4.5rem; }
 @media (min-width: 60rem) { :root { --header-h: 3.75rem; } }
 html { scroll-padding-top: calc(var(--header-h) + 0.75rem); }
 @media (max-width: 59.99rem) { html { scroll-padding-bottom: 5rem; } }
