@@ -34,11 +34,11 @@ export const QUOTES = [
 ];
 const STRIP = [3, 4, 8, 10, 11];
 
-// Written only from the About facts.
+// Book-focused bios (owner, Nov 25, 2026: keep focus on the book).
 export const BIO_SHORT =
-  'Hemanth Reganti is an enterprise finance and solution architect and the author of The Autonomous Enterprise: How Leaders Build, Govern, and Scale the Agent-Run Company. He co-authored AI Powered Decision Making (Apress, 2026), is an alumnus of MIT Sloan and Harvard Business School Executive Education, and serves on the GoingVC investment committee.';
+  'Hemanth Reganti is the author of The Autonomous Enterprise: How Leaders Build, Govern, and Scale the Agent-Run Company, a field guide for leaders deciding where AI agents can act, who owns decisions and how autonomy is earned. He writes, speaks and advises on the human-led, agent-operated enterprise. He is an alumnus of Harvard Business School.';
 export const BIO_LONG =
-  'Hemanth Reganti is an enterprise finance and solution architect and author who writes and speaks on the human-led, agent-operated enterprise. His book, The Autonomous Enterprise: How Leaders Build, Govern, and Scale the Agent-Run Company (first edition, November 2026), is a vendor-neutral guide for leaders deciding where AI agents can act, who owns their decisions and how autonomy is earned with evidence. He is co-author of AI Powered Decision Making (Apress, 2026). Hemanth is an alumnus of the MIT Sloan Executive Program in General Management and Harvard Business School Executive Education. He is a member of the GoingVC investment committee, where he evaluates AI and enterprise software companies. He speaks to and advises leadership teams starting or scaling AI agents.';
+  'Hemanth Reganti is the author of The Autonomous Enterprise: How Leaders Build, Govern, and Scale the Agent-Run Company (first edition, November 2026). The book is a vendor-neutral field guide for leaders who must decide where AI agents can act, how far they are trusted and who is accountable when they get it wrong. Its central idea is human-led, agent-operated: people set intent and own outcomes, agents do the work inside limits people control, and autonomy is earned when value compounds faster than risk. Hemanth speaks to boards and leadership teams and advises companies starting or scaling AI agents on governance, guardrails and the operating model they need. He is an alumnus of Harvard Business School.';
 export const wordCount = (t) => t.split(/\s+/).filter(Boolean).length;
 
 const esc = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/'/g, '&rsquo;');
@@ -152,18 +152,16 @@ function jsonLd() {
     '@type': 'Person',
     '@id': `${SITE_URL}/#author`,
     name: 'Hemanth Reganti',
-    jobTitle: 'Enterprise finance and solution architect',
+    jobTitle: 'Author, speaker and advisor',
     knowsAbout: ['Human-led, agent-operated enterprises', 'AI agent governance', 'Enterprise autonomy'],
     description:
-      'Enterprise finance and solution architect and author. Co-author of "AI Powered Decision Making" (Apress, 2026).',
+      'Author of "The Autonomous Enterprise" and speaker and advisor on human-led, agent-operated enterprises.',
     url: `${SITE_URL}/about/`,
     image: { '@type': 'ImageObject', url: `${SITE_URL}/assets/images/portrait-960.jpg`, width: 960, height: 1200, caption: 'Hemanth Reganti' },
     sameAs: [LINKEDIN],
     alumniOf: [
-      { '@type': 'EducationalOrganization', name: 'MIT Sloan School of Management' },
       { '@type': 'EducationalOrganization', name: 'Harvard Business School' },
     ],
-    memberOf: { '@type': 'Organization', name: 'GoingVC' },
   };
   const book = {
     '@type': 'Book',
