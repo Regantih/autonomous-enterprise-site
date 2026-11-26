@@ -255,7 +255,9 @@ export function build() {
       JSONLD: page.jsonld ? jsonLd() : '',
       HEAD_EXTRA: page.src === 'index.html'
         ? `<link rel="preload" as="image" type="image/webp" imagesrcset="${assetUrl('images/cover-400.webp')} 400w, ${assetUrl('images/cover-800.webp')} 800w, ${assetUrl('images/cover-1200.webp')} 1200w" imagesizes="(min-width: 56rem) 30rem, 82vw" fetchpriority="high">\n`
-        : '',
+        : page.src === 'frameworks.html'
+          ? `<script src="${assetUrl('frameworks.js')}" defer></script>\n`
+          : '',
       NAV_SPEAKING: page.nav === 'SPEAKING' ? ' aria-current="page"' : '',
       NAV_IDEAS: page.nav === 'IDEAS' ? ' aria-current="page"' : '',
       NAV_FRAMEWORKS: page.nav === 'FRAMEWORKS' ? ' aria-current="page"' : '',

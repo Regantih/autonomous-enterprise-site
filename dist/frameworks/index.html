@@ -30,9 +30,10 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/assets/fonts/oswald-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/styles.css?v=984c4b23c0">
-<script src="/assets/site.js?v=984c4b23c0" defer></script>
-<script src="/assets/guide.js?v=984c4b23c0" defer></script>
+<script src="/assets/frameworks.js?v=81b5d28fa1" defer></script>
+<link rel="stylesheet" href="/assets/styles.css?v=974acd6341">
+<script src="/assets/site.js?v=974acd6341" defer></script>
+<script src="/assets/guide.js?v=974acd6341" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -59,6 +60,16 @@
     <p class="eyebrow">Frameworks from the book</p>
     <h1 id="page-title">How the agent-run company is managed</h1>
     <p class="lead">The core ideas and frameworks of <cite>The Autonomous Enterprise</cite>, explained. Each one answers a question leaders face when agents start to act on the company&rsquo;s behalf.</p>
+  </div>
+</section>
+
+<section class="section section-ink" id="see-it-run" aria-labelledby="run-title">
+  <div class="container">
+    <p class="eyebrow">See it run</p>
+    <h2 id="run-title">One decision, from request to outcome</h2>
+    <p class="lead">Watch an agent handle a real kind of request inside the harness. Pick a case, or set your own amount and confidence. The same agent posts a small credit, routes a large one to a person, and never touches bank details.</p>
+    <div class="ix" hidden><div data-ix="live-run"></div></div>
+    <noscript><p>Turn on JavaScript to watch an agent run through the harness.</p></noscript>
   </div>
 </section>
 
@@ -123,6 +134,8 @@
         </tbody>
       </table>
     </div>
+    <div class="ix" hidden><p class="ix-label">Try it &middot; The autonomy slider</p><div data-ix="levels"></div></div>
+
     <p>L3 is the main target for high-volume transactional work, and most measurable value in the first years comes from moving work from L2 to L3. At L3 the limits on amount, risk score, counterparty class and confidence sit outside the model, never in the prompt, and the agent cannot change them.</p>
     <p>One counter-intuitive finding: human hours can rise slightly from L2 to L3, because the items that escalate are the hardest ones. The value at L3 comes from speed and from freeing people for hard cases, not only from hours saved.</p>
   </div>
@@ -143,6 +156,8 @@
         </tbody>
       </table>
     </div>
+    <div class="ix" hidden><p class="ix-label">Try it &middot; Find a step&rsquo;s ceiling</p><div data-ix="ceiling"></div></div>
+
     <h3>Then five modifiers lower it</h3>
     <ol class="fw-list">
       <li><strong>Data quality.</strong> If the input data fails its quality gate, cap the step at L2.</li>
@@ -172,6 +187,8 @@
         </tbody>
       </table>
     </div>
+    <div class="ix" hidden><p class="ix-label">Try it &middot; The promotion gate</p><div data-ix="promotion"></div></div>
+
     <p>Automatic demotion triggers: an error above threshold, a failed data-quality gate, a change in the process or the model, or an audit finding. The book also separates duties: the person who approves an agent&rsquo;s actions may not change the agent&rsquo;s limits, instructions or tools.</p>
   </div>
 </section>
@@ -200,6 +217,8 @@
         </tbody>
       </table>
     </div>
+    <div class="ix" hidden><p class="ix-label">Try it &middot; Break the harness</p><div data-ix="harness"></div></div>
+
   </div>
 </section>
 
@@ -216,7 +235,8 @@
     </ol>
     <h3>When to act alone: the decision threshold</h3>
     <p>The book gives one definition for when an agent may act without a person: act only when the expected gain beats the expected loss. If <em>G</em> is the gain when the action is right and <em>L</em> the loss when it is wrong, act when the agent&rsquo;s confidence is at least <strong>L &divide; (G + L)</strong>. Bigger stakes raise the bar automatically, so the same agent posts a small credit and routes a large one to a person.</p>
-  </div>
+      <p><a class="more" href="#see-it-run">Watch it run with your own numbers</a></p>
+</div>
 </section>
 
 <section class="section section-paper-2 fw" id="weakest-link" aria-labelledby="f7">
@@ -238,6 +258,8 @@
         </tbody>
       </table>
     </div>
+    <div class="ix" hidden><p class="ix-label">Try it &middot; Build the chain</p><div data-ix="chain"></div></div>
+
     <p>Four decision rules follow. Fund the weakest link first. Never promise a chain level above its weakest handoff in a business case. Measure links, not only agents. Re-rate a chain whenever a link changes. The rule moves investment from agents to handoffs, which is why the book says many interfaces should be retired, not rebuilt.</p>
   </div>
 </section>
@@ -249,7 +271,8 @@
     <p class="lead">Platforms now charge for agent work. A cheap action that leaves a person to finish the job is not cheap.</p>
     <p class="fw-formula">cost per completed outcome = platform meter charges + model and runtime charges + review minutes &times; loaded rate + fallback share &times; fallback minutes &times; loaded rate</p>
     <p>Comparing on this one basis puts agents, people and vendors side by side honestly. The book&rsquo;s worked examples show that delay, not the meter price, moves value most: faster decisions, fewer penalties and released working capital often outweigh hours saved.</p>
-  </div>
+      <div class="ix" hidden><p class="ix-label">Try it &middot; Cost calculator</p><div data-ix="cost"></div></div>
+</div>
 </section>
 
 <section class="section section-paper-2 fw" id="not-automate" aria-labelledby="f9">
@@ -270,6 +293,8 @@
         </tbody>
       </table>
     </div>
+    <div class="ix" hidden><p class="ix-label">Try it &middot; The do-not-automate check</p><div data-ix="dna"></div></div>
+
     <p>Across every domain the pattern holds: agents investigate, match, draft and monitor; deterministic engines compute and post; named people sign, release money and decide about safety and about people. Autonomy grows fastest where decisions are frequent, small and reversible, and stops where an action cannot be undone or a law names the signatory.</p>
   </div>
 </section>
@@ -281,7 +306,8 @@
     <p class="lead">Score six dimensions from 1 to 5: core and interfaces, data and context, agents and platform, governance and controls, people and change, and value management.</p>
     <p>The enterprise stage is the lowest score, not the average, because the weakest control sets the ceiling. Record evidence for each score and repeat every six months. The five stages run from experiments to approved autonomy, bounded autonomy and, for selected chains, autonomous operations.</p>
     <p>The test is evidence, not ambition: a company claiming stage four with no reuse and a growing pile of open pilots is a stage-three company with more agents.</p>
-  </div>
+      <div class="ix" hidden><p class="ix-label">Try it &middot; Score your company</p><div data-ix="maturity"></div></div>
+</div>
 </section>
 
 <section class="section section-paper-2 fw" id="flywheel" aria-labelledby="f11">
@@ -295,7 +321,8 @@
       <li><strong>Drag to remove.</strong> Some drag is good, such as a control that slows a risky action. Some is bad, such as a manual handoff that slows a safe one. Add good drag where risk leads; remove bad drag where value is blocked.</li>
     </ol>
     <p>Every chapter names its value signal, risk counterweight and drag. The book turns them into a one-page scorecard read monthly per agent family and at every program gate.</p>
-  </div>
+      <div class="ix" hidden><p class="ix-label">Try it &middot; Read the flywheel</p><div data-ix="flywheel"></div></div>
+</div>
 </section>
 
 <section class="section fw" id="roadmap" aria-labelledby="f12">
