@@ -290,7 +290,7 @@
     if (i.outcomes.indexOf('capacity') >= 0) add('STR-02', 'Freed capacity absorbed', 'You chose capacity as an outcome.', '26.10.1');
     if (i.outcomes.indexOf('capacity') >= 0 || i.streams.indexOf('front') >= 0) add('PPL-01', 'Fear and bypass', 'Agents take over tasks people do today.', '26.10.7');
     if (c.cloud >= 2) add('VND-03', 'Metering and price changes', 'Several cloud suites each ship a meter.', '26.10.8');
-    if (c.mainframe || ck.wrapOnly) add('INT-04', 'Mainframe wrap late', (c.mainframe ? 'Agents depend on APIs in front of the mainframe.' : 'Agents depend on the APIs that wrap your core.'), '26.10.3');
+    if (c.mainframe) add('INT-04', 'Mainframe wrap late', 'Agents depend on APIs in front of the mainframe.', '26.10.3');
     if (i.streams.indexOf('supply') >= 0 && (c.legacyErp + c.cloud) >= 2) add('AGT-04', 'Error cascades across agents', 'Supply chain chains agents from demand to buying.', '26.10.5');
     if (ck.core) add('VND-01', 'Capability not GA', 'Core waves may plan on capabilities not yet generally available.', '26.10.8');
     if (i.interfaces === '300-1000' || i.interfaces === 'gt1000') add('INT-01', 'Hidden interfaces found late', 'Hundreds of interfaces rarely have a complete inventory.', '26.10.3');
@@ -450,7 +450,7 @@
   }
 
   function svgTimeline(t) {
-    var W = 640, x0 = 4, span = W - 8, y = 34, H = 26;
+    var W = 440, x0 = 4, span = W - 8, y = 34, H = 26;
     var tot = t.months ? t.total : 33;
     var pos = function (m) { return x0 + span * (m / tot); };
     var out = ['<svg class="rm-tl" viewBox="0 0 ' + W + ' 96" aria-hidden="true" focusable="false">'];
@@ -463,7 +463,7 @@
     });
     if (t.months) {
       out.push('<text class="rm-axis" x="' + x0 + '" y="86">Month 1</text>');
-      out.push('<text class="rm-axis" x="' + (W - 4) + '" y="86" text-anchor="end">Month ' + (t.axisEnd ? 'about ' + t.axisEnd : tot) + '</text>');
+      out.push('<text class="rm-axis" x="' + (W - 4) + '" y="86" text-anchor="end">' + (t.axisEnd ? 'About month ' + t.axisEnd : 'Month ' + tot) + '</text>');
     } else out.push('<text class="rm-axis" x="' + x0 + '" y="86">Relative phases; no durations in the book</text>');
     out.push('</svg>');
     return out.join('');
