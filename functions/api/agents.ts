@@ -26,8 +26,9 @@ import { RATE_LIMIT_WINDOW_MS, isSameOrigin, sha256Hex } from './request';
  *   {"agent":"Proposer","id":"proposer","text":"..."}   a finished turn (2 to 4 per reply)
  *   {"action":{"type":"propose_variant|tighten_guardrail|request_decision|reframe_goal|none"}}   optional
  *   {"usage":{"input_tokens":N,"output_tokens":N,"estimated":false,"model":"..."}}   always last on success
- *   {"error":"...","fallback":true}   the client shows the scripted reply instead
- * Caps, rate limits, AI errors and timeouts answer JSON { ok:false, fallback:true, reason } before any stream starts.
+ *   {"error":"..."}   the reply stopped (rule, empty, timeout, ai_error); the client says so plainly
+ * Caps, rate limits, AI errors and timeouts answer JSON { ok:false, reason, message, retry_at? } before any stream starts.
+ * There is no scripted or simulated fallback.
  */
 
 interface AiBinding {
@@ -48,12 +49,23 @@ function json(status: number, body: unknown, extra: Record<string, string> = {})
   return new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', ...BASE_HEADERS, ...extra } });
 }
 
-export type FallbackReason = 'visitor_limit' | 'daily_cap' | 'ai_error' | 'timeout' | 'unavailable';
-const fallback = (status: number, reason: FallbackReason, extra: Record<string, string> = {}) =>
-  json(status, { ok: false, fallback: true, reason, note: 'Live agents are resting; showing the simulated run.' }, extra);
+export type StopReason = 'visitor_limit' | 'daily_cap' | 'ai_error' | 'timeout' | 'unavailable';
+export const AGENT_STOP_MESSAGES: Record<StopReason, string> = {
+  visitor_limit: 'You have sent eight instructions this hour, the limit per visitor.',
+  daily_cap: "The agents have hit today's limit.",
+  ai_error: 'The AI agents are unavailable right now.',
+  timeout: 'The AI agents did not answer in time.',
+  unavailable: 'The AI agents are unavailable right now.',
+};
+const stopped = (status: number, reason: StopReason, extra: Record<string, string> = {}) => {
+  const now = Date.now();
+  const retry_at = reason === 'daily_cap' ? nextUtcMidnight(now) : reason === 'visitor_limit' ? now + 3600_000 : undefined;
+  return json(status, { ok: false, reason, message: AGENT_STOP_MESSAGES[reason], ...(retry_at ? { retry_at } : {}) }, extra);
+};
 
 /**
- * Per-visitor limit (8 live turns per hour) and global daily cap (60 per UTC day), both in rate_limits.
+ * Per-visitor limit (8 instructions per hour) and the global daily cap (120 model calls per UTC day, shared with
+ * /api/loop/step), both in rate_limits.
  * Visitor rows: key 'agents:<sha256(salt:agents:ip)>', created_at = now, so the shared one-hour cleanup clears them.
  * Global rows: key 'agents:global:YYYY-MM-DD', created_at = next UTC midnight, so the same cleanup
  * (which deletes created_at < now - 1h) keeps them for the whole day and clears them an hour after it ends.
@@ -140,15 +152,15 @@ export async function onRequestPost({ request, env, waitUntil }: Ctx): Promise<R
   const instr = validateInstruction(input.instruction);
   if (!instr.ok) return json(400, { ok: false, error: instr.error });
   const state = sanitizeState(input.state);
-  if (!env.AI || !env.DB) return fallback(503, 'unavailable');
+  if (!env.AI || !env.DB) return stopped(503, 'unavailable');
 
   const ip = request.headers.get('cf-connecting-ip') ?? 'unknown';
   try {
     const limit = await checkAgentLimits(env.DB, ip, env.RATE_LIMIT_SALT ?? 'autonomous-enterprise');
-    if (limit !== 'ok') return fallback(429, limit, { 'Retry-After': limit === 'visitor_limit' ? '3600' : String(Math.ceil((nextUtcMidnight(Date.now()) - Date.now()) / 1000)) });
+    if (limit !== 'ok') return stopped(429, limit, { 'Retry-After': limit === 'visitor_limit' ? '3600' : String(Math.ceil((nextUtcMidnight(Date.now()) - Date.now()) / 1000)) });
   } catch (err) {
     console.error('agents limit check failed', err instanceof Error ? err.message : err);
-    return fallback(503, 'unavailable');
+    return stopped(503, 'unavailable');
   }
 
   const messages = buildAgentsMessages(instr.value, state);
@@ -160,7 +172,7 @@ export async function onRequestPost({ request, env, waitUntil }: Ctx): Promise<R
   } catch (err) {
     const timeout = err instanceof Timeout;
     console.error('agents start failed', timeout ? 'timeout' : err instanceof Error ? err.message : err);
-    return fallback(503, timeout ? 'timeout' : 'ai_error');
+    return stopped(503, timeout ? 'timeout' : 'ai_error');
   }
 
   const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>();
@@ -192,11 +204,11 @@ export async function onRequestPost({ request, env, waitUntil }: Ctx): Promise<R
       }
       if (!turns.violated) for (const ev of turns.end()) await send(ev);
       if (turns.violated) failed = true;
-      else if (!turns.turnCount) { failed = true; await send({ error: 'empty', fallback: true }); }
+      else if (!turns.turnCount) { failed = true; await send({ error: 'empty' }); }
     } catch (err) {
       failed = true;
       console.error('agents stream failed', err instanceof Error ? err.message : err);
-      await send({ error: err instanceof Timeout ? 'timeout' : 'ai_error', fallback: true }).catch(() => {});
+      await send({ error: err instanceof Timeout ? 'timeout' : 'ai_error' }).catch(() => {});
     } finally {
       started.reader.cancel().catch(() => {});
       const u: Usage = usage ?? estimateUsage(inputChars, turns.outputChars);

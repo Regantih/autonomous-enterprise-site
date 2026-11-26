@@ -16,7 +16,6 @@
 .or-top .pill, .or-top .seg { background: transparent; color: var(--paper); border-color: var(--line-on-ink); }
 .or-top .or-start { background: var(--orange); color: var(--ink); border-color: var(--orange); font-weight: 700; min-width: 6rem; }
 .or-top .seg[aria-pressed="true"] { background: var(--paper); color: var(--ink); border-color: var(--paper); }
-.or-speed { display: inline-flex; gap: 2px; }
 .or-status { font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; padding: 0.3rem 0.65rem; border-radius: 999px; border: 1px solid var(--line-on-ink); color: var(--muted-on-ink); }
 .or-status.or-run { color: #9fe0b5; border-color: #2f7a4c; }
 .or-status.or-wait { color: var(--ink); background: #ffcf6e; border-color: #ffcf6e; animation: orPulse 1.4s ease-in-out infinite; }
@@ -133,14 +132,11 @@
 .or-chart-svg { width: 100%; height: auto; display: block; }
 .or-gl { stroke: var(--line); }
 .or-ax { font-size: 9.5px; fill: var(--muted); }
-.or-note { font-size: 9px; fill: var(--orange-text); font-weight: 700; }
 .or-line-score { fill: none; stroke: var(--orange); stroke-width: 3; stroke-linejoin: round; }
 .or-dot { fill: var(--orange); stroke: var(--white); stroke-width: 1.5; }
 .or-dot-r { fill: var(--ink); }
-.or-line-real { fill: none; stroke: var(--ink); stroke-width: 2; stroke-dasharray: 6 4; }
 .or-key { display: flex; flex-wrap: wrap; gap: 0.3rem 0.8rem; margin: 0.3rem 0 0; font-size: 0.78rem; }
 .or-key .k::before { content: ""; display: inline-block; width: 1.2rem; border-top: 3px solid var(--orange); vertical-align: middle; margin-right: 0.3rem; }
-.or-key .k-real::before { border-top: 2px dashed var(--ink); }
 .or-key-n { margin: 0.15rem 0 0; font-size: 0.75rem; color: var(--muted); }
 
 /* archive tree */
@@ -193,11 +189,34 @@
 }
 @media print { .or-ctl, .or-input { display: none !important; } .or-stream { height: auto; overflow: visible; } }
 
-/* live AI agents */
-.or-top .or-live-t { font-size: 0.8rem; font-weight: 700; }
-.or-top .or-live-t[aria-pressed="true"] { background: #9fe0b5; color: var(--ink); border-color: #9fe0b5; }
-.or-live-b { display: inline-block; margin-left: 0.3rem; padding: 0 0.35rem; border-radius: 3px; background: #1d6b3a; color: var(--white); font-size: 0.62rem; letter-spacing: 0.1em; font-weight: 700; vertical-align: 1px; }
+/* real agents: sources, meters, notes, halts, recording */
+.or-runmeter { flex-basis: 100%; margin: 0; font-size: 0.78rem; color: var(--muted-on-ink); font-variant-numeric: tabular-nums; }
+.or-src { display: inline-block; margin-left: 0.25rem; padding: 0 0.35rem; border-radius: 3px; font-size: 0.62rem; letter-spacing: 0.1em; font-weight: 700; vertical-align: 1px; }
+.or-src-ai { background: #1d6b3a; color: var(--white); }
+.or-src-code { background: var(--paper-2); color: var(--ink); border: 1px solid var(--line); }
+.or-live-b { display: inline-block; margin-right: 0.3rem; padding: 0 0.35rem; border-radius: 3px; background: #1d6b3a; color: var(--white); font-size: 0.62rem; letter-spacing: 0.1em; font-weight: 700; vertical-align: 1px; }
 .or-live .or-msg-b { border-color: #1d6b3a; }
-.or-meter { margin: -0.2rem 0 0 2.65rem; font-size: 0.75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
-.or-meter .or-live-b { margin-left: 0; margin-right: 0.3rem; }
-.or-note { margin: 0 0 0 2.65rem; font-size: 0.8rem; font-style: italic; color: var(--muted); }
+.or-thinking .or-msg-b { border-style: dashed; color: var(--muted); }
+.or-meter { margin: -0.2rem 0 0 2.65rem; font-size: 0.75rem; color: var(--muted); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.or-snote { margin: 0 0 0 2.65rem; font-size: 0.82rem; font-style: italic; color: var(--muted); }
+.or-snote-alert { color: var(--danger); font-style: normal; }
+.or-ship { margin-left: 2.65rem; font-size: 0.85rem; background: #e6f4ea; border: 1px solid #9ccfae; color: #1d6b3a; border-radius: 8px; padding: 0.35rem 0.65rem; }
+.or-ship span { color: var(--muted); }
+.or-halt, .or-recbanner { margin: 0.4rem 0 0.4rem 2.65rem; background: #fff7e6; border: 2px solid #ffcf6e; border-radius: 10px; padding: 0.75rem 0.9rem; }
+.or-halt p { margin: 0 0 0.5rem; }
+.or-halt-b { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0; }
+.or-recbanner { background: var(--paper); border-color: var(--line); font-size: 0.9rem; }
+.or-recbanner b { display: block; }
+.or-dec-r { margin: 0 0 0.6rem; font-size: 0.82rem; color: var(--ink); }
+.or-dec-goal { border-color: var(--ink); }
+.or-input-k small { text-transform: none; letter-spacing: 0; font-weight: 400; margin-left: 0.3rem; }
+.or-rails { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.or-rails-k { flex-basis: 100%; margin: 0; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
+.or-rails-k small { text-transform: none; letter-spacing: 0; font-weight: 400; }
+.or-dv { fill: var(--white); stroke: var(--ink); stroke-width: 1.5; }
+.or-dx { stroke: var(--danger); stroke-width: 2; }
+.or-key .k-var::before { border-top: 0; width: 0.55rem; height: 0.55rem; border: 1.5px solid var(--ink); border-radius: 50%; }
+.or-key .k-blk::before { border-top: 2px solid var(--danger); width: 0.6rem; transform: rotate(45deg); }
+.or-tl { font-size: 10px; fill: var(--muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.lp-data p { max-width: 72ch; }
+@media (max-width: 40rem) { .or-meter, .or-snote, .or-ship, .or-halt, .or-recbanner { margin-left: 0; } }

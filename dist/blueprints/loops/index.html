@@ -35,10 +35,10 @@
 <script src="/assets/data/workflows.js?v=357666b3fd" defer></script>
 <script src="/assets/data/architecture.js?v=ed9260c2c4" defer></script>
 <script src="/assets/blueprints.js?v=f2274eba03" defer></script>
-<link rel="stylesheet" href="/assets/loops.css?v=c557e71e37">
-<script src="/assets/loops-core.js?v=d5a90c614a" defer></script>
-<script src="/assets/loops-live.js?v=3eef593ebc" defer></script>
-<script src="/assets/loops.js?v=c375b04416" defer></script>
+<link rel="stylesheet" href="/assets/loops.css?v=9d149f465a">
+<script src="/assets/loops-live.js?v=f93c517c1c" defer></script>
+<script src="/assets/loops-recorded.js?v=63bed45718" defer></script>
+<script src="/assets/loops.js?v=95155759fc" defer></script>
 <link rel="stylesheet" href="/assets/styles.css?v=5dcafa399f">
 <script src="/assets/site.js?v=5dcafa399f" defer></script>
 <script src="/assets/guide.js?v=5dcafa399f" defer></script>
@@ -88,31 +88,31 @@
 <section class="section bp-section lp-room-section" id="room" aria-labelledby="room-title">
   <div class="container">
     <p class="eyebrow">Live operations room</p>
-    <h2 id="room-title" class="h-sm">Watch agents improve a workflow. You make the calls.</h2>
-    <p class="lp-intro">Five simulated agents improve accounts-payable exception handling in real time. They expand, guard, decide, measure and contract. You play the AP process owner: one-way doors come to you, and you run the monthly reframe.</p>
+    <h2 id="room-title" class="h-sm">Watch agents improve a policy. You make the calls.</h2>
+    <p class="lp-intro">Real AI agents. Real computation on sample AP data. The Proposer and Supervisor are AI agents. The Guardrail harness, Evaluator and Archivist are code that runs each proposed accounts-payable exception policy over 150 synthetic sample exceptions and measures what happens. You play the AP process owner: one-way doors come to you, and you run the reframe.</p>
     <div class="bp-ix" hidden><div data-lp="room"></div></div>
-    <noscript><p class="fw-note">Turn on JavaScript to run the operations room. It runs in your browser only. Nothing is sent or stored.</p></noscript>
+    <noscript><p class="fw-note">Turn on JavaScript to run the operations room. Below is text from a recorded real run.</p></noscript>
     <div class="lp-static" data-lp-static="room">
       <h3 class="lp-h3">The six steps</h3>
       <ol class="lp-steps-static">
-        <li><b>1 Expand.</b> The Proposer agent suggests two or three variants: a prompt, a tool, a workflow step or a threshold.</li>
-        <li><b>2 Guard.</b> The guardrail harness runs fitness checks. A change that breaks a protected characteristic stops here.</li>
+        <li><b>1 Expand.</b> The Proposer agent suggests two variants of the resolution policy.</li>
+        <li><b>2 Guard.</b> The guardrail harness runs each variant over the sample and checks the fitness rules. A failure stops here.</li>
         <li><b>3 Decide.</b> Two-way doors ship with an undo. One-way doors go to a named person.</li>
-        <li><b>4 Measure.</b> The Evaluator scores each variant against one goal number. Its scorer is locked outside the loop.</li>
-        <li><b>5 Contract.</b> The Archivist keeps the winner, archives the losers and retires what nobody uses.</li>
-        <li><b>6 Reframe.</b> Each month, people question the goal, the checks and the playbook.</li>
+        <li><b>4 Measure.</b> The Evaluator computes one goal number. Its scorer is locked outside the loop.</li>
+        <li><b>5 Contract.</b> The Archivist keeps the winner, archives the losers and records the lineage.</li>
+        <li><b>6 Reframe.</b> People question the goal, the checks and the playbook.</li>
       </ol>
-      <h3 class="lp-h3">A short excerpt from a run</h3>
-      <ol class="lp-transcript">
-        <li><b>Proposer agent:</b> Generation 2. Three variants. G2-3 raises the auto-approve limit to $5,000.</li>
-        <li><b>Guardrail harness:</b> Reversal rate, policy breaches, fairness gap and audit trace: all pass.</li>
-        <li><b>Supervisor agent:</b> G2-3 is a one-way door. Routing it to you, the AP process owner.</li>
-        <li><b>Proposer agent:</b> Generation 4. G4-3 edits the evaluator to count escalations as resolved.</li>
-        <li><b>Guardrail harness:</b> Blocked by scorer isolation, control MR-10. Only a person can override the lock.</li>
-        <li><b>Archivist:</b> If the lock is overridden, the score rises while the real outcome falls. The lineage review catches it and reverts.</li>
-      </ol>
+      <p>Turn on JavaScript to start a run.</p>
     </div>
-    <p class="fw-note">Simulated run, live AI agents when you type. Illustrative numbers. A scripted engine runs the loop in your browser. When you type or pick an instruction, live AI agents answer through this site; if they are resting, the simulated agents answer instead. Related controls: <a class="cid" href="/controls/#MR-10">MR-10</a> <a class="cid" href="/controls/#TRC-05">TRC-05</a> <a class="cid" href="/controls/#HO-06">HO-06</a>.</p>
+    <details class="lp-more lp-data">
+      <summary>What the agents run on</summary>
+      <p><b>Sample data.</b> 150 synthetic accounts-payable exceptions, generated once and fixed: amount, supplier size, exception type, the resolver agent&rsquo;s suggestion and confidence, the correct resolution and whether a person was needed. Not real suppliers, invoices or people. <a href="/assets/data/ap-sample.json?v=9d2e57beb0">Download the sample data (JSON)</a>.</p>
+      <p><b>The policy.</b> Six settings: auto-approve limit, match tolerance, senior-review threshold, small-supplier protection, confidence floor and audit trace. Bank-detail changes always go to a person.</p>
+      <p><b>Fitness rules.</b> Reversal rate at or under 2%, small-supplier fairness gap at or under 3 points, zero policy breaches, a complete audit trace. Any change to the scorer is blocked in code (<a class="cid" href="/controls/#MR-10">MR-10</a>).</p>
+      <p><b>Goal numbers.</b> Cost per completed outcome: triage $0.25, automated resolution $0.60, reviewer $9.50, senior reviewer $24, reversing a wrong approval $45, other rework $18, divided by the 150 exceptions. First-pass resolution: the share resolved correctly with no person and no rework.</p>
+      <p><b>Limits.</b> Each run makes at most ten AI calls. Two runs and eight instructions per visitor per hour. The site shares a daily allowance that resets at midnight UTC. Nothing you type is stored.</p>
+    </details>
+    <p class="fw-note">Real AI agents. Real computation on sample AP data. One-way doors are decided in code and explained by the Supervisor. Related controls: <a class="cid" href="/controls/#MR-10">MR-10</a> <a class="cid" href="/controls/#TRC-05">TRC-05</a> <a class="cid" href="/controls/#HO-06">HO-06</a>.</p>
   </div>
 </section>
 
@@ -120,7 +120,7 @@
   <div class="container fw-body">
     <p class="eyebrow">One-way and two-way doors</p>
     <h2 id="doors-title" class="h-sm">Which changes come to a person</h2>
-    <p>In the run, two-way doors ship behind an undo. One-way doors arrive as decision cards. The line between them is the book&rsquo;s ceiling: <a href="/frameworks/#ceiling">materiality times reversibility</a>. Low materiality and easy to undo runs fast, up to L4. High materiality or hard to undo goes to a named person (<a class="cid" href="/controls/#HO-06">HO-06</a>).</p>
+    <p>In the run, code sorts every change: raising the auto-approve limit above $5,000, turning off small-supplier protection or part of the audit trace, and moving invoices above the $25,000 delegated authority away from senior review are one-way doors. Two-way doors ship behind an undo. One-way doors arrive as decision cards. The line between them is the book&rsquo;s ceiling: <a href="/frameworks/#ceiling">materiality times reversibility</a>. Low materiality and easy to undo runs fast, up to L4. High materiality or hard to undo goes to a named person (<a class="cid" href="/controls/#HO-06">HO-06</a>).</p>
     <details class="lp-more">
       <summary>Ten example changes, sorted</summary>
       <div class="fw-table-wrap">
