@@ -202,15 +202,23 @@ describe('POST /api/guide (agent loop)', () => {
   });
 
   it('falls back to the smaller model on failure and reports an outage plainly when both fail', async () => {
-    ai.run.mockReset().mockRejectedValueOnce(new Error('capacity')).mockResolvedValueOnce(ANSWER);
+    ai.run.mockReset().mockRejectedValueOnce(new Error('capacity')).mockResolvedValueOnce(SEARCH).mockResolvedValueOnce(ANSWER);
     const ok = await call(chat([{ role: 'user', content: 'Hi' }]));
-    expect(ai.run.mock.calls.map((c) => c[0])).toEqual([PRIMARY_MODEL, FALLBACK_MODEL]);
+    expect(ai.run.mock.calls.map((c) => c[0])).toEqual([PRIMARY_MODEL, FALLBACK_MODEL, PRIMARY_MODEL]);
     expect(ok.body.ok).toBe(true);
     ai.run.mockReset().mockRejectedValue(new Error('down'));
     const { res, body } = await call(chat([{ role: 'user', content: 'Hi' }]));
     expect(res.status).toBe(503);
     expect(body).toMatchObject({ ok: false, reason: 'ai_error', message: 'The guide is offline: the model did not answer.' });
     expect(body.reply).toBeUndefined();
+  });
+
+  it('sends an ungrounded first-step answer back to search the book before it can answer', async () => {
+    ai.run.mockReset().mockResolvedValueOnce(ANSWER).mockResolvedValueOnce(SEARCH).mockResolvedValueOnce(ANSWER);
+    const { body } = await call(chat([{ role: 'user', content: 'How do we trust outside agents?' }]));
+    expect(body).toMatchObject({ ok: true, steps: 3, cites: ['Ch 23'] });
+    expect((ai.run.mock.calls[1][1] as { messages: { content: string }[] }).messages.at(-1)!.content).toContain('Call search_book first');
+    expect((body.trace as { tool: string }[])[0].tool).toBe('search_book');
   });
 
   it('withholds an answer that names a vendor, instead of replacing it with a scripted one', async () => {
