@@ -179,6 +179,10 @@ describe('built Blueprints pages', () => {
     const matrix = wf.match(/<table class="fw-table bp-matrix">[\s\S]*?<\/table>/)![0];
     expect(matrix.match(/<tr><th scope="row">/g)).toHaveLength(AE.workflows.length);
     expect(matrix.match(/<td data-layer=/g)).toHaveLength(AE.workflows.length * 7);
+    // Steps tables: every cell is labelled for the phone card layout and holds exactly one value wrapper.
+    const steps = wf.match(/<table class="fw-table bp-steps">[\s\S]*?<\/table>/g)!;
+    expect(steps).toHaveLength(AE.workflows.length);
+    for (const t of steps) for (const td of t.match(/<td[\s\S]*?<\/td>/g)!) expect(td).toMatch(/^<td data-label="[^"]+"><span class="bp-v">[\s\S]*<\/span><\/td>$/);
     const hub = html('blueprints/index.html');
     for (const l of AE.layers) expect(hub).toContain(`id="layer-${l.id}"`);
     expect(hub).toContain('Alignment across every layer');

@@ -1286,6 +1286,7 @@ html { scroll-padding-top: calc(var(--header-h) + 0.75rem); }
 .bp-steps td:nth-child(5) { min-width: 7rem; }
 .bp-steps td:nth-child(6) { min-width: 6.5rem; }
 .bp-steps td:nth-child(7) { min-width: 7.5rem; }
+.bp-v { display: block; }
 .bp-chips { display: flex; flex-wrap: wrap; gap: 0.3rem 0.35rem; align-items: flex-start; }
 .bp-chips .cid, .bp-nb { white-space: nowrap; }
 .bp-chip { display: inline-block; padding: 0.05rem 0.45rem; border: 1px solid var(--line); border-radius: 999px; background: var(--paper); font-size: 0.8rem; font-weight: 600; line-height: 1.5; white-space: nowrap; }
