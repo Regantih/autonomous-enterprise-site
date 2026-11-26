@@ -111,6 +111,24 @@ export const PAGE_BY_ID = new Map(SITE_PAGES.map((p) => [p.id, p]));
 // ---------- intake handoff ----------
 
 export type HandoffIntent = 'talk' | 'advisory' | 'media';
+/** What the visitor actually asked for; it names the trace line and the button. */
+export type RequestKind = 'workshop' | 'keynote' | 'talk' | 'board session' | 'advisory' | 'interview' | 'podcast';
+const KIND_INTENT: Record<RequestKind, HandoffIntent> = { workshop: 'talk', keynote: 'talk', talk: 'talk', 'board session': 'talk', advisory: 'advisory', interview: 'media', podcast: 'media' };
+const DEFAULT_KIND: Record<HandoffIntent, RequestKind> = { talk: 'talk', advisory: 'advisory', media: 'interview' };
+const article = (k: RequestKind) => (k === 'advisory' ? 'advisory' : k === 'interview' ? 'an interview' : `a ${k}`);
+
+/** The kind of request the visitor named, read in code from their words (null when none is named). */
+export function requestKind(text: string): RequestKind | null {
+  const t = text.toLowerCase();
+  if (/\bpodcast/.test(t)) return 'podcast';
+  if (/\binterview/.test(t)) return 'interview';
+  if (/\bworkshop|masterclass/.test(t)) return 'workshop';
+  if (/\bkeynote/.test(t)) return 'keynote';
+  if (/\bboard (session|briefing|meeting)/.test(t)) return 'board session';
+  if (/\b(advisory|advisor|adviser|advise|consult|consulting)/.test(t)) return 'advisory';
+  if (/\b(talk|speak|speaker|speaking|presentation|offsite|off-site|session|briefing|panel)\b/.test(t)) return 'talk';
+  return null;
+}
 export const HANDOFFS: Record<HandoffIntent, { href: string; label: string }> = {
   talk: { href: '/speaking/#speaking', label: 'Request a talk' },
   advisory: { href: '/speaking/#advisory', label: 'Request advisory' },
@@ -129,7 +147,7 @@ export interface ToolCall { name: ToolName; args: Record<string, unknown> }
 /** One line of the visible tool trace. */
 export interface TraceItem { tool: ToolName; label: string; detail?: string; href?: string }
 export interface PageCard { id: string; href: string; title: string; reason: string }
-export interface Handoff { intent: HandoffIntent; href: string; label: string }
+export interface Handoff { intent: HandoffIntent; kind: RequestKind; href: string; label: string }
 
 export interface ToolResult {
   trace: TraceItem;
@@ -183,12 +201,16 @@ export function runTool(call: ToolCall, visitorText = ''): ToolResult {
     const reason = words(str(call.args.reason, 200), 25) || page.about;
     return { trace: { tool: 'suggest_page', label: `Suggested: ${page.title} page`, href: page.href }, page: { id: page.id, href: page.href, title: page.title, reason } };
   }
-  const intent = str(call.args.intent, 20).toLowerCase() as HandoffIntent;
-  const h = HANDOFFS[intent] ?? HANDOFFS.advisory;
-  const which = HANDOFFS[intent] ? intent : 'advisory';
+  const asked = str(call.args.intent, 20).toLowerCase() as HandoffIntent;
+  const named = requestKind(visitorText);
+  // The visitor's own words win over the model's guess; the button and the trace name what they asked for.
+  const which: HandoffIntent = named ? KIND_INTENT[named] : HANDOFFS[asked] ? asked : 'advisory';
+  const kind: RequestKind = named && KIND_INTENT[named] === which ? named : DEFAULT_KIND[which];
+  const h = HANDOFFS[which];
+  const label = `Request ${article(kind)}`;
   return {
-    trace: { tool: 'start_intake', label: `Handed off: intake agent (${which === 'talk' ? 'a talk' : which === 'media' ? 'an interview' : 'advisory'})`, href: h.href },
-    handoff: { intent: which, href: h.href, label: h.label },
+    trace: { tool: 'start_intake', label: `Handed off: intake agent (${article(kind)})`, href: h.href },
+    handoff: { intent: which, kind, href: h.href, label },
   };
 }
 
@@ -219,4 +241,30 @@ export function graphIntent(text: string): boolean {
   if (/\b(sample|synthetic|demo|knowledge graph|skill graph|the graph|graphs)\b/.test(t)) return true;
   if (/\b(riskiest|highest[- ]risk|most risky|which (supplier|vendor|invoice|control|exception|polic|agent))/.test(t)) return true;
   return /\b(suppliers?|vendors?|invoices?|exceptions?|controls?)\b.{0,40}\b(most|highest|riskiest|open|overdue|flagged|top|worst|list)\b/.test(t);
+}
+
+/**
+ * Pages picked in code by the visitor's role or topic, so a CFO lands on cost and operations rather than the model
+ * catalogue. Returns two page ids, or null when nothing matches (then the agent's own picks stand). Order matters:
+ * the first rule that matches wins; a chip role beats words in the question.
+ */
+const PAGE_RULES: { role?: string; re?: RegExp; pages: [string, string] }[] = [
+  { re: /\b(sample data|synthetic|riskiest|knowledge graph|skill graph)\b/, pages: ['graphs', 'controls'] },
+  { re: /\b(supplier'?s? agent|outside agent|external agent|partner'?s? agent|customer'?s? agent|b2a)\b/, pages: ['trust', 'controls'] },
+  { role: 'cfo-finance', re: /\b(cfo|roi|return on investment|cost per|business case|budget|fund(ing)?|finance|payback)\b/, pages: ['design', 'operations'] },
+  { role: 'ceo-board', re: /\b(ceo|board|chief executive|founder|where do i start)\b/, pages: ['blueprints', 'organization'] },
+  { role: 'risk-audit', re: /\b(risk|audit|auditor|compliance|accountab|who answers|liabilit|regulat)/, pages: ['controls', 'organization'] },
+  { role: 'operations', re: /\b(operations|ops|supply chain|manufactur|logistics|procurement|plant)\b/, pages: ['workflows', 'operations'] },
+  { role: 'investor', re: /\b(investor|invest|due diligence|portfolio|agent-ready|valuation)\b/, pages: ['book', 'frameworks'] },
+  { role: 'cio-technology', re: /\b(cio|cto|architecture|tech stack|platform team)\b/, pages: ['architecture', 'models'] },
+];
+
+export function pagePlan(role: string, text: string): [string, string] | null {
+  const t = text.toLowerCase().replace(/\u2019/g, "'");
+  const topic = PAGE_RULES.slice(0, 2).find((r) => r.re!.test(t));
+  if (topic) return topic.pages;
+  const byRole = PAGE_RULES.find((r) => r.role && r.role === role);
+  if (byRole) return byRole.pages;
+  const byText = PAGE_RULES.slice(2).find((r) => r.re && r.re.test(t));
+  return byText ? byText.pages : null;
 }

@@ -17,8 +17,8 @@ import {
   violatesRules,
   type ChatMessage,
 } from '../lib/guide';
-import { CORE, MAX_CALLS_PER_TURN, MAX_TOOL_STEPS, MIN_ANSWER_WORDS, buildSystemPrompt, normalizeCite, parseStep } from '../lib/guide-agent';
-import { HANDOFFS, KNOWN_CITES, PASSAGES, SITE_PAGES, chapterTags, graphIntent, intakeIntent, runTool, searchBook } from '../lib/guide-tools';
+import { CORE, EXAMPLE_ANSWER, INTAKE_WORDS, MAX_CALLS_PER_TURN, MAX_TOOL_STEPS, MIN_ANSWER_WORDS, buildSystemPrompt, copiesExample, dedupeSentences, normalizeCite, parseStep, unsupportedSentences } from '../lib/guide-agent';
+import { HANDOFFS, KNOWN_CITES, PASSAGES, SITE_PAGES, chapterTags, graphIntent, intakeIntent, pagePlan, requestKind, runTool, searchBook } from '../lib/guide-tools';
 import { KNOWLEDGE } from '../lib/knowledge.generated';
 import { validateConversationLead } from '../lib/validate';
 import { FakeD1 } from './fake-d1';
@@ -73,7 +73,7 @@ describe('knowledge pack and tools (code, no model)', () => {
 
   it('start_intake hands off to the intake agent pages, never stores anything', () => {
     const r = runTool({ name: 'start_intake', args: { intent: 'talk' } });
-    expect(r.handoff).toEqual({ intent: 'talk', ...HANDOFFS.talk });
+    expect(r.handoff).toEqual({ intent: 'talk', kind: 'talk', ...HANDOFFS.talk });
     expect(r.trace.label).toBe('Handed off: intake agent (a talk)');
     expect(runTool({ name: 'start_intake', args: { intent: 'bogus' } }).handoff!.href).toBe('/speaking/#advisory');
   });
@@ -166,7 +166,7 @@ describe('POST /api/guide (agent loop)', () => {
   const usage = { prompt_tokens: 1000, completion_tokens: 50 };
   const step = (o: unknown) => ({ response: J(o), usage });
   const SEARCH = step({ tools: [{ name: 'search_book', args: { query: 'external agents trust tiers' } }] });
-  const ANSWER = step({ answer: 'Treat a supplier agent like a new trading partner, not a trusted colleague. Verify its signed record and its contract, issue your own short-lived credential and start it in a sandbox on synthetic data. Then publish read-only tools with caps, so it can look but not act. Actions come only after 90 days without a material finding.', cites: ['Ch 23'], tools: [{ name: 'suggest_page', args: { page: 'trust', reason: 'The trust tiers and welcome flow.' } }] });
+  const ANSWER = step({ answer: 'The harness, not the model, sets the autonomy ceiling, so a modest model inside a strong harness can run a narrow step at L3 safely. Agents decide and deterministic rules post: no agent writes a journal entry, and releasing money stays with people and signed systems. Autonomy is earned with evidence and can be withdrawn automatically. Promotion needs evidence and a human gate, while demotion triggers move a step down automatically.', cites: ['Ch 23'], tools: [{ name: 'suggest_page', args: { page: 'trust', reason: 'The trust tiers and welcome flow.' } }] });
 
   beforeEach(() => {
     db = new FakeD1();
@@ -177,8 +177,8 @@ describe('POST /api/guide (agent loop)', () => {
     const { res, body } = await call(chat([{ role: 'user', content: 'How should we trust a supplier\u2019s agent?' }]), { origin: 'https://example.pages.dev' });
     expect(res.status).toBe(200);
     expect(body).toMatchObject({ ok: true, cites: ['Ch 23'], steps: 2, handoff: null });
-    expect((body.trace as { label: string }[]).map((t) => t.label)).toEqual([expect.stringMatching(/^Searched the book: /), expect.stringMatching(/^Searched the book: .*Ch 23/), 'Suggested: Internal vs external agents page']);
-    expect(body.pages).toEqual([{ id: 'trust', href: '/blueprints/organization/#trust', title: 'Internal vs external agents', reason: 'The trust tiers and welcome flow.' }]);
+    expect((body.trace as { label: string }[]).map((t) => t.label)).toEqual([expect.stringMatching(/^Searched the book: /), expect.stringMatching(/^Searched the book: .*Ch 23/), 'Suggested: Internal vs external agents page', 'Suggested: Controls page']);
+    expect(body.pages).toEqual([{ id: 'trust', href: '/blueprints/organization/#trust', title: 'Internal vs external agents', reason: 'The trust tiers and welcome flow.' }, { id: 'controls', href: '/controls/', title: 'Controls', reason: expect.any(String) }]);
     expect((body.calls as unknown[]).length).toBe(2);
     expect(ai.run.mock.calls.map((c) => c[0])).toEqual([PRIMARY_MODEL, PRIMARY_MODEL]);
     const second = ai.run.mock.calls[1][1] as { max_tokens: number; messages: { role: string; content: string }[] };
@@ -255,12 +255,88 @@ describe('POST /api/guide (agent loop)', () => {
     expect(body.ok).toBe(true);
   });
 
-  it('hands a stated wish for a workshop to the intake agent even if the model forgot the tool', async () => {
-    ai.run.mockReset().mockResolvedValueOnce(step({ answer: 'The intake agent will ask about your board, the date and the format.', cites: [] }));
+  const INTAKE_ANSWER = 'A board workshop drawing on the book would start with the autonomy scale, from L0 Manual to L5 Full, and the rule that the harness, not the model, sets the autonomy ceiling. It would cover why agents decide while deterministic rules post, and how autonomy is earned with evidence and can be withdrawn automatically. The intake agent will ask about your audience, date and format, and nothing is sent until you consent.';
+
+  it('hands a stated wish for a workshop to the intake agent, names it a workshop, and wants a 60-120 word answer', async () => {
+    ai.run.mockReset()
+      .mockResolvedValueOnce(step({ answer: 'The intake agent will ask about your board, the date and the format.', cites: [], tools: [{ name: 'start_intake', args: { intent: 'talk' } }] }))
+      .mockResolvedValueOnce(step({ answer: INTAKE_ANSWER, cites: ['Ch 01'], tools: [{ name: 'start_intake', args: { intent: 'talk' } }] }));
     const { body } = await call(chat([{ role: 'user', content: 'I want a workshop for my board' }]));
-    expect(body).toMatchObject({ ok: true, actions: true, handoff: { intent: 'talk', href: '/speaking/#speaking' } });
-    expect(ai.run).toHaveBeenCalledTimes(1);
+    expect(body).toMatchObject({ ok: true, actions: true, handoff: { intent: 'talk', kind: 'workshop', href: '/speaking/#speaking', label: 'Request a workshop' } });
+    expect(ai.run).toHaveBeenCalledTimes(2);
+    expect((ai.run.mock.calls[1][1] as { messages: { content: string }[] }).messages.at(-1)!.content).toContain('a workshop could cover');
+    const words = String(body.reply).split(/\s+/).length;
+    expect(words).toBeGreaterThanOrEqual(INTAKE_WORDS.min);
+    expect(words).toBeLessThanOrEqual(INTAKE_WORDS.max);
+    const labels = (body.trace as { tool: string; label: string }[]).filter((t) => t.tool === 'start_intake').map((t) => t.label);
+    expect(labels).toEqual(['Handed off: intake agent (a workshop)']);
+    expect((body.trace as { tool: string }[])[0].tool).toBe('search_book');
     expect(db.requests).toHaveLength(0);
+  });
+
+  it('shows one handoff line even when the model calls start_intake in a tool step and again in its answer', async () => {
+    ai.run.mockReset()
+      .mockResolvedValueOnce(step({ tools: [{ name: 'start_intake', args: { intent: 'advisory' } }] }))
+      .mockResolvedValueOnce(step({ answer: INTAKE_ANSWER.replace('A board workshop', 'An advisory engagement'), cites: ['Ch 01'], tools: [{ name: 'start_intake', args: { intent: 'advisory' } }] }));
+    const { body } = await call(chat([{ role: 'user', content: 'Could Hemanth advise our leadership team?' }]));
+    expect(body).toMatchObject({ ok: true, handoff: { intent: 'advisory', kind: 'advisory', label: 'Request advisory' } });
+    expect((body.trace as { tool: string }[]).filter((t) => t.tool === 'start_intake')).toHaveLength(1);
+  });
+
+  it('cites no chapter for an answer that never searched the book, and never defaults to Ch 01', async () => {
+    const GRAPH = step({ answer: 'In the synthetic sample data, the riskiest supplier is the one with the most open exceptions in the subgraph. The harness, not the model, sets the autonomy ceiling, so limits stay in code. Agents decide and deterministic rules post: no agent writes a journal entry. Autonomy is earned with evidence and can be withdrawn automatically.', cites: ['Ch 01', 'Ch 23'] });
+    ai.run.mockReset().mockResolvedValueOnce(GRAPH);
+    const { body } = await call(chat([{ role: 'user', content: 'Which supplier in the sample data is riskiest?' }]));
+    expect(body).toMatchObject({ ok: true, cites: [] });
+    // A searched answer that cites nothing gets the chapters the search returned, not Ch 01 by default.
+    ai.run.mockReset().mockResolvedValueOnce(step({ answer: String(JSON.parse(ANSWER.response).answer), cites: [] }));
+    const searched = await call(chat([{ role: 'user', content: 'How do we trust outside agents?' }]));
+    const fromSearch = [...new Set(searchBook('How do we trust outside agents?').flatMap((p) => p.cites))].slice(0, 4);
+    expect(searched.body.cites).toEqual(fromSearch);
+  });
+
+  it('sends an answer that copies the prompt example back once, then withholds it', async () => {
+    const COPY = step({ answer: EXAMPLE_ANSWER, cites: ['Ch 05'] });
+    ai.run.mockReset().mockResolvedValueOnce(COPY).mockResolvedValueOnce(ANSWER);
+    const ok = await call(chat([{ role: 'user', content: 'How do we trust outside agents?' }]));
+    expect(ok.body.ok).toBe(true);
+    expect((ai.run.mock.calls[1][1] as { messages: { content: string }[] }).messages.at(-1)!.content).toContain('copies the example');
+    ai.run.mockReset().mockResolvedValue(COPY);
+    const bad = await call(chat([{ role: 'user', content: 'What is an agent contract?' }]));
+    expect(bad.body).toMatchObject({ ok: false, reason: 'copied' });
+  });
+
+  it('sends unsupported claims back once, then drops the sentences that still have no passage behind them', async () => {
+    const real = String(JSON.parse(ANSWER.response).answer);
+    const MADE_UP = step({ answer: `${real} Meridian saved 47 million dollars in the first quarter after switching vendors overnight.`, cites: ['Ch 23'] });
+    ai.run.mockReset().mockResolvedValue(MADE_UP);
+    const { body } = await call(chat([{ role: 'user', content: 'How do we trust outside agents?' }]));
+    expect((ai.run.mock.calls[1][1] as { messages: { content: string }[] }).messages.at(-1)!.content).toContain('not supported by the passages');
+    expect(body.ok).toBe(true);
+    expect(String(body.reply)).not.toContain('47 million');
+  });
+
+  it('checks answers in code: copy runs, unsupported sentences, repeated figures', () => {
+    expect(copiesExample(EXAMPLE_ANSWER)).toBe(true);
+    expect(copiesExample('An agent contract names the owner and the goal.')).toBe(false);
+    expect(unsupportedSentences('Promotion needs evidence and a human gate. Revenue grew 300 percent at every client.', CORE)).toEqual(['Revenue grew 300 percent at every client.']);
+    expect(dedupeSentences('Supplier S-104 has 7 open exceptions worth $42,000. It is riskiest. S-104 carries 7 exceptions and $42,000 open.')).toBe('Supplier S-104 has 7 open exceptions worth $42,000. It is riskiest.');
+    expect(EXAMPLE_ANSWER).not.toMatch(/supplier/i);
+  });
+
+  it('picks pages by role and topic in code', () => {
+    expect(pagePlan('cfo-finance', 'How do I measure ROI?')).toEqual(['design', 'operations']);
+    expect(pagePlan('', 'As CFO, how do I measure ROI and cost per outcome?')).toEqual(['design', 'operations']);
+    expect(pagePlan('ceo-board', 'Where do I start?')).toEqual(['blueprints', 'organization']);
+    expect(pagePlan('', 'Who answers when an agent goes wrong? I run risk and audit.')).toEqual(['controls', 'organization']);
+    expect(pagePlan('', 'I run operations. How should agents work in our supply chain?')).toEqual(['workflows', 'operations']);
+    expect(pagePlan('', 'I\u2019m an investor. How do I judge whether a company is agent-ready?')).toEqual(['book', 'frameworks']);
+    expect(pagePlan('', 'Which supplier in the sample data is riskiest?')).toEqual(['graphs', 'controls']);
+    expect(pagePlan('', 'How do I trust a supplier\u2019s agent?')).toEqual(['trust', 'controls']);
+    expect(pagePlan('', 'Tell me something')).toBeNull();
+    expect(requestKind('I want a workshop for my board')).toBe('workshop');
+    expect(requestKind('Can Hemanth keynote our summit?')).toBe('keynote');
+    expect(requestKind('We would like to interview Hemanth')).toBe('interview');
   });
 
   it('reads intake and graph intent deterministically', () => {

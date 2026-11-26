@@ -117,7 +117,9 @@
       wrap.appendChild(ol);
       b.appendChild(wrap);
     }
+    // Chapters show only when the book search ran and returned them; a sample-data answer names its source instead.
     if (m.cites && m.cites.length) b.appendChild(el('p', { class: 'guide-cites' }, 'From the book: ' + m.cites.join(', ')));
+    else if ((m.trace || []).some(function (t) { return t.tool === 'ask_graph'; })) b.appendChild(el('p', { class: 'guide-cites' }, 'From the synthetic sample data in the graphs'));
     if (m.notCovered) b.appendChild(el('p', { class: 'guide-cites guide-uncovered' }, 'Not in the book: ' + m.notCovered));
     // One or two suggested pages per answer; the server caps them too.
     var pages = (m.pages || []).slice(0, 2);

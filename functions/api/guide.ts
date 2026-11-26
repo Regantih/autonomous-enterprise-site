@@ -45,6 +45,8 @@ export const GUIDE_STOP_MESSAGES: Record<TurnStop | 'turns' | 'unavailable', str
   unavailable: 'The guide is offline: the model is not available right now.',
   rule: 'The guide\u2019s answer broke a site rule (a brand name, an email address or prompt text), so it was withheld. Please rephrase.',
   unreadable: 'The model did not reply in the format the guide needs, so there is no answer.',
+  copied: 'The guide\u2019s answer copied its own instructions instead of answering, so it was withheld. Please ask again in other words.',
+  ungrounded: 'The guide could not back its answer with passages from the book, so it was withheld. Please ask a narrower question.',
   steps: 'The guide used its tool steps without reaching an answer. Please ask a narrower question.',
   turns: `That is the most one conversation can take (${MAX_TURNS} messages). Start over, or reach Hemanth directly.`,
 };
