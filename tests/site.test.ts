@@ -22,6 +22,13 @@ beforeAll(() => {
   build();
 });
 
+// The only place an organisation name may appear is the citation block on /blueprints/loops/.
+const CITATION_PAGE = join(DIST, 'blueprints/loops/index.html');
+const CITATION_BLOCK = /<section [^>]*data-citations[^>]*>[\s\S]*?<\/section>/;
+function withoutCitations(file: string, text: string) {
+  return file === CITATION_PAGE ? text.replace(CITATION_BLOCK, '') : text;
+}
+
 describe('built site', () => {
   it('produces every page plus sitemap, robots, 404, headers and favicons', () => {
     for (const f of ['index.html', 'speaking/index.html', 'advisory/index.html', 'ideas/index.html', 'contact/index.html', '404.html',
@@ -110,7 +117,7 @@ describe('built site', () => {
   it('never names a software vendor other than LangChain, and never uses mailto', () => {
     const vendors = /\b(NVIDIA|Nvidia|Meta|Siemens|Rockwell|Alexa|Siri|Kafka|Kubernetes|Neo4j|Pinecone|Palantir|Tesla|Boston Dynamics|Mistral|Cohere|SAP|Oracle|Microsoft|Salesforce|Workday|ServiceNow|IBM|Google|Amazon Web Services|AWS|Azure|OpenAI|Anthropic|Coupa|Ariba|NetSuite|Infor|Epicor|UiPath|Snowflake|Databricks|MuleSoft|Boomi|Kyriba|BlackLine|Dynamics|Copilot|ChatGPT|Gemini|Claude|Llama|CrewAI|AutoGen)\b/;
     for (const f of walk(DIST).filter((f) => /\.(html|xml|txt|js|webmanifest)$/.test(f))) {
-      const t = readFileSync(f, 'utf8');
+      const t = withoutCitations(f, readFileSync(f, 'utf8'));
       expect(t.match(vendors)?.[0], f).toBeUndefined();
       expect(t).not.toContain('mailto:');
       expect(t.match(/\bGPT(?!-class)/)?.[0], f).toBeUndefined();
@@ -213,6 +220,44 @@ describe('built site', () => {
     expect(h).toContain('href="/press/the-autonomous-enterprise-cover.jpg" download');
     expect(h).toContain(BIO_SHORT);
     expect(h).toContain(BIO_LONG);
+  });
+});
+
+describe('site fitness functions', () => {
+  const builtHtml = () => walk(DIST).filter((f) => f.endsWith('.html'));
+
+  it('names no software vendor outside the one citation block, which exists only on /blueprints/loops/', () => {
+    const vendors = /\b(SAP|Salesforce|OpenAI|Anthropic|Microsoft|Google|NVIDIA|Oracle|Workday|ServiceNow)\b/;
+    for (const f of builtHtml()) {
+      const t = readFileSync(f, 'utf8');
+      if (f !== CITATION_PAGE) expect(t, f).not.toMatch(/data-citations/);
+      expect(withoutCitations(f, t).match(vendors)?.[0], f).toBeUndefined();
+    }
+    const block = readFileSync(CITATION_PAGE, 'utf8').match(CITATION_BLOCK)![0];
+    expect((block.match(/\bGoogle\b/g) ?? []).length).toBe(1);
+    expect(block).not.toMatch(/\b(SAP|Salesforce|OpenAI|Anthropic|Microsoft|NVIDIA|Oracle|Workday|ServiceNow)\b/);
+  });
+
+  it('keeps the header nav to eight items or fewer', () => {
+    for (const f of builtHtml()) {
+      const header = readFileSync(f, 'utf8').match(/<nav class="site-nav"[\s\S]*?<\/nav>/);
+      if (!header) continue;
+      expect((header[0].match(/<li>/g) ?? []).length, f).toBeLessThanOrEqual(8);
+    }
+  });
+
+  it('has no inline script, style attribute, style tag or inline event handler in any built HTML', () => {
+    for (const f of builtHtml()) {
+      const t = readFileSync(f, 'utf8');
+      expect(t, f).not.toMatch(/\sstyle="/);
+      expect(t, f).not.toMatch(/<style[\s>]/);
+      expect(t, f).not.toMatch(/\son[a-z]+="/);
+      for (const [tag] of t.matchAll(/<script\b[^>]*>/g)) expect(tag, f).toMatch(/src="\/|type="application\/ld\+json"/);
+    }
+  });
+
+  it('gives every built page exactly one h1', () => {
+    for (const f of builtHtml()) expect((readFileSync(f, 'utf8').match(/<h1[\s>]/g) ?? []).length, f).toBe(1);
   });
 });
 
