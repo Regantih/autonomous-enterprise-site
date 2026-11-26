@@ -421,6 +421,12 @@ describe('Operations page', () => {
     for (const ch of ['05', '06', '22', '24', '25', '26']) expect(h, ch).toContain(`Ch ${ch}`);
     expect(h).toContain('href="/blueprints/design/#evals"');
     expect(h).toContain('does not define per-agent error budgets');
+    expect(h).toContain('<h2 id="pipelines-title" class="h-sm">Pipelines and the work repository</h2>');
+    for (const id of ['skill-pipeline', 'agent-pipeline', 'release-pipeline', 'work-repository', 'which-pipeline']) expect(h, id).toContain(`<h3 id="${id}">`);
+    expect(h).toContain('does not describe one shared backlog');
+    expect(h).toMatch(/Practice, not from the book/);
+    // Third-party talk material must not appear on the site.
+    expect(h).not.toMatch(/Bojinov|Harvard Business School|HBS|Coday|Whoz|J-curve/);
     expect(h).not.toMatch(/<form[\s>]|data-intake/);
     expect(h).not.toMatch(/\b(SAP|Salesforce|ServiceNow|Coupa|Workday|Microsoft|Gravitee|Gartner|NVIDIA|OpenAI|Anthropic|Oracle|OpenTelemetry)\b/);
   });

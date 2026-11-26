@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Operating Agents: Audits, Observability and Reliability | Human-Led Enterprise</title>
-<meta name="description" content="Running agents in production, from the book: what to trace, dashboards, the agent registry, audits, guardian agents, the five-level kill switch, SLOs, incidents and demotion rules.">
+<title>Operating Agents: Audits, Observability, Reliability and Pipelines | Human-Led Enterprise</title>
+<meta name="description" content="Running agents in production, from the book: what to trace, dashboards, the agent registry, audits, guardian agents, the kill switch, SLOs, incidents, demotion, and the skill, agent and release pipelines.">
 <meta name="author" content="Hemanth Reganti">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://humanledenterprise.com/blueprints/operations/">
@@ -12,8 +12,8 @@
 <meta name="color-scheme" content="light">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Human-Led Enterprise">
-<meta property="og:title" content="Operating Agents: Audits, Observability and Reliability | Human-Led Enterprise">
-<meta property="og:description" content="Running agents in production, from the book: what to trace, dashboards, the agent registry, audits, guardian agents, the five-level kill switch, SLOs, incidents and demotion rules.">
+<meta property="og:title" content="Operating Agents: Audits, Observability, Reliability and Pipelines | Human-Led Enterprise">
+<meta property="og:description" content="Running agents in production, from the book: what to trace, dashboards, the agent registry, audits, guardian agents, the kill switch, SLOs, incidents, demotion, and the skill, agent and release pipelines.">
 <meta property="og:url" content="https://humanledenterprise.com/blueprints/operations/">
 <meta property="og:image" content="https://humanledenterprise.com/assets/images/og-image.jpg">
 <meta property="og:image:width" content="1200">
@@ -21,8 +21,8 @@
 <meta property="og:image:alt" content="The Autonomous Enterprise by Hemanth Reganti: book cover on a dark background">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Operating Agents: Audits, Observability and Reliability | Human-Led Enterprise">
-<meta name="twitter:description" content="Running agents in production, from the book: what to trace, dashboards, the agent registry, audits, guardian agents, the five-level kill switch, SLOs, incidents and demotion rules.">
+<meta name="twitter:title" content="Operating Agents: Audits, Observability, Reliability and Pipelines | Human-Led Enterprise">
+<meta name="twitter:description" content="Running agents in production, from the book: what to trace, dashboards, the agent registry, audits, guardian agents, the kill switch, SLOs, incidents, demotion, and the skill, agent and release pipelines.">
 <meta name="twitter:image" content="https://humanledenterprise.com/assets/images/og-image.jpg">
 <meta name="twitter:image:alt" content="The Autonomous Enterprise by Hemanth Reganti: book cover on a dark background">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
@@ -62,7 +62,7 @@
   <div class="container">
     <p class="eyebrow">Blueprints &middot; Operations</p>
     <h1 id="page-title">Operating agents: audits, observability, reliability</h1>
-    <p class="lead">Once agents run, someone must see what they do, prove it to an auditor and stop them fast. This page shows how, from the book.</p>
+    <p class="lead">Once agents run, someone must see what they do, prove it to an auditor and stop them fast. This page shows how, from the book, and how changes reach production.</p>
     <ul class="sa-jump" aria-label="On this page">
       <li><a href="#observe">What to trace</a></li>
       <li><a href="#dashboards">Dashboards</a></li>
@@ -71,6 +71,7 @@
       <li><a href="#guardians">Who watches</a></li>
       <li><a href="#killswitch">Kill switch</a></li>
       <li><a href="#reliability">Reliability</a></li>
+      <li><a href="#pipelines">Pipelines and work</a></li>
       <li><a href="/blueprints/organization/">Organization</a></li>
     </ul>
   </div>
@@ -367,6 +368,117 @@
     </div>
     <p class="fw-note">Book, Ch 26. &ldquo;A bad system will beat a good person every time&rdquo;: fix the process, data, incentives or harness, not the person on duty. All figures on this page are illustrative.</p>
     <p class="cta-row"><a class="btn btn-dark" href="/blueprints/organization/">Organization: humans and agents</a> <a class="btn btn-ghost" href="/blueprints/loops/">Self-improving loops</a></p>
+  </div>
+</section>
+
+<section class="section section-paper-2 bp-section" id="pipelines" aria-labelledby="pipelines-title">
+  <div class="container fw-body">
+    <p class="eyebrow">Pipelines and the work repository</p>
+    <h2 id="pipelines-title" class="h-sm">Pipelines and the work repository</h2>
+    <p class="lead">Every change to what an agent does goes through a pipeline. The kind of artifact that changes decides which pipeline and who approves. <span class="md-cite">Book, Ch 22 and Ch 25</span></p>
+    <p>One rule covers them all. Any artifact that can change what an agent posts, approves or sends is under change control. That includes a policy document the agent retrieves. <span class="md-cite">Book, Ch 22</span></p>
+
+    <h3 id="skill-pipeline">1. The skill pipeline</h3>
+    <p>A skill packages instructions, scripts and examples an agent loads only when a task needs them. The enterprise owns skills and governs them like code. <span class="md-cite">Book, Ch 05</span></p>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Skill pipeline, scroll sideways">
+      <table class="fw-table">
+        <caption class="visually-hidden">Skill pipeline stages, owners and rules</caption>
+        <thead><tr><th scope="col">Stage</th><th scope="col">Owner</th><th scope="col">Rule</th><th scope="col">Source</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Propose</th><td>Process owner, or the agent itself</td><td>Ideas come from hard cases, the exception list and override reasons. An agent may draft a skill but never approve it.</td><td>Ch 24, Ch 25</td></tr>
+          <tr><th scope="row">Specify and write</th><td>Process owner with the context engineer</td><td>Capture what experienced people know but no procedure states.</td><td>Ch 05, Ch 24</td></tr>
+          <tr><th scope="row">Test</th><td>AgentOps</td><td>A golden set per skill before first use.</td><td>Ch 05</td></tr>
+          <tr><th scope="row">Version and release</th><td>Product owner</td><td>Same release policy as instructions. The skill version is written to every trace.</td><td>Ch 05, Ch 25</td></tr>
+          <tr><th scope="row">Outside skills</th><td>Security</td><td>Install only from trusted sources. Review as third-party code and pin the version.</td><td>Ch 05</td></tr>
+          <tr><th scope="row">Withdraw</th><td>Process owner</td><td>On a policy change, failed regression or retired dependency. Agents that load it return to shadow until retested.</td><td>Ch 05</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The book&rsquo;s skill graph maps which skills depend on others and which agents use them. Withdrawing one skill then shows every agent it touches. <span class="md-cite">Book, Ch 05</span></p>
+
+    <h3 id="agent-pipeline">2. The agent pipeline</h3>
+    <p>An agent moves one state at a time, on written criteria and a named human decision. Demotion is automatic. <span class="md-cite">Book, Ch 05 and Ch 26</span></p>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Agent pipeline, scroll sideways">
+      <table class="fw-table">
+        <caption class="visually-hidden">Agent pipeline steps, gates and deciders</caption>
+        <thead><tr><th scope="col">Step</th><th scope="col">Gate (summary, illustrative)</th><th scope="col">Decided by</th><th scope="col">Source</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Design</th><td>The decision is written down: trigger, inputs, judgment, action, owner and evidence. An agent contract follows.</td><td>Process owner</td><td>Ch 05, Ch 21</td></tr>
+          <tr><th scope="row">Harness</th><td>The harness score caps the highest level the agent may ever reach.</td><td>Autonomy Office</td><td>Ch 05</td></tr>
+          <tr><th scope="row">Offline evaluation</th><td>Tool tests, golden set, trajectory checks, adversarial and envelope tests.</td><td>Autonomy Office</td><td>Ch 06, Ch 26</td></tr>
+          <tr><th scope="row">Register</th><td>Own identity in the vendor platform and the enterprise registry. No registry, no run.</td><td>Platform team</td><td>Ch 25, Ch 26</td></tr>
+          <tr><th scope="row">Shadow</th><td>Live triggers, no actions. At least 4 weeks incl. a month-end and 300 cases.</td><td>Process product owner</td><td>Ch 26</td></tr>
+          <tr><th scope="row">Pilot</th><td>Criteria signed before the build. It must be able to end in &ldquo;stop&rdquo;.</td><td>Process owner</td><td>Ch 26</td></tr>
+          <tr><th scope="row">Readiness gate</th><td>Twelve checks. L3 needs all twelve; L2 needs a named subset and a dated plan.</td><td>Named sign-offs per check</td><td>Ch 06</td></tr>
+          <tr><th scope="row">Promote in slices</th><td>L3 opens one band, entity and limit at a time.</td><td>Autonomy council</td><td>Ch 26</td></tr>
+          <tr><th scope="row">Demote or retire</th><td>Automatic on a critical error. Retired agents keep their traces.</td><td>Automatic; council reviews</td><td>Ch 05, Ch 26</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Pace matters too. In the book&rsquo;s plan, no financial agent is promoted in the last month of a quarter. A Sev 1 incident stops all promotions. <span class="md-cite">Book, Ch 26</span></p>
+
+    <h3 id="release-pipeline">3. The build and release pipeline</h3>
+    <p>Prompts, policies, limits, tools and model versions are released like code. Evals are the gate. <span class="md-cite">Book, Ch 06, Ch 22 and Ch 25</span></p>
+    <ul class="fw-list">
+      <li><b>Regression on every change.</b> Run the golden set, trajectory checks and adversarial set. Store the results in the registry entry. <span class="md-cite">Book, Ch 06</span></li>
+      <li><b>Pin model versions</b> at the gateway, so a silent provider update is caught. <span class="md-cite">Book, Ch 06</span></li>
+      <li><b>New version, new start.</b> A change to model, tools, instructions or limits starts in shadow unless it is minor. <span class="md-cite">Book, Ch 05</span></li>
+      <li><b>Canary.</b> A small share of live volume runs at the target level first. <span class="md-cite">Book, Ch 06</span></li>
+      <li><b>Rollback.</b> Changes an agent proposes roll back automatically on an SLO breach. <span class="md-cite">Book, Ch 25</span></li>
+      <li><b>Vendor updates</b> are model changes. Run the regression set and watch the SLOs for two weeks. <span class="md-cite">Book, Ch 25</span></li>
+      <li><b>No ticket, no change.</b> An instruction changed without a ticket is a control failure. <span class="md-cite">Book, Ch 22</span></li>
+    </ul>
+    <p class="fw-note">Practice, not from the book: the book names no build tools. A common way to apply it is to keep prompts, policies and skills in version control and block a merge when the regression suite fails.</p>
+
+    <h3 id="work-repository">4. The work repository</h3>
+    <p>People need one place to see what agents are doing and what waits for them. The book supplies the pieces. <span class="md-cite">Book, Ch 05 and Ch 25</span></p>
+    <ul class="fw-list">
+      <li><b>The hand-off queue is a production asset.</b> Size it, watch its age and label each human decision as evaluation data. <span class="md-cite">Book, Ch 25</span></li>
+      <li><b>One queue per value stream.</b> Keep one registry, one meter dataset and one hand-off queue, not one per vendor. <span class="md-cite">Book, Ch 25</span></li>
+      <li><b>Done is defined.</b> Each task has a completion contract: what counts as done, the evidence required and who accepts it. <span class="md-cite">Book, Ch 05</span></li>
+      <li><b>State lives outside the model.</b> Long tasks keep a progress record and the last known-good state. <span class="md-cite">Book, Ch 05</span></li>
+      <li><b>Every item points to evidence:</b> its trace ID and, where a person decides, its approval card. <span class="md-cite">Book, Ch 05 and Ch 22</span></li>
+    </ul>
+    <p>The book does not describe one shared backlog for human and agent tasks. The fields below are practice built from the book&rsquo;s pieces, not book figures.</p>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Work repository fields, scroll sideways">
+      <table class="fw-table">
+        <caption class="visually-hidden">Suggested fields for a shared work repository (practice)</caption>
+        <thead><tr><th scope="col">Field (practice)</th><th scope="col">What it holds</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Task</th><td>One decision or piece of work, in plain words</td></tr>
+          <tr><th scope="row">Doer</th><td>A person, or an agent by registry ID and version</td></tr>
+          <tr><th scope="row">Accountable</th><td>Always a named person, such as the agent&rsquo;s business owner</td></tr>
+          <tr><th scope="row">Status</th><td>Open, in progress, waiting for approval, escalated, done or not done</td></tr>
+          <tr><th scope="row">Level</th><td>The autonomy level the step runs at</td></tr>
+          <tr><th scope="row">Approval</th><td>Who approved, changed or rejected it, and when</td></tr>
+          <tr><th scope="row">Evidence</th><td>Trace ID, approval card and any change ticket</td></tr>
+          <tr><th scope="row">Deadline</th><td>The time that matters, such as a payment run</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fw-note">Practice, not from the book: an agent should not close an item that waits on its own approval. Every agent item should name the person who answers for it.</p>
+
+    <h3 id="which-pipeline">5. Which pipeline does a change go through?</h3>
+    <p>Classify the change by the artifact it touches. The class sets the pipeline and the approver. <span class="md-cite">Book, Ch 25</span></p>
+    <div class="fw-table-wrap" tabindex="0" role="region" aria-label="Which pipeline, scroll sideways">
+      <table class="fw-table">
+        <caption class="visually-hidden">Change, pipeline, class and approver</caption>
+        <thead><tr><th scope="col">The change</th><th scope="col">Pipeline</th><th scope="col">Class</th><th scope="col">Approver</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">New skill or skill wording</th><td>Skill</td><td>Standard if evaluation passes</td><td>Product owner</td></tr>
+          <tr><th scope="row">Instruction text</th><td>Build and release</td><td>Standard if evaluation passes</td><td>Product owner</td></tr>
+          <tr><th scope="row">Threshold or limit</th><td>Build and release</td><td>Normal, control-relevant</td><td>Owner and risk lead</td></tr>
+          <tr><th scope="row">Model version</th><td>Build and release</td><td>Normal, full regression</td><td>Evaluation engineer and owner</td></tr>
+          <tr><th scope="row">Tools and permissions</th><td>Agent</td><td>Major, with a duties check</td><td>Risk lead and platform team</td></tr>
+          <tr><th scope="row">Autonomy level</th><td>Agent</td><td>Major</td><td>Autonomy council</td></tr>
+          <tr><th scope="row">Another platform in the path</th><td>Agent</td><td>Major</td><td>Design authority and council</td></tr>
+          <tr><th scope="row">A change the agent proposes</th><td>Same as the artifact it touches</td><td>Never self-approved</td><td>Approver for that class</td></tr>
+          <tr><th scope="row">A case the agent cannot finish</th><td>Work repository</td><td>Hand-off</td><td>The person on the queue</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fw-note">Book, Ch 25, except the last row, which is practice. An agent&rsquo;s limits, permissions, evaluation sets, traces and kill switch stay outside its own write scope. <span class="md-cite">Book, Ch 22 and Ch 25</span></p>
+    <p class="cta-row"><a class="btn btn-dark" href="/blueprints/loops/">See a bounded improvement loop</a> <a class="btn btn-ghost" href="/controls/">Open the controls library</a></p>
   </div>
 </section>
 </main>

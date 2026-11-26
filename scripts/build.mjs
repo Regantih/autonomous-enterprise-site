@@ -161,9 +161,9 @@ export const PAGES = [
   },
   {
     src: 'operations.html', out: 'blueprints/operations/index.html', path: '/blueprints/operations/', nav: 'BLUEPRINTS', bp: 'operations',
-    title: 'Operating Agents: Audits, Observability and Reliability | Human-Led Enterprise',
+    title: 'Operating Agents: Audits, Observability, Reliability and Pipelines | Human-Led Enterprise',
     description:
-      'Running agents in production, from the book: what to trace, dashboards, the agent registry, audits, guardian agents, the five-level kill switch, SLOs, incidents and demotion rules.',
+      'Running agents in production, from the book: what to trace, dashboards, the agent registry, audits, guardian agents, the kill switch, SLOs, incidents, demotion, and the skill, agent and release pipelines.',
     sitemap: true, priority: '0.7',
   },
   {
