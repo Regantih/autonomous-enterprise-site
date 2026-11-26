@@ -299,3 +299,16 @@ describe('POST /api/guide (agent loop)', () => {
     expect((await onRequest()).status).toBe(405);
   });
 });
+
+describe('parseStep with two objects in one reply', () => {
+  it('keeps the answer and the page calls when the model sends a tools object and an answer together', () => {
+    const text = '{"tools":[{"name":"suggest_page","args":{"page":"trust","reason":"Trust tiers."}}]}\n{"answer":"Treat it like a new trading partner.","cites":["Ch 23"]}';
+    const p = parseStep(text);
+    expect(p.kind).toBe('answer');
+    if (p.kind === 'answer') {
+      expect(p.answer).toBe('Treat it like a new trading partner.');
+      expect(p.actions.map((a) => a.name)).toEqual(['suggest_page']);
+    }
+    expect(parseStep('{"answer":"Use a brace } inside text.","cites":["Ch 01"]}').kind).toBe('answer');
+  });
+});

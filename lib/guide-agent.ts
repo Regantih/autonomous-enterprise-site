@@ -126,10 +126,38 @@ function toolCalls(v: unknown): ToolCall[] {
     .slice(0, MAX_TOOLS_PER_STEP);
 }
 
+/** Every top-level JSON object in the text, in order (models sometimes send a tools object and an answer together). */
+function allJson(text: string): Record<string, unknown>[] {
+  const s = text.replace(/```(json)?/gi, '');
+  const out: Record<string, unknown>[] = [];
+  let depth = 0;
+  let start = -1;
+  let inStr = false;
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i];
+    if (inStr) {
+      if (ch === '\\') i++;
+      else if (ch === '"') inStr = false;
+      continue;
+    }
+    if (ch === '"') inStr = depth > 0;
+    else if (ch === '{') { if (depth++ === 0) start = i; }
+    else if (ch === '}' && depth > 0 && --depth === 0) {
+      try {
+        const v = JSON.parse(s.slice(start, i + 1));
+        if (v && typeof v === 'object' && !Array.isArray(v)) out.push(v as Record<string, unknown>);
+      } catch { /* skip */ }
+    }
+  }
+  return out;
+}
+
 export function parseStep(text: string): Step {
-  const o = firstJson(text);
+  const objs = allJson(text);
+  // Prefer the object that answers; keep tool calls from the others.
+  const o = objs.find((x) => typeof x.answer === 'string' && x.answer.trim()) ?? objs[0] ?? firstJson(text);
   if (!o) return { kind: 'unreadable' };
-  const calls = toolCalls(o.tools);
+  const calls = toolCalls([...(Array.isArray(o.tools) ? o.tools : []), ...objs.filter((x) => x !== o).flatMap((x) => (Array.isArray(x.tools) ? x.tools : []))]);
   if (typeof o.answer === 'string' && o.answer.trim()) {
     const answer = clampWords(o.answer.trim(), REPLY_WORD_LIMIT);
     const notCovered = typeof o.not_covered === 'string' ? clampWords(o.not_covered.trim(), 30) : '';
@@ -209,7 +237,7 @@ export async function runTurn(
   for (let step = 0; step <= MAX_TOOL_STEPS; step++) {
     const final = step === MAX_TOOL_STEPS;
     const messages = [
-      { role: 'system', content: buildSystemPrompt(profile, { ...opts, final, hint }) },
+      { role: 'system', content: buildSystemPrompt(profile, { ...opts, final, hint: hint || (step === 0 ? 'Your first step on this question is a tools object that calls search_book with its key terms. Answer only after you have read the passages.' : '') }) },
       ...recentHistory(history),
       ...toolLog,
     ];
