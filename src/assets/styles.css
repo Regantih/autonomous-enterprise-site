@@ -1086,3 +1086,13 @@ fieldset.field legend { padding: 0; margin-bottom: 0.35rem; }
 .sa-jump { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; margin: 1.25rem 0 0; padding: 0; }
 .sa-jump a { font-weight: 600; }
 .page-head .sa-jump a { color: var(--paper); text-decoration-color: var(--orange); text-underline-offset: 0.2em; }
+
+/* Visual QA fixes (Nov 26, 2026) */
+/* The home hero is dark: its eyebrow takes the bright orange (the text orange is 3.1:1 there, under AA). */
+.hero .eyebrow { color: var(--orange); }
+/* Below the desktop header the brand row sat flush with the top edge; give it breathing room. */
+@media (max-width: 59.99rem) { .header-inner { padding-top: 0.5rem; row-gap: 0.25rem; } }
+/* Guide input on phones: room for the two-line placeholder, and "Start over" on one line. */
+@media (max-width: 30rem) { .guide-input textarea { min-height: 5rem; } }
+.guide-foot { gap: 1rem; }
+.guide-reset { white-space: nowrap; }
