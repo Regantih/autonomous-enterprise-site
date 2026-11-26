@@ -261,32 +261,59 @@
     if (window.MutationObserver) new MutationObserver(queue).observe(document.body, { childList: true, subtree: true });
   }
 
+  /* "Talk to the book" never sits on a diagram, swimlane, table, matrix or console, at any width:
+     whenever one of them crosses the button's corner (home position plus a margin) it fades away, and it
+     comes back once the corner is clear. Checked on first paint, on scroll, on resize, when fonts or
+     diagrams finish drawing and when the page changes, so the first load is covered too. Phones also
+     tuck it away while the reader scrolls down. The header keeps its own Talk to the book link. */
   var fab = document.querySelector('.guide-fab');
-  var small = window.matchMedia && window.matchMedia('(max-width: 59.99rem)');
-  if (fab && small) {
-    var lastY = window.pageYOffset || 0;
-    /* Wider screens: the button also steps aside while it would sit on top of a wide table or diagram. */
-    var covers = function () {
+  if (fab && window.getComputedStyle) {
+    var AVOID = 'svg, table, canvas, figure, pre, .sl-wrap, .fw-table-wrap, .ar-svg-wrap, .hf-svg-wrap, .al-wrap, ' +
+      '.gr-canvas, .gr-stat-grid, .ld-tablewrap, .wf-grid, .ar-grid, .lr-console, .ctl-map, .or-ring, ' +
+      '[class*="matrix"], [class*="console"], [data-diagram]';
+    var SKIP = '.guide-fab, .site-header, .site-footer, [role="dialog"], dialog';
+    var small = window.matchMedia ? window.matchMedia('(max-width: 59.99rem)') : { matches: false };
+    var lastY = window.pageYOffset || 0, goingDown = false, framed = false;
+    var home = function () {
+      var cs = window.getComputedStyle(fab), m = 12;
       var vw = document.documentElement.clientWidth, vh = window.innerHeight;
-      var fw = fab.offsetWidth, fh = fab.offsetHeight, gap = 24;
-      var left = vw - fw - gap, top = vh - fh - gap;
-      var ws = document.querySelectorAll(HINTED);
-      for (var i = 0; i < ws.length; i++) {
-        var r = ws[i].getBoundingClientRect();
-        if (r.width && r.right > left && r.bottom > top && r.top < vh) return true;
+      var right = vw - (parseFloat(cs.right) || 0), bottom = vh - (parseFloat(cs.bottom) || 0);
+      return { left: right - fab.offsetWidth - m, top: bottom - fab.offsetHeight - m, right: right + m, bottom: bottom + m };
+    };
+    var covers = function () {
+      if (!fab.offsetWidth) return false;
+      var c = home(), els = document.querySelectorAll(AVOID);
+      for (var i = 0; i < els.length; i++) {
+        var el = els[i];
+        var r = el.getBoundingClientRect();
+        if (r.width < 48 || r.height < 32) continue;
+        if (r.right <= c.left || r.left >= c.right || r.bottom <= c.top || r.top >= c.bottom) continue;
+        if (el.closest(SKIP)) continue;
+        return true;
       }
       return false;
     };
-    var goingDown = false;
     var place = function () {
+      framed = false;
       var y = window.pageYOffset || 0, d = y - lastY;
       if (Math.abs(d) >= 8) { goingDown = d > 0; lastY = y; }
-      var over = !small.matches && covers();
-      var away = !fab.contains(document.activeElement) && (over || (small.matches && goingDown && y > 240));
-      fab.classList.toggle('fab-away', away);
+      var keep = fab.contains(document.activeElement);
+      var away = !keep && (covers() || (small.matches && goingDown && y > 240));
+      if (fab.classList.contains('fab-away') !== away) fab.classList.toggle('fab-away', away);
+      fab.setAttribute('aria-hidden', away ? 'true' : 'false');
+      if (away) fab.setAttribute('tabindex', '-1'); else fab.removeAttribute('tabindex');
     };
-    window.addEventListener('scroll', place, { passive: true });
-    window.addEventListener('resize', place, { passive: true });
-    window.addEventListener('load', place);
+    var soon = function () { if (!framed) { framed = true; (window.requestAnimationFrame || setTimeout)(place); } };
+    place();
+    window.addEventListener('scroll', soon, { passive: true });
+    window.addEventListener('resize', soon, { passive: true });
+    window.addEventListener('orientationchange', soon);
+    window.addEventListener('load', soon);
+    document.addEventListener('DOMContentLoaded', soon);
+    fab.addEventListener('blur', soon);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(soon);
+    if (window.MutationObserver) new MutationObserver(soon).observe(document.body, { childList: true, subtree: true });
+    if (window.ResizeObserver) new ResizeObserver(soon).observe(document.body);
+    [150, 500, 1200, 2500].forEach(function (t) { setTimeout(soon, t); });
   }
 })();

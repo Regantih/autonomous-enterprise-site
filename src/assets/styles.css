@@ -1043,7 +1043,7 @@ fieldset.field legend { padding: 0; margin-bottom: 0.35rem; }
   .dz-name { flex: 1 1 100%; order: 3; }
 }
 
-/* Talk to the book: smaller on phones, steps aside while reading down the page (site.js) */
+/* Talk to the book: smaller on phones; fades away while a diagram, table or matrix crosses its corner, and on phones while reading down (site.js) */
 .guide-fab { transition: transform 0.25s ease, opacity 0.25s ease; }
 .guide-fab.fab-away { transform: translateY(calc(100% + 2rem)); opacity: 0; pointer-events: none; }
 @media (max-width: 40rem) {
