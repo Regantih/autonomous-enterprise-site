@@ -146,6 +146,15 @@ describe('built site', () => {
     expect(readFileSync(join(DIST, 'robots.txt'), 'utf8')).toContain('Sitemap: https://humanledenterprise.com/sitemap.xml');
   });
 
+  it('leads the header wordmark with the book: The Autonomous Enterprise, human-led and agent-operated, linking home', () => {
+    for (const p of pages) {
+      const header = html(p).match(/<header class="site-header">(.*?)<\/header>/s)![1];
+      expect(header).toContain('<a class="brand" href="/" aria-label="The Autonomous Enterprise: human-led, agent-operated, home">');
+      expect(header).toContain('<span class="brand-name">The Autonomous Enterprise</span> <span class="brand-sub">Human-led, agent-operated</span>');
+      expect(header).not.toContain('Human-Led Enterprise');
+    }
+  });
+
   it('has Book, Frameworks, Blueprints, Ideas, Speaking, Advisory, About, Contact in the header and footer of every page', () => {
     for (const p of pages) {
       const h = html(p);
