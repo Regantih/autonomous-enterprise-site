@@ -140,8 +140,8 @@ function assetUrl(rel) {
 function coverPicture({ priority }) {
   const loading = priority ? 'fetchpriority="high" decoding="async"' : 'loading="lazy" decoding="async"';
   return `<picture>
-        <source type="image/webp" srcset="${assetUrl('images/cover-400.webp')} 400w, ${assetUrl('images/cover-800.webp')} 800w" sizes="(min-width: 56rem) 22rem, 70vw">
-        <img class="cover-img" src="${assetUrl('images/cover-800.jpg')}" srcset="${assetUrl('images/cover-400.jpg')} 400w, ${assetUrl('images/cover-800.jpg')} 800w" sizes="(min-width: 56rem) 22rem, 70vw" width="800" height="1280" alt="Cover of The Autonomous Enterprise: How Leaders Build, Govern, and Scale the Agent-Run Company, by Hemanth Reganti" ${loading}>
+        <source type="image/webp" srcset="${assetUrl('images/cover-400.webp')} 400w, ${assetUrl('images/cover-800.webp')} 800w, ${assetUrl('images/cover-1200.webp')} 1200w" sizes="(min-width: 56rem) 30rem, 82vw">
+        <img class="cover-img" src="${assetUrl('images/cover-800.jpg')}" srcset="${assetUrl('images/cover-400.jpg')} 400w, ${assetUrl('images/cover-800.jpg')} 800w, ${assetUrl('images/cover-1200.jpg')} 1200w" sizes="(min-width: 56rem) 30rem, 82vw" width="800" height="1280" alt="Cover of The Autonomous Enterprise: How Leaders Build, Govern, and Scale the Agent-Run Company, by Hemanth Reganti" ${loading}>
       </picture>`;
 }
 
@@ -254,7 +254,7 @@ export function build() {
       ASSET_VERSION: assetVersion,
       JSONLD: page.jsonld ? jsonLd() : '',
       HEAD_EXTRA: page.src === 'index.html'
-        ? `<link rel="preload" as="image" type="image/webp" imagesrcset="${assetUrl('images/cover-400.webp')} 400w, ${assetUrl('images/cover-800.webp')} 800w" imagesizes="(min-width: 56rem) 22rem, 70vw" fetchpriority="high">\n`
+        ? `<link rel="preload" as="image" type="image/webp" imagesrcset="${assetUrl('images/cover-400.webp')} 400w, ${assetUrl('images/cover-800.webp')} 800w, ${assetUrl('images/cover-1200.webp')} 1200w" imagesizes="(min-width: 56rem) 30rem, 82vw" fetchpriority="high">\n`
         : '',
       NAV_SPEAKING: page.nav === 'SPEAKING' ? ' aria-current="page"' : '',
       NAV_IDEAS: page.nav === 'IDEAS' ? ' aria-current="page"' : '',
@@ -264,9 +264,9 @@ export function build() {
       NAV_BOOK: page.nav === 'BOOK' ? ' aria-current="page"' : '',
       NAV_ABOUT: page.nav === 'ABOUT' ? ' aria-current="page"' : '',
       GUIDE_FAB: page.nav === 'TALK' ? '' : read(join(SRC, 'partials', 'guide-fab.html')).trimEnd(),
-      PORTRAIT_BAND: portraitPicture('(min-width: 56rem) 26rem, 90vw'),
-      PORTRAIT_SPEAKING: portraitPicture('(min-width: 56rem) 22rem, 90vw'),
-      PORTRAIT_ABOUT: portraitPicture('(min-width: 56rem) 26rem, 90vw'),
+      PORTRAIT_BAND: portraitPicture('(min-width: 56rem) 34rem, 90vw'),
+      PORTRAIT_SPEAKING: portraitPicture('(min-width: 56rem) 26rem, 90vw'),
+      PORTRAIT_ABOUT: portraitPicture('(min-width: 56rem) 32rem, 90vw'),
       PORTRAIT_THUMB: assetUrl('images/portrait-480.jpg'),
       COVER_HERO: coverPicture({ priority: true }),
       COVER_BOOK: coverPicture({ priority: false }),

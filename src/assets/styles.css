@@ -554,3 +554,17 @@ fieldset.field legend { padding: 0; margin-bottom: 0.35rem; }
 .fw-formula { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--white); border-left: 4px solid var(--orange); padding: 0.9rem 1rem; margin: 1.25rem 0; font-size: 0.95rem; overflow-wrap: anywhere; }
 .fw-note { font-size: 0.9rem; color: #555; margin-top: 1rem; }
 @media (max-width: 40rem) { .fw-table tbody th { white-space: normal; } }
+
+/* Louder photo, more prominent book (Nov 25, 2026) */
+@media (min-width: 56rem) { .hero-grid { grid-template-columns: 1.05fr 0.95fr; } }
+.hero-cover { width: min(100%, 30rem); }
+.hero-cover .cover-img { box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.06); }
+@media (max-width: 55.99rem) { .hero-cover { width: min(82%, 21rem); } }
+.author-band { padding-block: clamp(3.5rem, 7vw, 6rem); }
+@media (min-width: 56rem) { .author-grid { grid-template-columns: 1.1fr 0.9fr; } }
+.author-photo { max-width: 34rem; width: 100%; }
+.author-photo .portrait-img { border-radius: 12px; box-shadow: 0 34px 80px -30px rgba(0, 0, 0, 0.55); }
+.author-band h2 { font-size: clamp(2.4rem, 5vw, 3.6rem); }
+@media (min-width: 56rem) { .why-layout { grid-template-columns: 26rem 1fr; } }
+.why-photo { max-width: 26rem; }
+.about-photo { max-width: 32rem; }
