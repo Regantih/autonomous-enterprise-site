@@ -6,12 +6,14 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "check:dist": "node scripts/build.mjs && git diff --exit-code -- dist",
+    "check:dist": "node scripts/build.mjs && git diff --exit-code -- dist lib/knowledge.generated.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "dev": "wrangler pages dev",
     "db:local": "wrangler d1 execute autonomous-enterprise --local --file=./schema.sql",
     "db:remote": "wrangler d1 execute autonomous-enterprise --remote --file=./schema.sql",
+    "db:migrate:local": "wrangler d1 migrations apply autonomous-enterprise --local",
+    "db:migrate:remote": "wrangler d1 migrations apply autonomous-enterprise --remote",
     "deploy": "wrangler pages deploy"
   },
   "devDependencies": {

@@ -206,8 +206,108 @@ describe('built site', () => {
 });
 
 describe('schema.sql', () => {
-  it('allows speaking, consultation and media request types', () => {
+  it('allows speaking, consultation, media and conversation request types', () => {
     expect(readFileSync(fileURLToPath(new URL('../schema.sql', import.meta.url)), 'utf8'))
-      .toContain("CHECK (type IN ('speaking', 'consultation', 'media'))");
+      .toContain("CHECK (type IN ('speaking', 'consultation', 'media', 'conversation'))");
+  });
+
+  it('has a migration that rebuilds requests to allow conversation', () => {
+    const sql = readFileSync(fileURLToPath(new URL('../migrations/0002_conversation.sql', import.meta.url)), 'utf8');
+    expect(sql).toContain("CHECK (type IN ('speaking', 'consultation', 'media', 'conversation'))");
+    expect(sql).toMatch(/INSERT INTO requests_new[\s\S]*FROM requests;/);
+    expect(sql).toContain('ALTER TABLE requests_new RENAME TO requests;');
+  });
+});
+
+describe('wrangler.toml', () => {
+  const toml = readFileSync(fileURLToPath(new URL('../wrangler.toml', import.meta.url)), 'utf8');
+  it('binds D1 as DB and Workers AI as AI', () => {
+    expect(toml).toMatch(/binding = "DB"/);
+    expect(toml).toMatch(/\[ai\]\s*\nbinding = "AI"/);
+    expect(toml).toContain('pages_build_output_dir = "dist"');
+  });
+});
+
+describe('portrait, real cover and guide', () => {
+  const home = () => html(byOut('index.html'));
+
+  it('uses the real cover in responsive sizes and for Open Graph', () => {
+    for (const f of ['cover-400.webp', 'cover-800.webp', 'cover-400.jpg', 'cover-800.jpg', 'portrait-480.webp', 'portrait-960.webp', 'portrait-480.jpg', 'portrait-960.jpg']) {
+      expect(existsSync(join(DIST, 'assets/images', f)), f).toBe(true);
+    }
+    expect(existsSync(join(DIST, 'assets/images/source')), 'sources are not published').toBe(false);
+    expect(home()).toMatch(/cover-800\.jpg[^"]*" srcset=[^>]+width="800" height="1280"/);
+    expect(home()).toContain(`<meta property="og:image" content="${SITE_URL}/assets/images/og-image.jpg">`);
+  });
+
+  it('shows the portrait in colour, rectangular, with alt text on home, speaking and about', () => {
+    for (const out of ['index.html', 'speaking/index.html', 'about/index.html']) {
+      const h = html(byOut(out));
+      expect(h, out).toMatch(/<img class="portrait-img" src="\/assets\/images\/portrait-960\.jpg[^"]*"[^>]+alt="Hemanth Reganti, author of The Autonomous Enterprise[^"]+"/);
+    }
+    const css = readFileSync(join(DIST, 'assets/styles.css'), 'utf8');
+    expect(css).not.toMatch(/grayscale|greyscale|saturate\(0/);
+    expect(css).not.toMatch(/\.portrait-img[^}]*border-radius:\s*50%/);
+  });
+
+  it('puts an author band with both CTAs right after the thesis on home', () => {
+    const h = home();
+    const thesis = h.indexOf('id="thesis"');
+    const author = h.indexOf('id="author"');
+    expect(thesis).toBeGreaterThan(0);
+    expect(author).toBeGreaterThan(thesis);
+    expect(h.slice(thesis, author).match(/<section /g)).toHaveLength(1);
+    const band = h.slice(author, h.indexOf('</section>', author));
+    expect(band).toContain('Author, speaker and advisor on human-led, agent-operated enterprises.');
+    expect(band).toContain('>Request a talk</a>');
+    expect(band).toContain('>Book an advisory call</a>');
+  });
+
+  it('keeps home to six sections and moves the detail to /book', () => {
+    const main = home().split('<main')[1].split('</main>')[0];
+    expect(main.match(/<section /g)).toHaveLength(6);
+    for (const id of ['problem', 'inside', 'audience']) {
+      expect(main).not.toContain(`id="${id}"`);
+      expect(html(byOut('book/index.html'))).toContain(`id="${id}"`);
+    }
+    expect(home()).toMatch(/<a class="btn btn-ghost" href="\/talk\/" data-guide-open>Talk to the book<\/a>/);
+  });
+
+  it('has one primary header CTA, Talk to the author, on every page', () => {
+    for (const p of pages) {
+      const header = html(p).split('<header')[1].split('</header>')[0];
+      expect(header.match(/btn-primary/g), p.out).toHaveLength(1);
+      expect(header, p.out).toContain('>Talk to the author</a>');
+    }
+  });
+
+  it('adds the floating Talk to the book button to every page except /talk, which embeds the chat', () => {
+    for (const p of pages) {
+      const h = html(p);
+      expect(h, p.out).toContain('<script src="/assets/guide.js?v=');
+      if (p.out === 'talk/index.html') {
+        expect(h).not.toContain('class="guide-fab"');
+        expect(h).toContain('data-guide-embed');
+      } else expect(h, p.out).toContain('<a class="guide-fab" href="/talk/" data-guide-open');
+    }
+  });
+
+  it('keeps guide state in sessionStorage only and calls only the same-origin API', () => {
+    const js = readFileSync(join(DIST, 'assets/guide.js'), 'utf8');
+    expect(js).toContain('sessionStorage');
+    expect(js).not.toMatch(/localStorage|document\.cookie|indexedDB/);
+    expect(js).toContain("var API = '/api/guide'");
+    expect(js.match(/https?:\/\/[^'" )]+/g)).toEqual(['https://www.amazon.com/dp/B0HS8HG6DP']);
+    expect(js).toContain('Share a summary of this chat with Hemanth');
+  });
+
+  it('adds the headshot and real cover downloads to the press kit and the Person image to JSON-LD', () => {
+    expect(existsSync(join(DIST, 'press/hemanth-reganti-headshot.jpg'))).toBe(true);
+    const contact = html(byOut('contact/index.html'));
+    expect(contact).toContain('href="/press/hemanth-reganti-headshot.jpg" download');
+    expect(contact).toContain('href="/press/the-autonomous-enterprise-cover.jpg" download');
+    const ld = JSON.parse(home().match(/<script type="application\/ld\+json">(.*?)<\/script>/)![1]);
+    const person = ld['@graph'].find((n: { '@type': string }) => n['@type'] === 'Person');
+    expect(person.image.url).toBe(`${SITE_URL}/assets/images/portrait-960.jpg`);
   });
 });

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Regenerate cover, Open Graph and icon images in src/assets/images and src/static.
+"""Regenerate cover, portrait, Open Graph, press-download and icon images in src/assets/images and src/static.
 
 Usage:
-  python3 tools/make-images.py                 # cover from tools/cover-mock.html
-  python3 tools/make-images.py path/to/cover.jpg   # use the real cover file instead
+  python3 tools/make-images.py                          # sources in src/assets/images/source/
+  python3 tools/make-images.py cover.jpg [portrait.jpg]  # other source files
 
 Needs Google Chrome (headless) and Pillow. Run `npm run build` afterwards.
 """
@@ -22,32 +22,28 @@ def shoot(html: pathlib.Path, out: pathlib.Path, w: int, h: int, scale: int = 1)
                    check=True, capture_output=True)
 
 
+def save_set(img: Image.Image, name: str, widths) -> None:
+    w, h = img.size
+    for width in widths:
+        r = img.resize((width, round(h * width / w)), Image.LANCZOS)
+        r.save(IMG / f"{name}-{width}.webp", "WEBP", quality=82, method=6)
+        r.save(IMG / f"{name}-{width}.jpg", "JPEG", quality=84, optimize=True, progressive=True)
+
+
 def main() -> None:
     IMG.mkdir(parents=True, exist_ok=True)
     tmp = pathlib.Path(tempfile.mkdtemp())
-    if len(sys.argv) > 1:
-        cover = Image.open(sys.argv[1]).convert("RGB")
-    else:
-        shoot(ROOT / "tools/cover-mock.html", tmp / "cover.png", 800, 1200, scale=2)
-        cover = Image.open(tmp / "cover.png").convert("RGB")
-    # Normalise to 2:3 at 800x1200.
-    w, h = cover.size
-    target = 2 / 3
-    if abs(w / h - target) > 0.01:
-        if w / h > target:
-            nw = int(h * target); cover = cover.crop(((w - nw) // 2, 0, (w - nw) // 2 + nw, h))
-        else:
-            nh = int(w / target); cover = cover.crop((0, (h - nh) // 2, w, (h - nh) // 2 + nh))
-    # Press download: up to 1600x2400 (never upscaled beyond the source).
     press = STATIC / "press"
     press.mkdir(parents=True, exist_ok=True)
-    big = cover.resize((1600, 2400), Image.LANCZOS) if cover.size[0] >= 1600 else cover
-    big.save(press / "the-autonomous-enterprise-cover.jpg", "JPEG", quality=90, optimize=True, progressive=True)
-    cover = cover.resize((800, 1200), Image.LANCZOS)
-    for width in (400, 800):
-        img = cover.resize((width, width * 3 // 2), Image.LANCZOS)
-        img.save(IMG / f"cover-{width}.webp", "WEBP", quality=82, method=6)
-        img.save(IMG / f"cover-{width}.jpg", "JPEG", quality=84, optimize=True, progressive=True)
+    src = IMG / "source"
+    cover = Image.open(sys.argv[1] if len(sys.argv) > 1 else src / "cover-real-1600x2560.jpg").convert("RGB")
+    portrait = Image.open(sys.argv[2] if len(sys.argv) > 2 else src / "hemanth-portrait.jpg").convert("RGB")
+
+    # Cover keeps its own aspect ratio (5:8 for the real cover).
+    save_set(cover, "cover", (400, 800))
+    cover.save(press / "the-autonomous-enterprise-cover.jpg", "JPEG", quality=90, optimize=True, progressive=True)
+    save_set(portrait, "portrait", (480, 960))
+    portrait.save(press / "hemanth-reganti-headshot.jpg", "JPEG", quality=92, optimize=True, progressive=True)
 
     cover.save(tmp / "cover-og.png")
     og_html = (ROOT / "tools/og-mock.html").read_text().replace("COVER_SRC", (tmp / "cover-og.png").as_uri())

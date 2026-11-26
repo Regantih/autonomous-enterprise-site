@@ -77,21 +77,33 @@ async function readBody(request: Request): Promise<Record<string, unknown> | nul
   return null;
 }
 
-async function sha256Hex(s: string): Promise<string> {
+export async function sha256Hex(s: string): Promise<string> {
   const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
   return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
 /** Returns true if the caller is over the limit; otherwise records this attempt. */
-export async function isRateLimited(db: D1Database, ip: string, salt: string, now = Date.now()): Promise<boolean> {
-  const key = await sha256Hex(`${salt}:${ip}`);
+export interface RateLimitOptions {
+  /** Separate counters per bucket; the default bucket is the site's forms. */
+  bucket?: string;
+  max?: number;
+}
+
+export async function isRateLimited(
+  db: D1Database,
+  ip: string,
+  salt: string,
+  now = Date.now(),
+  { bucket, max = RATE_LIMIT_MAX }: RateLimitOptions = {},
+): Promise<boolean> {
+  const key = await sha256Hex(bucket ? `${salt}:${bucket}:${ip}` : `${salt}:${ip}`);
   const since = now - RATE_LIMIT_WINDOW_MS;
   await db.prepare('DELETE FROM rate_limits WHERE created_at < ?').bind(since).run();
   const row = await db
     .prepare('SELECT COUNT(*) AS n FROM rate_limits WHERE key = ? AND created_at >= ?')
     .bind(key, since)
     .first<{ n: number }>();
-  if ((row?.n ?? 0) >= RATE_LIMIT_MAX) return true;
+  if ((row?.n ?? 0) >= max) return true;
   await db.prepare('INSERT INTO rate_limits (key, created_at) VALUES (?, ?)').bind(key, now).run();
   return false;
 }
@@ -107,18 +119,19 @@ export async function saveRequest(db: D1Database, req: ValidRequest): Promise<st
   return id;
 }
 
-export async function onRequestPost({ request, env }: Ctx): Promise<Response> {
-  const url = new URL(request.url);
+/** Rejects cross-site posts. Requests without an Origin header (same-origin GET-style tools) pass. */
+export function isSameOrigin(request: Request): boolean {
   const origin = request.headers.get('origin');
-  if (origin && origin !== 'null') {
-    let host = '';
-    try {
-      host = new URL(origin).host;
-    } catch {
-      /* invalid origin */
-    }
-    if (host !== url.host) return fail(request, 403, 'Requests must come from this site.');
+  if (!origin || origin === 'null') return true;
+  try {
+    return new URL(origin).host === new URL(request.url).host;
+  } catch {
+    return false;
   }
+}
+
+export async function onRequestPost({ request, env }: Ctx): Promise<Response> {
+  if (!isSameOrigin(request)) return fail(request, 403, 'Requests must come from this site.');
 
   const declared = Number(request.headers.get('content-length') ?? '0');
   if (declared > MAX_BODY_BYTES) return fail(request, 413, 'Your message is too long.');

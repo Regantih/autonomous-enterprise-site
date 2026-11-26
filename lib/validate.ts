@@ -1,4 +1,7 @@
-export const REQUEST_TYPES = ['speaking', 'consultation', 'media'] as const;
+/** Types accepted by the site's forms at /api/request. */
+export const FORM_TYPES = ['speaking', 'consultation', 'media'] as const;
+/** All types stored in D1. 'conversation' leads come only from the guide at /api/guide. */
+export const REQUEST_TYPES = [...FORM_TYPES, 'conversation'] as const;
 export type RequestType = (typeof REQUEST_TYPES)[number];
 
 export interface ValidRequest {
@@ -86,7 +89,7 @@ export function isHoneypotFilled(input: Input): boolean {
 export function validateRequest(input: Input, today: Date = new Date()): ValidationResult {
   const c = new Checker(input);
   const type = text(input, 'type');
-  if (!(REQUEST_TYPES as readonly string[]).includes(type)) {
+  if (!(FORM_TYPES as readonly string[]).includes(type)) {
     return { ok: false, errors: { type: 'Unknown request type.' } };
   }
 
@@ -144,4 +147,56 @@ export function validateRequest(input: Input, today: Date = new Date()): Validat
     ok: true,
     value: { type: type as RequestType, name, email: email.toLowerCase(), organization, role: role || null, details },
   };
+}
+
+export const GUIDE_ROLES = [
+  { id: 'ceo-board', label: 'CEO/board' },
+  { id: 'cfo-finance', label: 'CFO/finance' },
+  { id: 'cio-technology', label: 'CIO/technology' },
+  { id: 'operations', label: 'Operations/supply chain' },
+  { id: 'risk-audit', label: 'Risk/audit' },
+  { id: 'investor', label: 'Investor' },
+  { id: 'curious', label: 'Just curious' },
+] as const;
+
+export const GUIDE_MATURITY = [
+  { id: 'l0-l1', label: 'L0–L1 exploring' },
+  { id: 'l2', label: 'L2 pilots with approval' },
+  { id: 'l3-plus', label: 'L3+ acting within limits' },
+  { id: 'not-sure', label: 'Not sure' },
+] as const;
+
+export type GuideRoleId = (typeof GUIDE_ROLES)[number]['id'];
+export type GuideMaturityId = (typeof GUIDE_MATURITY)[number]['id'];
+
+export const roleLabel = (id: string): string => GUIDE_ROLES.find((r) => r.id === id)?.label ?? '';
+export const maturityLabel = (id: string): string => GUIDE_MATURITY.find((m) => m.id === id)?.label ?? '';
+
+export interface ConversationLead {
+  name: string;
+  email: string;
+  organization: string;
+  role: string;
+  maturity: GuideMaturityId | '';
+  goal: string;
+  /** Visitor agreed to share a summary of the chat with Hemanth. */
+  consent: boolean;
+}
+
+export type LeadResult = { ok: true; value: ConversationLead } | { ok: false; errors: Record<string, string> };
+
+/** Validates the inline "Talk with Hemanth" form inside the guide. */
+export function validateConversationLead(input: Input): LeadResult {
+  const c = new Checker(input);
+  const name = c.str('name', 'Name', { required: true, max: 120, min: 2 });
+  const email = c.str('email', 'Work email', { required: true, max: 254 });
+  if (email && !c.errors.email && !EMAIL_RE.test(email)) c.errors.email = 'Please enter a valid email address.';
+  const organization = c.str('organization', 'Organization', { required: true, max: 160 });
+  const role = c.str('role', 'Role', { max: 120 });
+  const maturity = c.choice('maturity', 'where your agents are today', GUIDE_MATURITY.map((m) => m.id), false);
+  const goal = c.str('goal', 'Goal', { required: true, max: 200, min: 3 });
+  const raw = input.consent;
+  const consent = raw === true || raw === 'true' || raw === 'on' || raw === '1';
+  if (Object.keys(c.errors).length) return { ok: false, errors: c.errors };
+  return { ok: true, value: { name, email: email.toLowerCase(), organization, role, maturity, goal, consent } };
 }

@@ -1,9 +1,10 @@
--- Speaking, advisory ('consultation') and media requests submitted from the site.
+-- Speaking, advisory ('consultation') and media requests submitted from the site, plus
+-- 'conversation' leads from the Talk to the Book guide (details: {role, maturity, goal, summary}).
 -- For media requests, `organization` holds the outlet.
 CREATE TABLE IF NOT EXISTS requests (
   id           TEXT PRIMARY KEY,
   created_at   TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
-  type         TEXT NOT NULL CHECK (type IN ('speaking', 'consultation', 'media')),
+  type         TEXT NOT NULL CHECK (type IN ('speaking', 'consultation', 'media', 'conversation')),
   name         TEXT NOT NULL,
   email        TEXT NOT NULL,
   organization TEXT NOT NULL,

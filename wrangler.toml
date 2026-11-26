@@ -10,3 +10,6 @@ database_id = "c44d5f0d-174a-4f3a-8e54-4ae9a3989eb6"
 
 
 
+
+[ai]
+binding = "AI"
