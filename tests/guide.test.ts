@@ -177,7 +177,7 @@ describe('POST /api/guide (agent loop)', () => {
     const { res, body } = await call(chat([{ role: 'user', content: 'How should we trust a supplier\u2019s agent?' }]), { origin: 'https://example.pages.dev' });
     expect(res.status).toBe(200);
     expect(body).toMatchObject({ ok: true, cites: ['Ch 23'], steps: 2, handoff: null });
-    expect((body.trace as { label: string }[]).map((t) => t.label)).toEqual([expect.stringMatching(/^Searched the book: .*Ch 23/), 'Suggested: Internal vs external agents page']);
+    expect((body.trace as { label: string }[]).map((t) => t.label)).toEqual([expect.stringMatching(/^Searched the book: /), expect.stringMatching(/^Searched the book: .*Ch 23/), 'Suggested: Internal vs external agents page']);
     expect(body.pages).toEqual([{ id: 'trust', href: '/blueprints/organization/#trust', title: 'Internal vs external agents', reason: 'The trust tiers and welcome flow.' }]);
     expect((body.calls as unknown[]).length).toBe(2);
     expect(ai.run.mock.calls.map((c) => c[0])).toEqual([PRIMARY_MODEL, PRIMARY_MODEL]);
@@ -213,12 +213,13 @@ describe('POST /api/guide (agent loop)', () => {
     expect(body.reply).toBeUndefined();
   });
 
-  it('sends an ungrounded first-step answer back to search the book before it can answer', async () => {
-    ai.run.mockReset().mockResolvedValueOnce(ANSWER).mockResolvedValueOnce(SEARCH).mockResolvedValueOnce(ANSWER);
+  it('searches the book in code on the question before the first model call', async () => {
+    ai.run.mockReset().mockResolvedValueOnce(ANSWER);
     const { body } = await call(chat([{ role: 'user', content: 'How do we trust outside agents?' }]));
-    expect(body).toMatchObject({ ok: true, steps: 3, cites: ['Ch 23'] });
-    expect((ai.run.mock.calls[1][1] as { messages: { content: string }[] }).messages.at(-1)!.content).toContain('Call search_book first');
+    expect(body).toMatchObject({ ok: true, steps: 1 });
+    expect(ai.run).toHaveBeenCalledTimes(1);
     expect((body.trace as { tool: string }[])[0].tool).toBe('search_book');
+    expect((ai.run.mock.calls[0][1] as { messages: { content: string }[] }).messages.at(-1)!.content).toContain('code ran search_book');
   });
 
   it('sends a one-line answer back once for a full one', async () => {
@@ -233,21 +234,24 @@ describe('POST /api/guide (agent loop)', () => {
     expect((await call(chat([{ role: 'user', content: 'Again?' }]))).body).toMatchObject({ ok: true, reply: 'Apply the B2A rules.' });
   });
 
-  it('sends a "not in the book" answer back to search when no tool ran', async () => {
+  it('sends a "not in the book" answer back when the search found passages', async () => {
     const DODGE = step({ answer: 'The book does not cover that.', cites: [], not_covered: 'The book does not cover this.' });
-    ai.run.mockReset().mockResolvedValueOnce(DODGE).mockResolvedValueOnce(SEARCH).mockResolvedValueOnce(ANSWER);
-    const { body } = await call(chat([{ role: 'user', content: 'Where do I start as a CEO?' }]));
-    expect(body).toMatchObject({ ok: true, steps: 3, cites: ['Ch 23'] });
-    expect((ai.run.mock.calls[1][1] as { messages: { content: string }[] }).messages.at(-1)!.content).toContain('Call search_book first');
+    ai.run.mockReset().mockResolvedValueOnce(DODGE).mockResolvedValueOnce(ANSWER);
+    const { body } = await call(chat([{ role: 'user', content: 'How do we trust outside agents and external agents?' }]));
+    expect(body).toMatchObject({ ok: true, steps: 2, not_covered: '' });
+    expect((ai.run.mock.calls[1][1] as { messages: { content: string }[] }).messages.at(-1)!.content).toContain('The answer is too short');
+    // An off-topic decline after a search that matched nothing stands.
+    ai.run.mockReset().mockResolvedValueOnce(DODGE);
+    expect((await call(chat([{ role: 'user', content: 'zzqx wombat sonnet' }]))).body).toMatchObject({ ok: true, not_covered: 'The book does not cover this.' });
   });
 
-  it('routes a sample-data question to ask_graph and nudges once if the model skipped it', async () => {
-    ai.run.mockReset().mockResolvedValueOnce(SEARCH).mockResolvedValueOnce(ANSWER)
-      .mockResolvedValueOnce(step({ tools: [{ name: 'ask_graph', args: { question: 'riskiest supplier' } }] })).mockResolvedValueOnce(ANSWER);
+  it('routes a sample-data question to ask_graph in code before the first model call', async () => {
+    ai.run.mockReset().mockResolvedValueOnce(ANSWER);
     const { body } = await call(chat([{ role: 'user', content: 'Which sample supplier is riskiest?' }]));
-    expect((ai.run.mock.calls[0][1] as { messages: { content: string }[] }).messages[0].content).toContain('Call ask_graph first');
-    expect((ai.run.mock.calls[2][1] as { messages: { content: string }[] }).messages.at(-1)!.content).toContain('Call ask_graph');
-    expect((body.trace as { tool: string }[]).map((t) => t.tool)).toContain('ask_graph');
+    const first = ai.run.mock.calls[0][1] as { messages: { content: string }[] };
+    expect(first.messages[0].content).toContain('ask_graph subgraph');
+    expect(first.messages.at(-1)!.content).toContain('code ran ask_graph');
+    expect((body.trace as { tool: string }[])[0].tool).toBe('ask_graph');
     expect(body.ok).toBe(true);
   });
 
