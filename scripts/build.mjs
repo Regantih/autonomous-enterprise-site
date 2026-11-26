@@ -138,12 +138,12 @@ function coverPicture({ priority }) {
       </picture>`;
 }
 
-const PORTRAIT_ALT = 'Hemanth Reganti, author of The Autonomous Enterprise, in a navy suit and red tie';
+const PORTRAIT_ALT = 'Hemanth Reganti, author of The Autonomous Enterprise, in a blue suit, speaking at a podium';
 
 function portraitPicture(sizes) {
   return `<picture>
         <source type="image/webp" srcset="${assetUrl('images/portrait-480.webp')} 480w, ${assetUrl('images/portrait-960.webp')} 960w" sizes="${sizes}">
-        <img class="portrait-img" src="${assetUrl('images/portrait-960.jpg')}" srcset="${assetUrl('images/portrait-480.jpg')} 480w, ${assetUrl('images/portrait-960.jpg')} 960w" sizes="${sizes}" width="960" height="1242" alt="${PORTRAIT_ALT}" loading="lazy" decoding="async">
+        <img class="portrait-img" src="${assetUrl('images/portrait-960.jpg')}" srcset="${assetUrl('images/portrait-480.jpg')} 480w, ${assetUrl('images/portrait-960.jpg')} 960w" sizes="${sizes}" width="960" height="1200" alt="${PORTRAIT_ALT}" loading="lazy" decoding="async">
       </picture>`;
 }
 
@@ -157,7 +157,7 @@ function jsonLd() {
     description:
       'Enterprise finance and solution architect and author. Co-author of "AI Powered Decision Making" (Apress, 2026).',
     url: `${SITE_URL}/about/`,
-    image: { '@type': 'ImageObject', url: `${SITE_URL}/assets/images/portrait-960.jpg`, width: 960, height: 1242, caption: 'Hemanth Reganti' },
+    image: { '@type': 'ImageObject', url: `${SITE_URL}/assets/images/portrait-960.jpg`, width: 960, height: 1200, caption: 'Hemanth Reganti' },
     sameAs: [LINKEDIN],
     alumniOf: [
       { '@type': 'EducationalOrganization', name: 'MIT Sloan School of Management' },
