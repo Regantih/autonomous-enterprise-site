@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reference Architecture for Agent-Operated Work | Human-Led Enterprise</title>
+<meta name="description" content="An interactive layered reference architecture: channels, human command, orchestration, agents, the model portfolio, the ten-part harness, tools, data and assurance.">
+<meta name="author" content="Hemanth Reganti">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://humanledenterprise.com/architecture/">
+<meta name="theme-color" content="#141414">
+<meta name="color-scheme" content="light">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Human-Led Enterprise">
+<meta property="og:title" content="Reference Architecture for Agent-Operated Work | Human-Led Enterprise">
+<meta property="og:description" content="An interactive layered reference architecture: channels, human command, orchestration, agents, the model portfolio, the ten-part harness, tools, data and assurance.">
+<meta property="og:url" content="https://humanledenterprise.com/architecture/">
+<meta property="og:image" content="https://humanledenterprise.com/assets/images/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Autonomous Enterprise by Hemanth Reganti: book cover on a dark background">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Reference Architecture for Agent-Operated Work | Human-Led Enterprise">
+<meta name="twitter:description" content="An interactive layered reference architecture: channels, human command, orchestration, agents, the model portfolio, the ten-part harness, tools, data and assurance.">
+<meta name="twitter:image" content="https://humanledenterprise.com/assets/images/og-image.jpg">
+<meta name="twitter:image:alt" content="The Autonomous Enterprise by Hemanth Reganti: book cover on a dark background">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preload" href="/assets/fonts/oswald-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
+<script src="/assets/data/controls.js?v=1f7fc4dacc" defer></script>
+<script src="/assets/data/layers.js?v=7c10827ab4" defer></script>
+<script src="/assets/data/workflows.js?v=252848c49c" defer></script>
+<script src="/assets/data/architecture.js?v=9bb81a9cf9" defer></script>
+<script src="/assets/blueprints.js?v=131319b61e" defer></script>
+<link rel="stylesheet" href="/assets/styles.css?v=34a02cac07">
+<script src="/assets/site.js?v=34a02cac07" defer></script>
+<script src="/assets/guide.js?v=34a02cac07" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="3" fill="#F2622E"/><path fill="#141414" d="M5 23h3v4H5zM9.5 20h3v7h-3zM14 17h3v10h-3zM18.5 13h3v14h-3zM23 9h3v18h-3z"/></svg><span class="brand-text"><span class="brand-name">Human-Led Enterprise</span> <span class="brand-sub">Hemanth Reganti</span></span></a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/book/">Book</a></li>
+        <li><a href="/frameworks/">Frameworks</a></li>
+        <li><a href="/blueprints/" aria-current="page">Blueprints</a></li>
+        <li><a href="/ideas/">Ideas</a></li>
+        <li><a href="/speaking/">Speaking</a></li>
+        <li><a href="/advisory/">Advisory</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn-primary header-cta" href="/contact/#advisory">Talk to the author</a>
+  </div>
+</header>
+<main id="main" tabindex="-1">
+<section class="page-head bp-head" aria-labelledby="page-title">
+  <div class="container">
+    <p class="eyebrow">Blueprints &middot; Architecture</p>
+    <h1 id="page-title">Reference architecture</h1>
+    <p class="lead">Nine layers make an agent-operated enterprise. The model is one layer. The harness, not the model, sets the autonomy ceiling.</p>
+  </div>
+</section>
+<nav class="bp-subnav" aria-label="Blueprints">
+  <div class="container">
+    <a class="bp-subnav-home" href="/blueprints/">Blueprints</a>
+    <ul>
+      <li><a href="/architecture/" aria-current="page">Architecture</a></li>
+      <li><a href="/workflows/">Workflows</a></li>
+      <li><a href="/controls/">Controls</a></li>
+      <li><a href="/designer/">Designer</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="section bp-section" id="diagram" aria-labelledby="diagram-title">
+  <div class="container">
+    <h2 id="diagram-title" class="h-sm">The layered architecture</h2>
+    <p>Click any component to see what it does, when to use it, its model family, its controls and its main failure mode. Pick a pattern to watch a request flow through it.</p>
+    <div class="bp-ix" hidden><div data-bp="architecture"></div></div>
+    <noscript><p class="fw-note">Turn on JavaScript for the interactive diagram. The layers are listed below.</p></noscript>
+  </div>
+</section>
+
+<section class="section section-paper-2 bp-section" id="chooser" aria-labelledby="chooser-title">
+  <div class="container">
+    <p class="eyebrow">Model chooser</p>
+    <h2 id="chooser-title" class="h-sm">Pick the model family for the task</h2>
+    <p>Use the simplest engine that works: rules before models, workflows before agents. Describe the task to see which families fit, which evals to run and which controls become mandatory.</p>
+    <div class="bp-ix" hidden><div data-bp="chooser"></div></div>
+    <h3>Model families compared</h3>
+    <div class="fw-table-wrap"><table class="fw-table bp-models"><thead><tr><th scope="col">Model family</th><th scope="col">Good at</th><th scope="col">Weak at</th><th scope="col">Evals you need</th><th scope="col">Typical ceiling</th></tr></thead><tbody>
+<tr><th scope="row">Frontier large language models (GPT-class)</th><td>Language, drafting, explanation, flexible reasoning</td><td>Arithmetic, exact recall, hard limits</td><td>Task accuracy, groundedness, injection, refusal</td><td>L3 in a strong harness</td></tr>
+<tr><th scope="row">Small and open models</th><td>Narrow classification and extraction at low cost</td><td>Broad or novel tasks</td><td>Accuracy per class, robustness to new inputs</td><td>L3 to L4 for narrow tasks</td></tr>
+<tr><th scope="row">Reasoning models</th><td>Multi-step plans and root cause</td><td>Latency and cost</td><td>Plan correctness, step validity, loop rate</td><td>L2 to L3</td></tr>
+<tr><th scope="row">Multimodal and vision</th><td>Documents, images, inspection</td><td>Low-quality scans, rare layouts</td><td>Field accuracy, layout coverage</td><td>L3 with schema checks</td></tr>
+<tr><th scope="row">Speech (speech-to-text, text-to-speech)</th><td>Voice in and out</td><td>Noise, accents, numbers</td><td>Word error rate, read-back accuracy</td><td>L3 with read-back</td></tr>
+<tr><th scope="row">Embeddings and retrieval (RAG)</th><td>Grounded answers from documents</td><td>Stale or missing documents</td><td>Retrieval recall, citation accuracy, access leaks</td><td>L3 with citations</td></tr>
+<tr><th scope="row">Knowledge graphs and graph machine learning</th><td>Entities, relationships, explainable links</td><td>Unstructured judgment</td><td>Entity match precision, link coverage</td><td>L3 for checks</td></tr>
+<tr><th scope="row">Classical ML and forecasting</th><td>Numbers, time series, scores</td><td>Language, regime change</td><td>Error by segment, calibration, drift</td><td>L3 to L4 with drift monitoring</td></tr>
+<tr><th scope="row">Optimization solvers</th><td>Best plan under constraints</td><td>Unclear goals</td><td>Constraint satisfaction, cost gap, scenario tests</td><td>L3 to L4 for plans</td></tr>
+<tr><th scope="row">Reinforcement learning (incl. human feedback, bandits)</th><td>Sequential decisions with feedback</td><td>Safe exploration, reward design</td><td>Simulation return, unsafe-action rate, shadow agreement</td><td>L2 to L3 after simulation</td></tr>
+<tr><th scope="row">Rules engines and RPA</th><td>Exact, explainable, repeatable logic</td><td>Ambiguity and change</td><td>Rule coverage, regression tests</td><td>L4 for deterministic steps</td></tr>
+<tr><th scope="row">Simulation and digital twins</th><td>Safe testing of policies and plans</td><td>Gap to reality</td><td>Sim-to-real agreement</td><td>Gates promotion; does not act</td></tr>
+<tr><th scope="row">Physical AI (robot foundation models, vision-language-action policies)</th><td>Perception and motion in mapped cells</td><td>Open, crowded spaces</td><td>Task success, safety stops, near misses</td><td>Inside a safety envelope</td></tr>
+</tbody></table></div>
+  </div>
+</section>
+
+<section class="section bp-section" id="patterns" aria-labelledby="patterns-title">
+  <div class="container">
+    <p class="eyebrow">Eight patterns</p>
+    <h2 id="patterns-title" class="h-sm">Architecture variations</h2>
+    <ol class="bp-var-static"><li><b>Assistant (L1).</b> A person asks, a GPT-class model drafts, the person acts. <span class="muted">Chat &rarr; Model gateway &rarr; Embeddings and retrieval (RAG) &rarr; Frontier large language models (GPT-class) &rarr; Decision trace &rarr; Accountable owner &rarr; Systems of record</span></li><li><b>Single agent with tools (L2 to L3).</b> One agent plans, calls governed tools and proposes; rules commit. <span class="muted">Email &rarr; Context and memory &rarr; Finance agents &rarr; Frontier large language models (GPT-class) &rarr; Tool gateway &rarr; Policy and limits &rarr; Verification and approval &rarr; API gateway &rarr; Decision trace</span></li><li><b>Supervisor and specialists (L3).</b> A supervisor agent splits the goal; specialists work under cross-agent contracts. <span class="muted">Web &rarr; Planner and supervisor agent &rarr; Cross-agent contracts &rarr; Supply chain agents &rarr; Finance agents &rarr; Verification and approval &rarr; Workflow engine &rarr; Approval inbox and decision cards &rarr; Decision trace store</span></li><li><b>Event-driven IoT loop (L2 to L3).</b> Sensor anomaly to work order, with a technician approving. <span class="muted">IoT and edge sensors &rarr; IoT time series &rarr; Data quality gates &rarr; Classical ML and forecasting &rarr; Event bus &rarr; Maintenance agents &rarr; Policy and limits &rarr; Approval inbox and decision cards &rarr; API gateway</span></li><li><b>Voice front door (L3).</b> Speech in, identity check, agent, speech out, and a warm handoff. <span class="muted">Voice agents &rarr; Speech (speech-to-text, text-to-speech) &rarr; Identity and delegation &rarr; Service agents &rarr; Embeddings and retrieval (RAG) &rarr; Policy and limits &rarr; Speech (speech-to-text, text-to-speech) &rarr; Escalation</span></li><li><b>Physical AI cell (L3 in envelope).</b> A robot policy trained with reinforcement learning in a digital twin, deployed inside a safety envelope. <span class="muted">Simulation and digital twins &rarr; Reinforcement learning (incl. human feedback, bandits) &rarr; Offline evals &rarr; Evaluation and kill switch &rarr; Physical AI (robot foundation models, vision-language-action policies) &rarr; Machine control interfaces &rarr; Robots and machines &rarr; Kill switch</span></li><li><b>Optimizer and LLM (L3).</b> A solver decides the plan; a GPT-class model explains it and handles exceptions. <span class="muted">Event streams &rarr; Classical ML and forecasting &rarr; Optimization solvers &rarr; Frontier large language models (GPT-class) &rarr; Policy and limits &rarr; Approval inbox and decision cards &rarr; API gateway</span></li><li><b>Graph-grounded agent (L2 to L3).</b> A knowledge graph resolves entities and links before the agent acts. <span class="muted">Email &rarr; Finance agents &rarr; Knowledge graphs and graph machine learning &rarr; Knowledge graph &rarr; Reasoning models &rarr; Policy and limits &rarr; Escalation &rarr; Decision trace</span></li></ol>
+  </div>
+</section>
+
+<section class="section section-paper-2 bp-section" id="layers" aria-labelledby="layers-title">
+  <div class="container">
+    <p class="eyebrow">In words</p>
+    <h2 id="layers-title" class="h-sm">The layers and their components</h2>
+    <section class="ar-static-layer" aria-labelledby="arl-ch"><h3 id="arl-ch">Channels and signals</h3><ul class="ar-static-list">
+  <li id="c-web"><b>Web.</b> Forms and portals start requests. <span class="muted">Use for: Structured requests with known fields. Not for: Free text that needs a conversation.</span> <a class="cid" href="/controls/#PCS-01">PCS-01</a> <a class="cid" href="/controls/#PRV-04">PRV-04</a></li>
+  <li id="c-chat"><b>Chat.</b> People ask in natural language. <span class="muted">Use for: Questions, status and simple changes. Not for: Decisions that need a signature.</span> <a class="cid" href="/controls/#PRV-04">PRV-04</a> <a class="cid" href="/controls/#PCS-01">PCS-01</a> <a class="cid" href="/controls/#PCS-05">PCS-05</a></li>
+  <li id="c-email"><b>Email.</b> Customers and suppliers send requests and documents. <span class="muted">Use for: High-volume inbound requests. Not for: Instructions to the agent; email is data.</span> <a class="cid" href="/controls/#PCS-01">PCS-01</a> <a class="cid" href="/controls/#PRV-01">PRV-01</a></li>
+  <li id="c-voice"><b>Voice agents.</b> Callers speak with an agent that listens and answers. <span class="muted">Use for: Common requests with clear policy. Not for: Distressed callers or disputes; hand off fast.</span> <a class="cid" href="/controls/#PRV-04">PRV-04</a> <a class="cid" href="/controls/#IAM-05">IAM-05</a> <a class="cid" href="/controls/#HO-03">HO-03</a></li>
+  <li id="c-mobile"><b>Mobile.</b> Field staff and customers use phone apps. <span class="muted">Use for: Approvals on the move and field capture. Not for: Long reviews of complex evidence.</span> <a class="cid" href="/controls/#HO-01">HO-01</a> <a class="cid" href="/controls/#IAM-02">IAM-02</a></li>
+  <li id="c-iot"><b>IoT and edge sensors.</b> Sensors stream readings from assets and sites. <span class="muted">Use for: Condition monitoring and early warning. Not for: Direct control of machines.</span> <a class="cid" href="/controls/#OT-01">OT-01</a> <a class="cid" href="/controls/#OT-02">OT-02</a> <a class="cid" href="/controls/#OT-04">OT-04</a></li>
+  <li id="c-robots"><b>Robots and machines.</b> Machines act in the physical world. <span class="muted">Use for: Repetitive tasks in mapped spaces. Not for: Unmapped spaces shared with people.</span> <a class="cid" href="/controls/#PHY-01">PHY-01</a> <a class="cid" href="/controls/#PHY-02">PHY-02</a> <a class="cid" href="/controls/#PHY-03">PHY-03</a></li>
+</ul></section>
+<section class="ar-static-layer" aria-labelledby="arl-hum"><h3 id="arl-hum">Human command</h3><ul class="ar-static-list">
+  <li id="c-charter"><b>Charter.</b> Leaders state intent, limits and the do-not-automate list. <span class="muted">Use for: Before any agent goes live. Not for: As a one-time document; review it.</span> <a class="cid" href="/controls/#TAL-05">TAL-05</a> <a class="cid" href="/controls/#HO-02">HO-02</a></li>
+  <li id="c-inbox"><b>Approval inbox and decision cards.</b> People decide on cards with evidence, rule and options. <span class="muted">Use for: L2 steps and over-limit cases. Not for: Low-value, reversible items; let them run.</span> <a class="cid" href="/controls/#HO-01">HO-01</a> <a class="cid" href="/controls/#HO-05">HO-05</a> <a class="cid" href="/controls/#SOD-01">SOD-01</a></li>
+  <li id="c-escalation"><b>Escalation.</b> Hard cases reach the right person with full context. <span class="muted">Use for: Low confidence, disputes and outages. Not for: As the default path for all work.</span> <a class="cid" href="/controls/#HO-03">HO-03</a> <a class="cid" href="/controls/#TAL-02">TAL-02</a></li>
+  <li id="c-kill"><b>Kill switch.</b> Owners stop an agent, a scope or the fleet. <span class="muted">Use for: Always. Test it every quarter. Not for: Never skip the drill.</span> <a class="cid" href="/controls/#RES-01">RES-01</a> <a class="cid" href="/controls/#RES-04">RES-04</a> <a class="cid" href="/controls/#PHY-03">PHY-03</a></li>
+  <li id="c-owner"><b>Accountable owner.</b> Each agent has one named person who answers for it. <span class="muted">Use for: Every agent, every version. Not for: Shared or committee ownership.</span> <a class="cid" href="/controls/#HO-02">HO-02</a> <a class="cid" href="/controls/#IAM-02">IAM-02</a></li>
+</ul></section>
+<section class="ar-static-layer" aria-labelledby="arl-orc"><h3 id="arl-orc">Orchestration</h3><ul class="ar-static-list">
+  <li id="c-planner"><b>Planner and supervisor agent.</b> Splits a goal into tasks and assigns them. <span class="muted">Use for: Multi-step goals across domains. Not for: Simple flows; a workflow engine is safer.</span> <a class="cid" href="/controls/#RES-03">RES-03</a> <a class="cid" href="/controls/#CST-01">CST-01</a> <a class="cid" href="/controls/#TAL-03">TAL-03</a></li>
+  <li id="c-wfengine"><b>Workflow engine.</b> Runs fixed steps in a fixed order. <span class="muted">Use for: Known processes with clear rules. Not for: Open-ended work.</span> <a class="cid" href="/controls/#TAL-02">TAL-02</a> <a class="cid" href="/controls/#TRC-01">TRC-01</a></li>
+  <li id="c-eventbus"><b>Event bus.</b> Moves events between systems and agents in real time. <span class="muted">Use for: Signals that need fast reaction. Not for: Batch data with no urgency.</span> <a class="cid" href="/controls/#DQ-02">DQ-02</a> <a class="cid" href="/controls/#TRC-02">TRC-02</a></li>
+  <li id="c-contracts"><b>Cross-agent contracts.</b> Define who decides, what evidence returns and what happens on failure. <span class="muted">Use for: Any agent-to-agent handoff. Not for: Implicit handoffs by shared memory.</span> <a class="cid" href="/controls/#TAL-03">TAL-03</a> <a class="cid" href="/controls/#HO-02">HO-02</a></li>
+  <li id="c-queues"><b>Queues.</b> Hold work, set priority and absorb peaks. <span class="muted">Use for: Volume spikes and retries. Not for: Hiding work that nobody owns.</span> <a class="cid" href="/controls/#TAL-04">TAL-04</a> <a class="cid" href="/controls/#RES-03">RES-03</a></li>
+</ul></section>
+<section class="ar-static-layer" aria-labelledby="arl-agt"><h3 id="arl-agt">Agents</h3><ul class="ar-static-list">
+  <li id="c-ag-fin"><b>Finance agents.</b> Disputes, invoice exceptions, reconciliations, close. <span class="muted">Use for: High-volume, rule-rich work. Not for: Payment release and bank changes.</span> <a class="cid" href="/controls/#TAL-01">TAL-01</a> <a class="cid" href="/controls/#TAL-05">TAL-05</a> <a class="cid" href="/controls/#DQ-04">DQ-04</a></li>
+  <li id="c-ag-sc"><b>Supply chain agents.</b> Planning, purchasing and supplier follow-up. <span class="muted">Use for: Frequent, bounded decisions. Not for: Large commitments to third parties.</span> <a class="cid" href="/controls/#TAL-01">TAL-01</a> <a class="cid" href="/controls/#CST-02">CST-02</a></li>
+  <li id="c-ag-svc"><b>Service agents.</b> Answer customers and change orders. <span class="muted">Use for: Common requests with clear policy. Not for: Complaints that need empathy and judgment.</span> <a class="cid" href="/controls/#HO-03">HO-03</a> <a class="cid" href="/controls/#PCS-05">PCS-05</a></li>
+  <li id="c-ag-hr"><b>HR agents.</b> Onboarding tasks, policy answers, scheduling. <span class="muted">Use for: Admin work around people. Not for: Decisions about hiring, pay or dismissal.</span> <a class="cid" href="/controls/#TAL-05">TAL-05</a> <a class="cid" href="/controls/#PRV-01">PRV-01</a> <a class="cid" href="/controls/#HO-01">HO-01</a></li>
+  <li id="c-ag-mnt"><b>Maintenance agents.</b> Turn signals into work orders and plans. <span class="muted">Use for: Condition-based maintenance. Not for: Direct machine control.</span> <a class="cid" href="/controls/#OT-03">OT-03</a> <a class="cid" href="/controls/#HO-01">HO-01</a> <a class="cid" href="/controls/#DQ-03">DQ-03</a></li>
+</ul></section>
+<section class="ar-static-layer" aria-labelledby="arl-int"><h3 id="arl-int">Intelligence: model portfolio</h3><ul class="ar-static-list">
+  <li id="c-llm"><b>Frontier large language models (GPT-class).</b> Read, write and reason over language. <span class="muted">Use for: Unstructured text, drafting, explanation. Not for: Arithmetic, postings and hard limits.</span> <a class="cid" href="/controls/#PCS-01">PCS-01</a> <a class="cid" href="/controls/#PCS-02">PCS-02</a> <a class="cid" href="/controls/#MR-04">MR-04</a></li>
+  <li id="c-slm"><b>Small and open models.</b> Cheaper, faster language models for narrow tasks. <span class="muted">Use for: Classification, extraction, routing, edge. Not for: Broad open-ended reasoning.</span> <a class="cid" href="/controls/#MR-01">MR-01</a> <a class="cid" href="/controls/#TPS-01">TPS-01</a></li>
+  <li id="c-reason"><b>Reasoning models.</b> Plan and check multi-step problems. <span class="muted">Use for: Planning, root cause, complex exceptions. Not for: Low-latency or low-cost paths.</span> <a class="cid" href="/controls/#RES-03">RES-03</a> <a class="cid" href="/controls/#CST-01">CST-01</a> <a class="cid" href="/controls/#MR-04">MR-04</a></li>
+  <li id="c-mm"><b>Multimodal and vision.</b> Read documents, images and video. <span class="muted">Use for: Invoices, forms, inspections. Not for: Safety decisions without other checks.</span> <a class="cid" href="/controls/#PCS-02">PCS-02</a> <a class="cid" href="/controls/#DQ-01">DQ-01</a></li>
+  <li id="c-speech"><b>Speech (speech-to-text, text-to-speech).</b> Turn voice into text and text into voice. <span class="muted">Use for: Voice channels and hands-free work. Not for: Noisy settings without confirmation.</span> <a class="cid" href="/controls/#PRV-04">PRV-04</a> <a class="cid" href="/controls/#PRV-02">PRV-02</a></li>
+  <li id="c-rag"><b>Embeddings and retrieval (RAG).</b> Find the right documents and ground answers in them. <span class="muted">Use for: Policy answers and evidence packs. Not for: Facts that live in systems of record; query them.</span> <a class="cid" href="/controls/#PCS-04">PCS-04</a> <a class="cid" href="/controls/#MR-04">MR-04</a> <a class="cid" href="/controls/#DQ-02">DQ-02</a></li>
+  <li id="c-kg"><b>Knowledge graphs and graph machine learning.</b> Resolve entities and relationships. <span class="muted">Use for: Suppliers, fraud rings, asset hierarchies. Not for: Simple lookups.</span> <a class="cid" href="/controls/#DQ-03">DQ-03</a> <a class="cid" href="/controls/#MR-04">MR-04</a></li>
+  <li id="c-ml"><b>Classical ML and forecasting.</b> Predict numbers, classes and time series. <span class="muted">Use for: Demand, risk scores, anomalies. Not for: Language tasks.</span> <a class="cid" href="/controls/#MR-01">MR-01</a> <a class="cid" href="/controls/#MON-02">MON-02</a></li>
+  <li id="c-opt"><b>Optimization solvers.</b> Find the best plan under constraints. <span class="muted">Use for: Scheduling, routing, supply plans. Not for: Fuzzy goals that nobody can state.</span> <a class="cid" href="/controls/#MR-01">MR-01</a> <a class="cid" href="/controls/#TAL-01">TAL-01</a></li>
+  <li id="c-rl"><b>Reinforcement learning (incl. human feedback, bandits).</b> Learn actions from rewards over many trials. <span class="muted">Use for: Sequential decisions with fast feedback. Not for: Live trials where errors are costly.</span> <a class="cid" href="/controls/#MR-05">MR-05</a> <a class="cid" href="/controls/#PHY-04">PHY-04</a> <a class="cid" href="/controls/#MON-03">MON-03</a></li>
+  <li id="c-rules"><b>Rules engines and RPA.</b> Apply fixed logic and repeat screen tasks. <span class="muted">Use for: Postings, limits, stable legacy screens. Not for: Judgment or changing screens.</span> <a class="cid" href="/controls/#TAL-02">TAL-02</a> <a class="cid" href="/controls/#SOD-02">SOD-02</a></li>
+  <li id="c-twin"><b>Simulation and digital twins.</b> Model a plant, warehouse or network in software. <span class="muted">Use for: Training and testing policies safely. Not for: As proof without field validation.</span> <a class="cid" href="/controls/#MR-05">MR-05</a></li>
+  <li id="c-phys"><b>Physical AI (robot foundation models, vision-language-action policies).</b> Perceive and act with robots. <span class="muted">Use for: Picking, inspection, handling in mapped cells. Not for: Open spaces with people and no safety envelope.</span> <a class="cid" href="/controls/#PHY-01">PHY-01</a> <a class="cid" href="/controls/#PHY-04">PHY-04</a> <a class="cid" href="/controls/#OT-03">OT-03</a></li>
+</ul></section>
+<section class="ar-static-layer" aria-labelledby="arl-har"><h3 id="arl-har">Harness: control plane</h3><ul class="ar-static-list">
+  <li id="c-H1"><b>Identity and delegation.</b> One identity per agent, acting for an accountable person. <span class="muted">Use for: Every agent call. Not for: Shared service accounts.</span> <a class="cid" href="/controls/#IAM-01">IAM-01</a> <a class="cid" href="/controls/#IAM-02">IAM-02</a> <a class="cid" href="/controls/#IAM-05">IAM-05</a> <a class="cid" href="/controls/#OT-01">OT-01</a></li>
+  <li id="c-H2"><b>Registry and lifecycle.</b> Only registered, active agent versions run. <span class="muted">Use for: Every release. Not for: Shadow agents outside the registry.</span> <a class="cid" href="/controls/#IAM-04">IAM-04</a> <a class="cid" href="/controls/#MR-03">MR-03</a> <a class="cid" href="/controls/#HO-02">HO-02</a> <a class="cid" href="/controls/#TRC-04">TRC-04</a></li>
+  <li id="c-H3"><b>Policy and limits.</b> Thresholds, segregation of duties and blackout windows, outside the model. <span class="muted">Use for: Every action with value at risk. Not for: Limits in prompts.</span> <a class="cid" href="/controls/#SOD-01">SOD-01</a> <a class="cid" href="/controls/#TAL-01">TAL-01</a> <a class="cid" href="/controls/#TAL-05">TAL-05</a> <a class="cid" href="/controls/#TAL-07">TAL-07</a></li>
+  <li id="c-H4"><b>Tool gateway.</b> Scopes, rate limits, read and write separation. <span class="muted">Use for: Every tool call. Not for: Direct database writes by agents.</span> <a class="cid" href="/controls/#IAM-03">IAM-03</a> <a class="cid" href="/controls/#TAL-03">TAL-03</a> <a class="cid" href="/controls/#TAL-04">TAL-04</a> <a class="cid" href="/controls/#TAL-06">TAL-06</a></li>
+  <li id="c-H5"><b>Model gateway.</b> Routing, fallback, masking and quotas. <span class="muted">Use for: Every model call. Not for: Direct calls to providers.</span> <a class="cid" href="/controls/#PRV-02">PRV-02</a> <a class="cid" href="/controls/#PCS-03">PCS-03</a> <a class="cid" href="/controls/#PCS-05">PCS-05</a> <a class="cid" href="/controls/#RES-02">RES-02</a></li>
+  <li id="c-H6"><b>Context and memory.</b> What may enter context and what memory may keep. <span class="muted">Use for: Every prompt and memory write. Not for: Unfiltered documents in context.</span> <a class="cid" href="/controls/#DQ-02">DQ-02</a> <a class="cid" href="/controls/#DQ-03">DQ-03</a> <a class="cid" href="/controls/#PRV-01">PRV-01</a> <a class="cid" href="/controls/#PCS-01">PCS-01</a></li>
+  <li id="c-H7"><b>Verification and approval.</b> Schema checks, a checker and approval cards. <span class="muted">Use for: Before every commit. Not for: Self-checking by the same agent.</span> <a class="cid" href="/controls/#SOD-03">SOD-03</a> <a class="cid" href="/controls/#DQ-01">DQ-01</a> <a class="cid" href="/controls/#PRV-04">PRV-04</a> <a class="cid" href="/controls/#MR-04">MR-04</a></li>
+  <li id="c-H8"><b>Operating envelope and cost.</b> Deadlines, call budgets, retries and loop guards. <span class="muted">Use for: Every run. Not for: Unlimited retries.</span> <a class="cid" href="/controls/#RES-03">RES-03</a> <a class="cid" href="/controls/#CST-01">CST-01</a> <a class="cid" href="/controls/#CST-02">CST-02</a></li>
+  <li id="c-H9"><b>Decision trace.</b> What was seen, decided and done. <span class="muted">Use for: Every decision. Not for: Logs that miss the evidence.</span> <a class="cid" href="/controls/#DQ-04">DQ-04</a> <a class="cid" href="/controls/#PRV-03">PRV-03</a> <a class="cid" href="/controls/#MON-04">MON-04</a> <a class="cid" href="/controls/#TRC-01">TRC-01</a></li>
+  <li id="c-H10"><b>Evaluation and kill switch.</b> Test sets before release; stop an agent, a scope or the fleet. <span class="muted">Use for: Every release and every quarter. Not for: Release without evals.</span> <a class="cid" href="/controls/#SOD-02">SOD-02</a> <a class="cid" href="/controls/#MR-01">MR-01</a> <a class="cid" href="/controls/#MR-02">MR-02</a> <a class="cid" href="/controls/#MR-05">MR-05</a></li>
+</ul></section>
+<section class="ar-static-layer" aria-labelledby="arl-tool"><h3 id="arl-tool">Tools and integration</h3><ul class="ar-static-list">
+  <li id="c-apigw"><b>API gateway.</b> Exposes released interfaces of core systems. <span class="muted">Use for: Every write to a system of record. Not for: Screen scraping where an interface exists.</span> <a class="cid" href="/controls/#IAM-03">IAM-03</a> <a class="cid" href="/controls/#TAL-06">TAL-06</a></li>
+  <li id="c-toolc"><b>Tool contracts (MCP-style).</b> Typed, scoped descriptions of what a tool does. <span class="muted">Use for: Every tool an agent may call. Not for: Generic tools with broad scopes.</span> <a class="cid" href="/controls/#TAL-03">TAL-03</a> <a class="cid" href="/controls/#IAM-03">IAM-03</a></li>
+  <li id="c-rpa"><b>RPA bots.</b> Repeat screen steps on legacy systems. <span class="muted">Use for: Stable screens with no interface. Not for: Changing screens or judgment.</span> <a class="cid" href="/controls/#SOD-02">SOD-02</a> <a class="cid" href="/controls/#TAL-06">TAL-06</a></li>
+  <li id="c-mci"><b>Machine control interfaces.</b> Request setpoints and tasks behind safety controllers and interlocks. <span class="muted">Use for: Plant and robot tasks. Not for: Bypassing the control system.</span> <a class="cid" href="/controls/#OT-02">OT-02</a> <a class="cid" href="/controls/#OT-03">OT-03</a> <a class="cid" href="/controls/#PHY-01">PHY-01</a></li>
+</ul></section>
+<section class="ar-static-layer" aria-labelledby="arl-dat"><h3 id="arl-dat">Data and context</h3><ul class="ar-static-list">
+  <li id="c-sor"><b>Systems of record.</b> Ledgers, orders, assets, people. <span class="muted">Use for: The source of truth for facts. Not for: As a scratchpad for agents.</span> <a class="cid" href="/controls/#DQ-02">DQ-02</a> <a class="cid" href="/controls/#TAL-06">TAL-06</a></li>
+  <li id="c-dprod"><b>Data products.</b> Curated, owned datasets with contracts. <span class="muted">Use for: Planning, analytics and features. Not for: Ownerless copies.</span> <a class="cid" href="/controls/#DQ-01">DQ-01</a> <a class="cid" href="/controls/#DQ-02">DQ-02</a></li>
+  <li id="c-vec"><b>Vector store.</b> Stores embeddings for retrieval. <span class="muted">Use for: Policy and document search. Not for: Facts that change daily.</span> <a class="cid" href="/controls/#PCS-04">PCS-04</a></li>
+  <li id="c-kgstore"><b>Knowledge graph.</b> Stores entities and relationships. <span class="muted">Use for: Master data and fraud checks. Not for: Transaction data.</span> <a class="cid" href="/controls/#DQ-03">DQ-03</a></li>
+  <li id="c-feat"><b>Feature store.</b> Serves consistent features to models. <span class="muted">Use for: Classical ML in production. Not for: One-off analysis.</span> <a class="cid" href="/controls/#MON-02">MON-02</a> <a class="cid" href="/controls/#DQ-02">DQ-02</a></li>
+  <li id="c-stream"><b>Event streams.</b> Ordered streams of business events. <span class="muted">Use for: Real-time agents. Not for: Data that needs heavy cleaning first.</span> <a class="cid" href="/controls/#DQ-01">DQ-01</a></li>
+  <li id="c-ts"><b>IoT time series.</b> Sensor readings over time. <span class="muted">Use for: Condition monitoring and twins. Not for: Without plausibility checks.</span> <a class="cid" href="/controls/#OT-04">OT-04</a></li>
+  <li id="c-dqg"><b>Data quality gates.</b> Check freshness, completeness and validity. <span class="muted">Use for: Before any agent reads. Not for: After the decision.</span> <a class="cid" href="/controls/#DQ-01">DQ-01</a></li>
+</ul></section>
+<section class="ar-static-layer" aria-labelledby="arl-asr"><h3 id="arl-asr">Assurance</h3><ul class="ar-static-list">
+  <li id="c-offeval"><b>Offline evals.</b> Test sets run before release. <span class="muted">Use for: Every release and model change. Not for: Only once at launch.</span> <a class="cid" href="/controls/#MR-01">MR-01</a> <a class="cid" href="/controls/#TPS-03">TPS-03</a></li>
+  <li id="c-oneval"><b>Online evals.</b> Score live outputs and samples. <span class="muted">Use for: Every production step. Not for: Instead of offline evals.</span> <a class="cid" href="/controls/#MON-01">MON-01</a> <a class="cid" href="/controls/#HO-04">HO-04</a></li>
+  <li id="c-redteam"><b>Red-teaming.</b> Attack the system on purpose. <span class="muted">Use for: Before release and after big changes. Not for: As a one-time event.</span> <a class="cid" href="/controls/#PCS-01">PCS-01</a> <a class="cid" href="/controls/#PCS-03">PCS-03</a></li>
+  <li id="c-drift"><b>Drift and quality monitoring.</b> Detect shifts in data and outputs. <span class="muted">Use for: All models in production. Not for: Without an owner to act.</span> <a class="cid" href="/controls/#MON-02">MON-02</a> <a class="cid" href="/controls/#MON-03">MON-03</a></li>
+  <li id="c-tracestore"><b>Decision trace store.</b> Keeps traces append-only. <span class="muted">Use for: Every decision. Not for: Editable logs.</span> <a class="cid" href="/controls/#TRC-02">TRC-02</a> <a class="cid" href="/controls/#PRV-03">PRV-03</a></li>
+  <li id="c-audit"><b>Audit.</b> Independent review of controls and outcomes. <span class="muted">Use for: Every promotion to L3 and above. Not for: Only after an incident.</span> <a class="cid" href="/controls/#TRC-03">TRC-03</a> <a class="cid" href="/controls/#HO-04">HO-04</a></li>
+</ul></section>
+    <p class="fw-note">Ceiling hints, levels and figures on this page are illustrative. Each company sets its own with internal audit.</p>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="brand" href="/"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="3" fill="#F2622E"/><path fill="#141414" d="M5 23h3v4H5zM9.5 20h3v7h-3zM14 17h3v10h-3zM18.5 13h3v14h-3zM23 9h3v18h-3z"/></svg><span class="brand-text"><span class="brand-name">Human-Led Enterprise</span> <span class="brand-sub">Hemanth Reganti</span></span></a>
+      <p>Author, speaker and advisor on human-led, agent-operated enterprises.</p>
+      <p>&copy; 2026 Hemanth Reganti</p>
+      <p>We use your details only to respond to your request.</p>
+    </div>
+    <div>
+      <ul class="footer-links" aria-label="Site">
+        <li><a href="/book/">Book</a></li>
+        <li><a href="/frameworks/">Frameworks</a></li>
+        <li><a href="/blueprints/">Blueprints</a></li>
+        <li><a href="/ideas/">Ideas</a></li>
+        <li><a href="/speaking/">Speaking</a></li>
+        <li><a href="/advisory/">Advisory</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+      <ul class="footer-links footer-ext" aria-label="Elsewhere">
+        <li><a href="/contact/#press">Press kit</a></li>
+        <li><a href="https://www.amazon.com/dp/B0HS8HG6DP" rel="noopener" target="_blank">Amazon<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+        <li><a href="https://www.linkedin.com/in/hemanth-reganti-147153178/" rel="noopener" target="_blank">LinkedIn<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+<a class="guide-fab" href="/talk/" data-guide-open aria-haspopup="dialog"><span class="guide-fab-mark" aria-hidden="true"></span>Talk to the book</a>
+</body>
+</html>

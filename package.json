@@ -8,7 +8,7 @@
     "build": "node scripts/build.mjs",
     "check:dist": "node scripts/build.mjs && git diff --exit-code -- dist lib/knowledge.generated.ts",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
+    "test": "vitest run --no-file-parallelism",
     "dev": "wrangler pages dev",
     "db:local": "wrangler d1 execute autonomous-enterprise --local --file=./schema.sql",
     "db:remote": "wrangler d1 execute autonomous-enterprise --remote --file=./schema.sql",

@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Controls Library for AI Agents | Human-Led Enterprise</title>
+<meta name="description" content="A filterable library of controls for AI agents, voice, IoT and physical AI, mapped to NIST AI RMF, the EU AI Act, OWASP LLM Top 10, SOX ITGC, ISO/IEC 42001, IEC 62443 and ISO 10218.">
+<meta name="author" content="Hemanth Reganti">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://humanledenterprise.com/controls/">
+<meta name="theme-color" content="#141414">
+<meta name="color-scheme" content="light">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Human-Led Enterprise">
+<meta property="og:title" content="Controls Library for AI Agents | Human-Led Enterprise">
+<meta property="og:description" content="A filterable library of controls for AI agents, voice, IoT and physical AI, mapped to NIST AI RMF, the EU AI Act, OWASP LLM Top 10, SOX ITGC, ISO/IEC 42001, IEC 62443 and ISO 10218.">
+<meta property="og:url" content="https://humanledenterprise.com/controls/">
+<meta property="og:image" content="https://humanledenterprise.com/assets/images/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Autonomous Enterprise by Hemanth Reganti: book cover on a dark background">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Controls Library for AI Agents | Human-Led Enterprise">
+<meta name="twitter:description" content="A filterable library of controls for AI agents, voice, IoT and physical AI, mapped to NIST AI RMF, the EU AI Act, OWASP LLM Top 10, SOX ITGC, ISO/IEC 42001, IEC 62443 and ISO 10218.">
+<meta name="twitter:image" content="https://humanledenterprise.com/assets/images/og-image.jpg">
+<meta name="twitter:image:alt" content="The Autonomous Enterprise by Hemanth Reganti: book cover on a dark background">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preload" href="/assets/fonts/oswald-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
+<script src="/assets/data/controls.js?v=1f7fc4dacc" defer></script>
+<script src="/assets/data/layers.js?v=7c10827ab4" defer></script>
+<script src="/assets/data/workflows.js?v=252848c49c" defer></script>
+<script src="/assets/data/architecture.js?v=9bb81a9cf9" defer></script>
+<script src="/assets/blueprints.js?v=131319b61e" defer></script>
+<link rel="stylesheet" href="/assets/styles.css?v=34a02cac07">
+<script src="/assets/site.js?v=34a02cac07" defer></script>
+<script src="/assets/guide.js?v=34a02cac07" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="3" fill="#F2622E"/><path fill="#141414" d="M5 23h3v4H5zM9.5 20h3v7h-3zM14 17h3v10h-3zM18.5 13h3v14h-3zM23 9h3v18h-3z"/></svg><span class="brand-text"><span class="brand-name">Human-Led Enterprise</span> <span class="brand-sub">Hemanth Reganti</span></span></a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/book/">Book</a></li>
+        <li><a href="/frameworks/">Frameworks</a></li>
+        <li><a href="/blueprints/" aria-current="page">Blueprints</a></li>
+        <li><a href="/ideas/">Ideas</a></li>
+        <li><a href="/speaking/">Speaking</a></li>
+        <li><a href="/advisory/">Advisory</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn-primary header-cta" href="/contact/#advisory">Talk to the author</a>
+  </div>
+</header>
+<main id="main" tabindex="-1">
+<section class="page-head bp-head" aria-labelledby="page-title">
+  <div class="container">
+    <p class="eyebrow">Blueprints &middot; Controls</p>
+    <h1 id="page-title">Controls library</h1>
+    <p class="lead">65 controls for agents, voice, IoT and physical AI. Each one names its purpose, how it works, the evidence an auditor asks for and its public framework mappings.</p>
+  </div>
+</section>
+<nav class="bp-subnav" aria-label="Blueprints">
+  <div class="container">
+    <a class="bp-subnav-home" href="/blueprints/">Blueprints</a>
+    <ul>
+      <li><a href="/architecture/">Architecture</a></li>
+      <li><a href="/workflows/">Workflows</a></li>
+      <li><a href="/controls/" aria-current="page">Controls</a></li>
+      <li><a href="/designer/">Designer</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="section bp-section" id="library" aria-labelledby="library-title">
+  <div class="container">
+    <h2 id="library-title" class="h-sm">Find a control</h2>
+    <div class="bp-ix" hidden><div data-bp="controls"></div></div>
+    <div class="ctl-list" id="ctl-list">
+<article class="ctl" id="IAM-01" data-cat="IAM" data-type="preventive" data-part="H1" data-min="1" data-applies="agents voice iot physical" data-layers="app be">
+  <header><span class="ctl-id">IAM-01</span><h3>Agent identity per agent</h3></header>
+  <p class="ctl-purpose">Give every agent its own identity. Never let an agent use a shared or a human account.</p>
+  <ul class="ctl-tags"><li>Identity and access</li><li class="t-preventive">preventive</li><li>Identity and delegation</li><li>Required from L1</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Issue a workload identity for each agent version. Bind short-lived tokens to that identity.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Identity register. Token issue logs. Review that finds no shared credentials.</dd></div><div><dt>Layers aligned</dt><dd>Application, Technical: Backend</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Govern, Manage</li><li><b>OWASP LLM 2025</b> LLM06 Excessive agency</li><li><b>SOX/COSO ITGC</b> Access</li><li><b>ISO/IEC 42001</b> AI management system</li></ul>
+</article>
+<article class="ctl" id="IAM-02" data-cat="IAM" data-type="preventive" data-part="H1" data-min="2" data-applies="agents voice iot physical" data-layers="app be fe">
+  <header><span class="ctl-id">IAM-02</span><h3>On-behalf-of delegation</h3></header>
+  <p class="ctl-purpose">Each agent acts for a named, accountable person, inside a delegation with a scope and an expiry date.</p>
+  <ul class="ctl-tags"><li>Identity and access</li><li class="t-preventive">preventive</li><li>Identity and delegation</li><li>Required from L2</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The delegation token carries owner, scope and expiry. The gateway rejects calls without it.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Delegation record per agent. Owner sign-off. Expiry report.</dd></div><div><dt>Layers aligned</dt><dd>Application, Technical: Backend, Technical: Frontend</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Govern</li><li><b>SOX/COSO ITGC</b> Access</li><li><b>ISO/IEC 42001</b> AI management system</li></ul>
+</article>
+<article class="ctl" id="IAM-03" data-cat="IAM" data-type="preventive" data-part="H4" data-min="1" data-applies="agents voice iot physical" data-layers="app be fin">
+  <header><span class="ctl-id">IAM-03</span><h3>Least-privilege tool scopes</h3></header>
+  <p class="ctl-purpose">Give each agent only the read and write scopes that its step needs.</p>
+  <ul class="ctl-tags"><li>Identity and access</li><li class="t-preventive">preventive</li><li>Tool gateway</li><li>Required from L1</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The tool contract defines the scopes. Write scopes are separate from read scopes.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Scope matrix per agent. Quarterly access review with sign-off.</dd></div><div><dt>Layers aligned</dt><dd>Application, Technical: Backend, Financial</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li><li><b>OWASP LLM 2025</b> LLM06 Excessive agency</li><li><b>SOX/COSO ITGC</b> Access</li><li><b>ISO/IEC 42001</b> AI management system</li></ul>
+</article>
+<article class="ctl" id="IAM-04" data-cat="IAM" data-type="detective" data-part="H2" data-min="2" data-applies="agents voice iot physical" data-layers="app reg">
+  <header><span class="ctl-id">IAM-04</span><h3>Agent access recertification</h3></header>
+  <p class="ctl-purpose">Review agent permissions on a fixed cycle. Remove the permissions that the agent does not use.</p>
+  <ul class="ctl-tags"><li>Identity and access</li><li class="t-detective">detective</li><li>Registry and lifecycle</li><li>Required from L2</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Each quarter, the owner confirms each scope. Unused scopes expire automatically.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Recertification records. List of removed scopes.</dd></div><div><dt>Layers aligned</dt><dd>Application, Regulatory and statutory</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Govern</li><li><b>SOX/COSO ITGC</b> Access</li></ul>
+</article>
+<article class="ctl" id="IAM-05" data-cat="IAM" data-type="preventive" data-part="H1" data-min="2" data-applies="voice agents" data-layers="reg ops fe">
+  <header><span class="ctl-id">IAM-05</span><h3>Caller identity verification</h3></header>
+  <p class="ctl-purpose">Verify the caller before any account action. Ask for more proof when the request is risky.</p>
+  <ul class="ctl-tags"><li>Identity and access</li><li class="t-preventive">preventive</li><li>Identity and delegation</li><li>Required from L2</li><li>Voice, Agents</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Knowledge and device checks before account access. Step-up checks for payment or address changes.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Verification results per call. Step-up rate. Failed-verification handoffs.</dd></div><div><dt>Layers aligned</dt><dd>Regulatory and statutory, Operational, Technical: Frontend</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li></ul>
+</article>
+<article class="ctl" id="SOD-01" data-cat="SOD" data-type="preventive" data-part="H3" data-min="2" data-applies="agents voice iot physical" data-layers="fin reg fe">
+  <header><span class="ctl-id">SOD-01</span><h3>Approver cannot change limits</h3></header>
+  <p class="ctl-purpose">The person who approves agent actions may not change the limits, instructions or tools of that agent.</p>
+  <ul class="ctl-tags"><li>Delegation and segregation of duties</li><li class="t-preventive">preventive</li><li>Policy and limits</li><li>Required from L2</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The policy engine holds role-conflict rules. A different owner must approve each change request.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Role-conflict report. Change tickets that show a separate approver.</dd></div><div><dt>Layers aligned</dt><dd>Financial, Regulatory and statutory, Technical: Frontend</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Govern</li><li><b>SOX/COSO ITGC</b> SoD, Change management</li><li><b>ISO/IEC 42001</b> AI management system</li></ul>
+</article>
+<article class="ctl" id="SOD-02" data-cat="SOD" data-type="preventive" data-part="H10" data-min="1" data-applies="agents voice iot physical" data-layers="app reg be">
+  <header><span class="ctl-id">SOD-02</span><h3>Maker-checker for agent changes</h3></header>
+  <p class="ctl-purpose">One person cannot both change an agent and release that change.</p>
+  <ul class="ctl-tags"><li>Delegation and segregation of duties</li><li class="t-preventive">preventive</li><li>Evaluation and kill switch</li><li>Required from L1</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The release pipeline needs a second reviewer for prompts, tools, limits and model versions.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Release records with two names. Pipeline rules that block self-approval.</dd></div><div><dt>Layers aligned</dt><dd>Application, Regulatory and statutory, Technical: Backend</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Govern</li><li><b>SOX/COSO ITGC</b> SoD, Change management</li><li><b>ISO/IEC 42001</b> AI management system</li></ul>
+</article>
+<article class="ctl" id="SOD-03" data-cat="SOD" data-type="preventive" data-part="H7" data-min="2" data-applies="agents voice iot physical" data-layers="fin be app">
+  <header><span class="ctl-id">SOD-03</span><h3>Agent cannot approve its own proposal</h3></header>
+  <p class="ctl-purpose">The agent that proposes an action cannot approve or commit that action.</p>
+  <ul class="ctl-tags"><li>Delegation and segregation of duties</li><li class="t-preventive">preventive</li><li>Verification and approval</li><li>Required from L2</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The commit path accepts only proposals that passed validation and the policy table.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Commit logs that show the routing decision for each action.</dd></div><div><dt>Layers aligned</dt><dd>Financial, Technical: Backend, Application</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li><li><b>OWASP LLM 2025</b> LLM06 Excessive agency</li><li><b>SOX/COSO ITGC</b> SoD</li></ul>
+</article>
+<article class="ctl" id="DQ-01" data-cat="DQ" data-type="preventive" data-part="H7" data-min="2" data-applies="agents voice iot physical" data-layers="data ops fin">
+  <header><span class="ctl-id">DQ-01</span><h3>Data quality gate</h3></header>
+  <p class="ctl-purpose">Stop a step when its input data fails checks for freshness, completeness or validity.</p>
+  <ul class="ctl-tags"><li>Data quality and lineage</li><li class="t-preventive">preventive</li><li>Verification and approval</li><li>Required from L2</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The gate runs before the agent reads the data. A failed gate caps the step at L2.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Gate results per run. Trend of the failure rate.</dd></div><div><dt>Layers aligned</dt><dd>Technical: Data, Operational, Financial</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Measure</li><li><b>EU AI Act</b> Art. 10 Data governance</li><li><b>ISO/IEC 42001</b> AI management system</li></ul>
+</article>
+<article class="ctl" id="DQ-02" data-cat="DQ" data-type="preventive" data-part="H6" data-min="1" data-applies="agents voice iot physical" data-layers="data app reg">
+  <header><span class="ctl-id">DQ-02</span><h3>Source of truth and lineage</h3></header>
+  <p class="ctl-purpose">Every fact that the agent uses traces to a named system of record.</p>
+  <ul class="ctl-tags"><li>Data quality and lineage</li><li class="t-preventive">preventive</li><li>Context and memory</li><li>Required from L1</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Each context item carries a source ID and a timestamp. The trace stores the lineage.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Lineage records for a sample of decisions.</dd></div><div><dt>Layers aligned</dt><dd>Technical: Data, Application, Regulatory and statutory</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Map</li><li><b>EU AI Act</b> Art. 10 Data governance</li><li><b>ISO/IEC 42001</b> AI management system</li></ul>
+</article>
+<article class="ctl" id="DQ-03" data-cat="DQ" data-type="preventive" data-part="H6" data-min="2" data-applies="agents iot" data-layers="data fin ops">
+  <header><span class="ctl-id">DQ-03</span><h3>Golden master data</h3></header>
+  <p class="ctl-purpose">Supplier, customer, asset and material records have one owner and one golden version.</p>
+  <ul class="ctl-tags"><li>Data quality and lineage</li><li class="t-preventive">preventive</li><li>Context and memory</li><li>Required from L2</li><li>Agents, IoT</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>A master data service publishes golden records. Agents read only from that service.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Data owner register. Duplicate-record rate.</dd></div><div><dt>Layers aligned</dt><dd>Technical: Data, Financial, Operational</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Map</li><li><b>EU AI Act</b> Art. 10 Data governance</li></ul>
+</article>
+<article class="ctl" id="DQ-04" data-cat="DQ" data-type="detective" data-part="H9" data-min="2" data-applies="agents" data-layers="fin data be">
+  <header><span class="ctl-id">DQ-04</span><h3>Daily tie-out to the ledger</h3></header>
+  <p class="ctl-purpose">Reconcile agent postings to the general ledger every day.</p>
+  <ul class="ctl-tags"><li>Data quality and lineage</li><li class="t-detective">detective</li><li>Decision trace</li><li>Required from L2</li><li>Agents</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>An automated job ties trace totals to ledger totals. Each break opens a case.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Daily tie-out reports. Break aging report.</dd></div><div><dt>Layers aligned</dt><dd>Financial, Technical: Data, Technical: Backend</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Measure</li></ul>
+</article>
+<article class="ctl" id="PRV-01" data-cat="PRV" data-type="preventive" data-part="H6" data-min="1" data-applies="agents voice" data-layers="data reg">
+  <header><span class="ctl-id">PRV-01</span><h3>Data minimization in context</h3></header>
+  <p class="ctl-purpose">Only the fields that a step needs enter the model context.</p>
+  <ul class="ctl-tags"><li>Privacy</li><li class="t-preventive">preventive</li><li>Context and memory</li><li>Required from L1</li><li>Agents, Voice</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The context builder uses an allow-list per step. It masks personal data that the step does not need.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Allow-list per step. Masking test results.</dd></div><div><dt>Layers aligned</dt><dd>Technical: Data, Regulatory and statutory</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li><li><b>EU AI Act</b> Art. 10 Data governance</li><li><b>OWASP LLM 2025</b> LLM02 Sensitive information disclosure</li><li><b>ISO/IEC 42001</b> AI management system</li></ul>
+</article>
+<article class="ctl" id="PRV-02" data-cat="PRV" data-type="preventive" data-part="H5" data-min="1" data-applies="agents voice" data-layers="be data reg">
+  <header><span class="ctl-id">PRV-02</span><h3>Personal data masking at the model gateway</h3></header>
+  <p class="ctl-purpose">Mask personal and secret data before any prompt leaves the enterprise boundary.</p>
+  <ul class="ctl-tags"><li>Privacy</li><li class="t-preventive">preventive</li><li>Model gateway</li><li>Required from L1</li><li>Agents, Voice</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The model gateway detects and masks identifiers. It restores them only in approved outputs.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Gateway masking logs. Leak tests.</dd></div><div><dt>Layers aligned</dt><dd>Technical: Backend, Technical: Data, Regulatory and statutory</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li><li><b>OWASP LLM 2025</b> LLM02 Sensitive information disclosure</li></ul>
+</article>
+<article class="ctl" id="PRV-03" data-cat="PRV" data-type="preventive" data-part="H9" data-min="1" data-applies="agents voice iot physical" data-layers="reg data">
+  <header><span class="ctl-id">PRV-03</span><h3>Retention and deletion</h3></header>
+  <p class="ctl-purpose">Keep traces, transcripts and recordings only as long as policy and law require.</p>
+  <ul class="ctl-tags"><li>Privacy</li><li class="t-preventive">preventive</li><li>Decision trace</li><li>Required from L1</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Each record carries a retention class. A scheduled job deletes expired records.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Retention schedule. Deletion job logs.</dd></div><div><dt>Layers aligned</dt><dd>Regulatory and statutory, Technical: Data</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Govern</li></ul>
+</article>
+<article class="ctl" id="PRV-04" data-cat="PRV" data-type="preventive" data-part="H7" data-min="1" data-applies="voice agents" data-layers="reg fe">
+  <header><span class="ctl-id">PRV-04</span><h3>Agent disclosure and recording notice</h3></header>
+  <p class="ctl-purpose">Tell people that they deal with an agent, and tell callers when a call is recorded.</p>
+  <ul class="ctl-tags"><li>Privacy</li><li class="t-preventive">preventive</li><li>Verification and approval</li><li>Required from L1</li><li>Voice, Agents</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The channel plays or shows a fixed notice before the conversation starts.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Notice scripts. Sample recordings with the notice.</dd></div><div><dt>Layers aligned</dt><dd>Regulatory and statutory, Technical: Frontend</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Govern</li></ul>
+</article>
+<article class="ctl" id="MR-01" data-cat="MR" data-type="preventive" data-part="H10" data-min="1" data-applies="agents voice iot physical" data-layers="app reg be">
+  <header><span class="ctl-id">MR-01</span><h3>Pre-release evaluation suite</h3></header>
+  <p class="ctl-purpose">Test each agent and model version against a fixed set of evaluations before release.</p>
+  <ul class="ctl-tags"><li>Model risk and evals</li><li class="t-preventive">preventive</li><li>Evaluation and kill switch</li><li>Required from L1</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The release pipeline runs task, safety and regression evals. A failed eval blocks the release.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Eval results per release. Thresholds signed by the owner.</dd></div><div><dt>Layers aligned</dt><dd>Application, Regulatory and statutory, Technical: Backend</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Measure</li><li><b>EU AI Act</b> Art. 9 Risk management; Art. 15 Accuracy, robustness and cybersecurity</li><li><b>SOX/COSO ITGC</b> Change management</li><li><b>ISO/IEC 42001</b> AI management system</li></ul>
+</article>
+<article class="ctl" id="MR-02" data-cat="MR" data-type="preventive" data-part="H10" data-min="2" data-applies="agents voice iot physical" data-layers="reg ops">
+  <header><span class="ctl-id">MR-02</span><h3>Promotion on evidence</h3></header>
+  <p class="ctl-purpose">Raise the level of a step only when the step meets the exit criteria of its current level.</p>
+  <ul class="ctl-tags"><li>Model risk and evals</li><li class="t-preventive">preventive</li><li>Evaluation and kill switch</li><li>Required from L2</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>A promotion request carries the evidence. A human gate approves it. Promotion is never automatic.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Promotion records with evidence and approver.</dd></div><div><dt>Layers aligned</dt><dd>Regulatory and statutory, Operational</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li><li><b>EU AI Act</b> Art. 9 Risk management</li><li><b>ISO/IEC 42001</b> AI management system</li></ul>
+</article>
+<article class="ctl" id="MR-03" data-cat="MR" data-type="preventive" data-part="H2" data-min="0" data-applies="agents voice iot physical" data-layers="app reg">
+  <header><span class="ctl-id">MR-03</span><h3>Model and agent inventory</h3></header>
+  <p class="ctl-purpose">Record every model and agent version with its owner, purpose and risk tier.</p>
+  <ul class="ctl-tags"><li>Model risk and evals</li><li class="t-preventive">preventive</li><li>Registry and lifecycle</li><li>Required from L0</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The registry blocks any model or agent version that is not in the inventory.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Inventory extract. Risk tier per entry.</dd></div><div><dt>Layers aligned</dt><dd>Application, Regulatory and statutory</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Govern, Map</li><li><b>EU AI Act</b> Art. 9 Risk management</li><li><b>ISO/IEC 42001</b> AI management system</li></ul>
+</article>
+<article class="ctl" id="MR-04" data-cat="MR" data-type="detective" data-part="H7" data-min="1" data-applies="agents voice" data-layers="app data">
+  <header><span class="ctl-id">MR-04</span><h3>Groundedness and citation check</h3></header>
+  <p class="ctl-purpose">Check that each claim in an agent output cites a retrieved source.</p>
+  <ul class="ctl-tags"><li>Model risk and evals</li><li class="t-detective">detective</li><li>Verification and approval</li><li>Required from L1</li><li>Agents, Voice</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>A checker compares claims to the retrieved sources. Unsupported claims go to a person.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Groundedness scores. Samples of rejected claims.</dd></div><div><dt>Layers aligned</dt><dd>Application, Technical: Data</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Measure</li><li><b>EU AI Act</b> Art. 15 Accuracy, robustness and cybersecurity</li><li><b>OWASP LLM 2025</b> LLM09 Misinformation</li></ul>
+</article>
+<article class="ctl" id="MR-05" data-cat="MR" data-type="preventive" data-part="H10" data-min="2" data-applies="iot physical" data-layers="ops reg">
+  <header><span class="ctl-id">MR-05</span><h3>Simulation validation before live</h3></header>
+  <p class="ctl-purpose">Validate learned and optimized policies in a digital twin before live use.</p>
+  <ul class="ctl-tags"><li>Model risk and evals</li><li class="t-preventive">preventive</li><li>Evaluation and kill switch</li><li>Required from L2</li><li>IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The policy must pass scenario tests in the twin, including rare and unsafe cases.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Twin test reports. Scenario coverage list.</dd></div><div><dt>Layers aligned</dt><dd>Operational, Regulatory and statutory</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Measure</li><li><b>EU AI Act</b> Art. 15 Accuracy, robustness and cybersecurity</li></ul>
+</article>
+<article class="ctl" id="PCS-01" data-cat="PCS" data-type="preventive" data-part="H6" data-min="1" data-applies="agents voice" data-layers="app be">
+  <header><span class="ctl-id">PCS-01</span><h3>Untrusted content is data</h3></header>
+  <p class="ctl-purpose">Treat emails, documents, web pages and transcripts as data. Never treat them as instructions.</p>
+  <ul class="ctl-tags"><li>Prompt and content security</li><li class="t-preventive">preventive</li><li>Context and memory</li><li>Required from L1</li><li>Agents, Voice</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Instructions and content use separate channels. The system flags text that looks like an instruction.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Injection test results. Flagged-content log.</dd></div><div><dt>Layers aligned</dt><dd>Application, Technical: Backend</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li><li><b>EU AI Act</b> Art. 15 Accuracy, robustness and cybersecurity</li><li><b>OWASP LLM 2025</b> LLM01 Prompt injection</li></ul>
+</article>
+<article class="ctl" id="PCS-02" data-cat="PCS" data-type="preventive" data-part="H7" data-min="1" data-applies="agents voice iot" data-layers="app be">
+  <header><span class="ctl-id">PCS-02</span><h3>Output schema validation</h3></header>
+  <p class="ctl-purpose">Accept agent output only when it matches the expected schema and value ranges.</p>
+  <ul class="ctl-tags"><li>Prompt and content security</li><li class="t-preventive">preventive</li><li>Verification and approval</li><li>Required from L1</li><li>Agents, Voice, IoT</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>A validator checks type, range and required fields before any downstream use.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Validation failure log. Schema versions.</dd></div><div><dt>Layers aligned</dt><dd>Application, Technical: Backend</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li><li><b>EU AI Act</b> Art. 15 Accuracy, robustness and cybersecurity</li><li><b>OWASP LLM 2025</b> LLM05 Improper output handling</li></ul>
+</article>
+<article class="ctl" id="PCS-03" data-cat="PCS" data-type="preventive" data-part="H5" data-min="1" data-applies="agents voice" data-layers="be app">
+  <header><span class="ctl-id">PCS-03</span><h3>No secrets or limits in prompts</h3></header>
+  <p class="ctl-purpose">Keep secrets, keys and limits out of prompts. Detect attempts to extract the system instructions.</p>
+  <ul class="ctl-tags"><li>Prompt and content security</li><li class="t-preventive">preventive</li><li>Model gateway</li><li>Required from L1</li><li>Agents, Voice</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Limits live in the policy engine. A scanner checks prompts for secrets before release.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Prompt scan results. Leakage test results.</dd></div><div><dt>Layers aligned</dt><dd>Technical: Backend, Application</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li><li><b>OWASP LLM 2025</b> LLM07 System prompt leakage</li></ul>
+</article>
+<article class="ctl" id="PCS-04" data-cat="PCS" data-type="preventive" data-part="H6" data-min="1" data-applies="agents voice" data-layers="data app">
+  <header><span class="ctl-id">PCS-04</span><h3>Permission-aware retrieval</h3></header>
+  <p class="ctl-purpose">Filter retrieved documents by the permissions of the caller before they reach the model.</p>
+  <ul class="ctl-tags"><li>Prompt and content security</li><li class="t-preventive">preventive</li><li>Context and memory</li><li>Required from L1</li><li>Agents, Voice</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The retrieval index stores access labels. The query applies the caller identity.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Retrieval access tests. Index label coverage.</dd></div><div><dt>Layers aligned</dt><dd>Technical: Data, Application</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li><li><b>OWASP LLM 2025</b> LLM08 Vector and embedding weaknesses; LLM02 Sensitive information disclosure</li></ul>
+</article>
+<article class="ctl" id="PCS-05" data-cat="PCS" data-type="preventive" data-part="H5" data-min="1" data-applies="agents voice" data-layers="fe reg">
+  <header><span class="ctl-id">PCS-05</span><h3>Content safety filter</h3></header>
+  <p class="ctl-purpose">Screen inputs and outputs for harmful, offensive or off-policy content.</p>
+  <ul class="ctl-tags"><li>Prompt and content security</li><li class="t-preventive">preventive</li><li>Model gateway</li><li>Required from L1</li><li>Agents, Voice</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Filters run at the model gateway. Blocked content goes to a reviewed queue.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Filter hit rates. Review queue samples.</dd></div><div><dt>Layers aligned</dt><dd>Technical: Frontend, Regulatory and statutory</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li></ul>
+</article>
+<article class="ctl" id="TAL-01" data-cat="TAL" data-type="preventive" data-part="H3" data-min="3" data-applies="agents voice iot physical" data-layers="fin ops be">
+  <header><span class="ctl-id">TAL-01</span><h3>Limits outside the model</h3></header>
+  <p class="ctl-purpose">Enforce amount, risk and counterparty limits in a policy table that the agent cannot change.</p>
+  <ul class="ctl-tags"><li>Tool and action limits</li><li class="t-preventive">preventive</li><li>Policy and limits</li><li>Required from L3</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The policy engine checks every proposal against the table. A missing rule means escalate.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Policy table versions. Limit-breach routing log.</dd></div><div><dt>Layers aligned</dt><dd>Financial, Operational, Technical: Backend</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li><li><b>OWASP LLM 2025</b> LLM06 Excessive agency</li><li><b>ISO/IEC 42001</b> AI management system</li></ul>
+</article>
+<article class="ctl" id="TAL-02" data-cat="TAL" data-type="preventive" data-part="H7" data-min="3" data-applies="agents voice iot physical" data-layers="fin app be ops">
+  <header><span class="ctl-id">TAL-02</span><h3>Propose, validate, route, commit</h3></header>
+  <p class="ctl-purpose">The agent proposes. Deterministic rules validate, route and commit.</p>
+  <ul class="ctl-tags"><li>Tool and action limits</li><li class="t-preventive">preventive</li><li>Verification and approval</li><li>Required from L3</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The commit service accepts only validated proposals. The policy table routes each one.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Trace sample that shows all four moves per action.</dd></div><div><dt>Layers aligned</dt><dd>Financial, Application, Technical: Backend, Operational</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li><li><b>OWASP LLM 2025</b> LLM06 Excessive agency; LLM05 Improper output handling</li></ul>
+</article>
+<article class="ctl" id="TAL-03" data-cat="TAL" data-type="preventive" data-part="H4" data-min="1" data-applies="agents voice iot physical" data-layers="app be">
+  <header><span class="ctl-id">TAL-03</span><h3>Typed tool contracts</h3></header>
+  <p class="ctl-purpose">Agents call only registered tools with typed inputs, typed outputs and declared scopes.</p>
+  <ul class="ctl-tags"><li>Tool and action limits</li><li class="t-preventive">preventive</li><li>Tool gateway</li><li>Required from L1</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The tool gateway rejects unknown tools and calls that break the contract.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Tool registry. Rejected-call log.</dd></div><div><dt>Layers aligned</dt><dd>Application, Technical: Backend</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li><li><b>OWASP LLM 2025</b> LLM06 Excessive agency</li></ul>
+</article>
+<article class="ctl" id="TAL-04" data-cat="TAL" data-type="preventive" data-part="H4" data-min="2" data-applies="agents voice iot physical" data-layers="be ops">
+  <header><span class="ctl-id">TAL-04</span><h3>Rate and volume limits</h3></header>
+  <p class="ctl-purpose">Cap the actions per minute and per day for each agent and each tool.</p>
+  <ul class="ctl-tags"><li>Tool and action limits</li><li class="t-preventive">preventive</li><li>Tool gateway</li><li>Required from L2</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The tool gateway counts calls. It stops the agent at the cap and alerts the owner.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Rate-limit configuration. Cap-breach alerts.</dd></div><div><dt>Layers aligned</dt><dd>Technical: Backend, Operational</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li><li><b>OWASP LLM 2025</b> LLM06 Excessive agency; LLM10 Unbounded consumption</li></ul>
+</article>
+<article class="ctl" id="TAL-05" data-cat="TAL" data-type="preventive" data-part="H3" data-min="0" data-applies="agents voice iot physical" data-layers="reg fin">
+  <header><span class="ctl-id">TAL-05</span><h3>Do-not-automate list</h3></header>
+  <p class="ctl-purpose">Named decisions stay with people. Agents cannot hold the permissions for those decisions.</p>
+  <ul class="ctl-tags"><li>Tool and action limits</li><li class="t-preventive">preventive</li><li>Policy and limits</li><li>Required from L0</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The list is a reviewed control. Identity rules block agent scopes that the list reserves.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Approved list. Permission report with no agent holding a reserved scope.</dd></div><div><dt>Layers aligned</dt><dd>Regulatory and statutory, Financial</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Govern</li><li><b>EU AI Act</b> Art. 14 Human oversight</li><li><b>ISO/IEC 42001</b> AI management system</li></ul>
+</article>
+<article class="ctl" id="TAL-06" data-cat="TAL" data-type="corrective" data-part="H4" data-min="3" data-applies="agents iot physical" data-layers="be fin app">
+  <header><span class="ctl-id">TAL-06</span><h3>Idempotent commit and reversal path</h3></header>
+  <p class="ctl-purpose">Every committed action has a tested reversal. No action can post twice.</p>
+  <ul class="ctl-tags"><li>Tool and action limits</li><li class="t-corrective">corrective</li><li>Tool gateway</li><li>Required from L3</li><li>Agents, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Each commit carries a unique key. A reversal interface exists for each action type.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Reversal test results. Duplicate-commit checks.</dd></div><div><dt>Layers aligned</dt><dd>Technical: Backend, Financial, Application</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li></ul>
+</article>
+<article class="ctl" id="TAL-07" data-cat="TAL" data-type="preventive" data-part="H3" data-min="0" data-applies="agents" data-layers="fin reg ops">
+  <header><span class="ctl-id">TAL-07</span><h3>Out-of-band verification for bank changes</h3></header>
+  <p class="ctl-purpose">A person verifies each bank-detail change by calling a known number from the master record.</p>
+  <ul class="ctl-tags"><li>Tool and action limits</li><li class="t-preventive">preventive</li><li>Policy and limits</li><li>Required from L0</li><li>Agents</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The change request stays on hold until a named person records the call result.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Call verification records. Changes released without a call: zero.</dd></div><div><dt>Layers aligned</dt><dd>Financial, Regulatory and statutory, Operational</dd></div></dl>
+  <ul class="ctl-map"></ul>
+</article>
+<article class="ctl" id="HO-01" data-cat="HO" data-type="preventive" data-part="H7" data-min="2" data-applies="agents voice iot physical" data-layers="fe ops reg fin">
+  <header><span class="ctl-id">HO-01</span><h3>Decision card for approvals</h3></header>
+  <p class="ctl-purpose">Show the approver the proposal, evidence, rule, confidence and options on one card.</p>
+  <ul class="ctl-tags"><li>Human oversight</li><li class="t-preventive">preventive</li><li>Verification and approval</li><li>Required from L2</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The card reads its fields from the trace. The approver chooses approve, change, ask or reassign.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Card samples. Approval decisions with timestamps.</dd></div><div><dt>Layers aligned</dt><dd>Technical: Frontend, Operational, Regulatory and statutory, Financial</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li><li><b>EU AI Act</b> Art. 13 Transparency; Art. 14 Human oversight</li></ul>
+</article>
+<article class="ctl" id="HO-02" data-cat="HO" data-type="preventive" data-part="H2" data-min="0" data-applies="agents voice iot physical" data-layers="reg ops app fe">
+  <header><span class="ctl-id">HO-02</span><h3>Named accountable owner</h3></header>
+  <p class="ctl-purpose">Every agent has one named owner with the authority to stop it.</p>
+  <ul class="ctl-tags"><li>Human oversight</li><li class="t-preventive">preventive</li><li>Registry and lifecycle</li><li>Required from L0</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The registry blocks an agent without an owner. Owner changes need sign-off.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Registry extract with owners. Owner change log.</dd></div><div><dt>Layers aligned</dt><dd>Regulatory and statutory, Operational, Application, Technical: Frontend</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Govern</li><li><b>EU AI Act</b> Art. 14 Human oversight</li><li><b>ISO/IEC 42001</b> AI management system</li></ul>
+</article>
+<article class="ctl" id="HO-03" data-cat="HO" data-type="corrective" data-part="H7" data-min="1" data-applies="agents voice" data-layers="ops fe reg">
+  <header><span class="ctl-id">HO-03</span><h3>Handoff with full context</h3></header>
+  <p class="ctl-purpose">Hand a case to a person with its full history, so nobody asks the customer twice.</p>
+  <ul class="ctl-tags"><li>Human oversight</li><li class="t-corrective">corrective</li><li>Verification and approval</li><li>Required from L1</li><li>Agents, Voice</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The handoff packet carries the transcript, summary, checks run and open questions.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Handoff samples. Repeat-question rate.</dd></div><div><dt>Layers aligned</dt><dd>Operational, Technical: Frontend, Regulatory and statutory</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li><li><b>EU AI Act</b> Art. 14 Human oversight</li></ul>
+</article>
+<article class="ctl" id="HO-04" data-cat="HO" data-type="detective" data-part="H7" data-min="3" data-applies="agents voice iot physical" data-layers="ops reg fin">
+  <header><span class="ctl-id">HO-04</span><h3>In-limit sampling review</h3></header>
+  <p class="ctl-purpose">People review a random sample of in-limit agent actions every week.</p>
+  <ul class="ctl-tags"><li>Human oversight</li><li class="t-detective">detective</li><li>Verification and approval</li><li>Required from L3</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The sampler picks actions by risk-weighted random draw. Reviewers record agree or disagree.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Sample results. Disagreement rate trend.</dd></div><div><dt>Layers aligned</dt><dd>Operational, Regulatory and statutory, Financial</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Measure</li><li><b>EU AI Act</b> Art. 14 Human oversight</li></ul>
+</article>
+<article class="ctl" id="HO-05" data-cat="HO" data-type="detective" data-part="H7" data-min="2" data-applies="agents voice iot physical" data-layers="fe ops">
+  <header><span class="ctl-id">HO-05</span><h3>Rubber-stamp monitor</h3></header>
+  <p class="ctl-purpose">Flag approvers who approve too fast or approve everything.</p>
+  <ul class="ctl-tags"><li>Human oversight</li><li class="t-detective">detective</li><li>Verification and approval</li><li>Required from L2</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The system measures time on card and approval rate per approver.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Approver analytics. Coaching records.</dd></div><div><dt>Layers aligned</dt><dd>Technical: Frontend, Operational</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Measure</li><li><b>EU AI Act</b> Art. 14 Human oversight</li></ul>
+</article>
+<article class="ctl" id="MON-01" data-cat="MON" data-type="detective" data-part="H10" data-min="3" data-applies="agents voice iot physical" data-layers="ops app">
+  <header><span class="ctl-id">MON-01</span><h3>Online quality monitoring</h3></header>
+  <p class="ctl-purpose">Track error, reversal and override rates for each step in production.</p>
+  <ul class="ctl-tags"><li>Monitoring and drift</li><li class="t-detective">detective</li><li>Evaluation and kill switch</li><li>Required from L3</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Dashboards read from the trace store. Thresholds raise alerts to the owner.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Monitoring dashboard. Alert history.</dd></div><div><dt>Layers aligned</dt><dd>Operational, Application</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Measure</li></ul>
+</article>
+<article class="ctl" id="MON-02" data-cat="MON" data-type="detective" data-part="H10" data-min="2" data-applies="agents voice iot physical" data-layers="data ops">
+  <header><span class="ctl-id">MON-02</span><h3>Drift detection</h3></header>
+  <p class="ctl-purpose">Alert when inputs or outputs move away from the evaluated baseline.</p>
+  <ul class="ctl-tags"><li>Monitoring and drift</li><li class="t-detective">detective</li><li>Evaluation and kill switch</li><li>Required from L2</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Statistical tests compare live data with the evaluation data each day.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Drift reports. Alert responses.</dd></div><div><dt>Layers aligned</dt><dd>Technical: Data, Operational</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Measure</li><li><b>EU AI Act</b> Art. 15 Accuracy, robustness and cybersecurity</li></ul>
+</article>
+<article class="ctl" id="MON-03" data-cat="MON" data-type="corrective" data-part="H10" data-min="3" data-applies="agents voice iot physical" data-layers="ops reg">
+  <header><span class="ctl-id">MON-03</span><h3>Automatic demotion triggers</h3></header>
+  <p class="ctl-purpose">Move a step down one level when an error, data, process or model trigger fires.</p>
+  <ul class="ctl-tags"><li>Monitoring and drift</li><li class="t-corrective">corrective</li><li>Evaluation and kill switch</li><li>Required from L3</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The policy engine lowers the level at once. Promotion back needs fresh evidence.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Demotion log. Trigger definitions.</dd></div><div><dt>Layers aligned</dt><dd>Operational, Regulatory and statutory</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li><li><b>ISO/IEC 42001</b> AI management system</li></ul>
+</article>
+<article class="ctl" id="MON-04" data-cat="MON" data-type="detective" data-part="H9" data-min="2" data-applies="agents voice iot physical" data-layers="data ops">
+  <header><span class="ctl-id">MON-04</span><h3>Override labelling</h3></header>
+  <p class="ctl-purpose">Record each human override as a labelled error for evals and retraining.</p>
+  <ul class="ctl-tags"><li>Monitoring and drift</li><li class="t-detective">detective</li><li>Decision trace</li><li>Required from L2</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The decision card captures the reason for each override as a structured label.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Override label set. Eval updates that use the labels.</dd></div><div><dt>Layers aligned</dt><dd>Technical: Data, Operational</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Measure</li></ul>
+</article>
+<article class="ctl" id="TRC-01" data-cat="TRC" data-type="preventive" data-part="H9" data-min="1" data-applies="agents voice iot physical" data-layers="reg fin be fe">
+  <header><span class="ctl-id">TRC-01</span><h3>Decision trace before commit</h3></header>
+  <p class="ctl-purpose">Write what the agent saw, decided and did before any action commits.</p>
+  <ul class="ctl-tags"><li>Decision trace and audit</li><li class="t-preventive">preventive</li><li>Decision trace</li><li>Required from L1</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The commit service writes the trace first. If the trace write fails, the action fails.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Trace sample per step. Failed-write tests.</dd></div><div><dt>Layers aligned</dt><dd>Regulatory and statutory, Financial, Technical: Backend, Technical: Frontend</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Govern</li><li><b>EU AI Act</b> Art. 12 Record-keeping</li><li><b>ISO/IEC 42001</b> AI management system</li></ul>
+</article>
+<article class="ctl" id="TRC-02" data-cat="TRC" data-type="preventive" data-part="H9" data-min="2" data-applies="agents voice iot physical" data-layers="reg be data">
+  <header><span class="ctl-id">TRC-02</span><h3>Tamper-evident trace store</h3></header>
+  <p class="ctl-purpose">Store traces append-only, so nobody can edit them after the fact.</p>
+  <ul class="ctl-tags"><li>Decision trace and audit</li><li class="t-preventive">preventive</li><li>Decision trace</li><li>Required from L2</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The store chains record hashes. Access to the store is read-only for everyone but the writer.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Hash-chain verification report. Access list.</dd></div><div><dt>Layers aligned</dt><dd>Regulatory and statutory, Technical: Backend, Technical: Data</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Govern</li><li><b>EU AI Act</b> Art. 12 Record-keeping</li></ul>
+</article>
+<article class="ctl" id="TRC-03" data-cat="TRC" data-type="detective" data-part="H9" data-min="2" data-applies="agents voice iot physical" data-layers="reg fin data">
+  <header><span class="ctl-id">TRC-03</span><h3>Audit evidence pack</h3></header>
+  <p class="ctl-purpose">Produce a sample of traces with their evidence for auditors on request.</p>
+  <ul class="ctl-tags"><li>Decision trace and audit</li><li class="t-detective">detective</li><li>Decision trace</li><li>Required from L2</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>A query builds the pack by period, step and risk. It includes inputs, rule versions and approvals.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Evidence packs delivered. Auditor requests closed.</dd></div><div><dt>Layers aligned</dt><dd>Regulatory and statutory, Financial, Technical: Data</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Govern</li><li><b>EU AI Act</b> Art. 12 Record-keeping</li></ul>
+</article>
+<article class="ctl" id="TRC-04" data-cat="TRC" data-type="detective" data-part="H2" data-min="1" data-applies="agents voice iot physical" data-layers="app reg">
+  <header><span class="ctl-id">TRC-04</span><h3>Change log for agents</h3></header>
+  <p class="ctl-purpose">Log every change to instructions, tools, limits and model versions.</p>
+  <ul class="ctl-tags"><li>Decision trace and audit</li><li class="t-detective">detective</li><li>Registry and lifecycle</li><li>Required from L1</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The registry records each change with author, reviewer, reason and release time.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Change log extract. Link from each change to its eval results.</dd></div><div><dt>Layers aligned</dt><dd>Application, Regulatory and statutory</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Govern</li><li><b>EU AI Act</b> Art. 12 Record-keeping</li><li><b>SOX/COSO ITGC</b> Change management</li></ul>
+</article>
+<article class="ctl" id="RES-01" data-cat="RES" data-type="corrective" data-part="H10" data-min="2" data-applies="agents voice iot physical" data-layers="ops reg fe">
+  <header><span class="ctl-id">RES-01</span><h3>Kill switch at three scopes</h3></header>
+  <p class="ctl-purpose">Stop one agent, one scope or the whole fleet within minutes.</p>
+  <ul class="ctl-tags"><li>Resilience and kill switch</li><li class="t-corrective">corrective</li><li>Evaluation and kill switch</li><li>Required from L2</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The owner console revokes tokens and halts queues. Work in flight goes to people.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Kill switch design. Stop times from drills.</dd></div><div><dt>Layers aligned</dt><dd>Operational, Regulatory and statutory, Technical: Frontend</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li><li><b>EU AI Act</b> Art. 14 Human oversight</li><li><b>ISO/IEC 42001</b> AI management system</li></ul>
+</article>
+<article class="ctl" id="RES-02" data-cat="RES" data-type="corrective" data-part="H5" data-min="1" data-applies="agents voice iot physical" data-layers="be ops">
+  <header><span class="ctl-id">RES-02</span><h3>Model fallback and safe degrade</h3></header>
+  <p class="ctl-purpose">When a model fails, route to a fallback model or drop the step to L1.</p>
+  <ul class="ctl-tags"><li>Resilience and kill switch</li><li class="t-corrective">corrective</li><li>Model gateway</li><li>Required from L1</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The model gateway detects errors and timeouts. It switches route and records the switch.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Fallback events. Degraded-mode service levels.</dd></div><div><dt>Layers aligned</dt><dd>Technical: Backend, Operational</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li><li><b>EU AI Act</b> Art. 15 Accuracy, robustness and cybersecurity</li></ul>
+</article>
+<article class="ctl" id="RES-03" data-cat="RES" data-type="preventive" data-part="H8" data-min="1" data-applies="agents voice iot physical" data-layers="be ops">
+  <header><span class="ctl-id">RES-03</span><h3>Loop and retry guard</h3></header>
+  <p class="ctl-purpose">Stop an agent that repeats a call, loops or uses up its retry budget.</p>
+  <ul class="ctl-tags"><li>Resilience and kill switch</li><li class="t-preventive">preventive</li><li>Operating envelope and cost</li><li>Required from L1</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The runtime counts steps, retries and repeated calls per case. It stops at the limit and escalates.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Guard trips per week. Escalation traces.</dd></div><div><dt>Layers aligned</dt><dd>Technical: Backend, Operational</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li><li><b>OWASP LLM 2025</b> LLM10 Unbounded consumption</li></ul>
+</article>
+<article class="ctl" id="RES-04" data-cat="RES" data-type="detective" data-part="H10" data-min="2" data-applies="agents voice iot physical" data-layers="ops reg">
+  <header><span class="ctl-id">RES-04</span><h3>Kill switch drill</h3></header>
+  <p class="ctl-purpose">Test the kill switch every quarter and record the time to stop.</p>
+  <ul class="ctl-tags"><li>Resilience and kill switch</li><li class="t-detective">detective</li><li>Evaluation and kill switch</li><li>Required from L2</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>An owner runs a planned stop in production or a full copy. The team records results.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Drill records with stop times and fixes.</dd></div><div><dt>Layers aligned</dt><dd>Operational, Regulatory and statutory</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li></ul>
+</article>
+<article class="ctl" id="CST-01" data-cat="CST" data-type="preventive" data-part="H8" data-min="1" data-applies="agents voice iot physical" data-layers="fin ops be">
+  <header><span class="ctl-id">CST-01</span><h3>Per-case cost budget</h3></header>
+  <p class="ctl-purpose">Cap model and tool spend for each case. Stop and escalate when the budget runs out.</p>
+  <ul class="ctl-tags"><li>Cost envelope</li><li class="t-preventive">preventive</li><li>Operating envelope and cost</li><li>Required from L1</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The runtime tracks spend per case against a budget from the policy table.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Budget configuration. Budget-breach log.</dd></div><div><dt>Layers aligned</dt><dd>Financial, Operational, Technical: Backend</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li><li><b>OWASP LLM 2025</b> LLM10 Unbounded consumption</li></ul>
+</article>
+<article class="ctl" id="CST-02" data-cat="CST" data-type="detective" data-part="H8" data-min="2" data-applies="agents voice iot physical" data-layers="fin ops">
+  <header><span class="ctl-id">CST-02</span><h3>Cost per completed outcome</h3></header>
+  <p class="ctl-purpose">Report the cost per completed outcome, including review and fallback minutes.</p>
+  <ul class="ctl-tags"><li>Cost envelope</li><li class="t-detective">detective</li><li>Operating envelope and cost</li><li>Required from L2</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Finance joins platform charges, model charges and review time by case.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Monthly cost report reconciled to invoices.</dd></div><div><dt>Layers aligned</dt><dd>Financial, Operational</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Measure</li></ul>
+</article>
+<article class="ctl" id="CST-03" data-cat="CST" data-type="preventive" data-part="H5" data-min="1" data-applies="agents voice" data-layers="be fin">
+  <header><span class="ctl-id">CST-03</span><h3>Model quotas</h3></header>
+  <p class="ctl-purpose">Set token and call quotas per agent at the model gateway.</p>
+  <ul class="ctl-tags"><li>Cost envelope</li><li class="t-preventive">preventive</li><li>Model gateway</li><li>Required from L1</li><li>Agents, Voice</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The gateway enforces quotas and alerts the owner at 80 percent use.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Quota configuration. Quota alerts.</dd></div><div><dt>Layers aligned</dt><dd>Technical: Backend, Financial</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li><li><b>OWASP LLM 2025</b> LLM10 Unbounded consumption</li></ul>
+</article>
+<article class="ctl" id="TPS-01" data-cat="TPS" data-type="preventive" data-part="H2" data-min="0" data-applies="agents voice iot physical" data-layers="reg app">
+  <header><span class="ctl-id">TPS-01</span><h3>Model and component provenance</h3></header>
+  <p class="ctl-purpose">Use only approved models and components with a known origin and license.</p>
+  <ul class="ctl-tags"><li>Third-party and model supply chain</li><li class="t-preventive">preventive</li><li>Registry and lifecycle</li><li>Required from L0</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The registry checks origin, license and signature before a component goes live.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Approved component list. Signature checks.</dd></div><div><dt>Layers aligned</dt><dd>Regulatory and statutory, Application</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Govern</li><li><b>OWASP LLM 2025</b> LLM03 Supply chain</li><li><b>ISO/IEC 42001</b> AI management system</li></ul>
+</article>
+<article class="ctl" id="TPS-02" data-cat="TPS" data-type="preventive" data-part="H10" data-min="1" data-applies="agents voice iot physical" data-layers="data reg">
+  <header><span class="ctl-id">TPS-02</span><h3>Tuning data vetting</h3></header>
+  <p class="ctl-purpose">Check data used to tune models for poisoning, bias and usage rights.</p>
+  <ul class="ctl-tags"><li>Third-party and model supply chain</li><li class="t-preventive">preventive</li><li>Evaluation and kill switch</li><li>Required from L1</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Data passes source, rights and anomaly checks before it enters a tuning set.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Tuning data sheets. Rights records.</dd></div><div><dt>Layers aligned</dt><dd>Technical: Data, Regulatory and statutory</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Map</li><li><b>EU AI Act</b> Art. 10 Data governance</li><li><b>OWASP LLM 2025</b> LLM04 Data and model poisoning</li></ul>
+</article>
+<article class="ctl" id="TPS-03" data-cat="TPS" data-type="detective" data-part="H5" data-min="1" data-applies="agents voice iot physical" data-layers="app reg">
+  <header><span class="ctl-id">TPS-03</span><h3>Provider model change review</h3></header>
+  <p class="ctl-purpose">Run the evals again whenever a provider changes or retires a model.</p>
+  <ul class="ctl-tags"><li>Third-party and model supply chain</li><li class="t-detective">detective</li><li>Model gateway</li><li>Required from L1</li><li>Agents, Voice, IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The model gateway pins versions. A version change opens a release ticket with evals.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Pinned version list. Re-evaluation records.</dd></div><div><dt>Layers aligned</dt><dd>Application, Regulatory and statutory</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Manage</li><li><b>OWASP LLM 2025</b> LLM03 Supply chain</li><li><b>SOX/COSO ITGC</b> Change management</li></ul>
+</article>
+<article class="ctl" id="OT-01" data-cat="OT" data-type="preventive" data-part="H1" data-min="1" data-applies="iot physical" data-layers="be ops">
+  <header><span class="ctl-id">OT-01</span><h3>Device identity and signed firmware</h3></header>
+  <p class="ctl-purpose">Every sensor and machine has a unique identity and runs signed firmware.</p>
+  <ul class="ctl-tags"><li>IoT and OT security</li><li class="t-preventive">preventive</li><li>Identity and delegation</li><li>Required from L1</li><li>IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Devices enroll with certificates. The edge gateway rejects unsigned firmware.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Device register. Firmware signature checks.</dd></div><div><dt>Layers aligned</dt><dd>Technical: Backend, Operational</dd></div></dl>
+  <ul class="ctl-map"><li><b>IEC 62443</b> Industrial automation security</li></ul>
+</article>
+<article class="ctl" id="OT-02" data-cat="OT" data-type="preventive" data-part="H4" data-min="1" data-applies="iot physical" data-layers="be ops">
+  <header><span class="ctl-id">OT-02</span><h3>Zones and conduits</h3></header>
+  <p class="ctl-purpose">Split plant networks into zones. Agents reach machines only through approved conduits.</p>
+  <ul class="ctl-tags"><li>IoT and OT security</li><li class="t-preventive">preventive</li><li>Tool gateway</li><li>Required from L1</li><li>IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Firewalls and brokers enforce the conduits. Each conduit has an owner and a rule set.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Zone and conduit diagram. Rule reviews.</dd></div><div><dt>Layers aligned</dt><dd>Technical: Backend, Operational</dd></div></dl>
+  <ul class="ctl-map"><li><b>IEC 62443</b> Industrial automation security</li></ul>
+</article>
+<article class="ctl" id="OT-03" data-cat="OT" data-type="preventive" data-part="H4" data-min="0" data-applies="iot physical" data-layers="ops reg be">
+  <header><span class="ctl-id">OT-03</span><h3>Agents read plant data, machines stay in control</h3></header>
+  <p class="ctl-purpose">Agents read plant data. Any write to a machine goes through the control system and its interlocks.</p>
+  <ul class="ctl-tags"><li>IoT and OT security</li><li class="t-preventive">preventive</li><li>Tool gateway</li><li>Required from L0</li><li>IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The conduit is read-only for agents. Setpoint requests go to the control system for checks.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Conduit rules. Setpoint request log.</dd></div><div><dt>Layers aligned</dt><dd>Operational, Regulatory and statutory, Technical: Backend</dd></div></dl>
+  <ul class="ctl-map"><li><b>OWASP LLM 2025</b> LLM06 Excessive agency</li><li><b>IEC 62443</b> Industrial automation security</li></ul>
+</article>
+<article class="ctl" id="OT-04" data-cat="OT" data-type="detective" data-part="H7" data-min="2" data-applies="iot physical" data-layers="data ops">
+  <header><span class="ctl-id">OT-04</span><h3>Sensor plausibility check</h3></header>
+  <p class="ctl-purpose">Reject sensor values that break physical limits or disagree with nearby sensors.</p>
+  <ul class="ctl-tags"><li>IoT and OT security</li><li class="t-detective">detective</li><li>Verification and approval</li><li>Required from L2</li><li>IoT, Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Range, rate and cross-sensor rules run at the edge. Failed readings go to quarantine.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Quarantine log. Rule set per sensor type.</dd></div><div><dt>Layers aligned</dt><dd>Technical: Data, Operational</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Measure</li><li><b>EU AI Act</b> Art. 15 Accuracy, robustness and cybersecurity</li></ul>
+</article>
+<article class="ctl" id="PHY-01" data-cat="PHY" data-type="preventive" data-part="H3" data-min="0" data-applies="physical" data-layers="reg ops">
+  <header><span class="ctl-id">PHY-01</span><h3>Safety controller outside the AI</h3></header>
+  <p class="ctl-purpose">A safety controller enforces stops, speed and force limits, whatever the AI decides.</p>
+  <ul class="ctl-tags"><li>Physical safety</li><li class="t-preventive">preventive</li><li>Policy and limits</li><li>Required from L0</li><li>Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Safety functions run on a rated controller. The AI policy cannot change them.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Safety function validation. Risk assessment.</dd></div><div><dt>Layers aligned</dt><dd>Regulatory and statutory, Operational</dd></div></dl>
+  <ul class="ctl-map"><li><b>ISO 10218</b> Industrial robot safety</li></ul>
+</article>
+<article class="ctl" id="PHY-02" data-cat="PHY" data-type="preventive" data-part="H3" data-min="0" data-applies="physical" data-layers="ops reg">
+  <header><span class="ctl-id">PHY-02</span><h3>Speed and separation monitoring</h3></header>
+  <p class="ctl-purpose">Slow or stop the robot when a person enters its zone.</p>
+  <ul class="ctl-tags"><li>Physical safety</li><li class="t-preventive">preventive</li><li>Policy and limits</li><li>Required from L0</li><li>Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Safety scanners measure distance. The safety controller reduces speed by zone.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Scanner configuration. Stop-distance tests.</dd></div><div><dt>Layers aligned</dt><dd>Operational, Regulatory and statutory</dd></div></dl>
+  <ul class="ctl-map"><li><b>ISO 10218</b> Industrial robot safety</li></ul>
+</article>
+<article class="ctl" id="PHY-03" data-cat="PHY" data-type="corrective" data-part="H10" data-min="0" data-applies="physical" data-layers="ops reg fe">
+  <header><span class="ctl-id">PHY-03</span><h3>Geofence and emergency stop</h3></header>
+  <p class="ctl-purpose">Keep robots inside mapped zones. Anyone nearby can trigger an emergency stop.</p>
+  <ul class="ctl-tags"><li>Physical safety</li><li class="t-corrective">corrective</li><li>Evaluation and kill switch</li><li>Required from L0</li><li>Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>Mapped zones are enforced by the safety controller. E-stops are hard-wired.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Zone maps. E-stop test records.</dd></div><div><dt>Layers aligned</dt><dd>Operational, Regulatory and statutory, Technical: Frontend</dd></div></dl>
+  <ul class="ctl-map"><li><b>ISO 10218</b> Industrial robot safety</li></ul>
+</article>
+<article class="ctl" id="PHY-04" data-cat="PHY" data-type="preventive" data-part="H10" data-min="1" data-applies="physical iot" data-layers="ops reg">
+  <header><span class="ctl-id">PHY-04</span><h3>Shadow mode before live</h3></header>
+  <p class="ctl-purpose">Run a new policy in shadow, then in one limited cell, before full operation.</p>
+  <ul class="ctl-tags"><li>Physical safety</li><li class="t-preventive">preventive</li><li>Evaluation and kill switch</li><li>Required from L1</li><li>Physical AI, IoT</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>The policy proposes actions without acting. Teams compare it with operators, then widen the scope.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Shadow results. Cell trial sign-off.</dd></div><div><dt>Layers aligned</dt><dd>Operational, Regulatory and statutory</dd></div></dl>
+  <ul class="ctl-map"><li><b>NIST AI RMF</b> Measure</li></ul>
+</article>
+<article class="ctl" id="PHY-05" data-cat="PHY" data-type="preventive" data-part="H7" data-min="0" data-applies="physical" data-layers="ops reg">
+  <header><span class="ctl-id">PHY-05</span><h3>Human interlock for shared tasks</h3></header>
+  <p class="ctl-purpose">A person confirms before a robot enters a shared work cell.</p>
+  <ul class="ctl-tags"><li>Physical safety</li><li class="t-preventive">preventive</li><li>Verification and approval</li><li>Required from L0</li><li>Physical AI</li></ul>
+  <dl class="ctl-dl"><div><dt>How it works</dt><dd>An enabling device or interlock must be active before the robot moves into the cell.</dd></div><div><dt>Evidence an auditor asks for</dt><dd>Interlock tests. Shared-cell procedure.</dd></div><div><dt>Layers aligned</dt><dd>Operational, Regulatory and statutory</dd></div></dl>
+  <ul class="ctl-map"><li><b>ISO 10218</b> Industrial robot safety</li></ul>
+</article>
+    </div>
+    <p class="fw-note">Mappings show only where the link is clear. A blank mapping is not a gap in the framework; it means no confident match. ISO/IEC 42001 is named without clause numbers. This library is a starting point, not legal advice. Any numbers in it, such as alert thresholds, are illustrative.</p>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="brand" href="/"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="3" fill="#F2622E"/><path fill="#141414" d="M5 23h3v4H5zM9.5 20h3v7h-3zM14 17h3v10h-3zM18.5 13h3v14h-3zM23 9h3v18h-3z"/></svg><span class="brand-text"><span class="brand-name">Human-Led Enterprise</span> <span class="brand-sub">Hemanth Reganti</span></span></a>
+      <p>Author, speaker and advisor on human-led, agent-operated enterprises.</p>
+      <p>&copy; 2026 Hemanth Reganti</p>
+      <p>We use your details only to respond to your request.</p>
+    </div>
+    <div>
+      <ul class="footer-links" aria-label="Site">
+        <li><a href="/book/">Book</a></li>
+        <li><a href="/frameworks/">Frameworks</a></li>
+        <li><a href="/blueprints/">Blueprints</a></li>
+        <li><a href="/ideas/">Ideas</a></li>
+        <li><a href="/speaking/">Speaking</a></li>
+        <li><a href="/advisory/">Advisory</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+      <ul class="footer-links footer-ext" aria-label="Elsewhere">
+        <li><a href="/contact/#press">Press kit</a></li>
+        <li><a href="https://www.amazon.com/dp/B0HS8HG6DP" rel="noopener" target="_blank">Amazon<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+        <li><a href="https://www.linkedin.com/in/hemanth-reganti-147153178/" rel="noopener" target="_blank">LinkedIn<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+<a class="guide-fab" href="/talk/" data-guide-open aria-haspopup="dialog"><span class="guide-fab-mark" aria-hidden="true"></span>Talk to the book</a>
+</body>
+</html>

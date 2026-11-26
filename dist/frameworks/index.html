@@ -31,9 +31,9 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/assets/fonts/oswald-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
 <script src="/assets/frameworks.js?v=4dee711a59" defer></script>
-<link rel="stylesheet" href="/assets/styles.css?v=261f82b078">
-<script src="/assets/site.js?v=261f82b078" defer></script>
-<script src="/assets/guide.js?v=261f82b078" defer></script>
+<link rel="stylesheet" href="/assets/styles.css?v=34a02cac07">
+<script src="/assets/site.js?v=34a02cac07" defer></script>
+<script src="/assets/guide.js?v=34a02cac07" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -44,6 +44,7 @@
       <ul>
         <li><a href="/book/">Book</a></li>
         <li><a href="/frameworks/" aria-current="page">Frameworks</a></li>
+        <li><a href="/blueprints/">Blueprints</a></li>
         <li><a href="/ideas/">Ideas</a></li>
         <li><a href="/speaking/">Speaking</a></li>
         <li><a href="/advisory/">Advisory</a></li>
@@ -138,7 +139,8 @@
 
     <p>L3 is the main target for high-volume transactional work, and most measurable value in the first years comes from moving work from L2 to L3. At L3 the limits on amount, risk score, counterparty class and confidence sit outside the model, never in the prompt, and the agent cannot change them.</p>
     <p>One counter-intuitive finding: human hours can rise slightly from L2 to L3, because the items that escalate are the hardest ones. The value at L3 comes from speed and from freeing people for hard cases, not only from hours saved.</p>
-  </div>
+      <p class="fw-bp"><a class="more" href="/designer/">Set levels per step in the workflow designer</a></p>
+</div>
 </section>
 
 <section class="section section-paper-2 fw" id="ceiling" aria-labelledby="f3">
@@ -167,7 +169,8 @@
       <li><strong>Weakest link.</strong> A step that depends on a handoff between platforms cannot run above that handoff.</li>
     </ol>
     <p class="fw-note">Thresholds are illustrative. The book asks each company to set its own with internal audit.</p>
-  </div>
+      <p class="fw-bp"><a class="more" href="/designer/">Compute ceilings for your own workflow in the designer</a></p>
+</div>
 </section>
 
 <section class="section fw" id="earned" aria-labelledby="f4">
@@ -219,7 +222,8 @@
     </div>
     <div class="ix" hidden><p class="ix-label">Try it &middot; Break the harness</p><div data-ix="harness"></div></div>
 
-  </div>
+      <p class="fw-bp"><a class="more" href="/architecture/">See the harness as the control plane in the reference architecture</a> &middot; <a class="more" href="/controls/">Browse the controls library</a></p>
+</div>
 </section>
 
 <section class="section fw" id="pvrc" aria-labelledby="f6">
@@ -236,6 +240,7 @@
     <h3>When to act alone: the decision threshold</h3>
     <p>The book gives one definition for when an agent may act without a person: act only when the expected gain beats the expected loss. If <em>G</em> is the gain when the action is right and <em>L</em> the loss when it is wrong, act when the agent&rsquo;s confidence is at least <strong>L &divide; (G + L)</strong>. Bigger stakes raise the bar automatically, so the same agent posts a small credit and routes a large one to a person.</p>
       <p><a class="more" href="#see-it-run">Watch it run with your own numbers</a></p>
+    <p class="fw-bp"><a class="more" href="/workflows/">See propose, validate, route, commit in the workflow swimlanes</a></p>
 </div>
 </section>
 
@@ -261,7 +266,8 @@
     <div class="ix" hidden><p class="ix-label">Try it &middot; Build the chain</p><div data-ix="chain"></div></div>
 
     <p>Four decision rules follow. Fund the weakest link first. Never promise a chain level above its weakest handoff in a business case. Measure links, not only agents. Re-rate a chain whenever a link changes. The rule moves investment from agents to handoffs, which is why the book says many interfaces should be retired, not rebuilt.</p>
-  </div>
+      <p class="fw-bp"><a class="more" href="/workflows/">See the chain level of eight reimagined workflows</a></p>
+</div>
 </section>
 
 <section class="section fw" id="cost" aria-labelledby="f8">
@@ -272,6 +278,7 @@
     <p class="fw-formula">cost per completed outcome = platform meter charges + model and runtime charges + review minutes &times; loaded rate + fallback share &times; fallback minutes &times; loaded rate</p>
     <p>Comparing on this one basis puts agents, people and vendors side by side honestly. The book&rsquo;s worked examples show that delay, not the meter price, moves value most: faster decisions, fewer penalties and released working capital often outweigh hours saved.</p>
       <div class="ix" hidden><p class="ix-label">Try it &middot; Cost calculator</p><div data-ix="cost"></div></div>
+    <p class="fw-bp"><a class="more" href="/workflows/">Compare cost per completed outcome, before and after</a></p>
 </div>
 </section>
 
@@ -296,7 +303,8 @@
     <div class="ix" hidden><p class="ix-label">Try it &middot; The do-not-automate check</p><div data-ix="dna"></div></div>
 
     <p>Across every domain the pattern holds: agents investigate, match, draft and monitor; deterministic engines compute and post; named people sign, release money and decide about safety and about people. Autonomy grows fastest where decisions are frequent, small and reversible, and stops where an action cannot be undone or a law names the signatory.</p>
-  </div>
+      <p class="fw-bp"><a class="more" href="/workflows/#wf-supplier">See the supplier bank change that stays with people</a></p>
+</div>
 </section>
 
 <section class="section fw" id="maturity" aria-labelledby="f10">
@@ -358,6 +366,7 @@
     <p class="lead">Read the full method, test where your company stands, or bring it to your leadership team.</p>
     <p class="cta-row">
       <a class="btn btn-primary ext" href="https://www.amazon.com/dp/B0HS8HG6DP" rel="noopener" target="_blank">Get the book<span class="visually-hidden"> (opens in a new tab)</span></a>
+      <a class="btn btn-dark" href="/blueprints/">Explore the blueprints</a>
       <a class="btn btn-dark" href="/talk/">Talk to the book</a>
       <a class="btn btn-dark" href="/contact/#advisory">Talk with Hemanth</a>
     </p>
@@ -376,6 +385,7 @@
       <ul class="footer-links" aria-label="Site">
         <li><a href="/book/">Book</a></li>
         <li><a href="/frameworks/">Frameworks</a></li>
+        <li><a href="/blueprints/">Blueprints</a></li>
         <li><a href="/ideas/">Ideas</a></li>
         <li><a href="/speaking/">Speaking</a></li>
         <li><a href="/advisory/">Advisory</a></li>

@@ -25,6 +25,7 @@ beforeAll(() => {
 describe('built site', () => {
   it('produces every page plus sitemap, robots, 404, headers and favicons', () => {
     for (const f of ['index.html', 'speaking/index.html', 'advisory/index.html', 'ideas/index.html', 'contact/index.html', '404.html',
+      'blueprints/index.html', 'architecture/index.html', 'workflows/index.html', 'controls/index.html', 'designer/index.html',
       'sitemap.xml', 'robots.txt', '_headers', 'favicon.ico', 'favicon.svg', 'apple-touch-icon.png',
       'site.webmanifest', 'assets/images/og-image.jpg', '_redirects', 'press/the-autonomous-enterprise-cover.jpg']) {
       expect(existsSync(join(DIST, f)), f).toBe(true);
@@ -107,11 +108,12 @@ describe('built site', () => {
   });
 
   it('never names a software vendor other than LangChain, and never uses mailto', () => {
-    const vendors = /\b(SAP|Oracle|Microsoft|Salesforce|Workday|ServiceNow|IBM|Google|Amazon Web Services|AWS|Azure|OpenAI|Anthropic|Coupa|Ariba|NetSuite|Infor|Epicor|UiPath|Snowflake|Databricks|MuleSoft|Boomi|Kyriba|BlackLine|Dynamics|Copilot|ChatGPT|Gemini|Claude|Llama|CrewAI|AutoGen)\b/;
+    const vendors = /\b(NVIDIA|Nvidia|Meta|Siemens|Rockwell|Alexa|Siri|Kafka|Kubernetes|Neo4j|Pinecone|Palantir|Tesla|Boston Dynamics|Mistral|Cohere|SAP|Oracle|Microsoft|Salesforce|Workday|ServiceNow|IBM|Google|Amazon Web Services|AWS|Azure|OpenAI|Anthropic|Coupa|Ariba|NetSuite|Infor|Epicor|UiPath|Snowflake|Databricks|MuleSoft|Boomi|Kyriba|BlackLine|Dynamics|Copilot|ChatGPT|Gemini|Claude|Llama|CrewAI|AutoGen)\b/;
     for (const f of walk(DIST).filter((f) => /\.(html|xml|txt|js|webmanifest)$/.test(f))) {
       const t = readFileSync(f, 'utf8');
       expect(t.match(vendors)?.[0], f).toBeUndefined();
       expect(t).not.toContain('mailto:');
+      expect(t.match(/\bGPT(?!-class)/)?.[0], f).toBeUndefined();
     }
     expect(html(pages[0]).match(/LangChain/g)?.length).toBeGreaterThan(0);
   });
@@ -144,12 +146,12 @@ describe('built site', () => {
     expect(readFileSync(join(DIST, 'robots.txt'), 'utf8')).toContain('Sitemap: https://humanledenterprise.com/sitemap.xml');
   });
 
-  it('has Book, Frameworks, Ideas, Speaking, Advisory, About, Contact in the header and footer of every page', () => {
+  it('has Book, Frameworks, Blueprints, Ideas, Speaking, Advisory, About, Contact in the header and footer of every page', () => {
     for (const p of pages) {
       const h = html(p);
       for (const part of [h.match(/<header[\s\S]*?<\/header>/)![0], h.match(/<footer[\s\S]*?<\/footer>/)![0]]) {
         const labels = [...part.matchAll(/<li><a href="(\/[^"]*)"[^>]*>([^<]+)<\/a><\/li>/g)].map((m) => m[2]);
-        expect(labels.slice(0, 7), p.out).toEqual(['Book', 'Frameworks', 'Ideas', 'Speaking', 'Advisory', 'About', 'Contact']);
+        expect(labels.slice(0, 8), p.out).toEqual(['Book', 'Frameworks', 'Blueprints', 'Ideas', 'Speaking', 'Advisory', 'About', 'Contact']);
       }
     }
   });

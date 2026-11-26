@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blueprints for the Human-Led, Agent-Operated Enterprise | Human-Led Enterprise</title>
+<meta name="description" content="Blueprints to reimagine enterprise work with AI agents: a reference architecture, workflow swimlanes, a controls library and a designer, all aligned across every layer.">
+<meta name="author" content="Hemanth Reganti">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://humanledenterprise.com/blueprints/">
+<meta name="theme-color" content="#141414">
+<meta name="color-scheme" content="light">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Human-Led Enterprise">
+<meta property="og:title" content="Blueprints for the Human-Led, Agent-Operated Enterprise | Human-Led Enterprise">
+<meta property="og:description" content="Blueprints to reimagine enterprise work with AI agents: a reference architecture, workflow swimlanes, a controls library and a designer, all aligned across every layer.">
+<meta property="og:url" content="https://humanledenterprise.com/blueprints/">
+<meta property="og:image" content="https://humanledenterprise.com/assets/images/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Autonomous Enterprise by Hemanth Reganti: book cover on a dark background">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Blueprints for the Human-Led, Agent-Operated Enterprise | Human-Led Enterprise">
+<meta name="twitter:description" content="Blueprints to reimagine enterprise work with AI agents: a reference architecture, workflow swimlanes, a controls library and a designer, all aligned across every layer.">
+<meta name="twitter:image" content="https://humanledenterprise.com/assets/images/og-image.jpg">
+<meta name="twitter:image:alt" content="The Autonomous Enterprise by Hemanth Reganti: book cover on a dark background">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preload" href="/assets/fonts/oswald-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
+<script src="/assets/data/controls.js?v=1f7fc4dacc" defer></script>
+<script src="/assets/data/layers.js?v=7c10827ab4" defer></script>
+<script src="/assets/data/workflows.js?v=252848c49c" defer></script>
+<script src="/assets/data/architecture.js?v=9bb81a9cf9" defer></script>
+<script src="/assets/blueprints.js?v=131319b61e" defer></script>
+<link rel="stylesheet" href="/assets/styles.css?v=34a02cac07">
+<script src="/assets/site.js?v=34a02cac07" defer></script>
+<script src="/assets/guide.js?v=34a02cac07" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="3" fill="#F2622E"/><path fill="#141414" d="M5 23h3v4H5zM9.5 20h3v7h-3zM14 17h3v10h-3zM18.5 13h3v14h-3zM23 9h3v18h-3z"/></svg><span class="brand-text"><span class="brand-name">Human-Led Enterprise</span> <span class="brand-sub">Hemanth Reganti</span></span></a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/book/">Book</a></li>
+        <li><a href="/frameworks/">Frameworks</a></li>
+        <li><a href="/blueprints/" aria-current="page">Blueprints</a></li>
+        <li><a href="/ideas/">Ideas</a></li>
+        <li><a href="/speaking/">Speaking</a></li>
+        <li><a href="/advisory/">Advisory</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn-primary header-cta" href="/contact/#advisory">Talk to the author</a>
+  </div>
+</header>
+<main id="main" tabindex="-1">
+<section class="page-head bp-head" aria-labelledby="page-title">
+  <div class="container">
+    <p class="eyebrow">Blueprints</p>
+    <h1 id="page-title">Blueprints for the human-led, agent-operated enterprise</h1>
+    <p class="lead">Reimagine enterprise work with agents, with every known control built in. Four tools turn the frameworks of <cite>The Autonomous Enterprise</cite> into designs you can use.</p>
+  </div>
+</section>
+<nav class="bp-subnav" aria-label="Blueprints">
+  <div class="container">
+    <a class="bp-subnav-home" href="/blueprints/" aria-current="page">Blueprints</a>
+    <ul>
+      <li><a href="/architecture/">Architecture</a></li>
+      <li><a href="/workflows/">Workflows</a></li>
+      <li><a href="/controls/">Controls</a></li>
+      <li><a href="/designer/">Designer</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="section section-ink bp-hero" id="flow" aria-labelledby="flow-title">
+  <div class="container">
+    <p class="eyebrow">One request, end to end</p>
+    <h2 id="flow-title">Follow one request through the stack</h2>
+    <p class="lead">A customer disputes an invoice. Watch the request move from the channel to the system of record, and see which layer does what.</p>
+    <div class="bp-ix" hidden><div data-bp="hub-flow"></div></div>
+    <ol class="bp-flow-static">
+      <li><b>Channels and signals.</b> The dispute arrives by email.</li>
+      <li><b>Human command.</b> The charter and the do-not-automate list set the limits.</li>
+      <li><b>Orchestration.</b> The workflow engine starts the dispute flow.</li>
+      <li><b>Agents.</b> The finance agent investigates.</li>
+      <li><b>Intelligence.</b> A GPT-class model reads the contract; retrieval grounds it.</li>
+      <li><b>Harness.</b> Policy limits, the decision threshold and verification check the proposal.</li>
+      <li><b>Tools and integration.</b> A released interface commits the credit.</li>
+      <li><b>Data and context.</b> The system of record and the ledger tie out.</li>
+      <li><b>Assurance.</b> The trace, evals and audit keep the evidence.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="section" id="tools" aria-labelledby="tools-title">
+  <div class="container">
+    <p class="eyebrow">Four tools</p>
+    <h2 id="tools-title">Design, run, control, decide</h2>
+    <ul class="bp-cards">
+      <li class="bp-card"><span class="bp-card-n">01</span><h3><a href="/architecture/">Reference architecture</a></h3><p>Nine layers, from channels to assurance. Click any part. Play eight architecture patterns and pick the right models.</p></li>
+      <li class="bp-card"><span class="bp-card-n">02</span><h3><a href="/workflows/">Reimagined workflows</a></h3><p>8 workflows as swimlanes, today versus reimagined. Run a case and inject failures to see which control catches them.</p></li>
+      <li class="bp-card"><span class="bp-card-n">03</span><h3><a href="/controls/">Controls library</a></h3><p>65 controls, mapped to public frameworks. Filter by category, harness part, level, layer and use.</p></li>
+      <li class="bp-card"><span class="bp-card-n">04</span><h3><a href="/designer/">Workflow designer</a></h3><p>Add your steps. Get the ceiling per step, the weakest link, the required controls and a blueprint to export.</p></li>
+    </ul>
+  </div>
+</section>
+
+<section class="section section-paper-2" id="alignment" aria-labelledby="alignment-title">
+  <div class="container">
+    <p class="eyebrow">Alignment across every layer</p>
+    <h2 id="alignment-title">Alignment across every layer</h2>
+    <p class="lead">Every agent action must agree across the financial, regulatory, operational, application and technical layers of the enterprise.</p>
+    <p>Pick a layer. Each item shows what the agent does, how the layer stays consistent with the others, the controls that enforce it and the evidence. The same layers filter the architecture, the workflows, the controls and the designer.</p>
+    <div class="al-wrap" data-bp="alignment">
+<section class="al-layer" id="layer-fin" aria-labelledby="al-fin">
+  <h3 id="al-fin">Financial</h3>
+  <p class="al-desc">Agents prepare and propose money movements. The ledger, the limits and the trace must always agree.</p>
+  <ol class="al-items">
+    <li><details><summary>Credits and adjustments</summary><dl><div><dt>What the agent does</dt><dd>The agent investigates a dispute and proposes a credit memo.</dd></div><div><dt>Alignment check</dt><dd>A posted credit ties to the general ledger, the policy limit and the audit trail.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#TAL-01">TAL-01</a> <a class="cid" href="/controls/#TAL-02">TAL-02</a> <a class="cid" href="/controls/#DQ-04">DQ-04</a> <a class="cid" href="/controls/#TRC-01">TRC-01</a></dd></div><div><dt>Evidence</dt><dd>Daily tie-out report. Trace ID on every posting.</dd></div></dl></details></li>
+    <li><details><summary>Invoice exceptions</summary><dl><div><dt>What the agent does</dt><dd>The agent resolves price and quantity variances inside tolerance.</dd></div><div><dt>Alignment check</dt><dd>The purchase order, the receipt and the invoice agree before release.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#TAL-01">TAL-01</a> <a class="cid" href="/controls/#DQ-01">DQ-01</a> <a class="cid" href="/controls/#SOD-03">SOD-03</a></dd></div><div><dt>Evidence</dt><dd>Match results. Version of the tolerance table.</dd></div></dl></details></li>
+    <li><details><summary>Close and reconciliations</summary><dl><div><dt>What the agent does</dt><dd>The agent prepares reconciliations and proposes journals.</dd></div><div><dt>Alignment check</dt><dd>Subledger equals ledger. The preparer is never the approver.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#DQ-04">DQ-04</a> <a class="cid" href="/controls/#SOD-01">SOD-01</a> <a class="cid" href="/controls/#HO-01">HO-01</a></dd></div><div><dt>Evidence</dt><dd>Signed reconciliations. Journal approval log.</dd></div></dl></details></li>
+    <li><details><summary>Payments and bank data</summary><dl><div><dt>What the agent does</dt><dd>The agent prepares evidence only. It never releases money or changes bank details.</dd></div><div><dt>Alignment check</dt><dd>No agent holds a payment-release or bank-change permission.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#TAL-05">TAL-05</a> <a class="cid" href="/controls/#TAL-07">TAL-07</a> <a class="cid" href="/controls/#IAM-03">IAM-03</a></dd></div><div><dt>Evidence</dt><dd>Permission report with zero agent payment scopes.</dd></div></dl></details></li>
+    <li><details><summary>Cost of agent work</summary><dl><div><dt>What the agent does</dt><dd>The agent records its spend per case.</dd></div><div><dt>Alignment check</dt><dd>Cost per completed outcome matches the finance allocation.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#CST-01">CST-01</a> <a class="cid" href="/controls/#CST-02">CST-02</a></dd></div><div><dt>Evidence</dt><dd>Monthly cost report reconciled to platform invoices.</dd></div></dl></details></li>
+  </ol>
+</section>
+<section class="al-layer" id="layer-reg" aria-labelledby="al-reg">
+  <h3 id="al-reg">Regulatory and statutory</h3>
+  <p class="al-desc">Laws and standards set hard edges. Every step shows which rule applies and who signs.</p>
+  <ol class="al-items">
+    <li><details><summary>Human oversight where law requires it</summary><dl><div><dt>What the agent does</dt><dd>The agent routes reserved decisions to named people.</dd></div><div><dt>Alignment check</dt><dd>The level of a step never exceeds its legal ceiling.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#HO-01">HO-01</a> <a class="cid" href="/controls/#HO-02">HO-02</a> <a class="cid" href="/controls/#TAL-05">TAL-05</a> <a class="cid" href="/controls/#RES-01">RES-01</a></dd></div><div><dt>Evidence</dt><dd>Oversight design record. Approver logs.</dd></div></dl></details></li>
+    <li><details><summary>Record-keeping</summary><dl><div><dt>What the agent does</dt><dd>The agent writes a trace for every decision.</dd></div><div><dt>Alignment check</dt><dd>Retention meets the statute, and each trace links to the record it supports.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#TRC-01">TRC-01</a> <a class="cid" href="/controls/#TRC-02">TRC-02</a> <a class="cid" href="/controls/#PRV-03">PRV-03</a></dd></div><div><dt>Evidence</dt><dd>Retention schedule. Trace samples.</dd></div></dl></details></li>
+    <li><details><summary>Key financial controls</summary><dl><div><dt>What the agent does</dt><dd>Agent steps inside key controls stay at L2 until audit approves more.</dd></div><div><dt>Alignment check</dt><dd>The control matrix, the agent registry and the release log name the same steps.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#SOD-01">SOD-01</a> <a class="cid" href="/controls/#SOD-02">SOD-02</a> <a class="cid" href="/controls/#TRC-04">TRC-04</a> <a class="cid" href="/controls/#MR-02">MR-02</a></dd></div><div><dt>Evidence</dt><dd>Control matrix with agent steps flagged. Audit sign-off.</dd></div></dl></details></li>
+    <li><details><summary>Privacy</summary><dl><div><dt>What the agent does</dt><dd>The agent uses the minimum personal data.</dd></div><div><dt>Alignment check</dt><dd>The lawful basis for each field matches the context allow-list.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#PRV-01">PRV-01</a> <a class="cid" href="/controls/#PRV-02">PRV-02</a> <a class="cid" href="/controls/#PRV-03">PRV-03</a></dd></div><div><dt>Evidence</dt><dd>Data protection assessment. Masking logs.</dd></div></dl></details></li>
+    <li><details><summary>Machine and product safety</summary><dl><div><dt>What the agent does</dt><dd>Physical AI runs inside rated safety functions.</dd></div><div><dt>Alignment check</dt><dd>No AI output can override the safety controller.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#PHY-01">PHY-01</a> <a class="cid" href="/controls/#PHY-02">PHY-02</a> <a class="cid" href="/controls/#PHY-03">PHY-03</a> <a class="cid" href="/controls/#OT-03">OT-03</a></dd></div><div><dt>Evidence</dt><dd>Safety validation report. Risk assessment.</dd></div></dl></details></li>
+    <li><details><summary>Transparency</summary><dl><div><dt>What the agent does</dt><dd>The agent tells people that they deal with an agent.</dd></div><div><dt>Alignment check</dt><dd>Every channel plays the same approved notice.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#PRV-04">PRV-04</a> <a class="cid" href="/controls/#HO-03">HO-03</a></dd></div><div><dt>Evidence</dt><dd>Notice scripts. Call samples.</dd></div></dl></details></li>
+  </ol>
+</section>
+<section class="al-layer" id="layer-ops" aria-labelledby="al-ops">
+  <h3 id="al-ops">Operational</h3>
+  <p class="al-desc">Agents run the work. Service levels, capacity and exceptions must stay in line with the plan.</p>
+  <ol class="al-items">
+    <li><details><summary>Service levels</summary><dl><div><dt>What the agent does</dt><dd>The agent works the queue and escalates hard cases.</dd></div><div><dt>Alignment check</dt><dd>Escalations meet the same service level as agent-closed cases.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#HO-03">HO-03</a> <a class="cid" href="/controls/#MON-01">MON-01</a></dd></div><div><dt>Evidence</dt><dd>Service-level report by path.</dd></div></dl></details></li>
+    <li><details><summary>Exception routing</summary><dl><div><dt>What the agent does</dt><dd>The agent sends each exception to one owner.</dd></div><div><dt>Alignment check</dt><dd>Every exception has an owner and lands in one inbox.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#HO-01">HO-01</a> <a class="cid" href="/controls/#TAL-02">TAL-02</a></dd></div><div><dt>Evidence</dt><dd>Queue aging report.</dd></div></dl></details></li>
+    <li><details><summary>Capacity and envelope</summary><dl><div><dt>What the agent does</dt><dd>The agent runs inside call, time and cost budgets.</dd></div><div><dt>Alignment check</dt><dd>Run budgets match planned volumes.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#CST-01">CST-01</a> <a class="cid" href="/controls/#RES-03">RES-03</a> <a class="cid" href="/controls/#TAL-04">TAL-04</a></dd></div><div><dt>Evidence</dt><dd>Budget-breach log.</dd></div></dl></details></li>
+    <li><details><summary>Field and plant work</summary><dl><div><dt>What the agent does</dt><dd>The agent drafts work orders from sensor signals.</dd></div><div><dt>Alignment check</dt><dd>Each order matches the asset record, the part and the technician skill.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#DQ-03">DQ-03</a> <a class="cid" href="/controls/#OT-04">OT-04</a> <a class="cid" href="/controls/#HO-01">HO-01</a></dd></div><div><dt>Evidence</dt><dd>Work order audit sample.</dd></div></dl></details></li>
+    <li><details><summary>Continuity</summary><dl><div><dt>What the agent does</dt><dd>On an outage, work falls back to people without loss.</dd></div><div><dt>Alignment check</dt><dd>Fallback queues and staffing match the demotion plan.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#RES-02">RES-02</a> <a class="cid" href="/controls/#RES-01">RES-01</a> <a class="cid" href="/controls/#RES-04">RES-04</a></dd></div><div><dt>Evidence</dt><dd>Drill records.</dd></div></dl></details></li>
+  </ol>
+</section>
+<section class="al-layer" id="layer-app" aria-labelledby="al-app">
+  <h3 id="al-app">Application</h3>
+  <p class="al-desc">Agents act through applications. Every action uses a released interface and the rules of that application.</p>
+  <ol class="al-items">
+    <li><details><summary>Released interfaces only</summary><dl><div><dt>What the agent does</dt><dd>The agent calls tools, not screens.</dd></div><div><dt>Alignment check</dt><dd>Each tool maps to a versioned interface with the validations of the application.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#TAL-03">TAL-03</a> <a class="cid" href="/controls/#IAM-03">IAM-03</a></dd></div><div><dt>Evidence</dt><dd>Tool registry matched to the interface catalogue.</dd></div></dl></details></li>
+    <li><details><summary>Business rules stay in the application</summary><dl><div><dt>What the agent does</dt><dd>The agent proposes a change.</dd></div><div><dt>Alignment check</dt><dd>The application validates the proposal again before commit.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#PCS-02">PCS-02</a> <a class="cid" href="/controls/#TAL-02">TAL-02</a></dd></div><div><dt>Evidence</dt><dd>Rejection logs.</dd></div></dl></details></li>
+    <li><details><summary>Idempotency and reversal</summary><dl><div><dt>What the agent does</dt><dd>The agent commits through one key per action.</dd></div><div><dt>Alignment check</dt><dd>Each action can be reversed once, and only once.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#TAL-06">TAL-06</a></dd></div><div><dt>Evidence</dt><dd>Reversal tests.</dd></div></dl></details></li>
+    <li><details><summary>Registry and versions</summary><dl><div><dt>What the agent does</dt><dd>Only registered agent versions run.</dd></div><div><dt>Alignment check</dt><dd>The registry, the release log and the running version agree.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#MR-03">MR-03</a> <a class="cid" href="/controls/#SOD-02">SOD-02</a> <a class="cid" href="/controls/#TRC-04">TRC-04</a></dd></div><div><dt>Evidence</dt><dd>Release records.</dd></div></dl></details></li>
+    <li><details><summary>Cross-agent contracts</summary><dl><div><dt>What the agent does</dt><dd>Agents hand work to other agents.</dd></div><div><dt>Alignment check</dt><dd>Each contract names who decides, what evidence returns and the failure path.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#TAL-03">TAL-03</a> <a class="cid" href="/controls/#HO-02">HO-02</a></dd></div><div><dt>Evidence</dt><dd>Contract library.</dd></div></dl></details></li>
+  </ol>
+</section>
+<section class="al-layer" id="layer-fe" aria-labelledby="al-fe">
+  <h3 id="al-fe">Technical: Frontend</h3>
+  <p class="al-desc">What people see must match what the agent did and what policy allows.</p>
+  <ol class="al-items">
+    <li><details><summary>Decision cards</summary><dl><div><dt>What the agent does</dt><dd>The agent sends a proposal to a person.</dd></div><div><dt>Alignment check</dt><dd>Card fields come from the trace, not from free model text.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#HO-01">HO-01</a> <a class="cid" href="/controls/#TRC-01">TRC-01</a></dd></div><div><dt>Evidence</dt><dd>Card render samples.</dd></div></dl></details></li>
+    <li><details><summary>Approval screens</summary><dl><div><dt>What the agent does</dt><dd>The agent waits for a decision.</dd></div><div><dt>Alignment check</dt><dd>Approve buttons show only for roles that may approve.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#SOD-01">SOD-01</a> <a class="cid" href="/controls/#IAM-02">IAM-02</a></dd></div><div><dt>Evidence</dt><dd>Role test results.</dd></div></dl></details></li>
+    <li><details><summary>Agent disclosure</summary><dl><div><dt>What the agent does</dt><dd>The agent talks in chat or voice.</dd></div><div><dt>Alignment check</dt><dd>Every screen and call labels the agent.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#PRV-04">PRV-04</a> <a class="cid" href="/controls/#PCS-05">PCS-05</a></dd></div><div><dt>Evidence</dt><dd>Screenshots and scripts per release.</dd></div></dl></details></li>
+    <li><details><summary>Approval quality</summary><dl><div><dt>What the agent does</dt><dd>The agent asks for approval on large items.</dd></div><div><dt>Alignment check</dt><dd>The screen shows the evidence before the approve button works.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#HO-05">HO-05</a></dd></div><div><dt>Evidence</dt><dd>Time-on-card analytics.</dd></div></dl></details></li>
+    <li><details><summary>Owner console</summary><dl><div><dt>What the agent does</dt><dd>The agent reports status to its owner.</dd></div><div><dt>Alignment check</dt><dd>The stop control is visible and works from the console.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#RES-01">RES-01</a> <a class="cid" href="/controls/#HO-02">HO-02</a></dd></div><div><dt>Evidence</dt><dd>Console audit and drill results.</dd></div></dl></details></li>
+  </ol>
+</section>
+<section class="al-layer" id="layer-be" aria-labelledby="al-be">
+  <h3 id="al-be">Technical: Backend</h3>
+  <p class="al-desc">Services enforce the limits. The model never holds them.</p>
+  <ol class="al-items">
+    <li><details><summary>Policy engine</summary><dl><div><dt>What the agent does</dt><dd>The agent sends a proposal.</dd></div><div><dt>Alignment check</dt><dd>The policy service, not the prompt, decides inside or outside limits.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#TAL-01">TAL-01</a> <a class="cid" href="/controls/#SOD-03">SOD-03</a></dd></div><div><dt>Evidence</dt><dd>Policy table versions.</dd></div></dl></details></li>
+    <li><details><summary>Tool and model gateways</summary><dl><div><dt>What the agent does</dt><dd>The agent calls tools and models.</dd></div><div><dt>Alignment check</dt><dd>Gateways enforce scopes, quotas and masking on every call.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#TAL-03">TAL-03</a> <a class="cid" href="/controls/#TAL-04">TAL-04</a> <a class="cid" href="/controls/#PRV-02">PRV-02</a> <a class="cid" href="/controls/#CST-03">CST-03</a></dd></div><div><dt>Evidence</dt><dd>Gateway logs.</dd></div></dl></details></li>
+    <li><details><summary>Identity and tokens</summary><dl><div><dt>What the agent does</dt><dd>The agent authenticates.</dd></div><div><dt>Alignment check</dt><dd>Each call carries an agent identity and an on-behalf-of owner.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#IAM-01">IAM-01</a> <a class="cid" href="/controls/#IAM-02">IAM-02</a></dd></div><div><dt>Evidence</dt><dd>Token issue logs.</dd></div></dl></details></li>
+    <li><details><summary>Resilience</summary><dl><div><dt>What the agent does</dt><dd>The agent meets an error or a loop.</dd></div><div><dt>Alignment check</dt><dd>Fallback and guards trip before damage spreads.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#RES-02">RES-02</a> <a class="cid" href="/controls/#RES-03">RES-03</a></dd></div><div><dt>Evidence</dt><dd>Failure-injection test results.</dd></div></dl></details></li>
+    <li><details><summary>Trace write-ahead</summary><dl><div><dt>What the agent does</dt><dd>The agent commits an action.</dd></div><div><dt>Alignment check</dt><dd>If the trace write fails, the action fails.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#TRC-01">TRC-01</a> <a class="cid" href="/controls/#TRC-02">TRC-02</a></dd></div><div><dt>Evidence</dt><dd>Failed-write tests.</dd></div></dl></details></li>
+  </ol>
+</section>
+<section class="al-layer" id="layer-data" aria-labelledby="al-data">
+  <h3 id="al-data">Technical: Data</h3>
+  <p class="al-desc">Agents read governed data. Context, features and traces stay consistent with systems of record.</p>
+  <ol class="al-items">
+    <li><details><summary>Quality gates</summary><dl><div><dt>What the agent does</dt><dd>The agent reads input data.</dd></div><div><dt>Alignment check</dt><dd>The gate result travels with the data into the trace.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#DQ-01">DQ-01</a></dd></div><div><dt>Evidence</dt><dd>Gate dashboards.</dd></div></dl></details></li>
+    <li><details><summary>Lineage</summary><dl><div><dt>What the agent does</dt><dd>The agent cites facts.</dd></div><div><dt>Alignment check</dt><dd>Every fact links back to a system of record.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#DQ-02">DQ-02</a></dd></div><div><dt>Evidence</dt><dd>Lineage samples.</dd></div></dl></details></li>
+    <li><details><summary>Golden records</summary><dl><div><dt>What the agent does</dt><dd>The agent looks up suppliers, customers and assets.</dd></div><div><dt>Alignment check</dt><dd>One golden version per entity, with a named owner.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#DQ-03">DQ-03</a></dd></div><div><dt>Evidence</dt><dd>Duplicate-record rate.</dd></div></dl></details></li>
+    <li><details><summary>Permission-aware retrieval</summary><dl><div><dt>What the agent does</dt><dd>The agent searches documents.</dd></div><div><dt>Alignment check</dt><dd>Retrieval applies the same access rights as the source system.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#PCS-04">PCS-04</a> <a class="cid" href="/controls/#PRV-01">PRV-01</a></dd></div><div><dt>Evidence</dt><dd>Retrieval access tests.</dd></div></dl></details></li>
+    <li><details><summary>Drift and labels</summary><dl><div><dt>What the agent does</dt><dd>The agent learns from outcomes.</dd></div><div><dt>Alignment check</dt><dd>Live data stays close to the evaluated baseline, and overrides become labels.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#MON-02">MON-02</a> <a class="cid" href="/controls/#MON-04">MON-04</a></dd></div><div><dt>Evidence</dt><dd>Drift reports. Label sets.</dd></div></dl></details></li>
+    <li><details><summary>Trace and ledger tie-out</summary><dl><div><dt>What the agent does</dt><dd>The agent posts through deterministic rules.</dd></div><div><dt>Alignment check</dt><dd>Trace totals equal ledger totals every day.</dd></div><div><dt>Controls embedded</dt><dd><a class="cid" href="/controls/#DQ-04">DQ-04</a> <a class="cid" href="/controls/#TRC-03">TRC-03</a></dd></div><div><dt>Evidence</dt><dd>Tie-out reports.</dd></div></dl></details></li>
+  </ol>
+</section>
+    </div>
+    <p class="cta-row"><a class="btn btn-dark" href="/workflows/#matrix">See the workflows by layer matrix</a></p>
+  </div>
+</section>
+
+<section class="section" id="connect" aria-labelledby="connect-title">
+  <div class="container fw-body">
+    <p class="eyebrow">Built on the book</p>
+    <h2 id="connect-title">Every blueprint traces to a framework</h2>
+    <div class="fw-table-wrap">
+      <table class="fw-table">
+        <thead><tr><th scope="col">Framework</th><th scope="col">Where it shows in the blueprints</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><a href="/frameworks/#scale">L0 to L5 scale</a></th><td>Every component, step and control carries a level.</td></tr>
+          <tr><th scope="row"><a href="/frameworks/#ceiling">Materiality and reversibility</a></th><td>The designer computes each ceiling with the five modifiers.</td></tr>
+          <tr><th scope="row"><a href="/frameworks/#harness">Ten-part harness</a></th><td>The control plane layer of the architecture, and the heatmap on the controls page.</td></tr>
+          <tr><th scope="row"><a href="/frameworks/#pvrc">Propose, validate, route, commit</a></th><td>The harness lane of every reimagined workflow.</td></tr>
+          <tr><th scope="row"><a href="/frameworks/#pvrc">Decision threshold</a></th><td>The designer computes L &divide; (G + L) per step.</td></tr>
+          <tr><th scope="row"><a href="/frameworks/#weakest-link">Weakest-link rule</a></th><td>Each workflow shows its chain level and the link that holds it.</td></tr>
+          <tr><th scope="row"><a href="/frameworks/#cost">Cost per completed outcome</a></th><td>Before and after cards on each workflow.</td></tr>
+          <tr><th scope="row"><a href="/frameworks/#not-automate">Do-not-automate list</a></th><td>Control TAL-05, and the supplier bank change that stays with people.</td></tr>
+          <tr><th scope="row"><a href="/frameworks/#flywheel">Value-risk flywheel</a></th><td>Drift, demotion and override labels in the assurance layer.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fw-note">All figures in the blueprints are illustrative. They are not client data.</p>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="brand" href="/"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="3" fill="#F2622E"/><path fill="#141414" d="M5 23h3v4H5zM9.5 20h3v7h-3zM14 17h3v10h-3zM18.5 13h3v14h-3zM23 9h3v18h-3z"/></svg><span class="brand-text"><span class="brand-name">Human-Led Enterprise</span> <span class="brand-sub">Hemanth Reganti</span></span></a>
+      <p>Author, speaker and advisor on human-led, agent-operated enterprises.</p>
+      <p>&copy; 2026 Hemanth Reganti</p>
+      <p>We use your details only to respond to your request.</p>
+    </div>
+    <div>
+      <ul class="footer-links" aria-label="Site">
+        <li><a href="/book/">Book</a></li>
+        <li><a href="/frameworks/">Frameworks</a></li>
+        <li><a href="/blueprints/">Blueprints</a></li>
+        <li><a href="/ideas/">Ideas</a></li>
+        <li><a href="/speaking/">Speaking</a></li>
+        <li><a href="/advisory/">Advisory</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+      <ul class="footer-links footer-ext" aria-label="Elsewhere">
+        <li><a href="/contact/#press">Press kit</a></li>
+        <li><a href="https://www.amazon.com/dp/B0HS8HG6DP" rel="noopener" target="_blank">Amazon<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+        <li><a href="https://www.linkedin.com/in/hemanth-reganti-147153178/" rel="noopener" target="_blank">LinkedIn<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+<a class="guide-fab" href="/talk/" data-guide-open aria-haspopup="dialog"><span class="guide-fab-mark" aria-hidden="true"></span>Talk to the book</a>
+</body>
+</html>

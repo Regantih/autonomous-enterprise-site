@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workflow Designer: Autonomy Ceilings and Controls | Human-Led Enterprise</title>
+<meta name="description" content="Design an agentic workflow step by step: get the autonomy ceiling per step, the weakest link, the required controls, a swimlane and an exportable blueprint.">
+<meta name="author" content="Hemanth Reganti">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://humanledenterprise.com/designer/">
+<meta name="theme-color" content="#141414">
+<meta name="color-scheme" content="light">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Human-Led Enterprise">
+<meta property="og:title" content="Workflow Designer: Autonomy Ceilings and Controls | Human-Led Enterprise">
+<meta property="og:description" content="Design an agentic workflow step by step: get the autonomy ceiling per step, the weakest link, the required controls, a swimlane and an exportable blueprint.">
+<meta property="og:url" content="https://humanledenterprise.com/designer/">
+<meta property="og:image" content="https://humanledenterprise.com/assets/images/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Autonomous Enterprise by Hemanth Reganti: book cover on a dark background">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Workflow Designer: Autonomy Ceilings and Controls | Human-Led Enterprise">
+<meta name="twitter:description" content="Design an agentic workflow step by step: get the autonomy ceiling per step, the weakest link, the required controls, a swimlane and an exportable blueprint.">
+<meta name="twitter:image" content="https://humanledenterprise.com/assets/images/og-image.jpg">
+<meta name="twitter:image:alt" content="The Autonomous Enterprise by Hemanth Reganti: book cover on a dark background">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preload" href="/assets/fonts/oswald-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
+<script src="/assets/data/controls.js?v=1f7fc4dacc" defer></script>
+<script src="/assets/data/layers.js?v=7c10827ab4" defer></script>
+<script src="/assets/data/workflows.js?v=252848c49c" defer></script>
+<script src="/assets/data/architecture.js?v=9bb81a9cf9" defer></script>
+<script src="/assets/blueprints.js?v=131319b61e" defer></script>
+<link rel="stylesheet" href="/assets/styles.css?v=34a02cac07">
+<script src="/assets/site.js?v=34a02cac07" defer></script>
+<script src="/assets/guide.js?v=34a02cac07" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="3" fill="#F2622E"/><path fill="#141414" d="M5 23h3v4H5zM9.5 20h3v7h-3zM14 17h3v10h-3zM18.5 13h3v14h-3zM23 9h3v18h-3z"/></svg><span class="brand-text"><span class="brand-name">Human-Led Enterprise</span> <span class="brand-sub">Hemanth Reganti</span></span></a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/book/">Book</a></li>
+        <li><a href="/frameworks/">Frameworks</a></li>
+        <li><a href="/blueprints/" aria-current="page">Blueprints</a></li>
+        <li><a href="/ideas/">Ideas</a></li>
+        <li><a href="/speaking/">Speaking</a></li>
+        <li><a href="/advisory/">Advisory</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn-primary header-cta" href="/contact/#advisory">Talk to the author</a>
+  </div>
+</header>
+<main id="main" tabindex="-1">
+<section class="page-head bp-head" aria-labelledby="page-title">
+  <div class="container">
+    <p class="eyebrow">Blueprints &middot; Designer</p>
+    <h1 id="page-title">Workflow designer</h1>
+    <p class="lead">Describe each step of a workflow. Get the autonomy ceiling per step, the weakest link, the controls you need, a swimlane and a blueprint to export.</p>
+  </div>
+</section>
+<nav class="bp-subnav" aria-label="Blueprints">
+  <div class="container">
+    <a class="bp-subnav-home" href="/blueprints/">Blueprints</a>
+    <ul>
+      <li><a href="/architecture/">Architecture</a></li>
+      <li><a href="/workflows/">Workflows</a></li>
+      <li><a href="/controls/">Controls</a></li>
+      <li><a href="/designer/" aria-current="page">Designer</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="section bp-section" id="design" aria-labelledby="design-title">
+  <div class="container">
+    <h2 id="design-title" class="h-sm">Design your workflow</h2>
+    <p>One example is loaded: a customer dispute. Change it or add your own steps. Nothing leaves your browser. There is no storage and no cookies.</p>
+    <div class="bp-ix" hidden><div data-bp="designer"></div></div>
+    <noscript><p class="fw-note">Turn on JavaScript to use the designer. The rules it applies are below.</p></noscript>
+  </div>
+</section>
+
+<section class="section section-paper-2 bp-section" id="rules" aria-labelledby="rules-title">
+  <div class="container fw-body">
+    <p class="eyebrow">The rules it applies</p>
+    <h2 id="rules-title" class="h-sm">How the designer decides</h2>
+    <ol class="fw-list">
+      <li><strong>Default ceiling.</strong> Materiality and reversibility set the start point, from up to L4 for low and easily reversible to L0&ndash;L1 for high and irreversible. <a href="/frameworks/#ceiling">See the table</a>.</li>
+      <li><strong>Data quality.</strong> If the input data fails its gate, the step is capped at L2.</li>
+      <li><strong>Regulation.</strong> A regulated step or key financial control is capped at L2 until legal and audit approve more.</li>
+      <li><strong>Evidence.</strong> A step runs no higher than the level it has proven.</li>
+      <li><strong>External counterparty.</strong> A commitment to a third party lowers the ceiling one level for the first 90 days.</li>
+      <li><strong>Weakest link.</strong> A step cannot run above the handoff it depends on. The chain runs at its lowest step or handoff.</li>
+      <li><strong>Decision threshold.</strong> The agent acts alone only when confidence is at least L &divide; (G + L).</li>
+      <li><strong>Controls.</strong> The designer pulls every control that the step level, the model family and the step context require from the <a href="/controls/">library</a>.</li>
+    </ol>
+    <p class="fw-note">Thresholds are illustrative. Set your own with internal audit.</p>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="brand" href="/"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="3" fill="#F2622E"/><path fill="#141414" d="M5 23h3v4H5zM9.5 20h3v7h-3zM14 17h3v10h-3zM18.5 13h3v14h-3zM23 9h3v18h-3z"/></svg><span class="brand-text"><span class="brand-name">Human-Led Enterprise</span> <span class="brand-sub">Hemanth Reganti</span></span></a>
+      <p>Author, speaker and advisor on human-led, agent-operated enterprises.</p>
+      <p>&copy; 2026 Hemanth Reganti</p>
+      <p>We use your details only to respond to your request.</p>
+    </div>
+    <div>
+      <ul class="footer-links" aria-label="Site">
+        <li><a href="/book/">Book</a></li>
+        <li><a href="/frameworks/">Frameworks</a></li>
+        <li><a href="/blueprints/">Blueprints</a></li>
+        <li><a href="/ideas/">Ideas</a></li>
+        <li><a href="/speaking/">Speaking</a></li>
+        <li><a href="/advisory/">Advisory</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+      <ul class="footer-links footer-ext" aria-label="Elsewhere">
+        <li><a href="/contact/#press">Press kit</a></li>
+        <li><a href="https://www.amazon.com/dp/B0HS8HG6DP" rel="noopener" target="_blank">Amazon<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+        <li><a href="https://www.linkedin.com/in/hemanth-reganti-147153178/" rel="noopener" target="_blank">LinkedIn<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+<a class="guide-fab" href="/talk/" data-guide-open aria-haspopup="dialog"><span class="guide-fab-mark" aria-hidden="true"></span>Talk to the book</a>
+</body>
+</html>
