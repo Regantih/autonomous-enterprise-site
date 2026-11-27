@@ -192,3 +192,51 @@ export function teamVars(assetsDir) {
     TEAM_DIRECTORY: directory(T),
   };
 }
+
+// ---------- the guide's knowledge pack ----------
+
+/** Longest line the guide's search returns for one agent; search_book hands the model at most four lines. */
+export const TEAM_LINE_MAX = 760;
+
+const flat = (t) => String(t).replace(/\s+/g, ' ').trim();
+const list = (xs, n) => xs.slice(0, n).map(flat).join('; ');
+const clip = (t, n) => (t.length <= n ? t : `${t.slice(0, n - 1).replace(/[\s,;:]+\S*$/, '')}…`);
+
+/**
+ * One searchable line per agent or human role, summarised to fit TEAM_LINE_MAX: what it does and its department come
+ * first, then its level by task, owner, a limit, a KPI and what it cannot do. A part that does not fit is left out
+ * whole (the page has the rest); the chapter citation always closes the line so an answer can cite it.
+ */
+export function teamAgentLine(a, d) {
+  const ch = a.cite.replace(/^Ch\s+/, '');
+  const range = agentRange(a);
+  const who = kindOf(a) === 'role' ? 'human role' : 'agent';
+  const cite = ` [Ch ${ch}]`;
+  const head = clip(`${a.name} (${who}, ${d.short} department; Ch ${ch}): ${flat(a.does)}`, 300);
+  const optional = [
+    `${range == null ? 'Level not stated in the book' : `Autonomy ${levelLabel(range)}`}${a.tasks.length ? `; tasks: ${a.tasks.slice(0, 2).map((t) => `${flat(t.t)} (${levelLabel(t.l)})`).join('; ')}` : ''}.`,
+    `Owner: ${flat(a.owner)}${a.approver && !/^n\/a$/i.test(flat(a.approver)) ? `; approver: ${flat(a.approver)}` : ''}.`,
+    a.limits.length ? `Limit: ${list(a.limits, 1)}.` : '',
+    a.kpis.length ? `KPIs: ${list(a.kpis, 2)}.` : '',
+    a.cannot.length ? `Cannot: ${list(a.cannot, 1)}.` : '',
+  ].filter(Boolean).map((t) => t.replace(/\.\.$/, '.'));
+  let line = head.replace(/\.?$/, '.');
+  for (const part of optional) if (line.length + 1 + part.length + cite.length <= TEAM_LINE_MAX) line += ` ${part}`;
+  return line + cite;
+}
+
+/** The team section of the guide's knowledge pack, generated from the same data file the page renders. */
+export function teamKnowledge(T) {
+  const c = teamCounts(T);
+  const byDept = new Map(T.depts.map((d) => [d.id, d]));
+  const lines = [
+    `## Agent operations team (page /blueprints/team/; Book, Ch 12–20, 05, 06, 22, 24, 25)`,
+    `- The Agent Operations Team page at /blueprints/team/ lists every agent the book names: ${c.agents} agents and ${c.roles} human roles in ${c.depts} departments, ${c.tasks} tasks, each task tagged with its L0 to L5 level or "Level not stated", with owner, approver, limits, kill switch, KPIs and a chapter citation (Ch 12–20, 05, 22, 24, 25).`,
+  ];
+  for (const d of T.depts) {
+    const names = T.agents.filter((a) => a.dept === d.id).map((a) => a.name);
+    lines.push(`- ${d.short} department (${flat(d.name)}; ${d.cite}): ${flat(d.lead)} ${deptCountLabel(c.per[d.id])}: ${names.join(', ')}.`);
+  }
+  for (const a of T.agents) lines.push(`- ${teamAgentLine(a, byDept.get(a.dept))}`);
+  return lines.join('\n');
+}

@@ -4,7 +4,7 @@ import { factSheet } from './fact-check';
 
 /**
  * The guide's tools. All of them are code that runs on the server; none calls a model.
- *   search_book   keyword search over the knowledge pack (chapters, glossary), returns passages with chapter tags
+ *   search_book   keyword search over the knowledge pack (chapters, glossary, agent team), returns passages with chapter tags
  *   ask_graph     routes a question and traverses the site's knowledge graph and skill graph (the graph agent's code)
  *   suggest_page  recommends one page of this site, with a reason
  *   start_intake  hands the visitor to the intake agent; nothing is stored until they consent and press Send there
@@ -63,10 +63,12 @@ export function terms(q: string): string[] {
 }
 
 const DOC_TERMS = PASSAGES.map((p) => terms(`${p.section} ${p.text}`));
+/** The passage's subject: the words before its first colon or bracket ("Journal agent", "Trust tier"). */
+const LEAD_TERMS = PASSAGES.map((p) => terms(p.text.split(/[:(]/)[0].split(/\s+/).slice(0, 8).join(' ')));
 const DF = new Map<string, number>();
 for (const ts of DOC_TERMS) for (const t of new Set(ts)) DF.set(t, (DF.get(t) ?? 0) + 1);
 
-/** Deterministic keyword search: inverse-document-frequency weights, a bonus for matches in the section heading. */
+/** Deterministic keyword search: inverse-document-frequency weights, a bonus for matches in the section heading and in the passage's subject. */
 export function searchBook(query: string, k = 4): Passage[] {
   const qs = terms(query);
   if (!qs.length) return [];
@@ -80,6 +82,8 @@ export function searchBook(query: string, k = 4): Passage[] {
       if (!hit) continue;
       s += Math.log(1 + n / (DF.get(q) ?? 1));
       if (head.includes(q)) s += 0.5;
+      // A passage about the very thing asked for (an agent or a term by name) beats one that only mentions it.
+      if (LEAD_TERMS[i].includes(q)) s += 0.25;
     }
     return { p, s };
   }).filter((x) => x.s > 0);
@@ -99,6 +103,7 @@ export const SITE_PAGES: SitePage[] = [
   { id: 'design', href: '/blueprints/design/', title: 'Design choices', about: 'Tabular models, retrieval, evals, agent security, inference budgets, models versus rules.' },
   { id: 'controls', href: '/controls/', title: 'Controls', about: 'A filterable library of controls for agents, mapped to public frameworks.' },
   { id: 'loops', href: '/blueprints/loops/', title: 'Loops', about: 'Self-improving loops with a live operations room you can steer.' },
+  { id: 'team', href: '/blueprints/team/', title: 'Agent operations team', about: 'Every agent the book names, by department, with its level, owner, limits, KPIs and chapter.' },
   { id: 'graphs', href: '/blueprints/graphs/', title: 'Graphs', about: 'A knowledge graph of sample payables data, a skill graph and the graph agent.' },
   { id: 'frameworks', href: '/frameworks/', title: 'Frameworks', about: 'The autonomy scale, the harness, the weakest link and the 30-month plan.' },
   { id: 'architecture', href: '/architecture/', title: 'Architecture', about: 'The layered reference architecture for agent-operated work.' },
@@ -253,6 +258,7 @@ export function graphIntent(text: string): boolean {
 const PAGE_RULES: { role?: string; re?: RegExp; pages: [string, string] }[] = [
   { re: /\b(sample data|synthetic|riskiest|knowledge graph|skill graph)\b/, pages: ['graphs', 'controls'] },
   { re: /\b(supplier'?s? agent|outside agent|external agent|partner'?s? agent|customer'?s? agent|b2a)\b/, pages: ['trust', 'controls'] },
+  { re: /\b(agent (operations )?team|which agents|what agents|agents? (does|do|in|for) (the )?(finance|procurement|supply chain|hr|it|tax|legal|front office|sales|service|close)|agent roster|every agent)\b/, pages: ['team', 'organization'] },
   { role: 'cfo-finance', re: /\b(cfo|roi|return on investment|cost per|business case|budget|fund(ing)?|finance|payback)\b/, pages: ['design', 'operations'] },
   { role: 'ceo-board', re: /\b(ceo|board|chief executive|founder|where do i start)\b/, pages: ['blueprints', 'organization'] },
   { role: 'risk-audit', re: /\b(risk|audit|auditor|compliance|accountab|who answers|liabilit|regulat)/, pages: ['controls', 'organization'] },
@@ -263,10 +269,10 @@ const PAGE_RULES: { role?: string; re?: RegExp; pages: [string, string] }[] = [
 
 export function pagePlan(role: string, text: string): [string, string] | null {
   const t = text.toLowerCase().replace(/\u2019/g, "'");
-  const topic = PAGE_RULES.slice(0, 2).find((r) => r.re!.test(t));
+  const topic = PAGE_RULES.slice(0, 3).find((r) => r.re!.test(t));
   if (topic) return topic.pages;
   const byRole = PAGE_RULES.find((r) => r.role && r.role === role);
   if (byRole) return byRole.pages;
-  const byText = PAGE_RULES.slice(2).find((r) => r.re && r.re.test(t));
+  const byText = PAGE_RULES.slice(3).find((r) => r.re && r.re.test(t));
   return byText ? byText.pages : null;
 }

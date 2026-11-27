@@ -22,6 +22,10 @@ import { CORE, EXAMPLE_ANSWER, INTAKE_LINE, INTAKE_WORDS, MAX_CALLS_PER_TURN, MA
 import { HANDOFFS, KNOWN_CITES, PASSAGES, SITE_PAGES, chapterTags, graphIntent, intakeIntent, pagePlan, requestKind, runTool, searchBook } from '../lib/guide-tools';
 import { KNOWLEDGE } from '../lib/knowledge.generated';
 import { validateConversationLead } from '../lib/validate';
+// @ts-expect-error plain JS build script
+import { TEAM_LINE_MAX, loadTeam } from '../scripts/team-static.mjs';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { FakeD1 } from './fake-d1';
 
 const URL_ = 'https://example.pages.dev/api/guide';
@@ -61,6 +65,46 @@ describe('knowledge pack and tools (code, no model)', () => {
     expect(r.trace.label).toMatch(/^Searched the book: .*Ch 23/);
     expect(r.forModel).toContain('T3 act within limits');
     expect(runTool({ name: 'search_book', args: { query: 'zzzz qqqq' } }).trace.label).toBe('Searched the book: no passage matched');
+  });
+
+  it('carries the agent operations team: every agent findable with its department, level, owner and chapter (code, no model)', () => {
+    const T = loadTeam(join(fileURLToPath(new URL('..', import.meta.url)), 'src', 'assets'));
+    const team = PASSAGES.filter((p) => p.section === 'Agent operations team');
+    // One summary line, one line per department, one line per agent or human role; each within the line cap.
+    expect(team).toHaveLength(1 + T.depts.length + T.agents.length);
+    for (const a of T.agents) {
+      const line = team.find((p) => p.text.startsWith(`${a.name} (`));
+      expect(line, a.name).toBeTruthy();
+      expect(line!.text.length, a.name).toBeLessThanOrEqual(TEAM_LINE_MAX);
+      expect(line!.text.endsWith(`[Ch ${a.cite.replace(/^Ch\s+/, '')}]`), a.name).toBe(true);
+      expect(line!.cites.length, a.name).toBeGreaterThan(0);
+      expect(line!.text, a.name).toContain('Owner:');
+    }
+    const hits = searchBook('What does the Journal agent do?');
+    expect(hits[0].section).toBe('Agent operations team');
+    expect(hits[0].text).toMatch(/^Journal agent \(agent, Record-to-report department; Ch 12\.5\.2\)/);
+    expect(hits[0].text).toMatch(/Autonomy L1–L3/);
+    expect(hits[0].text).toContain('Owner: Agent product owner');
+    expect(hits[0].cites).toContain('Ch 12');
+    const r = runTool({ name: 'search_book', args: { query: 'Journal agent owner limits' } });
+    expect(r.forModel).toContain('[Ch 12] Agent operations team: Journal agent');
+    expect(r.forModel).toContain('[Ch 12.5.2]');
+    expect(r.cites).toContain('Ch 12');
+    expect(normalizeCite('Ch 12')).toBe('Ch 12');
+    // Department questions find the department line.
+    expect(searchBook('which agents run procurement department').some((h) => /^Procurement department \(/.test(h.text))).toBe(true);
+    // The original pack still leads on its own questions.
+    expect(searchBook('who solves the management problem')[0].section).toBe('The management problem, answered');
+  });
+
+  it('suggests the agent operations team page, and the prompt lists it', () => {
+    const ok = runTool({ name: 'suggest_page', args: { page: 'team', reason: 'Every agent with its level, owner and limits.' } });
+    expect(ok.trace).toMatchObject({ label: 'Suggested: Agent operations team page', href: '/blueprints/team/' });
+    expect(ok.page).toMatchObject({ id: 'team', href: '/blueprints/team/', title: 'Agent operations team' });
+    expect(runTool({ name: 'suggest_page', args: { page: '/blueprints/team/' } }).page?.id).toBe('team');
+    expect(buildSystemPrompt(sanitizeProfile({}))).toContain('team (Every agent the book names');
+    expect(pagePlan('', 'Which agents does the finance close need?')).toEqual(['team', 'organization']);
+    expect(pagePlan('cfo-finance', 'Show me the agent team for procurement')).toEqual(['team', 'organization']);
   });
 
   it('suggest_page only links real pages, with a short reason', () => {
@@ -222,6 +266,16 @@ describe('POST /api/guide (agent loop)', () => {
     expect(res.status).toBe(503);
     expect(body).toMatchObject({ ok: false, reason: 'ai_error', message: 'The guide is offline: the model did not answer.' });
     expect(body.reply).toBeUndefined();
+  });
+
+  it('answers a team question from the team data with its chapter, using a mocked model only', async () => {
+    const TEAM_ANSWER = step({ answer: 'The Journal agent maps a journal request to a known pattern, then builds the entry with support and submits it to the ledger checks. Its tasks run at L1 to L3, and its owner is the agent product owner. An accountant approves its journals, and the controller approves after the entity close lock. Batch approval applies only when each entry is below 0.5% of entity performance materiality.', cites: ['Ch 12'], tools: [{ name: 'suggest_page', args: { page: 'team', reason: 'Every agent with its level, owner and limits.' } }] });
+    ai.run.mockReset().mockResolvedValueOnce(TEAM_ANSWER);
+    const { body } = await call(chat([{ role: 'user', content: 'What does the Journal agent do and who owns it?' }]));
+    const first = (ai.run.mock.calls[0][1] as { messages: { content: string }[] }).messages.at(-1)!.content;
+    expect(first).toContain('Journal agent (agent, Record-to-report department; Ch 12.5.2)');
+    expect(body).toMatchObject({ ok: true, cites: ['Ch 12'] });
+    expect((body.pages as { id: string }[]).map((p) => p.id)).toContain('team');
   });
 
   it('searches the book in code on the question before the first model call', async () => {
