@@ -30,11 +30,14 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/assets/fonts/oswald-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
-<script src="/assets/early.js?v=bc9112e216"></script>
+<script src="/assets/early.js?v=462dc560e7"></script>
 <script src="/assets/frameworks.js?v=4dee711a59" defer></script>
-<link rel="stylesheet" href="/assets/styles.css?v=bc9112e216">
-<script src="/assets/site.js?v=bc9112e216" defer></script>
-<script src="/assets/guide.js?v=bc9112e216" defer></script>
+<link rel="stylesheet" href="/assets/vz.css?v=c530f55e1c">
+<script src="/assets/vz-core.js?v=ec0727a784" defer></script>
+<script src="/assets/vz.js?v=8264b79e75" defer></script>
+<link rel="stylesheet" href="/assets/styles.css?v=462dc560e7">
+<script src="/assets/site.js?v=462dc560e7" defer></script>
+<script src="/assets/guide.js?v=462dc560e7" defer></script>
 </head>
 <body class="has-fab">
 <a class="skip-link" href="#main">Skip to content</a>
@@ -113,6 +116,10 @@
       <li>The enterprise owns its controls, context, definitions, skills and traces; models are replaceable parts.</li>
       <li>Autonomy is earned when value compounds faster than risk, read each period on one page.</li>
     </ol>
+    <h3>Who owns what</h3>
+    <p>Ownership follows the layers. Each executive owns one part of the agent estate. <span class="md-cite">Book, Ch 01.8</span></p>
+    <div class="vz-wrap" hidden><p class="ix-label">Try it &middot; Select a role to see what it owns</p><div data-vz="owners"></div></div>
+    <noscript><ul class="fw-list"><li><strong>CFO.</strong> Owns the limits.</li><li><strong>CIO.</strong> Owns the harness, the interfaces and the cross-vendor inventory.</li><li><strong>COO.</strong> Owns the boundary between agents and physical operations.</li><li><strong>CHRO.</strong> Owns role redesign and the HR uses classed as high-risk.</li><li><strong>Chief data officer.</strong> Owns the system of context.</li><li><strong>Chief risk officer and internal audit.</strong> Own the evidence standard for decision traces.</li></ul></noscript>
     <p>How this changes roles, teams and decision rights: <a href="/blueprints/organization/">Organization: humans and agents</a>.</p>
   </div>
 </section>
@@ -279,6 +286,10 @@
     <p class="fw-formula">cost per completed outcome = platform meter charges + model and runtime charges + review minutes &times; loaded rate + fallback share &times; fallback minutes &times; loaded rate</p>
     <p>Comparing on this one basis puts agents, people and vendors side by side honestly. The book&rsquo;s worked examples show that delay, not the meter price, moves value most: faster decisions, fewer penalties and released working capital often outweigh hours saved.</p>
       <div class="ix" hidden><p class="ix-label">Try it &middot; Cost calculator</p><div data-ix="cost"></div></div>
+    <h3>Today vs transformed: your exception cost</h3>
+    <p>The book prices exception work with one formula. Enter your own numbers. Defaults are Meridian&rsquo;s. <span class="md-cite">Book, Ch 21.13.3</span></p>
+    <div class="vz-wrap" hidden><div data-vz="calc:exc"></div></div>
+    <noscript><p class="fw-formula">C = N &times; e &times; [ (1 &minus; a) &times; t &times; w + a &times; c_a ]</p><p>Meridian: 900,000 invoices, 12% exceptions, 20 minutes each at USD 1.02 a minute cost about USD 2.2M a year. One point of exception rate is worth about 4.4 points of autonomy.</p></noscript>
     <p class="fw-bp"><a class="more" href="/workflows/">Compare cost per completed outcome, before and after</a></p>
 </div>
 </section>
@@ -356,6 +367,7 @@
         </tbody>
       </table>
     </div>
+    <div class="vz-wrap" hidden><p class="ix-label">Try it &middot; Walk the 33 months, gate by gate</p><div data-vz="roadmap"></div></div>
     <p>Each phase closes at a gate that passes on a scorecard reading, not only on delivery milestones, so value is booked only as fast as risk is shown to be under control. The book adds a 100-day starter plan, an agent contract template, promotion checklists and board questions in its toolkit.</p>
     <p class="fw-note">Figures and thresholds on this page are illustrative frameworks from the book, built around a fictional company, Meridian Industries.</p>
   </div>

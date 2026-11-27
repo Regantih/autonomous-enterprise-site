@@ -78,7 +78,7 @@ export const PAGES = [
     sitemap: true, priority: '0.8',
   },
   {
-    src: 'frameworks.html', out: 'frameworks/index.html', path: '/frameworks/', nav: 'BOOK',
+    src: 'frameworks.html', out: 'frameworks/index.html', path: '/frameworks/', nav: 'BOOK', vz: true,
     title: 'Frameworks from The Autonomous Enterprise | Human-Led Enterprise',
     description:
       'The core frameworks of The Autonomous Enterprise explained: the L0 to L5 autonomy scale, the harness, the weakest-link rule, cost per completed outcome, when not to automate and the 30-month plan.',
@@ -489,6 +489,8 @@ export function build() {
       BIO_SHORT_WORDS: String(wordCount(BIO_SHORT)),
       BIO_LONG_WORDS: String(wordCount(BIO_LONG)),
     };
+    // Visuals for leaders (storyboard pictures, Today vs Transformed calculators, maps): one engine, any page.
+    if (page.vz) vars.HEAD_EXTRA += `<link rel="stylesheet" href="${assetUrl('vz.css')}">\n<script src="${assetUrl('vz-core.js')}" defer></script>\n<script src="${assetUrl('vz.js')}" defer></script>\n`;
     const html = fill(expandPartials(layout).replace('{{BODY}}', body), vars);
     const outPath = join(DIST, page.out);
     mkdirSync(dirname(outPath), { recursive: true });
