@@ -324,6 +324,12 @@
     // A page such as /reimagine/ can pass a short summary in ?q=. It only prefills the box; the visitor decides to send it.
     var q = '';
     try { q = new URLSearchParams(window.location.search).get('q') || ''; } catch (e) { q = ''; }
+    // Calculators pass their figures in #ask=. The hash stays in the browser; it is cleared once read.
+    var ha = /^#ask=([^#]*)$/.exec(window.location.hash || '');
+    if (ha) {
+      try { q = decodeURIComponent(ha[1]); } catch (e) { q = ''; }
+      try { history.replaceState(null, '', window.location.pathname + window.location.search); } catch (e) { /* ignore */ }
+    }
     q = q.replace(/[\u0000-\u001f]+/g, ' ').trim().slice(0, MAX_CHARS);
     if (q && !g0.busy && !g0.input.disabled) { g0.input.value = q; g0.input.rows = 5; g0.input.focus(); }
   }

@@ -173,6 +173,27 @@
       if (i.src === V.YOU) return '<span class="vz-src vz-src-you">Illustrative default. Set your own.' + (i.note ? ' ' + esc(i.note) : '') + '</span>';
       return '<span class="vz-src">Book figure, ' + (i.src === 'Hours bases' ? 'front matter, hours bases' : esc(i.src)) + '</span>';
     }
+    var OWN = spec.own || [];
+    function anyOwn() { return OWN.some(function (i) { return v[i.k] != null; }); }
+    function ownHtml() {
+      if (!OWN.length) return '';
+      return '<details class="vz-mine"' + (anyOwn() ? ' open' : '') + '><summary>Add your own details</summary>' +
+        '<p class="vz-src">Optional. Leave a box blank to keep the book default. A figure you enter replaces it.</p>' +
+        OWN.map(function (i) {
+          var unit = i.unit === 'money' ? '<span class="vz-u vz-cur">' + esc(V.sym(v.cur)) + '</span>' : '';
+          return '<label class="vz-f" for="' + uid + '-o-' + i.k + '"><span class="vz-fl">' + esc(i.label) + '</span>' +
+            '<span class="vz-fi">' + unit + '<input id="' + uid + '-o-' + i.k + '" type="number" inputmode="decimal" data-o="' + i.k + '" min="' + i.min + '" max="' + i.max + '" step="' + i.step + '" placeholder="Book default" value="' + (v[i.k] == null ? '' : v[i.k]) + '">' +
+            (UNIT[i.unit] ? '<span class="vz-u">' + UNIT[i.unit] + '</span>' : '') + '</span>' +
+            '<span class="vz-src" data-os="' + i.k + '"></span></label>';
+        }).join('') + '</details>';
+    }
+    function ownSrc() {
+      OWN.forEach(function (i) {
+        var el = $('[data-os="' + i.k + '"]', root); if (!el) return;
+        el.className = 'vz-src' + (v[i.k] == null ? '' : ' vz-src-you');
+        el.textContent = v[i.k] == null ? 'Book default (' + i.src.replace('Hours bases', 'front matter') + '): ' + i.book + '.' : 'Your figure. It replaces the book default: ' + i.book + '.';
+      });
+    }
     var curOpts = V.CURRENCIES.map(function (c) { return '<option value="' + c[0] + '">' + (c[0] === 'XXX' ? 'Other (' + c[1] + ')' : c[0] + ' (' + c[1] + ')') + '</option>'; }).join('');
     root.innerHTML =
       '<div class="vz-calc">' +
@@ -188,8 +209,9 @@
             }).join('') +
             (spec.choice ? '<label class="vz-f" for="' + uid + '-ch"><span class="vz-fl">' + esc(spec.choice.label) + '</span><span class="vz-fi"><select id="' + uid + '-ch" data-choice="1">' +
               Object.keys(spec.choice.options).map(function (k) { return '<option value="' + k + '"' + (v[spec.choice.k] === k ? ' selected' : '') + '>' + esc(spec.choice.options[k].label) + '</option>'; }).join('') +
-              '</select></span><span class="vz-src">Book ratios. Pick the closest.</span></label>' : '') +
+              '</select></span><span class="vz-src">Book default: close Ch 01.9.2; order to cash Ch 30.5.1. Pick the closest.</span></label>' : '') +
             '<label class="vz-f" for="' + uid + '-cur"><span class="vz-fl">Currency</span><span class="vz-fi"><select id="' + uid + '-cur" data-cur="1">' + curOpts + '</select></span><span class="vz-src">Symbol only. Enter amounts in your currency; nothing is converted.</span></label>' +
+            ownHtml() +
           '</fieldset>' +
           '<div class="vz-out"><div class="vz-legend" aria-hidden="true"><span class="vz-lg-t">' + esc(names[0]) + '</span><span class="vz-lg-r">' + esc(names[1]) + '</span></div><div class="vz-rows"></div>' +
           '<p class="vz-sum" role="status" aria-live="polite"></p><div class="vz-levers"></div></div>' +
@@ -197,12 +219,16 @@
         '<details class="vz-how"><summary>How this is calculated</summary><ul class="vz-formula"></ul></details>' +
         '<div class="vz-actions"><button type="button" class="btn btn-ghost btn-sm" data-a="reset">Reset to the defaults</button>' +
         '<button type="button" class="btn btn-ghost btn-sm" data-a="share">Copy a link to this view</button><span class="vz-share-msg" role="status"></span></div>' +
+        '<div class="vz-ask"><p class="vz-ask-h">Have more details or a different situation? Ask Hemanth.</p>' +
+        '<p class="vz-ask-p">The guide opens with your figures in the box. Nothing is sent until you press Send.</p>' +
+        '<p class="vz-ask-b"><a class="btn btn-primary btn-sm" data-ask="1" href="/talk/">Ask Hemanth through the guide</a>' +
+        '<a class="more" href="' + V.LINKEDIN + '" rel="noopener" target="_blank">Message Hemanth on LinkedIn<span class="visually-hidden"> (opens in a new tab)</span></a></p></div>' +
       '</div>';
     $('[data-cur]', root).value = v.cur;
     var rowsEl = $('.vz-rows', root), sumEl = $('.vz-sum', root), levEl = $('.vz-levers', root), built = false;
 
     function rowHtml(r, i) {
-      return '<div class="vz-row' + (r.key ? ' vz-key' : '') + '" data-i="' + i + '"><p class="vz-rl">' + esc(r.label) + '</p>' +
+      return '<div class="vz-row' + (r.key ? ' vz-key' : '') + '" data-i="' + i + '"><p class="vz-rl"><span class="vz-rlt">' + esc(r.label) + '</span> <span class="vz-tag"></span></p>' +
         '<div class="vz-b"><span class="vz-bn">' + esc(names[0]) + '</span><svg class="vz-bar" viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true" focusable="false"><rect class="vz-bt" x="0" y="0" height="10" width="0"></rect></svg><b class="vz-vt"></b></div>' +
         '<div class="vz-b"><span class="vz-bn">' + esc(names[1]) + '</span><svg class="vz-bar" viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true" focusable="false"><rect class="vz-br" x="0" y="0" height="10" width="0"></rect></svg><b class="vz-vr"></b></div>' +
         '<p class="vz-d"></p></div>';
@@ -213,6 +239,10 @@
       if (!built) { rowsEl.innerHTML = r.rows.map(rowHtml).join(''); built = true; }
       r.rows.forEach(function (row, i) {
         var el = $('.vz-row[data-i="' + i + '"]', rowsEl), m = Math.max(Math.abs(row.today), Math.abs(row.re)) || 1;
+        $('.vz-rlt', el).textContent = row.label;
+        var tag = $('.vz-tag', el);
+        tag.textContent = row.basis === 'you' ? 'Your figure' : row.basis ? 'Book default (' + row.basis + ')' : '';
+        tag.className = 'vz-tag' + (row.basis === 'you' ? ' vz-tag-you' : '');
         tween($('.vz-bt', el), 'width', Math.max(row.today ? 1 : 0, 100 * Math.abs(row.today) / m), 450);
         tween($('.vz-br', el), 'width', Math.max(row.re ? 1 : 0, 100 * Math.abs(row.re) / m), 450);
         $('.vz-vt', el).textContent = V.fmt(row.today, row.unit, v.cur);
@@ -233,7 +263,10 @@
           (isFinite(L.ratio) ? 'So one point of exception rate is worth about <b>' + esc(V.num(L.ratio, 1)) + ' points</b> of agent share. ' : '') +
           'Remove the exception before you automate it. <span class="md-cite">Book, Ch 21.13.3</span></p>';
       }
-      $('.vz-formula', root).innerHTML = r.formula.map(function (f) { return '<li>' + esc(f) + '</li>'; }).join('');
+      $('.vz-formula', root).innerHTML = r.formula.map(function (f) { return '<li' + (/^Your figure/.test(f) ? ' class="vz-f-you"' : '') + '>' + esc(f) + '</li>'; }).join('');
+      ownSrc();
+      // The guide reads #ask= in the browser only; the hash never reaches the server.
+      $('[data-ask]', root).setAttribute('href', '/talk/#ask=' + encodeURIComponent(V.askText(spec, v, r)));
       if (opts.after) opts.after(r, v);
     }
     $$('input[data-k]', root).forEach(function (inp) {
@@ -245,12 +278,26 @@
       });
       inp.addEventListener('change', function () { v[spec_i.k] = V.values(spec, v)[spec_i.k]; inp.value = v[spec_i.k]; inp.removeAttribute('aria-invalid'); update(); });
     });
+    $$('input[data-o]', root).forEach(function (inp) {
+      var oi = OWN.filter(function (i) { return i.k === inp.dataset.o; })[0];
+      inp.addEventListener('input', function () {
+        if (inp.value === '') { inp.removeAttribute('aria-invalid'); v[oi.k] = null; update(); return; }
+        var n = parseFloat(inp.value);
+        if (!isFinite(n) || n < oi.min || n > oi.max) { inp.setAttribute('aria-invalid', 'true'); return; }
+        inp.removeAttribute('aria-invalid'); v[oi.k] = n; update();
+      });
+      inp.addEventListener('change', function () {
+        v[oi.k] = inp.value === '' ? null : V.values(spec, v)[oi.k];
+        inp.value = v[oi.k] == null ? '' : v[oi.k]; inp.removeAttribute('aria-invalid'); update();
+      });
+    });
     $('[data-cur]', root).addEventListener('change', function (e) { v.cur = e.target.value; $$('.vz-cur', root).forEach(function (s) { s.textContent = V.sym(v.cur); }); update(); });
     var ch = $('[data-choice]', root);
     if (ch) ch.addEventListener('change', function () { v[spec.choice.k] = ch.value; update(); });
     $('[data-a="reset"]', root).addEventListener('click', function () {
       v = V.defaults(spec);
       $$('input[data-k]', root).forEach(function (inp) { inp.value = v[inp.dataset.k]; inp.removeAttribute('aria-invalid'); });
+      $$('input[data-o]', root).forEach(function (inp) { inp.value = ''; inp.removeAttribute('aria-invalid'); });
       $('[data-cur]', root).value = v.cur; $$('.vz-cur', root).forEach(function (s) { s.textContent = V.sym(v.cur); });
       if (ch) ch.value = v[spec.choice.k];
       update();

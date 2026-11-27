@@ -77,6 +77,19 @@
 .vz-sum { margin: 1rem 0 0; font-weight: 600; }
 .vz-lev { margin: 0.9rem 0 0; padding: 0.8rem 1rem; background: var(--paper); border-left: 4px solid var(--orange); border-radius: 4px; font-size: 0.98rem; }
 .vz-how { margin: 1.25rem 0 0; }
+.vz-mine { border-top: 1px dashed var(--line); padding-top: 0.75rem; display: grid; gap: 0.6rem; min-width: 0; }
+.vz-mine[open] { gap: 0.75rem; }
+.vz-mine summary { cursor: pointer; font-weight: 700; color: var(--orange-text); }
+.vz-mine summary:focus-visible, .vz-how summary:focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
+.vz-tag { display: inline-block; font-size: 0.72rem; font-weight: 600; color: var(--muted); white-space: nowrap; }
+.vz-tag:empty { display: none; }
+.vz-tag-you { color: var(--orange-text); }
+.vz-formula .vz-f-you { color: var(--orange-text); }
+.vz-ask { margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+.vz-ask-h { font-weight: 700; margin: 0 0 0.25rem; }
+.vz-ask-p { font-size: 0.88rem; color: var(--muted); margin: 0 0 0.6rem; }
+.vz-ask-b { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.25rem; margin: 0; }
+.vz-ask-b .more { overflow-wrap: anywhere; }
 .vz-how summary { cursor: pointer; font-weight: 700; }
 .vz-formula { margin: 0.6rem 0 0; padding-left: 1.2rem; font-size: 0.95rem; }
 .vz-formula li { margin: 0.3rem 0; }
@@ -172,7 +185,7 @@
   .vz-own-map .vz-link { stroke-dashoffset: 0; }
   .md-story.vz-dim .md-panel, .vz-story.vz-dim .md-panel { transform: none; }
 }
-@media print { .vz-ctl, .vz-actions { display: none; } .md-story.vz-dim .md-panel, .vz-story.vz-dim .md-panel { opacity: 1; } }
+@media print { .vz-ctl, .vz-actions, .vz-ask, .vz-mine { display: none; } .md-story.vz-dim .md-panel, .vz-story.vz-dim .md-panel { opacity: 1; } }
 .vz-rm-detail, .vz-own-detail { font-size: 1rem; }
 .vz-ph span { white-space: nowrap; }
 @media (max-width: 40rem) { .vz-rm-cursor { display: none; } }

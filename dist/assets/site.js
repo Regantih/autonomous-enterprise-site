@@ -270,7 +270,7 @@
   if (fab && window.getComputedStyle) {
     var AVOID = 'svg, table, canvas, figure, pre, .sl-wrap, .fw-table-wrap, .ar-svg-wrap, .hf-svg-wrap, .al-wrap, ' +
       '.gr-canvas, .gr-stat-grid, .ld-tablewrap, .wf-grid, .ar-grid, .lr-console, .ctl-map, .or-ring, ' +
-      '[class*="matrix"], [class*="console"], [data-diagram], .vz-calc, .vz-clerk, .vz-own, .vz-rm, .vz-pic, .vz-ctl';
+      '[class*="matrix"], [class*="console"], [data-diagram], .vz-calc, .vz-clerk, .vz-own, .vz-rm, .vz-pic, .vz-ctl, .vz-ask';
     var SKIP = '.guide-fab, .site-header, .site-footer, [role="dialog"], dialog';
     var small = window.matchMedia ? window.matchMedia('(max-width: 59.99rem)') : { matches: false };
     var lastY = window.pageYOffset || 0, goingDown = false, framed = false;

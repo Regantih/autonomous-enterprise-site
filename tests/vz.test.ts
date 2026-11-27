@@ -220,3 +220,101 @@ describe('estate (Ch 01.9, Ch 21.13.2) and simulator hours', () => {
     expect(m).toContain('data-pic="gauge|0.87|0.81"');
   });
 });
+
+describe('add your own details: overrides replace the book default as the formula says', () => {
+  const ids = ['exc', 'queue', 'order', 'estate', 'touch'];
+  it('every calculator offers own details, blank by default, each citing the book default it replaces', () => {
+    ids.forEach((id) => {
+      const s = V.specs[id];
+      expect(s.own.length, id).toBeGreaterThanOrEqual(2);
+      s.own.forEach((i: Any) => {
+        expect(V.defaults(s)[i.k], id + i.k).toBeNull();
+        expect(i.src).toMatch(/^Ch \d\d\.\d|^Hours bases$/);
+        expect(i.book.length).toBeGreaterThan(2);
+      });
+    });
+  });
+  it('defaults are unchanged and their rows say "Book default (Ch ...)"', () => {
+    const e = run('estate');
+    expect(row(e, 'Cycle time, at the book\u2019s ratio').basis).toBe('Ch 01.9.2');
+    expect(row(run('estate', { cyc: 140, ratio: 'o2c' }), 'Cycle time, at the book\u2019s ratio').basis).toBe('Ch 30.5.1');
+    expect(row(run('order'), 'Order to full cash (book order)').basis).toBe('Ch 30.5.1');
+    ids.filter((id) => id !== 'touch').forEach((id) => {
+      run(id).rows.filter((r: Any) => r.basis).forEach((r: Any) => expect(r.basis, id).toMatch(/^Ch \d\d\.\d/));
+    });
+  });
+  it('estate: target cycle time, overtime and contractors, cost per system', () => {
+    const r = run('estate', { cyc: 9, tgt: 6, ot: 1_000_000, sp: 20, sys: 5, sysT: 4 });
+    expect(row(r, 'Cycle time, your target')).toMatchObject({ today: 9, re: 6, basis: 'you' });
+    expect(row(r, 'People cost a year').today).toBeCloseTo(400 * 110000 + 1_000_000, 6);
+    expect(row(r, 'Capacity released (value a year)').re).toBeCloseTo((44_000_000 + 1_000_000) * 0.2, 6);
+    expect(row(r, 'People cost a year').today - row(r, 'People cost a year').re).toBeCloseTo(45_000_000 * 0.2 * 0.5, 6);
+    expect(row(r, 'Cost index from systems touched (today = 100)').re).toBeCloseTo(100 / 1.2, 6);
+    expect(r.formula.filter((f: string) => /^Your figure/.test(f)).length).toBe(3);
+  });
+  it('order: own hours, own cut, own cash days and target', () => {
+    const r = run('order', { n: 1000, rate: 50, s: 100, hT: 10 });
+    expect(row(r, 'Person hours a year').today).toBeCloseTo(10000, 6);
+    expect(row(r, 'Person hours a year').re).toBeCloseTo(1000 * 10 * (35 / 60) / 15.5, 6);
+    const c = run('order', { n: 1000, hT: 10, cut: 80 });
+    expect(row(c, 'Person hours a year').re).toBeCloseTo(1000 * 2, 6);
+    expect(row(run('order', { cT: 60 }), 'Order to full cash (your order)')).toMatchObject({ today: 60, re: 60 * 73 / 140, basis: 'you' });
+    expect(row(run('order', { cT: 60, cR: 30 }), 'Order to full cash (your order)').re).toBe(30);
+  });
+  it('exceptions: own fall in the exception rate and rework', () => {
+    const r = run('exc', { drop: 25, rw: 10 });
+    const base = run('exc');
+    expect(row(r, 'Exceptions a year').re).toBeCloseTo(108000 * 0.75, 6);
+    expect(row(r, 'Exception cost a year').today).toBeCloseTo(row(base, 'Exception cost a year').today * 1.1, 3);
+    expect(row(r, 'Exception cost a year').re).toBeCloseTo(row(base, 'Exception cost a year').re * 0.75 * 1.1, 3);
+    expect(row(r, 'Exception cost a year').basis).toBe('you');
+  });
+  it('queue: rework, separate queues rounding up, premium', () => {
+    const r = run('queue', { rw: 10, q: 4, prem: 20 });
+    expect(row(r, 'Person hours a day').today).toBeCloseTo(144 * 1.1, 6);
+    expect(row(r, 'People needed on the queue').today).toBe(4 * Math.ceil(158.4 / 4 / 7));
+    expect(row(r, 'People needed on the queue').re).toBe(4 * Math.ceil(21.6 * 1.1 / 4 / 7));
+    expect(row(r, 'Cost of those people a year').re).toBeCloseTo(row(r, 'People needed on the queue').re * 110000 * 1.2, 6);
+  });
+  it('workflows hours: own agent-run minutes and rework', () => {
+    const c = { a: { touches: 6, exPeople: 1, handoffs: 5 }, b: { touches: 1, exPeople: 1, handoffs: 6 } };
+    const r = run('touch', { n: 1000, m: 10, x: 20, mB: 5, rw: 50 }, c);
+    expect(row(r, 'Person hours a year').today).toBeCloseTo(1000 * 6.2 * 1.5 * 10 / 60, 6);
+    expect(row(r, 'Person hours a year').re).toBeCloseTo(1000 * 1.2 * 1.5 * 5 / 60, 6);
+  });
+  it('own details round-trip through the URL hash only, and blank stays the book default', () => {
+    ids.forEach((id) => {
+      const s = V.specs[id], v = V.defaults(s);
+      v[s.own[0].k] = s.own[0].min;
+      expect(V.decode(s, '#' + V.encode(s, v))).toEqual(v);
+      expect(V.encode(s, V.defaults(s))).toBe('vz-' + id + '=');
+    });
+  });
+  it('the ask text names the visitor figures, stays under the guide limit and asks for Hemanth', () => {
+    const s = V.specs.estate, v = { ...V.defaults(s), tgt: 6 };
+    const t = V.askText(s, v, s.compute(v));
+    expect(t).toContain('Your target cycle time, in days 6 days');
+    expect(t).toMatch(/ask Hemanth\.$/);
+    expect(t.length).toBeLessThanOrEqual(560);
+  });
+});
+
+describe('ask Hemanth call to action', () => {
+  const js = src('assets/vz.js');
+  it('sits under every calculator with the guide link and LinkedIn, no email and no form', () => {
+    expect(js).toContain('Have more details or a different situation? Ask Hemanth.');
+    expect(js).toContain("'/talk/#ask=' + encodeURIComponent(V.askText(spec, v, r))");
+    expect(V.LINKEDIN).toBe('https://www.linkedin.com/in/hemanth-reganti-147153178/');
+    expect(js).toContain('Add your own details');
+    expect(js + src('assets/vz-core.js')).not.toMatch(/@[a-z0-9-]+\.(com|org|edu)|mailto:|<form/i);
+  });
+  it('the guide prefills from #ask= without sending, and clears the hash', () => {
+    const g = src('assets/guide.js');
+    expect(g).toContain('/^#ask=([^#]*)$/');
+    expect(g).toContain('history.replaceState(null, \'\', window.location.pathname + window.location.search)');
+  });
+  it('every calculator page carries a calculator the CTA renders into', () => {
+    [['reimagine/index.html', 'estate'], ['frameworks/index.html', 'exc'], ['book/index.html', 'order'], ['blueprints/organization/index.html', 'queue'], ['workflows/index.html', 'touch']]
+      .forEach(([p, id]) => expect(html(p)).toContain(`data-vz="calc:${id}"`));
+  });
+});
