@@ -956,6 +956,10 @@
     editor(); compute();
   }
 
+  // Shared with the simulator (sim.js), which draws and runs the visitor's own flow with the same swimlane and rules.
+  AE.ui = { drawSwimlane: drawSwimlane, moveToken: moveToken, laneVia: laneVia, follow: follow, placeBelowHeader: placeBelowHeader, chainOf: chainOf,
+    sv: sv, el: el, esc: esc, btn: btn, wait: wait, $: $, $$: $$, reduced: function () { return reduce; }, laneName: LANE_NAME, handoffName: HO_NAME };
+
   var MOUNTS = { alignment: alignment, 'hub-flow': hubFlow, architecture: architecture, chooser: chooser, workflows: workflows, controls: controls, designer: designer };
   $$('[data-bp]').forEach(function (n) {
     var f = MOUNTS[n.dataset.bp];

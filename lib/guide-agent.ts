@@ -292,7 +292,7 @@ export function unsupportedSentences(answer: string, evidence: string): string[]
 export function withTeamCite(answer: string, evidence: string): string {
   const low = answer.toLowerCase();
   let best: { at: number; end: number; cite: string } | null = null;
-  const consider = (name: string, label: string, lineStart: string) => {
+  const consider = (name: string, label: string, lineStart: string, dept = false) => {
     if (!evidence.includes(lineStart)) return;
     const cite = teamCite(name);
     if (!cite) return;
@@ -301,10 +301,12 @@ export function withTeamCite(answer: string, evidence: string): string {
     const at = m.index + m[1].length;
     let end = at + m[2].length;
     if (low[end] === 's' && !/[a-z]/.test(low[end + 1] ?? '')) end++;
+    // Keep the full name together: "Procurement department (Ch 14)", never "Procurement (Ch 14) department".
+    if (dept) { const tail = /^ (?:departments?|teams?)(?=[^a-z]|$)/.exec(low.slice(end)); if (tail) end += tail[0].length; }
     if (!best || at < best.at) best = { at, end, cite };
   };
   for (const n of TEAM_AGENT_NAMES) consider(n, n, `${n} (`);
-  for (const d of TEAM_DEPT_NAMES) consider(d, d, `${d} department (`);
+  for (const d of TEAM_DEPT_NAMES) consider(d, d, `${d} department (`, true);
   if (!best) return answer;
   const b = best as { at: number; end: number; cite: string };
   return `${answer.slice(0, b.end)} (${b.cite})${answer.slice(b.end)}`;

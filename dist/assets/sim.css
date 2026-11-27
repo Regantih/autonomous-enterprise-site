@@ -1,0 +1,35 @@
+/* Simulate your process (workflows page). Reuses the designer editor rows (.dz-*) and the player (.wf-*, .sl-*). */
+.sim { display: grid; gap: 0.9rem; min-width: 0; }
+.sim-modes { margin: 0.25rem 0 0; }
+.sim-ai { display: grid; gap: 0.5rem; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem; }
+.sim-ai[hidden], .sim-out[hidden] { display: none; }
+.sim-label { display: grid; gap: 0.25rem; font-size: 0.85rem; font-weight: 600; }
+.sim-text { width: 100%; min-height: 7.5rem; box-sizing: border-box; }
+.sim-ai-row { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; align-items: center; justify-content: space-between; }
+.sim-count { margin: 0; font-size: 0.82rem; color: var(--muted); }
+.sim-notice { margin: 0; }
+.sim-msg { margin: 0; min-height: 1.4em; font-size: 0.95rem; }
+.sim-msg:empty { min-height: 0; }
+.sim-msg-ok { color: var(--ink); font-weight: 600; }
+.sim-msg-warn { border-left: 4px solid var(--orange); padding-left: 0.6rem; }
+.sim-tplrow { display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; align-items: end; }
+.sim-tplrow .sim-label { flex: 1 1 16rem; }
+.sim-tpl { width: 100%; }
+.sim-help { margin: 0.75rem 0; font-size: 0.92rem; color: var(--muted); }
+.sim-step .dz-name input { width: 100%; box-sizing: border-box; }
+.sim-step .dz-fields { grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); }
+.sim-step .dz-fields select { width: 100%; }
+.sim-step .dz-move button:disabled { opacity: 0.35; cursor: not-allowed; }
+.sim-step .dz-chk:has(input:disabled) { color: var(--muted); }
+.sim-btns { margin-top: 0.25rem; }
+.sim-live { margin: 0.6rem 0 0; font-size: 0.92rem; }
+.sim-out { display: grid; gap: 0.35rem; min-width: 0; }
+.sim-out .wf-console { margin-top: 0.75rem; }
+.sim-out .btn-row { margin-top: 0.75rem; }
+@media (max-width: 30rem) {
+  .sim-step .dz-row1 { flex-wrap: wrap; }
+  .sim-step .dz-name { flex-basis: 100%; order: 2; }
+  .sim-step .dz-n { order: 1; }
+  .sim-step .dz-move { order: 1; margin-left: auto; }
+  .sim-ai-row .btn { width: 100%; }
+}

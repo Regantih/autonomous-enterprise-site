@@ -442,7 +442,8 @@ export function build() {
           ? `<link rel="stylesheet" href="${assetUrl('models.css')}">\n<link rel="stylesheet" href="${assetUrl('team.css')}">\n<script src="${assetUrl(TEAM_DATA_FILE)}" defer></script>\n<script src="${assetUrl('team-ui.js')}" defer></script>\n`
         : page.src === 'frameworks.html'
           ? `<script src="${assetUrl('frameworks.js')}" defer></script>\n`
-          : page.bp ? bpScripts + (page.src === 'trace.html' ? `<link rel="stylesheet" href="${assetUrl('trace.css')}">\n<script src="${assetUrl('trace-core.js')}" defer></script>\n<script src="${assetUrl('trace.js')}" defer></script>\n`
+          : page.bp ? bpScripts + (page.src === 'workflows.html' ? `<link rel="stylesheet" href="${assetUrl('sim.css')}">\n<script src="${assetUrl('sim-core.js')}" defer></script>\n<script src="${assetUrl('sim.js')}" defer></script>\n`
+            : page.src === 'trace.html' ? `<link rel="stylesheet" href="${assetUrl('trace.css')}">\n<script src="${assetUrl('trace-core.js')}" defer></script>\n<script src="${assetUrl('trace.js')}" defer></script>\n`
             : page.src === 'graphs.html' ? `<link rel="stylesheet" href="${assetUrl('graphs.css')}">\n<script src="${graphsData}" defer></script>\n<script src="${assetUrl('graphs.js')}" defer></script>\n`
             : ['models.html', 'design.html'].includes(page.src) ? `<link rel="stylesheet" href="${assetUrl('models.css')}">\n<script src="${assetUrl('models.js')}" defer></script>\n`
             : page.src === 'organization.html' ? `<link rel="stylesheet" href="${assetUrl('models.css')}">\n<script src="${assetUrl('org.js')}" defer></script>\n`

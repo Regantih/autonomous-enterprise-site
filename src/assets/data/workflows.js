@@ -322,6 +322,10 @@
     ];
   };
   AE.compareLine = function (wf) {
-    return side('Today', AE.flowStats(wf.today)) + ' ' + side('Agent-run', AE.flowStats(wf.steps));
+    return AE.compareFlows(wf.today, wf.steps, 'Today', 'Agent-run');
+  };
+  /* Any two flows, same rule and wording: used by the simulator for the visitor's own process. */
+  AE.compareFlows = function (a, b, nameA, nameB) {
+    return side(nameA, AE.flowStats(a)) + ' ' + side(nameB, AE.flowStats(b));
   };
 })(typeof window !== 'undefined' ? window : globalThis);

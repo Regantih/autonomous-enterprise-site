@@ -322,6 +322,9 @@ describe('POST /api/guide (agent loop)', () => {
     expect(withTeamCite('The Supplier risk agent scores suppliers.', ev)).toBe('The Supplier risk agent (Ch 14.9.2) scores suppliers.');
     expect(withTeamCite('Procurement runs ten agents.', ev)).toBe('Procurement (Ch 14) runs ten agents.');
     expect(withTeamCite('Nothing named here.', ev)).toBe('Nothing named here.');
+    expect(withTeamCite('The Procurement department runs ten agents.', ev)).toBe('The Procurement department (Ch 14) runs ten agents.');
+    expect(withTeamCite('Ask the procurement team.', ev)).toBe('Ask the procurement team (Ch 14).');
+    expect(withTeamCite('The Supplier risk agent and the Procurement department work together.', ev)).toBe('The Supplier risk agent (Ch 14.9.2) and the Procurement department work together.');
   });
 
   it('searches the book in code on the question before the first model call', async () => {

@@ -30,15 +30,18 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/assets/fonts/oswald-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
-<script src="/assets/early.js?v=cf5480ead6"></script>
+<script src="/assets/early.js?v=bc9112e216"></script>
 <script src="/assets/data/controls.js?v=e0d936f9ff" defer></script>
 <script src="/assets/data/layers.js?v=7c10827ab4" defer></script>
-<script src="/assets/data/workflows.js?v=f43330bf0d" defer></script>
+<script src="/assets/data/workflows.js?v=7ef5c01ebb" defer></script>
 <script src="/assets/data/architecture.js?v=2a1d6d58f4" defer></script>
-<script src="/assets/blueprints.js?v=6d4c868e91" defer></script>
-<link rel="stylesheet" href="/assets/styles.css?v=cf5480ead6">
-<script src="/assets/site.js?v=cf5480ead6" defer></script>
-<script src="/assets/guide.js?v=cf5480ead6" defer></script>
+<script src="/assets/blueprints.js?v=2039a23713" defer></script>
+<link rel="stylesheet" href="/assets/sim.css?v=9ba8c6ed5c">
+<script src="/assets/sim-core.js?v=8ca07e7c99" defer></script>
+<script src="/assets/sim.js?v=f16a417f5c" defer></script>
+<link rel="stylesheet" href="/assets/styles.css?v=bc9112e216">
+<script src="/assets/site.js?v=bc9112e216" defer></script>
+<script src="/assets/guide.js?v=bc9112e216" defer></script>
 </head>
 <body class="has-fab">
 <a class="skip-link" href="#main">Skip to content</a>
@@ -69,7 +72,7 @@
       </ol>
     </nav>
     <h1 id="page-title">Reimagined workflows</h1>
-    <p class="lead">9 enterprise workflows, redrawn for agents with every control in place. Compare today with the reimagined design, then run a case and break it.</p>
+    <p class="lead">9 enterprise workflows, redrawn for agents with every control in place. Compare today with the reimagined design, then run a case and break it. Or <a href="#simulate">simulate your own process</a> against the book&rsquo;s agent-run version.</p>
   </div>
 </section>
 <nav class="bp-subnav" aria-label="Blueprints">
@@ -116,7 +119,17 @@
   </div>
 </section>
 
-<section class="section section-paper-2 bp-section" id="matrix" aria-labelledby="matrix-title">
+<section class="section section-paper-2 bp-section" id="simulate" aria-labelledby="simulate-title">
+  <div class="container">
+    <p class="eyebrow">Your process, side by side</p>
+    <h2 id="simulate-title" class="h-sm">Simulate your process</h2>
+    <p>Lay out how one case moves through your process today, then run it next to the book&rsquo;s agent-run flow for the closest workflow. Build it step by step, or describe it in words and let an AI model draft the steps for you to check. The comparison counts steps, hand-offs, queue waits and person touches from the steps alone: no times, costs or percentages are invented.</p>
+    <div class="bp-ix" hidden><div class="sim" data-sim></div></div>
+    <noscript><p class="fw-note">Turn on JavaScript for the simulator. The book&rsquo;s workflows are listed below.</p></noscript>
+  </div>
+</section>
+
+<section class="section bp-section" id="matrix" aria-labelledby="matrix-title">
   <div class="container">
     <p class="eyebrow">Alignment across every layer</p>
     <h2 id="matrix-title" class="h-sm">Workflows by layer</h2>
