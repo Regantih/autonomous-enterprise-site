@@ -572,3 +572,51 @@ describe('Blueprints journey: tracks, breadcrumbs and previous/next', () => {
     }
   });
 });
+
+describe('workflows side-by-side run', () => {
+  it('compares the same case using only counts computed from the step data', () => {
+    const o2c = AE.workflows.find((w: { id: string }) => w.id === 'o2c');
+    expect(AE.compareLine(o2c)).toBe('Today: 6 steps, 5 hand-offs (all queue waits), 4 person touches. Agent-run: 7 steps, 6 hand-offs (none a queue wait), 0 person touches; 1 exception path goes to a person.');
+    const sup = AE.workflows.find((w: { id: string }) => w.id === 'supplier');
+    expect(AE.compareLine(sup)).toContain('Agent-run: 8 steps, 7 hand-offs (2 of them queue waits), 3 person touches.');
+    type St = { ex: boolean; ho: string | null; lvl: number | null; lane: string };
+    for (const w of AE.workflows) {
+      for (const ss of [w.today, w.steps] as St[][]) {
+        const main = ss.filter((s) => !s.ex);
+        const f = AE.flowStats(ss);
+        expect(f.steps, w.id).toBe(main.length);
+        expect(f.handoffs, w.id).toBe(main.filter((s) => s.ho).length);
+        expect(f.waits, w.id).toBe(main.filter((s) => s.ho === 'manual' || s.ho === 'file').length);
+        expect(f.touches, w.id).toBe(main.filter((s) => s.lvl != null && s.lvl <= 2).length);
+        expect(f.waits, w.id).toBeLessThanOrEqual(f.handoffs);
+      }
+      expect(AE.flowStats(w.today).waits, w.id).toBeGreaterThan(0);
+      // No invented times, money or percentages: the line carries counts only.
+      const line = AE.compareLine(w);
+      expect(line, w.id).not.toMatch(/\$|%|\bday|\bmin|\bhour|\bsec/);
+      for (const m of line.match(/\d+/g) || []) expect(Number(m)).toBeLessThan(20);
+    }
+  });
+
+  it('adds a Side by side view with Run both, queue clocks, a live result and reduced motion', () => {
+    const js = readFileSync(join(DIST, 'assets/blueprints.js'), 'utf8');
+    const css = readFileSync(join(DIST, 'assets/styles.css'), 'utf8');
+    expect(js).toContain("['both', 'Side by side']");
+    expect(js).toContain("runBtn.textContent = isBoth ? 'Run both' : 'Run it'");
+    expect(js).toContain('await Promise.all([runFlow(A, live), runFlow(B, live)])');
+    expect(js).toContain('if (reduce) {\n        // No movement: final states, the full log and the comparison at once.');
+    expect(js).toContain('waits are illustrative pacing (animation speed, not real time)');
+    expect(js).toContain("class: 'sl-q'");
+    expect(js).toContain('<div class="wf-result" aria-live="polite"></div>');
+    // Run brings the diagram it plays in below the sticky header, in both views.
+    expect(js).toContain('function placeBelowHeader(node)');
+    expect(js).toContain('placeBelowHeader(host);');
+    expect(js).toContain('placeBelowHeader(both);');
+    expect(js).not.toMatch(/style="|\.style\.|on[a-z]+="/);
+    expect(css).toContain('@media (prefers-reduced-motion: reduce) { .tok-wait.on { animation: none; } }');
+    expect(css).toContain('.sl-step.waited .sl-q, .sl-step.waiting .sl-q { display: inline; }');
+    const page = html('workflows/index.html');
+    expect(page.match(/<h1[\s>]/g)?.length).toBe(1);
+    expect(page).toMatch(/<script src="\/assets\/data\/workflows\.js\?v=[0-9a-f]{10}" defer><\/script>/);
+  });
+});

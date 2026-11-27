@@ -80,6 +80,16 @@
     if (Math.abs(host.scrollLeft - left) < 2) return;
     if (host.scrollTo && !reduce) host.scrollTo({ left: left, behavior: 'smooth' }); else host.scrollLeft = left;
   }
+  // When a run starts, bring the diagram it plays in to sit just below the sticky header (only if it is not
+  // already fully in view), so the token never starts off-screen.
+  function placeBelowHeader(node) {
+    if (!node || !node.getBoundingClientRect) return;
+    var hd = $('.site-header'), hb = hd ? Math.max(0, hd.getBoundingClientRect().bottom) : 0, r = node.getBoundingClientRect(), vh = window.innerHeight;
+    var inView = r.top >= hb && r.bottom <= vh, tallAndTop = r.height > vh - hb && Math.abs(r.top - hb - 8) < 12;
+    if (inView || tallAndTop) return;
+    var top = Math.max(0, window.pageYOffset + r.top - hb - 8);
+    if (window.scrollTo) { try { window.scrollTo({ top: top, behavior: reduce ? 'auto' : 'smooth' }); } catch (e) { window.scrollTo(0, top); } }
+  }
   function typeInto(node, text, isLive) {
     if (reduce) { node.textContent = text; return Promise.resolve(); }
     node.textContent = ''; node.classList.add('typing');
@@ -397,20 +407,20 @@
       var n = Math.max(1, steps.length), lw = avail && avail < 640 ? 90 : 104, pad = 8;
       var cw = avail ? (avail - lw - pad) / n : 0, fit = cw >= SL.CWMIN;
       if (!fit) cw = SL.CWSCROLL;
-      var bw = Math.min(cw - 10, 210), maxLines = bw < 120 ? 5 : 4;
+      var bw = Math.min(cw - 10, 210), maxLines = opts.compact ? 2 : bw < 120 ? 5 : 4;
       var font = '400 ' + SL.NAME_PX + 'px ' + (getComputedStyle(host).fontFamily || 'sans-serif');
       var names = steps.map(function (s) { return wrapPx(s.name, bw - 16, maxLines, font); });
       var lines = Math.max.apply(null, names.map(function (l) { return l.length; }).concat([2]));
-      var bh = 34 + lines * SL.LINE;
-      return { n: n, lw: lw, cw: cw, bw: bw, bh: bh, lh: bh + 32, names: names, fit: fit, w: fit ? Math.floor(avail - lw) : Math.ceil(n * cw + pad) };
+      var bh = (opts.compact ? 32 : 34) + lines * SL.LINE;
+      return { n: n, lw: lw, cw: cw, bw: bw, bh: bh, lh: bh + (opts.compact ? 12 : 32), names: names, fit: fit, w: fit ? Math.floor(avail - lw) : Math.ceil(n * cw + pad) };
     }
     function draw() {
       var avail = host.clientWidth;
       drawnFor = avail;
       // Keep what the visitor or a running case left on the steps.
       var keep = {}, tokEl = api.svg ? $('.tok', api.svg) : null;
-      if (api.svg) $$('.sl-step', api.svg).forEach(function (g) { keep[g.dataset.id] = ['sel', 'cur', 'done', 'hit'].filter(function (c) { return g.classList.contains(c); }); });
-      var Lo = layout(avail), lanes = AE.lanes, H = lanes.length * Lo.lh, W = Lo.w;
+      if (api.svg) $$('.sl-step', api.svg).forEach(function (g) { keep[g.dataset.id] = ['sel', 'cur', 'done', 'hit', 'waited', 'waiting'].filter(function (c) { return g.classList.contains(c); }); });
+      var Lo = layout(avail), lanes = opts.lanes ? AE.lanes.filter(function (L) { return opts.lanes.indexOf(L.id) >= 0; }) : AE.lanes, H = lanes.length * Lo.lh, W = Lo.w;
       host.innerHTML = '';
       host.classList.toggle('sl-fit', Lo.fit);
       var row = el('div', 'sl-row');
@@ -430,19 +440,25 @@
       sv('line', { x1: Lo.lw - 0.5, y1: 0, x2: Lo.lw - 0.5, y2: H, class: 'sl-lab-edge' }, lab);
       var gA = sv('g', {}, svg), gB = sv('g', {}, svg), pos = {}, nL = AE.layers.length, seg = Lo.bw / nL;
       steps.forEach(function (s, i) {
-        var bx = i * Lo.cw + (Lo.cw - Lo.bw) / 2 + 3, by = laneY[s.lane] + 10;
+        var bx = i * Lo.cw + (Lo.cw - Lo.bw) / 2 + 3, by = laneY[s.lane] + (opts.compact ? 6 : 10);
         pos[s.id] = { x: bx, y: by, cx: bx + Lo.bw / 2, cy: by + Lo.bh / 2, col: i };
         var weak = opts.weak && opts.weak.indexOf(s.id) >= 0;
         var al = opts.layer ? s.layers.indexOf(opts.layer) >= 0 : false;
         var g = sv('g', { class: 'sl-step' + (s.ex ? ' ex' : '') + (weak ? ' weak' : '') + (s.lane === 'harness' ? ' har' : '') + (opts.layer ? (al ? ' al-on' : ' al-dim') : '') + (keep[s.id] && keep[s.id].length ? ' ' + keep[s.id].join(' ') : ''), tabindex: '0', role: 'button', 'data-id': s.id,
-          'aria-label': 'Step ' + (i + 1) + ': ' + s.name + ', ' + lvl(s.lvl) + (s.ex ? ', exception path' : '') }, gB);
+          'aria-label': 'Step ' + (i + 1) + ': ' + s.name + ', ' + lvl(s.lvl) + (s.ex ? ', exception path' : '') + (opts.queues && AE.isQueueWait(s) ? ', queue wait before this step' : '') }, gB);
         sv('rect', { x: bx, y: by, width: Lo.bw, height: Lo.bh, rx: 8, class: 'sl-box' }, g);
         sv('rect', { x: bx + 6, y: by + 6, width: 38, height: 19, rx: 9.5, class: 'sl-badge l' + (s.lvl == null ? 'r' : s.lvl) }, g);
         var bt = sv('text', { x: bx + 25, y: by + 20, 'text-anchor': 'middle', class: 'sl-badge-t' }, g); bt.textContent = lvl(s.lvl);
         var nt = sv('text', { x: bx + Lo.bw - 8, y: by + 20, 'text-anchor': 'end', class: 'sl-num' }, g); nt.textContent = String(i + 1).padStart(2, '0');
-        var tl = textLines(g, bx + 8, by + 42, Lo.names[i], { class: 'sl-name' }, SL.LINE);
+        var tl = textLines(g, bx + 8, by + (opts.compact ? 40 : 42), Lo.names[i], { class: 'sl-name' }, SL.LINE);
         if (Lo.names[i].join(' ') !== s.name) { var tt = sv('title', {}, g); tt.textContent = s.name; g.insertBefore(tt, g.firstChild); }
-        AE.layers.forEach(function (L, k) {
+        if (opts.queues && AE.isQueueWait(s)) {
+          // Queue clock: shown once the case has waited here (side-by-side run).
+          var q = sv('g', { class: 'sl-q' }, g), qx = bx + Lo.bw - 38, qy = by + 15;
+          sv('circle', { cx: qx, cy: qy, r: 7, class: 'sl-q-face' }, q);
+          sv('path', { d: 'M' + qx + ' ' + (qy - 4) + 'V' + qy + 'H' + (qx + 3), class: 'sl-q-hand' }, q);
+        }
+        if (!opts.compact) AE.layers.forEach(function (L, k) {
           var on = s.layers.indexOf(L.id) >= 0;
           sv('rect', { x: bx + k * seg, y: by + Lo.bh + 5, width: seg - 2.5, height: 7, rx: 2, class: 'sl-ls' + (on ? ' on' : '') + (opts.layer === L.id ? ' cur' : '') }, g);
         });
@@ -460,10 +476,13 @@
         lastMain = s;
       });
       row.appendChild(lab); row.appendChild(svg); host.appendChild(row);
+      var ringEl = api.svg ? $('.tok-wait', api.svg) : null;
+      if (ringEl) svg.appendChild(ringEl);
       if (tokEl) {
         svg.appendChild(tokEl);
         var cur = $('.sl-step.cur', svg) || $('.sl-step.hit', svg);
-        if (cur && pos[cur.dataset.id]) { tokEl.setAttribute('cx', pos[cur.dataset.id].cx); tokEl.setAttribute('cy', pos[cur.dataset.id].cy); }
+        if (!cur && opts.keepLast) { var dn = $$('.sl-step.done', svg); cur = dn[dn.length - 1]; }
+        if (cur && pos[cur.dataset.id]) { tokEl.setAttribute('cx', pos[cur.dataset.id].cx); tokEl.setAttribute('cy', pos[cur.dataset.id].cy); if (ringEl) { ringEl.setAttribute('cx', pos[cur.dataset.id].cx); ringEl.setAttribute('cy', pos[cur.dataset.id].cy); } }
       }
       api.svg = svg; api.pos = pos; api.laneY = laneY; api.cw = Lo.cw; api.lh = Lo.lh; api.lw = Lo.lw; api.fit = Lo.fit;
     }
@@ -502,56 +521,86 @@
     if (hash) AE.workflows.forEach(function (w, i) { if (w.id === hash[1]) st.wf = i; });
     var lf = layerFilter(function (l) { st.layer = l; render(); });
     root.innerHTML = '<div class="wf-tabs" role="group" aria-label="Workflows"></div><div class="wf-bar"><div class="wf-view" role="group" aria-label="View"></div><p class="wf-chain" aria-live="polite"></p></div>' +
-      '<div class="sl-wrap" tabindex="0" role="region" aria-label="Swimlane diagram"></div>' +
+      '<div class="sl-wrap wf-single" tabindex="0" role="region" aria-label="Swimlane diagram"></div>' +
+      '<div class="wf-both" hidden><p class="wf-both-cap"><b>Today</b> <span>As-is best practice: lanes, manual hand-offs, approval queues.</span></p>' +
+      '<div class="sl-wrap wf-sl-today" tabindex="0" role="region" aria-label="Today swimlane"></div>' +
+      '<p class="wf-both-cap wf-both-re"><b>Agent-run</b> <span>Agents act within limits; people approve exceptions.</span></p>' +
+      '<div class="sl-wrap wf-sl-re" tabindex="0" role="region" aria-label="Agent-run swimlane"></div>' +
+      '<p class="fw-note wf-pace"><span class="wf-pace-k" aria-hidden="true"></span> The clock marks a queue wait: a hand-off by hand, email or scheduled file. Waits are illustrative pacing (animation speed, not real time).</p></div>' +
       '<div class="wf-grid"><div><div class="wf-run"><div class="wf-run-btns"></div><p class="lf-label">Inject a failure</p><div class="wf-fails" role="group" aria-label="Failure injection"></div></div>' +
       '<div class="lr-console wf-console"><div class="lr-bar"><span></span><span></span><span></span><b class="wf-ctitle">Case console</b></div><ol class="wf-log" aria-live="polite"></ol><div class="wf-result" aria-live="polite"></div></div>' +
       '<div class="wf-metrics"></div></div><aside class="ar-side"><div class="ar-panel wf-panel" aria-live="polite"></div></aside></div>';
     var tabs = $('.wf-tabs', root);
-    root.insertBefore(lf.el, $('.sl-wrap', root));
+    root.insertBefore(lf.el, $('.wf-single', root));
     AE.workflows.forEach(function (w, i) {
       var b = btn('<b>' + (i + 1) + '</b> ' + esc(w.short), 'pill', { 'aria-pressed': 'false' });
       b.addEventListener('click', function () { st.wf = i; st.sel = null; run++; render(); });
       tabs.appendChild(b);
     });
     var view = $('.wf-view', root);
-    [['today', 'Today'], ['re', 'Reimagined']].forEach(function (v) {
+    [['today', 'Today'], ['re', 'Reimagined'], ['both', 'Side by side']].forEach(function (v) {
       var b = btn(v[1], 'seg', { 'aria-pressed': String(v[0] === st.view), 'data-v': v[0] });
       b.addEventListener('click', function () { st.view = v[0]; st.sel = null; run++; render(); });
       view.appendChild(b);
     });
     var runBtn = btn('Run it', 'btn btn-primary wf-runbtn'); $('.wf-run-btns', root).appendChild(runBtn);
-    runBtn.addEventListener('click', function () { go(null); });
-    var host = $('.sl-wrap', root), panel = $('.wf-panel', root), log = $('.wf-log', root), result = $('.wf-result', root), run = 0, lane = null, tok = null;
-    function steps() { var w = AE.workflows[st.wf]; return st.view === 're' ? w.steps : w.today; }
+    runBtn.addEventListener('click', function () { if (st.view === 'both') goBoth(); else go(null); });
+    var both = $('.wf-both', root), hostT = $('.wf-sl-today', root), hostR = $('.wf-sl-re', root), pair = null;
+    var host = $('.wf-single', root), panel = $('.wf-panel', root), log = $('.wf-log', root), result = $('.wf-result', root), run = 0, lane = null, tok = null;
+    function steps() { var w = AE.workflows[st.wf]; return st.view === 'today' ? w.today : w.steps; }
+    function usedLanes(ss) { return uniq(ss.map(function (s) { return s.lane; })); }
+    function drawPair(w) {
+      function one(h, ss, key, name) {
+        var ch = chainOf(ss);
+        var api = drawSwimlane(h, ss, { layer: st.layer, weak: ch.weak.map(function (x) { return x.id; }), key: key, label: w.name + ', ' + name, lanes: usedLanes(ss), compact: true, queues: true, keepLast: true,
+          onSelect: function (s) { st.sel = s.id; select(s); } });
+        api.ring = sv('circle', { r: 17, class: 'tok-wait', cx: -40, cy: -40 }, api.svg);
+        api.tok = sv('circle', { r: 10, class: 'tok', cx: -30, cy: -30 }, api.svg);
+        return api;
+      }
+      return { today: one(hostT, w.today, 'wft', 'today'), re: one(hostR, w.steps, 'wfr', 'agent-run') };
+    }
+    function svgs() { return pair ? [pair.today.svg, pair.re.svg] : [lane.svg]; }
     function render() {
-      var w = AE.workflows[st.wf], ss = steps(), ch = chainOf(ss);
+      var w = AE.workflows[st.wf], ss = steps(), ch = chainOf(ss), isBoth = st.view === 'both';
       $$('button', tabs).forEach(function (b, i) { b.setAttribute('aria-pressed', String(i === st.wf)); });
       $$('button', view).forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.v === st.view)); });
-      $('.wf-chain', root).innerHTML = '<b>Chain level L' + ch.level + '</b> by the weakest-link rule. ' + (ch.weak.length > 2 ? 'Every main step and handoff is at L' + ch.level + ', so raise them together.' : 'Held by: ' + ch.weak.map(function (x) { return esc(x.why); }).join('; ') + '.') + ' <a href="/frameworks/#weakest-link">Why</a>';
-      lane = drawSwimlane(host, ss, { layer: st.layer, weak: ch.weak.map(function (x) { return x.id; }), key: 'wf', label: w.name + ', ' + (st.view === 're' ? 'reimagined' : 'today'),
-        onSelect: function (s) { st.sel = s.id; select(s); } });
-      tok = sv('circle', { r: 10, class: 'tok', cx: -30, cy: -30 }, lane.svg);
+      host.hidden = isBoth; both.hidden = !isBoth;
+      runBtn.textContent = isBoth ? 'Run both' : 'Run it';
+      if (isBoth) {
+        var cT = chainOf(w.today);
+        $('.wf-chain', root).innerHTML = '<b>Same case, two flows.</b> Chain level L' + cT.level + ' today, L' + ch.level + ' agent-run, by the weakest-link rule. <a href="/frameworks/#weakest-link">Why</a>';
+        pair = drawPair(w); lane = null; tok = null;
+      } else {
+        pair = null;
+        $('.wf-chain', root).innerHTML = '<b>Chain level L' + ch.level + '</b> by the weakest-link rule. ' + (ch.weak.length > 2 ? 'Every main step and handoff is at L' + ch.level + ', so raise them together.' : 'Held by: ' + ch.weak.map(function (x) { return esc(x.why); }).join('; ') + '.') + ' <a href="/frameworks/#weakest-link">Why</a>';
+        lane = drawSwimlane(host, ss, { layer: st.layer, weak: ch.weak.map(function (x) { return x.id; }), key: 'wf', label: w.name + ', ' + (st.view === 're' ? 'reimagined' : 'today'),
+          onSelect: function (s) { st.sel = s.id; select(s); } });
+        tok = sv('circle', { r: 10, class: 'tok', cx: -30, cy: -30 }, lane.svg);
+      }
       var fails = $('.wf-fails', root); fails.innerHTML = '';
-      AE.failureTypes.forEach(function (ft) {
+      $('.wf-run .lf-label', root).hidden = isBoth;
+      if (isBoth) fails.appendChild(el('span', 'muted wf-note', 'Failure injection runs in the Today or Reimagined view.'));
+      else AE.failureTypes.forEach(function (ft) {
         var f = w.failures.filter(function (x) { return x.type === ft.id; })[0];
         if (!f) return;
         var b = btn(esc(ft.name), 'pill pill-warn');
         b.addEventListener('click', function () { go(f); });
         fails.appendChild(b);
       });
-      if (st.view !== 're') fails.appendChild(el('span', 'muted wf-note', 'Today there is no harness. Inject a failure to see who catches it.'));
+      if (st.view === 'today') fails.appendChild(el('span', 'muted wf-note', 'Today there is no harness. Inject a failure to see who catches it.'));
       var m = w.metrics;
       $('.wf-metrics', root).innerHTML = '<p class="dcard-k">Before and after &middot; illustrative</p><table class="wf-mt"><thead><tr><th scope="col"></th><th scope="col">Today</th><th scope="col">Reimagined</th></tr></thead><tbody>' +
         '<tr><th scope="row">Cycle time</th><td>' + m.today.cycle + '</td><td>' + m.re.cycle + '</td></tr><tr><th scope="row">Touches per case</th><td>' + m.today.touches + '</td><td>' + m.re.touches + '</td></tr>' +
         '<tr><th scope="row">Cost per completed outcome</th><td>' + m.today.cost + '</td><td>' + m.re.cost + '</td></tr><tr><th scope="row">Chain level</th><td>L' + chainOf(w.today).level + '</td><td>L' + chainOf(w.steps).level + '</td></tr></tbody></table>' +
         '<p class="fw-note">Illustrative figures, not client data. <a href="/frameworks/#' + w.fw + '">Related framework: ' + esc(AE.frameworkNames[w.fw]) + '</a></p>';
       log.innerHTML = ''; result.innerHTML = '';
-      $('.wf-ctitle', root).textContent = 'Case console \u00b7 ' + w.short + ' \u00b7 ' + (st.view === 're' ? 'reimagined' : 'today');
+      $('.wf-ctitle', root).textContent = 'Case console \u00b7 ' + w.short + ' \u00b7 ' + (isBoth ? 'side by side' : st.view === 're' ? 'reimagined' : 'today');
       var s = ss.filter(function (x) { return x.id === st.sel; })[0] || ss.filter(function (x) { return x.card; })[0] || ss[1];
       select(s);
     }
     function select(s) {
-      $$('.sl-step', lane.svg).forEach(function (g) { g.classList.toggle('sel', g.dataset.id === s.id); });
+      svgs().forEach(function (svg) { $$('.sl-step', svg).forEach(function (g) { g.classList.toggle('sel', g.dataset.id === s.id); }); });
       panel.innerHTML = stepDetail(s, st.layer);
     }
     function line(cls, html) { var li = el('li', cls, html); log.appendChild(li); log.scrollTop = log.scrollHeight; return li; }
@@ -559,6 +608,7 @@
       var my = ++run; function live() { return my === run; }
       var ss = steps(), w = AE.workflows[st.wf];
       log.innerHTML = ''; result.innerHTML = '';
+      placeBelowHeader(host);
       $$('.sl-step', lane.svg).forEach(function (g) { g.classList.remove('done', 'cur', 'hit'); });
       var prev = null, prevPos = null, main = ss.filter(function (s) { return !s.ex; }), t = 0, re = st.view === 're';
       function stamp(s) {
@@ -611,6 +661,67 @@
       result.innerHTML = st.view === 're'
         ? '<div class="lr-result lr-r-post"><b>Completed at chain level L' + ch.level + '</b><span>Every step left a trace. Illustrative cycle time ' + w.metrics.re.cycle + ', cost per completed outcome ' + w.metrics.re.cost + '.</span></div>'
         : '<div class="lr-result lr-r-human"><b>Completed by hand at L' + ch.level + '</b><span>Illustrative cycle time ' + w.metrics.today.cycle + ', ' + w.metrics.today.touches + ' touches, cost per completed outcome ' + w.metrics.today.cost + '.</span></div>';
+    }
+    // Side-by-side run: the same case through Today and Agent-run at once. Both tokens move at one speed;
+    // a token pauses with a clock at each queue wait its own step data has (AE.isQueueWait). Nothing here is
+    // a measured time: the pause is animation pacing, and the result line is AE.compareLine (counts only).
+    var QWAIT = 1200;
+    function flowOf(key) {
+      var w = AE.workflows[st.wf], re = key === 're';
+      return { api: pair[key], host: re ? hostR : hostT, steps: re ? w.steps : w.today, name: re ? 'Agent-run' : 'Today', re: re };
+    }
+    function stepLine(F, s) {
+      line('wf-l-step', '<b>' + F.name + ' &middot; ' + String(F.steps.indexOf(s) + 1).padStart(2, '0') + ' ' + esc(LANE_NAME[s.lane]) + ' &middot; ' + lvl(s.lvl) + '</b><span>' + esc(F.re ? s.log : s.name) + '</span>');
+    }
+    function waitLine(F, s) {
+      line('wf-l-warn', '<b>' + F.name + ' &middot; queue wait</b><span>Waits on a ' + esc(HO_NAME[s.ho].toLowerCase()) + ' hand-off into step ' + String(F.steps.indexOf(s) + 1).padStart(2, '0') + '.</span>');
+    }
+    function finish(F) {
+      var main = F.steps.filter(function (s) { return !s.ex; }), last = main[main.length - 1], p = F.api.pos[last.id];
+      main.forEach(function (s) { var g = $('.sl-step[data-id="' + s.id + '"]', F.api.svg); g.classList.add('done'); if (AE.isQueueWait(s)) g.classList.add('waited'); });
+      F.api.tok.setAttribute('cx', p.cx); F.api.tok.setAttribute('cy', p.cy);
+      if (!F.api.fit) follow(F.host, p.cx + F.api.lw - F.host.clientWidth / 2);
+    }
+    async function runFlow(F, live) {
+      var main = F.steps.filter(function (s) { return !s.ex; }), prev = null, prevPos = null, api = F.api;
+      for (var i = 0; i < main.length; i++) {
+        var s = main[i], p = api.pos[s.id], g = $('.sl-step[data-id="' + s.id + '"]', api.svg);
+        g.classList.add('cur');
+        if (!api.fit) follow(F.host, p.cx + api.lw - F.host.clientWidth / 2);
+        var via = laneVia(prevPos, p);
+        await moveToken(api.tok, prev, [p.cx, p.cy], via ? 700 : 550, live, via); if (!live()) return;
+        prev = [p.cx, p.cy]; prevPos = p;
+        if (AE.isQueueWait(s)) {
+          api.ring.setAttribute('cx', p.cx); api.ring.setAttribute('cy', p.cy); api.ring.classList.add('on'); g.classList.add('waiting');
+          waitLine(F, s);
+          await wait(QWAIT); if (!live()) return;
+          api.ring.classList.remove('on'); g.classList.remove('waiting'); g.classList.add('waited');
+        }
+        stepLine(F, s);
+        await wait(260); if (!live()) return;
+        g.classList.remove('cur'); g.classList.add('done');
+      }
+    }
+    function bothResult(w) {
+      result.innerHTML = '<div class="lr-result lr-r-post wf-cmp"><b>Same case, two flows</b><span>' + esc(AE.compareLine(w)) +
+        ' A person touch is a main-path step at L0 to L2. Counts come from the step data; waits are illustrative pacing (animation speed, not real time).</span></div>';
+    }
+    async function goBoth() {
+      var my = ++run; function live() { return my === run; }
+      var w = AE.workflows[st.wf], A = flowOf('today'), B = flowOf('re');
+      log.innerHTML = ''; result.innerHTML = '';
+      placeBelowHeader(both);
+      [A, B].forEach(function (F) {
+        $$('.sl-step', F.api.svg).forEach(function (g) { g.classList.remove('done', 'cur', 'hit', 'waited', 'waiting'); });
+        F.api.ring.classList.remove('on'); F.api.tok.setAttribute('cx', -30); F.api.tok.setAttribute('cy', -30);
+      });
+      if (reduce) {
+        // No movement: final states, the full log and the comparison at once.
+        [A, B].forEach(function (F) { finish(F); F.steps.filter(function (s) { return !s.ex; }).forEach(function (s) { if (AE.isQueueWait(s)) waitLine(F, s); stepLine(F, s); }); });
+        bothResult(w); return;
+      }
+      await Promise.all([runFlow(A, live), runFlow(B, live)]); if (!live()) return;
+      bothResult(w);
     }
     render();
   }

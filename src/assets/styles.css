@@ -879,6 +879,32 @@ fieldset.field legend { padding: 0; margin-bottom: 0.35rem; }
 .sl-step.hit .sl-box { fill: #fde4e0; stroke: var(--danger); stroke-width: 3; }
 .sl-step.al-dim { opacity: 0.3; }
 .sl-step.al-on .sl-box { stroke: var(--orange); stroke-width: 2; }
+/* Side-by-side run (Nov 27, 2026): Today above Agent-run, compact lanes, a clock where the case sits in a queue. */
+.wf-both { display: grid; gap: 0.35rem; }
+.wf-both[hidden] { display: none; }
+.wf-both-cap { margin: 0.4rem 0 0; font-size: 0.92rem; display: flex; flex-wrap: wrap; gap: 0.2rem 0.5rem; align-items: baseline; }
+.wf-both-cap b { font-family: var(--font-display); letter-spacing: 0.01em; }
+.wf-both-cap span { color: var(--muted); }
+.wf-both-re { margin-top: 0.6rem; }
+.wf-pace { margin: 0.3rem 0 0; }
+.wf-pace-k { display: inline-block; width: 0.8rem; height: 0.8rem; border-radius: 50%; border: 2px solid #c98a1b; background: #fff4d6; vertical-align: -0.1rem; }
+.sl-q { display: none; }
+.sl-step.waited .sl-q, .sl-step.waiting .sl-q { display: inline; }
+.sl-q-face { fill: #fff4d6; stroke: #c98a1b; stroke-width: 1.6; }
+.sl-q-hand { fill: none; stroke: #7a4f00; stroke-width: 1.6; stroke-linecap: round; }
+.sl-step.waiting .sl-box { fill: #fff8e6; stroke: #c98a1b; stroke-width: 2.5; }
+.tok-wait { fill: none; stroke: #c98a1b; stroke-width: 3; opacity: 0; pointer-events: none; }
+.tok-wait.on { opacity: 1; animation: qPulse 1s ease-in-out infinite; }
+@keyframes qPulse { 0%, 100% { stroke-opacity: 1; stroke-width: 3; } 50% { stroke-opacity: 0.25; stroke-width: 6; } }
+@media (prefers-reduced-motion: reduce) { .tok-wait.on { animation: none; } }
+/* Phones: both diagrams fit one screen below the header; the run glides each diagram sideways to its token,
+   so the scroll hint and the caption detail give way. */
+.wf-both .x-hint + .sl-wrap { margin-top: 0; }
+@media (max-width: 40rem) {
+  .wf-both .x-hint { display: none; }
+  .wf-both-cap span { display: none; }
+  .wf-both-re { margin-top: 0.3rem; }
+}
 .sl-name { font-size: 13px; fill: var(--ink); pointer-events: none; }
 .sl-num { font-size: 12px; fill: #6b665e; font-weight: 700; }
 .sl-badge { fill: #8a857c; }

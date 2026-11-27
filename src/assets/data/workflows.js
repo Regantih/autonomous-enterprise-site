@@ -291,4 +291,28 @@
       s.layers = order.filter(function (l) { return set[l]; });
     });
   });
+
+  /* Side-by-side run: every count comes from the step definitions above, nothing else.
+     A queue wait is a main-path hand-off by hand or email, or by scheduled file (the kinds a case sits in).
+     A person touch is a main-path step at L0 to L2, where a person does, checks or approves the work. */
+  var QUEUE = { manual: 1, file: 1 };
+  AE.isQueueWait = function (s) { return !!(s && !s.ex && QUEUE[s.ho]); };
+  AE.flowStats = function (steps) {
+    var main = steps.filter(function (s) { return !s.ex; });
+    return {
+      steps: main.length,
+      handoffs: main.filter(function (s) { return !!s.ho; }).length,
+      waits: main.filter(AE.isQueueWait).length,
+      touches: main.filter(function (s) { return s.lvl != null && s.lvl <= 2; }).length,
+      exPeople: steps.filter(function (s) { return s.ex && s.lane === 'people'; }).length
+    };
+  };
+  function n(k, one, many) { return k + ' ' + (k === 1 ? one : many); }
+  function side(name, f) {
+    return name + ': ' + n(f.steps, 'step', 'steps') + ', ' + n(f.handoffs, 'hand-off', 'hand-offs') + (f.handoffs ? ' (' + (!f.waits ? 'none a queue wait' : f.waits === f.handoffs ? (f.waits === 1 ? 'a queue wait' : 'all queue waits') : f.waits + ' of them ' + (f.waits === 1 ? 'a queue wait' : 'queue waits')) + ')' : '') + ', ' +
+      n(f.touches, 'person touch', 'person touches') + (f.exPeople ? '; ' + n(f.exPeople, 'exception path goes', 'exception paths go') + ' to a person' : '') + '.';
+  }
+  AE.compareLine = function (wf) {
+    return side('Today', AE.flowStats(wf.today)) + ' ' + side('Agent-run', AE.flowStats(wf.steps));
+  };
 })(typeof window !== 'undefined' ? window : globalThis);
