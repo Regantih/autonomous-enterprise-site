@@ -38,9 +38,9 @@
 <script src="/assets/blueprints.js?v=2039a23713" defer></script>
 <link rel="stylesheet" href="/assets/models.css?v=9b39ac3957">
 <script src="/assets/models.js?v=ae133c964e" defer></script>
-<link rel="stylesheet" href="/assets/vz.css?v=5fa151db4d">
-<script src="/assets/vz-core.js?v=c77ea903ff" defer></script>
-<script src="/assets/vz.js?v=c2eb547550" defer></script>
+<link rel="stylesheet" href="/assets/vz.css?v=ad5ac600b7">
+<script src="/assets/vz-core.js?v=0ff371e0e4" defer></script>
+<script src="/assets/vz.js?v=4f5103f419" defer></script>
 <link rel="stylesheet" href="/assets/styles.css?v=14095203e5">
 <script src="/assets/site.js?v=14095203e5" defer></script>
 <script src="/assets/guide.js?v=14095203e5" defer></script>
@@ -186,6 +186,10 @@
         </tbody>
       </table>
     </div>
+    <h3>One step, followed: find, ground, cite</h3>
+    <p>Follow the dispute agent through one step on the book&rsquo;s capstone order. Pick a case to see what changes. <span class="md-cite">Book, Ch 08.8 and Ch 09.4</span></p>
+    <div class="vz-wrap" hidden><div data-vz="flow:rag"></div></div>
+    <noscript><ol class="fw-list"><li><b>Resolve</b> payer and contract in the graph.</li><li><b>Retrieve</b> policy first, filtered by permission, then like-for-like precedent.</li><li><b>Assemble</b> stable content first; wrap untrusted text.</li><li><b>Cite</b> every fact, or flag what is missing.</li></ol></noscript>
     <h3>Retrieval design</h3>
     <ul class="fw-list">
       <li><b>Start in a store you already run.</b> Consider a separate vector database only above about 100 million chunks with a 50 ms target. <span class="md-cite">Book, Ch 03</span></li>
@@ -343,6 +347,7 @@
     <h2 id="inference-title" class="h-sm">Inference design: route, budget, cache, fall back</h2>
     <p class="lead">Send each step to the cheapest engine that passes evaluation: rules, a tabular model, a small model, a frontier model, or a person. <span class="md-cite">Book, Ch 09</span></p>
     <p>In the book&rsquo;s accounts-payable simulation, rules resolve 39% of items, the tabular model 8%, the small model 4%, the frontier model 13% and people 36%. <span class="md-cite">Book, Ch 21</span></p>
+    <div class="vz-wrap" hidden><p class="ix-label">Try it &middot; Route 100 items, then watch a run hit its limit or lose its provider</p><div data-vz="flow:inference"></div></div>
     <ul class="fw-list">
       <li><b>Small or large.</b> Use a reasoning mode for the plan step and exception analysis. Use a fast model for extraction and drafting. <span class="md-cite">Book, Ch 04</span></li>
       <li><b>Spend tokens to save review minutes.</b> A stronger model on hard items often costs less per outcome. <span class="md-cite">Book, Ch 21</span></li>

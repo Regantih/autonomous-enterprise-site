@@ -523,16 +523,19 @@
         text(g, p[0], p[1] - 4, n.t, 'vz-n1', 'middle');
         var st = text(g, p[0], p[1] + 14, sub(k), 'vz-n2 vz-fs', 'middle');
         st.setAttribute('data-s', k);
+        fit(g);
       });
       swarmG = svgEl('g', { 'class': 'vz-swarm' }, svg);
       tok = svgEl('circle', { r: 8, cx: -20, cy: -20, 'class': 'vz-tok' }, svg);
       paint();
     }
+    // A label wider than its box is squeezed to fit, never clipped.
+    function fit(g) { $$('text', g).forEach(function (t) { t.removeAttribute('textLength'); try { if (t.getComputedTextLength && t.getComputedTextLength() > G.nw - 8) { t.setAttribute('textLength', G.nw - 8); t.setAttribute('lengthAdjust', 'spacingAndGlyphs'); } } catch (e) { /* not rendered yet */ } }); }
     function nodeEl(k) { return $('.vz-fn[data-k="' + k + '"]', svg); }
     function listSteps() {
       var c = C();
       list.innerHTML = c.route.map(function (k, i) {
-        return '<li data-i="' + i + '"><b>' + esc(F.nodes[k].t) + '.</b> ' + esc(say(k)) + ' <span class="md-cite">Book, ' + esc(F.nodes[k].c) + '</span></li>';
+        return '<li data-i="' + i + '"><b>' + esc(F.nodes[k].t) + (/[?.]$/.test(F.nodes[k].t) ? '' : '.') + '</b> ' + esc(say(k)) + ' <span class="md-cite">Book, ' + esc(F.nodes[k].c) + '</span></li>';
       }).join('') + '<li class="vz-flow-end" data-i="' + c.route.length + '">' + esc(c.end) + '</li>';
     }
     function paint() {
@@ -541,7 +544,7 @@
         var k = g.dataset.k, i = r.indexOf(k);
         g.classList.toggle('in', i >= 0); g.classList.toggle('done', i >= 0 && i < step); g.classList.toggle('cur', i >= 0 && i === step);
         g.classList.toggle('out', i < 0);
-        var t = $('[data-s]', g); if (t) t.textContent = sub(k);
+        var t = $('[data-s]', g); if (t && t.textContent !== sub(k)) { t.textContent = sub(k); fit(g); }
       });
       $$('.vz-edge', svg).forEach(function (e) {
         var ab = e.getAttribute('data-e').split('>'), i = r.indexOf(ab[0]);

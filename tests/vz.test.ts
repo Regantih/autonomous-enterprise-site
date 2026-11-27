@@ -334,6 +334,43 @@ describe('visuals part 5: maps and flows', () => {
     expect(src('assets/vz.css')).toContain('.mgmt-grid[hidden] { display: none; }');
     expect(src('assets/vz.js')).toMatch(/list\.hidden = true;[\s\S]*Show all five as a list/);
   });
+  it('flows: every node cites a chapter, captions are plain (<=25 words a sentence), every case walks real edges', () => {
+    for (const [id, F] of Object.entries(V.FLOWS) as [string, Any][]) {
+      for (const [k, n] of Object.entries(F.nodes) as [string, Any][]) {
+        expect(n.c, `${id}.${k}`).toMatch(/^(Ch \d\d(\.\d+)*(, Table [\d.]+)?(, Ch \d\d(\.\d+)*)?|Practice)$/);
+        words(n.d);
+        expect((n.s as string).length, `${id}.${k}.s`).toBeLessThanOrEqual(23);
+        expect((n.t as string).length, `${id}.${k}.t`).toBeLessThanOrEqual(22);
+      }
+      const has = (a: string, b: string) => F.edges.some((e: Any) => e[0] === a && e[1] === b);
+      F.cases.forEach((c: Any) => {
+        c.route.forEach((k: string, i: number) => { expect(F.nodes[k], `${id}:${k}`).toBeTruthy(); if (i) expect(has(c.route[i - 1], k), `${id} ${c.id} ${c.route[i - 1]}>${k}`).toBe(true); });
+        words(c.end); Object.values(c.say || {}).forEach((t) => words(t as string));
+        Object.values(c.sub || {}).forEach((t) => expect((t as string).length).toBeLessThanOrEqual(23));
+      });
+      // No two nodes share a grid cell, in either layout.
+      for (const lay of ['w', 'n']) {
+        if (lay === 'n' && F.narrow === 'route') continue;
+        const cells = Object.values(F.nodes).map((n: Any) => String(n[lay]));
+        expect(new Set(cells).size, `${id} ${lay}`).toBe(cells.length);
+      }
+    }
+  });
+  it('inference flow uses the book routing shares (Ch 21.14.3) and they sum to 100', () => {
+    const to = V.FLOWS.inference.cases[0].swarm.to;
+    expect(to).toEqual({ rules: 39, tab: 8, small: 4, front: 13, person: 36 });
+  });
+  it('design page carries the find-ground-cite and routing flows, with a no-JS list', () => {
+    const h = html('blueprints/design/index.html');
+    expect(h).toContain('data-vz="flow:rag"');
+    expect(h).toContain('data-vz="flow:inference"');
+    expect(h).toMatch(/<noscript><ol class="fw-list"><li><b>Resolve<\/b>/);
+  });
+  it('flows honour reduced motion: final state at once, no token travel', () => {
+    const js = src('assets/vz.js');
+    expect(js).toMatch(/if \(reduced\(\)\) \{ show\(C\(\)\.route\.length - 1\); if \(C\(\)\.swarm\) swarm\(true\); \}/);
+    expect(js).toMatch(/if \(reduced\(\) \|\| !e \|\| !e\.getTotalLength/);
+  });
   it('the floating Talk-to-the-book button avoids the new visual containers', () => {
     ['.vz-flow', '.vz-lad', '.vz-pair', '.vz-chap', '.vz-cases'].forEach((c) => expect(src('assets/site.js')).toContain(c));
   });

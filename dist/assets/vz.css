@@ -204,7 +204,8 @@
 .vz-fn { cursor: pointer; }
 .vz-fn rect { fill: var(--paper); stroke: var(--ink); stroke-width: 1.5; transition: fill 0.3s, opacity 0.3s, stroke 0.3s; }
 .vz-fn.vz-gate-n rect { stroke-dasharray: 5 3; }
-.vz-fn.out { opacity: 0.45; }
+.vz-fn.out rect { stroke: var(--rule); }
+.vz-fn.out text { opacity: 0.5; }
 .vz-fn.done rect { fill: #f3dccd; }
 .vz-fn.cur rect { fill: var(--orange); stroke-width: 2.5; }
 .vz-fn.cur.vz-stop-n rect { fill: var(--ink); }
