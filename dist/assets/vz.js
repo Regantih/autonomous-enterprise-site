@@ -76,7 +76,7 @@
     else if (a[0] === 'bars') {
       var x = +a[1], y = +a[2], m = Math.max(x, y) || 1;
       [[x, a[3], 'vz-pb-t', 14], [y, a[4], 'vz-pb-r', 44]].forEach(function (b) {
-        svgEl('rect', { x: 8, y: b[3], width: Math.max(2, 92 * b[0] / m), height: 14, 'class': 'grow ' + b[2] }, g);
+        svgEl('rect', { x: 8, y: b[3], width: Math.max(2, 80 * b[0] / m), height: 14, 'class': 'grow ' + b[2] }, g);
         text(g, 152, b[3] + 11, b[1] || '', 'vz-pt', 'end');
       });
     } else if (a[0] === 'gauge') {
@@ -88,7 +88,7 @@
       var n = pt(p, 44);
       svgEl('path', { d: 'M80 62 L' + n, 'class': 'd needle' }, g);
       text(g, t2[0] + 4, t2[1] - 2, 'p* ' + th, 'vz-pt');
-      text(g, 80, 70, 'p ' + p, 'vz-pt vz-ptb', 'middle');
+      text(g, 4, 70, 'p ' + p, 'vz-pt vz-ptb');
     } else if (a[0] === 'dots') {
       var tot = Math.min(24, +a[1] || 1), hi = +a[2] || 0;
       for (var i = 0; i < tot; i++) svgEl('circle', { cx: 20 + (i % 12) * 11, cy: 22 + Math.floor(i / 12) * 22, r: 4, 'class': i < hi ? 'acc' : 'd' }, g);
@@ -220,11 +220,11 @@
         var d = $('.vz-d', el), better;
         if (row.today === row.re) { d.textContent = 'Same'; better = null; }
         else if (!row.today) { d.textContent = (row.re > 0 ? '+' : '') + V.fmt(row.re, row.unit, v.cur); better = row.higher ? row.re > 0 : row.re < 0; }
-        else { var pc = (row.re - row.today) / Math.abs(row.today) * 100; d.textContent = (pc > 0 ? '+' : '') + V.num(pc, Math.abs(pc) < 10 ? 1 : 0) + '%' + (row.fixed ? ' (book order)' : ''); better = row.higher ? pc > 0 : pc < 0; }
+        else { var pc = (row.re - row.today) / Math.abs(row.today) * 100; d.textContent = (pc > 0 ? '+' : '') + V.num(pc, Math.abs(pc) < 10 ? 1 : 0) + '%' ; better = row.higher ? pc > 0 : pc < 0; }
         d.className = 'vz-d' + (better === true ? ' vz-good' : better === false ? ' vz-bad' : '');
       });
       var key = r.rows.filter(function (x) { return x.key; })[0] || r.rows[0];
-      sumEl.textContent = key.label + ': ' + V.fmt(key.today, key.unit, v.cur) + ' ' + names[0].toLowerCase() + ', ' + V.fmt(key.re, key.unit, v.cur) + ' ' + names[1].toLowerCase() + '.';
+      sumEl.textContent = key.label + ': ' + names[0] + ' ' + V.fmt(key.today, key.unit, v.cur) + '; ' + names[1] + ' ' + V.fmt(key.re, key.unit, v.cur) + '.';
       if (r.levers) {
         var L = r.levers;
         levEl.innerHTML = '<p class="vz-lev"><b>Which lever matters most at your numbers?</b> One point less exception rate saves ' + esc(V.money(L.exceptionPoint, v.cur)) +

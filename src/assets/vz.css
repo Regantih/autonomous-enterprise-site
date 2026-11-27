@@ -45,7 +45,7 @@
 .vz-priv { margin: 0 0 1.1rem; font-size: 0.88rem; color: var(--muted); }
 .vz-calc-grid { display: grid; gap: 1.5rem; grid-template-columns: minmax(0, 1fr); }
 @media (min-width: 60rem) { .vz-calc-grid { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); } }
-.vz-fs { border: 0; margin: 0; padding: 0; min-width: 0; display: grid; gap: 0.75rem; }
+.vz-fs { border: 0; margin: 0; padding: 0; min-width: 0; display: grid; gap: 0.75rem; align-content: start; }
 .vz-fs legend { font-weight: 700; margin-bottom: 0.4rem; padding: 0; }
 .vz-f { display: grid; gap: 0.15rem; min-width: 0; }
 .vz-fl { font-size: 0.95rem; font-weight: 600; }
@@ -176,3 +176,4 @@
 .vz-rm-detail, .vz-own-detail { font-size: 1rem; }
 .vz-ph span { white-space: nowrap; }
 @media (max-width: 40rem) { .vz-rm-cursor { display: none; } }
+.vz-sub { margin: 2.5rem 0 0.4rem; font-size: clamp(1.3rem, 2.6vw, 1.7rem); }

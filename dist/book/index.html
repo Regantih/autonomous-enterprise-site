@@ -31,6 +31,9 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/assets/fonts/oswald-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
 <script src="/assets/early.js?v=462dc560e7"></script>
+<link rel="stylesheet" href="/assets/vz.css?v=7da1cbadc5">
+<script src="/assets/vz-core.js?v=ec0727a784" defer></script>
+<script src="/assets/vz.js?v=14010ae27c" defer></script>
 <link rel="stylesheet" href="/assets/styles.css?v=462dc560e7">
 <script src="/assets/site.js?v=462dc560e7" defer></script>
 <script src="/assets/guide.js?v=462dc560e7" defer></script>
@@ -182,6 +185,69 @@
       <li><a href="/frameworks/#roadmap">Foundations first, then a 30-month plan with gates</a></li>
     </ul>
     <p class="cta-row"><a class="btn btn-dark" href="/frameworks/">See all the frameworks</a></p>
+  </div>
+</section>
+
+<section class="section" id="one-order" aria-labelledby="one-order-title">
+  <div class="container">
+    <p class="eyebrow">The capstone, as a storyboard</p>
+    <h2 id="one-order-title">One order, end to end</h2>
+    <p class="lead">The book ends by following one made-to-order order through every system at month 30 of the plan. Agents do the work. People sign where the book says they must. <span class="md-cite">Book, Ch 30</span></p>
+    <ol class="vz-story" data-vz="story">
+      <li class="md-panel" data-pic="icon|agent">
+        <span class="md-panel-n" aria-hidden="true">1</span>
+        <p class="md-tag">Intake agent &middot; L3</p>
+        <h3>The order arrives</h3>
+        <p>The customer&rsquo;s buying agent sends an order for four pump skids, USD 186,400. Only named partners may order this way. No person touches it.</p>
+      </li>
+      <li class="md-panel" data-pic="bars|4|0.027|4 days|39 min">
+        <span class="md-panel-n" aria-hidden="true">2</span>
+        <p class="md-tag">Price, credit, promise</p>
+        <h3>Confirmed in 39 minutes</h3>
+        <p>The agent prices from the contract. A credit rule releases the order. The promise agent offers July 30. In 2026 this took 4 days.</p>
+      </li>
+      <li class="md-panel" data-pic="icon|coin">
+        <span class="md-panel-n" aria-hidden="true">3</span>
+        <p class="md-tag">Buy-out agent &middot; L3</p>
+        <h3>The missing part is bought</h3>
+        <p>The agent orders four drive panels under a frame contract on day 0, not day 6. Supplier bank changes always go to a person.</p>
+      </li>
+      <li class="md-panel" data-pic="icon|factory">
+        <span class="md-panel-n" aria-hidden="true">4</span>
+        <p class="md-tag">Production agent &middot; L3</p>
+        <h3>The plant builds</h3>
+        <p>The agent releases the order to the plant. A gasket set fails and is replaced inside the plan&rsquo;s float. The agent does nothing, and the trace records that.</p>
+      </li>
+      <li class="md-panel md-panel-key" data-pic="icon|sign">
+        <span class="md-panel-n" aria-hidden="true">5</span>
+        <p class="md-tag">Quality &middot; a person signs</p>
+        <h3>The agent stops</h3>
+        <p>The quality agent builds the evidence pack, then stops. A qualified inspector witnesses the last test and signs. The agent may prepare the release, not give it.</p>
+      </li>
+      <li class="md-panel" data-pic="icon|truck">
+        <span class="md-panel-n" aria-hidden="true">6</span>
+        <p class="md-tag">Billing agent &middot; L3</p>
+        <h3>Delivery triggers the invoice</h3>
+        <p>Proof of delivery creates the invoice. An anomaly gate scores it normal. One line is wrong: the contract says the company pays the freight.</p>
+      </li>
+      <li class="md-panel" data-pic="gauge|0.96|0.81">
+        <span class="md-panel-n" aria-hidden="true">7</span>
+        <p class="md-tag">Dispute agent &middot; L2 over the limit</p>
+        <h3>Fixed in one day, not 38</h3>
+        <p>The customer short-pays USD 3,450. The claim clears the threshold: 0.96 against 0.81. The amount is over the USD 2,500 limit, so a credit manager approves.</p>
+      </li>
+      <li class="md-panel" data-pic="bars|140|73|140 days|73 days">
+        <span class="md-panel-n" aria-hidden="true">8</span>
+        <p class="md-tag">Close &middot; the controller signs</p>
+        <h3>Cash in 73 days, not 140</h3>
+        <p>The controller signs the close on working day 5. Person time on the order falls from 15.5 hours to about 35 minutes.</p>
+      </li>
+    </ol>
+    <p class="fw-note">Illustrative figures from Meridian, the book&rsquo;s fictional company. The threshold is p* = L &divide; (G + L). <span class="md-cite">Book, Ch 30.3 and Ch 30.5</span></p>
+    <h3 class="vz-sub">The same order in 2026 and at month 30, at your volume</h3>
+    <p>The book prices the person time on this order before and after. Scale it to your own order volume and cost. <span class="md-cite">Book, Ch 30.5</span></p>
+    <div class="vz-wrap" hidden><div data-vz="calc:order"></div></div>
+    <noscript><p>In 2026 the order needed 31 person touches and 15.5 hours of person time, and took 140 days to full cash. At month 30 it needs 3 gates, about 35 minutes and 73 days.</p></noscript>
   </div>
 </section>
 

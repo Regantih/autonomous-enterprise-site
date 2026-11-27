@@ -119,3 +119,41 @@ describe('pages carry the visuals', () => {
     expect(h).toMatch(/<noscript><ul class="fw-list"><li><strong>CFO\.<\/strong>/);
   });
 });
+
+describe('one order, 2026 vs month 30 (Ch 30.5)', () => {
+  it('uses the book per-order figures', () => {
+    expect(V.ORDER_BOOK).toMatchObject({ touchesT: 31, touchesR: 3, hoursT: 15.5, minutesR: 35, cashT: 140, cashR: 73, disputeT: 38, disputeR: 1 });
+  });
+  it('scales person hours with the visitor volume and share', () => {
+    const r = run('order', { n: 1000, rate: 50, s: 100 });
+    expect(row(r, 'Person hours a year').today).toBe(15500);
+    expect(row(r, 'Person hours a year').re).toBeCloseTo(1000 * 35 / 60, 6);
+    expect(row(r, 'Cost of person time a year').re).toBeCloseTo(1000 * 35 / 60 * 50, 6);
+    const none = run('order', { s: 0 });
+    expect(row(none, 'Person hours a year').re).toBe(row(none, 'Person hours a year').today);
+  });
+  it('keeps day counts fixed to the book order, whatever the volume', () => {
+    expect(row(run('order', { n: 50 }), 'Order to full cash (book order)')).toMatchObject({ today: 140, re: 73, fixed: true });
+  });
+});
+
+describe('storyboards follow the approved standard', () => {
+  const panels = (h: string, id: string) => {
+    const sec = h.slice(h.indexOf(`id="${id}"`));
+    const ol = sec.slice(sec.indexOf('<ol'), sec.indexOf('</ol>'));
+    return ol.split('<li').slice(1);
+  };
+  it('book: one order end to end in 8 panels, each with number, title, picture and a short caption', () => {
+    const ps = panels(html('book/index.html'), 'one-order');
+    expect(ps.length).toBe(8);
+    ps.forEach((p, i) => {
+      expect(p).toMatch(/data-pic="(icon|bars|gauge|dots|level|chain)\|/);
+      expect(p).toContain(`<span class="md-panel-n" aria-hidden="true">${i + 1}</span>`);
+      expect(p).toMatch(/<h3>[^<]{5,40}<\/h3>/);
+      const cap = (p.match(/<\/h3>\s*<p>([\s\S]*?)<\/p>/) as RegExpMatchArray)[1].replace(/&[a-z]+;/g, 'x');
+      expect(cap.split(/\s+/).length, cap).toBeLessThanOrEqual(34);
+      cap.split(/\.\s/).forEach((sent) => expect(sent.split(/\s+/).length, sent).toBeLessThanOrEqual(25));
+    });
+    expect(html('book/index.html')).toContain('data-vz="calc:order"');
+  });
+});

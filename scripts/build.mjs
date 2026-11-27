@@ -203,7 +203,7 @@ export const PAGES = [
     sitemap: true, priority: '0.6',
   },
   {
-    src: 'book.html', out: 'book/index.html', path: '/book/', nav: 'BOOK',
+    src: 'book.html', out: 'book/index.html', path: '/book/', nav: 'BOOK', vz: true,
     title: 'The Book | The Autonomous Enterprise by Hemanth Reganti',
     description:
       'Inside The Autonomous Enterprise: the L0 to L5 autonomy scale, guardrails, domain chapters, business case and a 30-month roadmap. Who it is for and where to buy.',
