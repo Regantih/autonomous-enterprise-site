@@ -486,6 +486,7 @@
     function C() { return F.cases[ci]; }
     function say(k) { var c = C(); return (c.say && c.say[k]) || F.nodes[k].d; }
     function sub(k) { var c = C(); return (c.sub && c.sub[k]) || F.nodes[k].s; }
+    function cite(k) { var c = C(); return (c.cite && c.cite[k]) || F.nodes[k].c; }
     var G = {};
     function geom() {
       narrow = host.clientWidth < 560;
@@ -535,7 +536,7 @@
     function listSteps() {
       var c = C();
       list.innerHTML = c.route.map(function (k, i) {
-        return '<li data-i="' + i + '"><b>' + esc(F.nodes[k].t) + (/[?.]$/.test(F.nodes[k].t) ? '' : '.') + '</b> ' + esc(say(k)) + ' <span class="md-cite">Book, ' + esc(F.nodes[k].c) + '</span></li>';
+        return '<li data-i="' + i + '"><b>' + esc(F.nodes[k].t) + (/[?.]$/.test(F.nodes[k].t) ? '' : '.') + '</b> ' + esc(say(k)) + ' <span class="md-cite">Book, ' + esc(cite(k)) + '</span></li>';
       }).join('') + '<li class="vz-flow-end" data-i="' + c.route.length + '">' + esc(c.end) + '</li>';
     }
     function paint() {
@@ -602,7 +603,7 @@
       if (step < 0) { status.textContent = c.route.length + ' steps. Press Play or Next.'; detail.innerHTML = ''; return; }
       var k = r[step];
       status.textContent = 'Step ' + (step + 1) + ' of ' + r.length + ': ' + F.nodes[k].t + '.' + (step === r.length - 1 ? ' ' + c.end : '');
-      detail.innerHTML = '<p class="vz-own-h">' + esc(F.nodes[k].t) + '</p><p>' + esc(say(k)) + ' <span class="md-cite">Book, ' + esc(F.nodes[k].c) + '</span></p>';
+      detail.innerHTML = '<p class="vz-own-h">' + esc(F.nodes[k].t) + '</p><p>' + esc(say(k)) + ' <span class="md-cite">Book, ' + esc(cite(k)) + '</span></p>';
       if (step === r.length - 1 && c.swarm) swarm(false);
     }
     function stop() { if (timer) clearTimeout(timer); timer = null; playBtn.setAttribute('aria-pressed', 'false'); playBtn.textContent = 'Play'; }
@@ -821,7 +822,7 @@
         if (!spec) return;
         var o = {};
         if (spec.id === 'order') o.names = ['2026', 'Month 30'];
-        if (spec.id === 'incident') o.names = ['Found by audit', 'Root-cause loop'];
+        if (spec.id === 'incident') o.names = ['By audit', 'By the loop'];
         if (spec.id === 'touch') {
           o.names = ['Your process', 'Agent-run'];
           var last = AE.simCounts || null;

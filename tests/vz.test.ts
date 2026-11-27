@@ -371,6 +371,42 @@ describe('visuals part 5: maps and flows', () => {
     expect(js).toMatch(/if \(reduced\(\)\) \{ show\(C\(\)\.route\.length - 1\); if \(C\(\)\.swarm\) swarm\(true\); \}/);
     expect(js).toMatch(/if \(reduced\(\) \|\| !e \|\| !e\.getTotalLength/);
   });
+  it('incident (Ch 30.4.2): with no payment lag the loop reproduces the book: 12 invoices, about USD 30,830, 9 paid silently', () => {
+    const r = run('incident', { lag: 0, od: 1000 / 3 });
+    expect(row(r, 'Invoices billed in error').re).toBeCloseTo(12, 6);
+    expect(row(r, 'Amount billed in error').re).toBeCloseTo(30828, 0);
+    expect(row(r, 'Invoices paid without complaint').re).toBeCloseTo(9, 6);
+    expect(V.INCIDENT_BOOK).toMatchObject({ invoices: 12, amount: 30830, disputed: 3, paidSilently: 9, rule: 3, window: 30 });
+  });
+  it('incident: a rule that never fires leaves both sides equal; own rule and window replace the book default', () => {
+    const slow = run('incident', { od: 10 });
+    expect(slow.fires).toBe(false);
+    expect(row(slow, 'Days the defect runs').re).toBe(row(slow, 'Days the defect runs').today);
+    const mine = run('incident', { k: 6, win: 60 });
+    expect(row(mine, 'Days the defect runs').basis).toBe('you');
+    expect(mine.formula.some((f: string) => /^Your figure: the rule fires at 6/.test(f))).toBe(true);
+    const s = V.specs.incident;
+    expect(s.inputs.find((i: Any) => i.k === 'od').src).toBe(V.YOU);
+    expect(s.inputs.find((i: Any) => i.k === 'D').src).toBe(V.YOU);
+  });
+  it('operations: incident storyboard follows the approved standard (8 panels, picture, number, title, short caption) and K2 is the key panel', () => {
+    const h = html('blueprints/operations/index.html');
+    const sec = h.slice(h.indexOf('id="killswitch"'));
+    const ps = sec.slice(sec.indexOf('<ol class="vz-story"'), sec.indexOf('</ol>')).split('<li').slice(1);
+    expect(ps.length).toBe(8);
+    ps.forEach((p, i) => {
+      expect(p).toMatch(/data-pic="(icon|bars|gauge|dots|level|chain|kill)\|/);
+      expect(p).toContain(`<span class="md-panel-n" aria-hidden="true">${i + 1}</span>`);
+      const cap = (p.match(/<\/h3>\s*<p>([\s\S]*?)<\/p>/) as RegExpMatchArray)[1].replace(/&[a-z]+;/g, 'x');
+      expect(cap.split(/\s+/).length, cap).toBeLessThanOrEqual(34);
+      cap.split(/\.\s/).forEach((sent) => expect(sent.split(/\s+/).length, sent).toBeLessThanOrEqual(25));
+    });
+    expect(ps[3]).toContain('data-pic="kill|2"');
+    expect(h).toContain('data-vz="calc:incident"');
+    expect(h).toContain('data-vz="flow:demotion"');
+    expect(h).toContain('data-vz="flow:pipelines"');
+    expect(h).not.toMatch(/ServiceNow/);
+  });
   it('the floating Talk-to-the-book button avoids the new visual containers', () => {
     ['.vz-flow', '.vz-lad', '.vz-pair', '.vz-chap', '.vz-cases'].forEach((c) => expect(src('assets/site.js')).toContain(c));
   });

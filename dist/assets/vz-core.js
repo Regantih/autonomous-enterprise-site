@@ -376,6 +376,7 @@
         { id: 'cite', name: 'Evidence complete', route: ['q', 'resolve', 'retrieve', 'prec', 'assemble', 'check', 'cite', 'answer'], end: 'Every fact is cited. The decision and its sources go into the trace.' },
         { id: 'gap', name: 'A fact is missing', route: ['q', 'resolve', 'retrieve', 'prec', 'assemble', 'check', 'gap'],
           say: { check: 'The carrier tender is not in the loaded records. The check fails on one fact.', gap: 'The agent does not guess. It names the missing tender and routes the case to a person.' },
+          cite: { check: 'Ch 05.4.3 (illustrative case)', gap: 'Ch 05.4.3' },
           end: 'A gap filled by the model is a defect. A gap stated can be fixed.' },
         { id: 'old', name: 'An old precedent', route: ['q', 'resolve', 'retrieve', 'prec', 'assemble', 'check', 'cite', 'answer'],
           say: { prec: 'One past case closed under a superseded threshold. It is shown and flagged, never copied.' },
@@ -438,6 +439,7 @@
         { id: 'sample', name: 'Critical error in the sample', route: ['run', 'sample', 'l2', 'council', 'fix', 'restart'], end: 'Lowering a level needs one rule and no meeting. Raising it needs evidence and a body.' },
         { id: 'a2a', name: 'Error above 0.2%: the book\u2019s case', route: ['run', 'err', 'l2', 'council', 'fix', 'restart'],
           say: { err: 'In August the A2A order channel reached 0.9% value-weighted error. The trigger is 0.2%.', l2: 'The A2A write path went to L2 by rule, not by debate.', fix: 'The team fixed the map and added an invariant and negative tests.', restart: 'Twenty orders ran in shadow with zero differences. The council restored the scope on September 19.' },
+          cite: { err: 'Ch 30.4.2', l2: 'Ch 30.4.2', fix: 'Ch 30.4.2', restart: 'Ch 30.4.2' },
           end: 'Certification bounds how often. The loop and the kill switch bound how long and how far.' },
         { id: 'ctrl', name: 'Control breach or missing trace', route: ['run', 'ctrl', 'shadow', 'council', 'fix', 'restart'], end: 'A missing trace is a control breach. The agent loses its actions first.' },
         { id: 'ready', name: 'Readiness check fails', route: ['run', 'ready', 'down1', 'council', 'fix', 'restart'], end: 'Demotion is automatic. Promotion never is.' }

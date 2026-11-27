@@ -38,8 +38,8 @@
 <script src="/assets/blueprints.js?v=2039a23713" defer></script>
 <link rel="stylesheet" href="/assets/models.css?v=9b39ac3957">
 <link rel="stylesheet" href="/assets/vz.css?v=ad5ac600b7">
-<script src="/assets/vz-core.js?v=0ff371e0e4" defer></script>
-<script src="/assets/vz.js?v=4f5103f419" defer></script>
+<script src="/assets/vz-core.js?v=44beda47a3" defer></script>
+<script src="/assets/vz.js?v=93ea373422" defer></script>
 <link rel="stylesheet" href="/assets/styles.css?v=14095203e5">
 <script src="/assets/site.js?v=14095203e5" defer></script>
 <script src="/assets/guide.js?v=14095203e5" defer></script>
@@ -312,7 +312,62 @@
       <li>A kill switch that works in one vendor console but not another is not a kill switch. <span class="md-cite">Book, Ch 25</span></li>
       <li>Two trained people per team can take the full queue. Drill the manual fallback before each quarter-end. <span class="md-cite">Book, Ch 22 and Ch 24</span></li>
     </ul>
-    <p>In the book&rsquo;s capstone, a K2 on one order-write scope kept all other traffic running while the defect was fixed. <span class="md-cite">Book, Ch 30</span></p>
+    <h3 id="incident">One incident, stopped narrowly</h3>
+    <p>In the book&rsquo;s capstone, a K2 on one order-write scope kept all other traffic running while the defect was fixed. Here is that incident, step by step. Times are Central. <span class="md-cite">Book, Ch 30.4</span></p>
+    <ol class="vz-story" data-vz="story">
+      <li class="md-panel" data-pic="icon|doc">
+        <span class="md-panel-n" aria-hidden="true">1</span>
+        <p class="md-tag">July 30 &middot; Billing agent</p>
+        <h3>A wrong freight line</h3>
+        <p>Gulf Coast&rsquo;s invoice carries a USD 3,450 freight line. The contract says DAP, so the seller pays freight. The anomaly gate scores it normal.</p>
+      </li>
+      <li class="md-panel" data-pic="icon|coin">
+        <span class="md-panel-n" aria-hidden="true">2</span>
+        <p class="md-tag">September 12 &middot; Dispute agent</p>
+        <h3>The customer deducts</h3>
+        <p>Gulf Coast pays USD 3,450 short: &ldquo;freight not per contract&rdquo;. The dispute agent finds the root cause. Invoice delivery terms differ from the contract.</p>
+      </li>
+      <li class="md-panel" data-pic="dots|3|3">
+        <span class="md-panel-n" aria-hidden="true">3</span>
+        <p class="md-tag">14:31 &middot; Governance plane</p>
+        <h3>Third time in 30 days</h3>
+        <p>The same root cause has now appeared three times on one channel. A rule opens a Sev 2 incident. Nobody had to notice.</p>
+      </li>
+      <li class="md-panel md-panel-key" data-pic="kill|2">
+        <span class="md-panel-n" aria-hidden="true">4</span>
+        <p class="md-tag">14:33 &middot; Kill switch K2</p>
+        <h3>Stop narrowly</h3>
+        <p>The gateway revokes one scope: agent order writes for contracts not on FCA terms. Those orders arrive as drafts for review. EDI keeps running.</p>
+      </li>
+      <li class="md-panel" data-pic="dots|12|9">
+        <span class="md-panel-n" aria-hidden="true">5</span>
+        <p class="md-tag">14:40 &middot; Blast radius</p>
+        <h3>Twelve invoices found</h3>
+        <p>A query over the traces finds 12 invoices and USD 30,830 billed in error. Two distributors paid nine in full and never noticed.</p>
+      </li>
+      <li class="md-panel" data-pic="icon|sign">
+        <span class="md-panel-n" aria-hidden="true">6</span>
+        <p class="md-tag">September 13 &middot; AR credit manager</p>
+        <h3>One batch credit</h3>
+        <p>A person approves one batch credit for the nine paid invoices, with one evidence pack. Each distributor gets one message.</p>
+      </li>
+      <li class="md-panel" data-pic="icon|shield">
+        <span class="md-panel-n" aria-hidden="true">7</span>
+        <p class="md-tag">September 13 to 18 &middot; Integration team</p>
+        <h3>Fix the cause</h3>
+        <p>The team fixes the map. Equal delivery terms become a hard check before send. New tests cover the empty field.</p>
+      </li>
+      <li class="md-panel" data-pic="icon|gate">
+        <span class="md-panel-n" aria-hidden="true">8</span>
+        <p class="md-tag">September 19 &middot; Autonomy council</p>
+        <h3>Restored on evidence</h3>
+        <p>Twenty orders run in shadow with zero differences. The council restores the scope. Channel error had reached 0.9%, so the write path went to L2 by rule.</p>
+      </li>
+    </ol>
+    <p class="fw-note">What it cost: about 14 hours of people (USD 900) and five days of L2 review. The credits were not a loss; the money was never owed. <span class="md-cite">Book, Ch 30.4.2</span></p>
+    <p>How much does the loop save at your volume? The book&rsquo;s figures are the defaults. <span class="md-cite">Book, Ch 30.4</span></p>
+    <div class="vz-wrap" hidden><div data-vz="calc:incident"></div></div>
+    <noscript><p class="fw-note">Turn on JavaScript to compare a defect found by audit with one caught by the root-cause loop.</p></noscript>
   </div>
 </section>
 
@@ -361,6 +416,7 @@
     </ol>
     <p class="fw-note">Book, Ch 26.</p>
     <h3>Demotion rules</h3>
+    <div class="vz-wrap" hidden><p class="ix-label">Try it &middot; Pick a trigger and watch the agent go down, then come back on evidence</p><div data-vz="flow:demotion"></div></div>
     <ul class="fw-list">
       <li>To L2 after one critical error in the weekly sample, or value-weighted error above 0.2% in a month. <span class="md-cite">Book, Ch 24</span></li>
       <li>To shadow after a control breach, missing traces or a vendor model change that fails regression. <span class="md-cite">Book, Ch 24</span></li>
@@ -406,6 +462,8 @@
     <h2 id="pipelines-title" class="h-sm">Pipelines and the work repository</h2>
     <p class="lead">Every change to what an agent does goes through a pipeline. The kind of artifact that changes decides which pipeline and who approves. <span class="md-cite">Book, Ch 22 and Ch 25</span></p>
     <p>One rule covers them all. Any artifact that can change what an agent posts, approves or sends is under change control. That includes a policy document the agent retrieves. <span class="md-cite">Book, Ch 22</span></p>
+
+    <div class="vz-wrap" hidden><p class="ix-label">Try it &middot; Pick a change and follow it through its pipeline to its approver</p><div data-vz="flow:pipelines"></div></div>
 
     <h3 id="skill-pipeline">1. The skill pipeline</h3>
     <p>A skill packages instructions, scripts and examples an agent loads only when a task needs them. The enterprise owns skills and governs them like code. <span class="md-cite">Book, Ch 05</span></p>
