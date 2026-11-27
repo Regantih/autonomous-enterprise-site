@@ -407,6 +407,26 @@ describe('visuals part 5: maps and flows', () => {
     expect(h).toContain('data-vz="flow:pipelines"');
     expect(h).not.toMatch(/ServiceNow/);
   });
+  it('delegation ladder follows Table 25.2: product owner, owner and risk lead or council, council with risk council; down by one person at once', () => {
+    const L = V.LADDER;
+    expect(L.levels.map((l: Any) => l.l)).toEqual(['L0', 'L1', 'L2', 'L3', 'L4', 'L5']);
+    expect(L.up[1].by).toBe('Process product owner');
+    expect(L.up[2].by).toMatch(/Owner and risk lead, or the autonomy council/);
+    expect(L.up[3].by).toBe('Autonomy council, endorsed by the risk council');
+    expect(L.down.by).toBe('Owner or AgentOps, at once');
+    [...L.up, L.down].forEach((u: Any) => { expect(u.c).toMatch(/^Ch \d\d/); words(u.ev); });
+  });
+  it('trust: five questions answered for both kinds of agent (Ch 23), and the tier flow climbs T0 to T3 then revokes', () => {
+    expect(V.TRUST_Q.length).toBe(5);
+    V.TRUST_Q.forEach((q: Any) => { words(q.i); words(q.e); expect(q.c).toMatch(/Ch 23/); });
+    const t = V.FLOWS.tiers;
+    expect(t.cases[0].route).toEqual(['t0', 'verify', 't1', 't2', 't3']);
+    expect(t.cases[1].route[t.cases[1].route.length - 1]).toBe('t0');
+  });
+  it('organization page carries the ladder, the pair map and the tier flow', () => {
+    const h = html('blueprints/organization/index.html');
+    ['ladder', 'pair', 'flow:tiers'].forEach((k) => expect(h).toContain(`data-vz="${k}"`));
+  });
   it('the floating Talk-to-the-book button avoids the new visual containers', () => {
     ['.vz-flow', '.vz-lad', '.vz-pair', '.vz-chap', '.vz-cases'].forEach((c) => expect(src('assets/site.js')).toContain(c));
   });
