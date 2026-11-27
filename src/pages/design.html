@@ -1,16 +1,19 @@
 <section class="page-head bp-head" aria-labelledby="page-title">
   <div class="container">
-    <p class="eyebrow">Blueprints &middot; Design choices</p>
+    {{BP_CRUMB}}
     <h1 id="page-title">Design choices</h1>
     <p class="lead">Six choices decide whether models work safely inside an agent-operated company. Each one comes from the book, with the chapter to read next.</p>
-    <ul class="sa-jump" aria-label="On this page">
-      <li><a href="#tabular">Tabular models</a></li>
-      <li><a href="#rag">Retrieval</a></li>
-      <li><a href="#evals">Evals and audits</a></li>
-      <li><a href="#security">Security</a></li>
-      <li><a href="#inference">Inference</a></li>
-      <li><a href="#deterministic">Models or rules</a></li>
-    </ul>
+    <details class="onpage" data-onpage>
+      <summary>On this page</summary>
+      <ul class="sa-jump" aria-label="On this page">
+        <li><a href="#tabular">Tabular models</a></li>
+        <li><a href="#rag">Retrieval</a></li>
+        <li><a href="#evals">Evals and audits</a></li>
+        <li><a href="#security">Security</a></li>
+        <li><a href="#inference">Inference</a></li>
+        <li><a href="#deterministic">Models or rules</a></li>
+      </ul>
+    </details>
   </div>
 </section>
 {{BP_SUBNAV}}
@@ -345,3 +348,5 @@
     <p class="cta-row"><a class="btn btn-dark" href="/blueprints/models/">Back to the model families</a> <a class="btn btn-ghost" href="/frameworks/#pvrc">Propose, validate, route, commit</a></p>
   </div>
 </section>
+
+{{BP_PAGER}}

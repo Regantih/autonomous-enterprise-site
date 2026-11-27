@@ -215,7 +215,7 @@
 (function () {
   'use strict';
   var HINTED = '.fw-table-wrap, .sl-wrap, .ar-svg-wrap, .ld-tablewrap';
-  var MASKED = HINTED + ', .site-nav';
+  var MASKED = HINTED + ', .site-nav, .bp-track ul, .onpage .sa-jump';
   var coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
   var seen = typeof WeakSet === 'function' ? new WeakSet() : null;
   var queued = false;
@@ -316,4 +316,58 @@
     if (window.ResizeObserver) new ResizeObserver(soon).observe(document.body);
     [150, 500, 1200, 2500].forEach(function (t) { setTimeout(soon, t); });
   }
+})();
+
+/* Header menu below 60rem: an accessible disclosure (button with aria-expanded controlling the nav).
+   Without JavaScript the toggle stays hidden and the nav shows as a plain list. */
+(function () {
+  'use strict';
+  var header = document.querySelector('.site-header');
+  var btn = header && header.querySelector('.nav-toggle');
+  var nav = btn && document.getElementById(btn.getAttribute('aria-controls'));
+  if (!btn || !nav) return;
+  btn.hidden = false;
+  header.classList.add('nav-ready');
+  function set(open, focusBack) {
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    nav.classList.toggle('is-open', open);
+    if (!open && focusBack) btn.focus();
+  }
+  btn.addEventListener('click', function () { set(btn.getAttribute('aria-expanded') !== 'true', false); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') set(false, nav.contains(document.activeElement) || document.activeElement === btn);
+  });
+  document.addEventListener('click', function (e) {
+    if (btn.getAttribute('aria-expanded') === 'true' && !header.contains(e.target)) set(false, false);
+  });
+  header.addEventListener('focusout', function (e) {
+    if (e.relatedTarget && !header.contains(e.relatedTarget)) set(false, false);
+  });
+  var wide = window.matchMedia && window.matchMedia('(min-width: 60rem)');
+  if (wide && wide.addEventListener) wide.addEventListener('change', function () { if (wide.matches) set(false, false); });
+})();
+
+/* "On this page": open on wide screens (one row of links), a closed disclosure on phones.
+   The current chip in a track's sideways row is scrolled into view without moving the page. */
+(function () {
+  'use strict';
+  var wide = window.matchMedia && window.matchMedia('(min-width: 60rem)');
+  var boxes = document.querySelectorAll('[data-onpage]');
+  function sync() { boxes.forEach(function (d) { d.open = !!(wide && wide.matches); }); }
+  if (boxes.length) {
+    sync();
+    if (wide && wide.addEventListener) wide.addEventListener('change', sync);
+    boxes.forEach(function (d) {
+      d.addEventListener('click', function (e) {
+        var a = e.target.closest && e.target.closest('a');
+        if (a && !(wide && wide.matches)) d.open = false;
+      });
+    });
+  }
+  document.querySelectorAll('.bp-track ul').forEach(function (ul) {
+    var cur = ul.querySelector('[aria-current="page"]');
+    if (!cur || ul.scrollWidth <= ul.clientWidth) return;
+    var li = cur.parentNode;
+    ul.scrollLeft = Math.max(0, li.offsetLeft - ul.offsetLeft - 16);
+  });
 })();

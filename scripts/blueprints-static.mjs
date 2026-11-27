@@ -30,13 +30,126 @@ export const SUBNAV = [
   ['operations', '/blueprints/operations/', 'Operations'],
 ];
 
+// One journey through the eleven tools: decide who owns what and which models fit, build the stack, run it.
+// The first tool in each track is its starting point.
+export const TRACKS = [
+  { id: 'decide', name: 'Decide', purpose: 'Who owns each decision, which design choices hold and which models fit.', tools: ['organization', 'design', 'models'] },
+  { id: 'build', name: 'Build', purpose: 'Lay out the stack, reimagine the workflows and design your own.', tools: ['architecture', 'workflows', 'designer', 'graphs'] },
+  { id: 'run', name: 'Run', purpose: 'Control, operate, trace and improve agents once they are live.', tools: ['controls', 'operations', 'trace', 'loops'] },
+];
+
+const TOOL = Object.fromEntries(SUBNAV.map(([k, href, label]) => [k, { key: k, href, label }]));
+
+export function trackOf(key) {
+  const t = TRACKS.find((tr) => tr.tools.includes(key));
+  return t ? { track: t, index: t.tools.indexOf(key) } : null;
+}
+
+/** Previous and next stop for a tool: within its track, then across to the next track's starting point. */
+export function neighbours(key) {
+  const at = trackOf(key);
+  if (!at) return null;
+  const { track, index } = at;
+  const ti = TRACKS.indexOf(track);
+  const prev = index > 0
+    ? { ...TOOL[track.tools[index - 1]], kind: 'Previous' }
+    : { href: '/blueprints/#tracks', label: 'All blueprints', kind: 'Back to' };
+  let next;
+  if (index < track.tools.length - 1) next = { ...TOOL[track.tools[index + 1]], kind: 'Next' };
+  else if (ti < TRACKS.length - 1) {
+    const nt = TRACKS[ti + 1];
+    next = { ...TOOL[nt.tools[0]], kind: `Next track: ${nt.name}` };
+  } else next = { href: '/blueprints/#tracks', label: 'All blueprints', kind: 'Back to' };
+  return { track, prev, next };
+}
+
 export function subnav(current) {
+  // The hub lists every tool in its track cards, so its bar only jumps to the three tracks.
+  if (current === 'hub') return `<nav class="bp-subnav" aria-label="Blueprints">
+  <div class="container">
+    <a class="bp-subnav-home" href="/blueprints/" aria-current="page">Blueprints</a>
+    <a class="bp-subnav-start" href="/reimagine/">Start here</a>
+    <ul class="bp-subnav-jump" aria-label="Tracks on this page">
+${TRACKS.map((t) => `      <li><a href="#${t.id}">${t.name}</a></li>`).join('\n')}
+    </ul>
+  </div>
+</nav>`;
+  const tracks = TRACKS.map((t) => {
+    const here = t.tools.includes(current);
+    return `    <div class="bp-track${here ? ' is-current' : ''}">
+      <a class="bp-track-name" href="/blueprints/#${t.id}">${t.name}</a>
+      <ul aria-label="${t.name} track">
+${t.tools.map((k) => `        <li><a href="${TOOL[k].href}"${k === current ? ' aria-current="page"' : ''}>${TOOL[k].label}</a></li>`).join('\n')}
+      </ul>
+    </div>`;
+  }).join('\n');
   return `<nav class="bp-subnav" aria-label="Blueprints">
   <div class="container">
     <a class="bp-subnav-home" href="/blueprints/"${current === 'hub' ? ' aria-current="page"' : ''}>Blueprints</a>
-    <ul>
-${SUBNAV.map(([k, href, label]) => `      <li><a href="${href}"${k === current ? ' aria-current="page"' : ''}>${label}</a></li>`).join('\n')}
-    </ul>
+    <a class="bp-subnav-start" href="/reimagine/"${current === 'reimagine' ? ' aria-current="page"' : ''}>Start here</a>
+    <div class="bp-tracks">
+${tracks}
+    </div>
+  </div>
+</nav>`;
+}
+
+const CARD = {
+  architecture: ['Reference architecture', () => 'Nine layers, from channels to assurance. Click any part. Play eight architecture patterns and pick the right models.'],
+  workflows: ['Reimagined workflows', (AE) => `${AE.workflows.length} workflows as swimlanes, today versus reimagined. Run a case and inject failures to see which control catches them.`],
+  controls: ['Controls library', (AE) => `${AE.controls.length} controls, mapped to public frameworks. Filter by category, harness part, level, layer and use.`],
+  designer: ['Workflow designer', () => 'Add your steps. Get the ceiling per step, the weakest link, the required controls and a blueprint to export.'],
+  trace: ['Decision trace viewer', () => 'See what a team of agents did and which control fired. Compare a normal run with a faulty one, or load your own trace.'],
+  loops: ['Self-improving loops', () => 'A live operations room. Agents propose and test improvements. You approve the one-way doors and catch reward hacking.'],
+  graphs: ['Graphs and the enterprise brain', () => 'A real knowledge graph and skill graph. Ask a question and watch the brain route it, walk the graph and answer.'],
+  models: ['Models', () => 'GPT-class, small, tabular, forecasting, graph, vision, video, voice and physical AI models. What each does and where it fits.'],
+  design: ['Design choices', () => 'Tabular models, retrieval, evals and audits, security, inference budgets, and which steps go to models or rules.'],
+  organization: ['Organization', () => 'New roles, pods and spans. Who sets autonomy, who answers for it, and a matrix of who does what.'],
+  operations: ['Operations', () => 'What to trace, dashboards, audits, the kill switch, SLOs, and the skill, agent and release pipelines.'],
+};
+
+/** The hub's three tracks: each tool as a card, the first one marked as the place to start. */
+export function hubTracks(AE) {
+  return TRACKS.map((t, ti) => `<section class="bp-trackcard" id="${t.id}" aria-labelledby="track-${t.id}">
+      <div class="bp-trackcard-head">
+        <p class="bp-trackcard-n">Track ${ti + 1} of ${TRACKS.length}</p>
+        <h3 id="track-${t.id}">${t.name}</h3>
+        <p>${t.purpose}</p>
+      </div>
+      <ol class="bp-cards">
+${t.tools.map((k, i) => `        <li class="bp-card${i === 0 ? ' bp-card-start' : ''}">${i === 0 ? '<span class="bp-start">Start here</span>' : `<span class="bp-card-n">Step ${i + 1}</span>`}<h4><a href="${TOOL[k].href}">${CARD[k][0]}</a></h4><p>${esc(CARD[k][1](AE))}</p></li>`).join('\n')}
+      </ol>
+    </section>`).join('\n    ');
+}
+
+/** Home teaser: one line per track and its starting tool. */
+export function homeTracks() {
+  return TRACKS.map((t) => `<li class="track-teaser"><h3>${t.name}</h3><p>${t.purpose}</p><a class="more" href="${TOOL[t.tools[0]].href}">Start with ${TOOL[t.tools[0]].label}</a></li>`).join('\n      ');
+}
+
+export function breadcrumb(current) {
+  const at = trackOf(current);
+  if (!at) return '';
+  return `<nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/blueprints/">Blueprints</a></li>
+        <li><a href="/blueprints/#${at.track.id}">${at.track.name}</a></li>
+        <li><span aria-current="page">${TOOL[current].label}</span></li>
+      </ol>
+    </nav>`;
+}
+
+export function pager(current) {
+  const n = neighbours(current);
+  if (!n) return '';
+  const link = (x, rel, cls) => `<a class="bp-pager-link ${cls}" href="${x.href}"${rel ? ` rel="${rel}"` : ''}><span class="bp-pager-k">${x.kind}</span> <span class="bp-pager-t">${x.label}</span></a>`;
+  return `<nav class="bp-pager" aria-label="${n.track.name} track: previous and next">
+  <div class="container">
+    <div class="bp-pager-row">
+      ${link(n.prev, n.prev.kind === 'Previous' ? 'prev' : '', 'bp-pager-prev')}
+      ${link(n.next, n.next.kind === 'Next' ? 'next' : '', 'bp-pager-next')}
+    </div>
+    <p class="bp-pager-ask"><a class="more" href="/talk/" data-guide-open>Ask the book about this</a></p>
   </div>
 </nav>`;
 }
@@ -148,5 +261,7 @@ export function blueprintVars(assetsDir) {
     BP_ARCH: archStatic(AE),
     BP_MODELS: modelTable(AE),
     BP_VARIATIONS: variationsStatic(AE),
+    BP_HUB_TRACKS: hubTracks(AE),
+    BP_HOME_TRACKS: homeTracks(),
   };
 }

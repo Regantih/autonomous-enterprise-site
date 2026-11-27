@@ -35,17 +35,18 @@
 <script src="/assets/data/workflows.js?v=357666b3fd" defer></script>
 <script src="/assets/data/architecture.js?v=2a1d6d58f4" defer></script>
 <script src="/assets/blueprints.js?v=7669c09787" defer></script>
-<link rel="stylesheet" href="/assets/models.css?v=6255f8512e">
-<link rel="stylesheet" href="/assets/styles.css?v=9cdafd4712">
-<script src="/assets/site.js?v=9cdafd4712" defer></script>
-<script src="/assets/guide.js?v=9cdafd4712" defer></script>
+<link rel="stylesheet" href="/assets/models.css?v=9b39ac3957">
+<link rel="stylesheet" href="/assets/styles.css?v=6c1d4199b9">
+<script src="/assets/site.js?v=6c1d4199b9" defer></script>
+<script src="/assets/guide.js?v=6c1d4199b9" defer></script>
 </head>
-<body>
+<body class="has-fab">
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header">
   <div class="container header-inner">
     <a class="brand" href="/" aria-label="The Autonomous Enterprise: human-led, agent-operated, home"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="3" fill="#F2622E"/><path fill="#141414" d="M5 23h3v4H5zM9.5 20h3v7h-3zM14 17h3v10h-3zM18.5 13h3v14h-3zM23 9h3v18h-3z"/></svg><span class="brand-text"><span class="brand-name">The Autonomous Enterprise</span> <span class="brand-sub">Human-led, agent-operated</span></span></a>
-    <nav class="site-nav" aria-label="Main">
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden><span class="nav-toggle-bars" aria-hidden="true"></span><span class="nav-toggle-label">Menu</span></button>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
       <ul>
         <li><a href="/book/">Book</a></li>
         <li><a href="/blueprints/" aria-current="page">Blueprints</a></li>
@@ -54,44 +55,68 @@
         <li><a href="/about/">About</a></li>
       </ul>
     </nav>
-    <a class="btn btn-primary header-cta" href="/contact/">Talk to the book</a>
+    <a class="btn btn-primary header-cta" href="/talk/" data-guide-open>Talk to the book</a>
   </div>
 </header>
 <main id="main" tabindex="-1">
 <section class="page-head bp-head" aria-labelledby="page-title">
   <div class="container">
-    <p class="eyebrow">Blueprints &middot; Operations</p>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/blueprints/">Blueprints</a></li>
+        <li><a href="/blueprints/#run">Run</a></li>
+        <li><span aria-current="page">Operations</span></li>
+      </ol>
+    </nav>
     <h1 id="page-title">Operating agents: audits, observability, reliability</h1>
     <p class="lead">Once agents run, someone must see what they do, prove it to an auditor and stop them fast. This page shows how, from the book, and how changes reach production.</p>
-    <ul class="sa-jump" aria-label="On this page">
-      <li><a href="#observe">What to trace</a></li>
-      <li><a href="#dashboards">Dashboards</a></li>
-      <li><a href="#registry">Registry</a></li>
-      <li><a href="#audits">Audits</a></li>
-      <li><a href="#guardians">Who watches</a></li>
-      <li><a href="#killswitch">Kill switch</a></li>
-      <li><a href="#reliability">Reliability</a></li>
-      <li><a href="#pipelines">Pipelines and work</a></li>
-      <li><a href="/blueprints/organization/">Organization</a></li>
-    </ul>
+    <details class="onpage" data-onpage>
+      <summary>On this page</summary>
+      <ul class="sa-jump" aria-label="On this page">
+        <li><a href="#observe">What to trace</a></li>
+        <li><a href="#dashboards">Dashboards</a></li>
+        <li><a href="#registry">Registry</a></li>
+        <li><a href="#audits">Audits</a></li>
+        <li><a href="#guardians">Who watches</a></li>
+        <li><a href="#killswitch">Kill switch</a></li>
+        <li><a href="#reliability">Reliability</a></li>
+        <li><a href="#pipelines">Pipelines and work</a></li>
+      </ul>
+    </details>
   </div>
 </section>
 <nav class="bp-subnav" aria-label="Blueprints">
   <div class="container">
     <a class="bp-subnav-home" href="/blueprints/">Blueprints</a>
-    <ul>
-      <li><a href="/architecture/">Architecture</a></li>
-      <li><a href="/workflows/">Workflows</a></li>
-      <li><a href="/controls/">Controls</a></li>
-      <li><a href="/designer/">Designer</a></li>
-      <li><a href="/blueprints/trace/">Trace viewer</a></li>
-      <li><a href="/blueprints/loops/">Improvement loops</a></li>
-      <li><a href="/blueprints/graphs/">Graphs</a></li>
-      <li><a href="/blueprints/models/">Models</a></li>
-      <li><a href="/blueprints/design/">Design choices</a></li>
-      <li><a href="/blueprints/organization/">Organization</a></li>
-      <li><a href="/blueprints/operations/" aria-current="page">Operations</a></li>
-    </ul>
+    <a class="bp-subnav-start" href="/reimagine/">Start here</a>
+    <div class="bp-tracks">
+    <div class="bp-track">
+      <a class="bp-track-name" href="/blueprints/#decide">Decide</a>
+      <ul aria-label="Decide track">
+        <li><a href="/blueprints/organization/">Organization</a></li>
+        <li><a href="/blueprints/design/">Design choices</a></li>
+        <li><a href="/blueprints/models/">Models</a></li>
+      </ul>
+    </div>
+    <div class="bp-track">
+      <a class="bp-track-name" href="/blueprints/#build">Build</a>
+      <ul aria-label="Build track">
+        <li><a href="/architecture/">Architecture</a></li>
+        <li><a href="/workflows/">Workflows</a></li>
+        <li><a href="/designer/">Designer</a></li>
+        <li><a href="/blueprints/graphs/">Graphs</a></li>
+      </ul>
+    </div>
+    <div class="bp-track is-current">
+      <a class="bp-track-name" href="/blueprints/#run">Run</a>
+      <ul aria-label="Run track">
+        <li><a href="/controls/">Controls</a></li>
+        <li><a href="/blueprints/operations/" aria-current="page">Operations</a></li>
+        <li><a href="/blueprints/trace/">Trace viewer</a></li>
+        <li><a href="/blueprints/loops/">Improvement loops</a></li>
+      </ul>
+    </div>
+    </div>
   </div>
 </nav>
 
@@ -481,6 +506,16 @@
     <p class="cta-row"><a class="btn btn-dark" href="/blueprints/loops/">See a bounded improvement loop</a> <a class="btn btn-ghost" href="/controls/">Open the controls library</a></p>
   </div>
 </section>
+
+<nav class="bp-pager" aria-label="Run track: previous and next">
+  <div class="container">
+    <div class="bp-pager-row">
+      <a class="bp-pager-link bp-pager-prev" href="/controls/" rel="prev"><span class="bp-pager-k">Previous</span> <span class="bp-pager-t">Controls</span></a>
+      <a class="bp-pager-link bp-pager-next" href="/blueprints/trace/" rel="next"><span class="bp-pager-k">Next</span> <span class="bp-pager-t">Trace viewer</span></a>
+    </div>
+    <p class="bp-pager-ask"><a class="more" href="/talk/" data-guide-open>Ask the book about this</a></p>
+  </div>
+</nav>
 </main>
 <footer class="site-footer">
   <div class="container footer-grid">

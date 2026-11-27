@@ -1,18 +1,20 @@
 <section class="page-head bp-head" aria-labelledby="page-title">
   <div class="container">
-    <p class="eyebrow">Blueprints &middot; Organization</p>
+    {{BP_CRUMB}}
     <h1 id="page-title">Organization: humans and agents</h1>
     <p class="lead">Agents change who does the work. People still set intent, own outcomes and decide where not to automate. This page shows how the organization changes, from the book.</p>
-    <ul class="sa-jump" aria-label="On this page">
-      <li><a href="#shifts">What changes</a></li>
-      <li><a href="#org">Org structure</a></li>
-      <li><a href="#storyboard">One team, redesigned</a></li>
-      <li><a href="#delegation">Delegation and decisions</a></li>
-      <li><a href="#incomplete">Incomplete information</a></li>
-      <li><a href="#capability">Capability matrix</a></li>
-      <li><a href="#trust">Internal vs external agents</a></li>
-      <li><a href="/blueprints/operations/">Audits and reliability</a></li>
-    </ul>
+    <details class="onpage" data-onpage>
+      <summary>On this page</summary>
+      <ul class="sa-jump" aria-label="On this page">
+        <li><a href="#shifts">What changes</a></li>
+        <li><a href="#org">Org structure</a></li>
+        <li><a href="#storyboard">One team, redesigned</a></li>
+        <li><a href="#delegation">Delegation and decisions</a></li>
+        <li><a href="#incomplete">Incomplete information</a></li>
+        <li><a href="#capability">Capability matrix</a></li>
+        <li><a href="#trust">Internal vs external agents</a></li>
+      </ul>
+    </details>
   </div>
 </section>
 {{BP_SUBNAV}}
@@ -499,3 +501,5 @@
     <p class="cta-row"><a class="btn btn-dark" href="/blueprints/operations/">Operating agents</a> <a class="btn btn-ghost" href="/controls/">Open the controls library</a> <a class="btn btn-ghost" href="/frameworks/#human-led">Human-led, agent-operated</a></p>
   </div>
 </section>
+
+{{BP_PAGER}}

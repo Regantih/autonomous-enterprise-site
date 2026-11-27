@@ -1,0 +1,60 @@
+<section class="page-head page-head-tight bp-head" aria-labelledby="page-title">
+  <div class="container">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/blueprints/">Blueprints</a></li>
+        <li><span aria-current="page">Start here</span></li>
+      </ol>
+    </nav>
+    <p class="eyebrow">Start here</p>
+    <h1 id="page-title">Reimagine your operations</h1>
+    <p class="lead">Describe your estate. The book&rsquo;s rules show your closest archetype, what gates investment, your first three pilots and the risks to watch.</p>
+    <p class="rm-privacy">Computed in your browser from the book&rsquo;s rules. No AI calls. Nothing is stored or sent.</p>
+  </div>
+</section>
+{{BP_SUBNAV}}
+
+<section class="section section-tight rm" data-rm aria-labelledby="rm-title">
+  <div class="container">
+    <h2 id="rm-title" class="visually-hidden">Your estate and what the book&rsquo;s rules say</h2>
+    <div class="rm-top">
+      <p class="rm-strip" id="rm-strip" role="status" aria-live="polite">{{RM_STRIP}}</p>
+      <div class="rm-actions">
+        <button class="btn btn-ghost btn-sm" type="button" data-rm-load hidden>Load the Meridian example</button>
+        <button class="btn btn-ghost btn-sm" type="button" data-rm-print hidden>Print / save as PDF</button>
+        <a class="btn btn-dark btn-sm" href="{{RM_TALK}}" data-rm-talk>Discuss this with the book</a>
+        <a class="more" href="/contact/">Request a working session</a>
+        <a class="more rm-jump" href="#rm-in-title">Edit the inputs</a>
+      </div>
+    </div>
+    <noscript><p class="rm-flag">The result below is the book&rsquo;s Meridian example. Turn on JavaScript to compute your own.</p></noscript>
+    <div class="rm-grid-main">
+      <section class="rm-res" aria-labelledby="rm-res-title">
+        <h2 id="rm-res-title" class="h-sm">What the book&rsquo;s rules say</h2>
+        <div id="rm-results">
+{{RM_RESULTS}}
+        </div>
+      </section>
+      <section class="rm-in" aria-labelledby="rm-in-title">
+        <h2 id="rm-in-title" class="h-sm">Your estate</h2>
+        <p class="rm-hint">Change any answer. The result updates at once.</p>
+        <div id="rm-inputs">
+{{RM_INPUTS}}
+        </div>
+        <p class="rm-jump"><a class="more" href="#rm-res-title">See the updated result</a></p>
+      </section>
+    </div>
+  </div>
+</section>
+
+<section class="section section-paper-2 section-tight rm-how" aria-labelledby="how-title">
+  <div class="container fw-body">
+    <h2 id="how-title" class="h-sm">How it works</h2>
+    <ul class="fw-list">
+      <li>Every output is a rule from <cite>The Autonomous Enterprise</cite>, applied to your answers, with its chapter and section.</li>
+      <li>Thresholds, levels and months in the book are illustrative. Set your own with internal audit.</li>
+      <li>Where the book gives no rule, the tool says so rather than inventing one.</li>
+    </ul>
+    <p class="cta-row"><a class="more" href="/blueprints/#decide">Next: the Decide track</a> <a class="more" href="/frameworks/">The frameworks behind the rules</a></p>
+  </div>
+</section>

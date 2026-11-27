@@ -1,16 +1,18 @@
 <section class="page-head bp-head" aria-labelledby="page-title">
   <div class="container">
-    <p class="eyebrow">Blueprints &middot; Models</p>
+    {{BP_CRUMB}}
     <h1 id="page-title">Models</h1>
     <p class="lead">An agent-operated company runs on a portfolio of models, not one. Each family does one kind of work well. This page shows where each one fits.</p>
-    <ul class="sa-jump" aria-label="On this page">
-      <li><a href="#portfolio">The rule</a></li>
-      <li><a href="#storyboard">One dispute, five engines</a></li>
-      <li><a href="#families">Twelve families</a></li>
-      <li><a href="#matrix">Matrix</a></li>
-      <li><a href="#evaluate">How models earn autonomy</a></li>
-      <li><a href="/blueprints/design/">Design choices</a></li>
-    </ul>
+    <details class="onpage" data-onpage>
+      <summary>On this page</summary>
+      <ul class="sa-jump" aria-label="On this page">
+        <li><a href="#portfolio">The rule</a></li>
+        <li><a href="#storyboard">One dispute, five engines</a></li>
+        <li><a href="#families">Twelve families</a></li>
+        <li><a href="#matrix">Matrix</a></li>
+        <li><a href="#evaluate">How models earn autonomy</a></li>
+      </ul>
+    </details>
   </div>
 </section>
 {{BP_SUBNAV}}
@@ -338,3 +340,5 @@
     <p class="cta-row"><a class="btn btn-dark" href="/architecture/#chooser">Open the model chooser</a> <a class="btn btn-ghost" href="/blueprints/graphs/#brain">See a brain route a question</a></p>
   </div>
 </section>
+
+{{BP_PAGER}}
