@@ -1,0 +1,79 @@
+<section class="page-head bp-head" aria-labelledby="page-title">
+  <div class="container">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/blueprints/">Blueprints</a></li>
+        <li><span aria-current="page">Agent operations team</span></li>
+      </ol>
+    </nav>
+    <h1 id="page-title">Agent operations team</h1>
+    <p class="lead">Every agent the book names, by department. Open any agent to see what it does, its limits, its owner and each task with its autonomy level.</p>
+    {{TEAM_SUMMARY}}
+    <details class="onpage" data-onpage>
+      <summary>On this page</summary>
+      <ul class="sa-jump" aria-label="On this page">
+        <li><a href="#overview">The team by department</a></li>
+        <li><a href="#scale">Autonomy levels</a></li>
+        <li><a href="#directory">Every agent in detail</a></li>
+        <li><a href="#rules">How this page was built</a></li>
+      </ul>
+    </details>
+  </div>
+</section>
+{{BP_SUBNAV}}
+
+<section class="section bp-section tm-overview" id="overview" aria-labelledby="overview-title">
+  <div class="container">
+    <p class="eyebrow">The team</p>
+    <h2 id="overview-title" class="h-sm">The team by department</h2>
+    <p class="lead">Each band is a domain chapter of the book. People set intent and own outcomes. Agents do the work inside limits people control.</p>
+    {{TEAM_FILTERS}}
+    <div class="tm-bands" data-tm-bands>
+    {{TEAM_BANDS}}
+    </div>
+    <p class="tm-empty" data-tm-empty hidden>No agent matches these filters. <button class="tm-linkbtn" type="button" data-tm-reset>Clear filters</button></p>
+  </div>
+</section>
+
+<section class="section section-tight bp-section" id="scale" aria-labelledby="scale-title">
+  <div class="container fw-body">
+    <p class="eyebrow">How far each one is trusted</p>
+    <h2 id="scale-title" class="h-sm">Autonomy levels, L0 to L5</h2>
+    <p>Levels rate one task, not a whole agent. So one agent can draft at L2 and act alone at L3. <span class="md-cite">Book, Ch 01.5.1</span></p>
+    {{TEAM_SCALE}}
+    <p>An agent may tighten a control on its own authority. Only a person may loosen one. <span class="md-cite">Book, Ch 12.5.3</span></p>
+    <p>Raising a level needs evidence and a decision body. Lowering it needs one person and no meeting. <span class="md-cite">Book, Ch 25.2.2</span> See <a href="/frameworks/#scale">the scale</a> and <a href="/blueprints/organization/#delegation">who decides</a>.</p>
+  </div>
+</section>
+
+<section class="section bp-section" id="directory" aria-labelledby="directory-title">
+  <div class="container">
+    <p class="eyebrow">Drill down</p>
+    <h2 id="directory-title" class="h-sm">Every agent in detail</h2>
+    <p class="lead">Inputs, outputs, owner, limits, kill switch, KPIs, the exception path and every task. Each entry cites its chapter and section.</p>
+    {{TEAM_DIRECTORY}}
+  </div>
+</section>
+
+<section class="section section-tight bp-section" id="rules" aria-labelledby="rules-title">
+  <div class="container fw-body">
+    <p class="eyebrow">Sources</p>
+    <h2 id="rules-title" class="h-sm">How this page was built</h2>
+    <ul class="md-rules">
+      <li>Every agent, task, level, limit and owner comes from the book. Each one cites its chapter and section.</li>
+      <li>Where the book names a task but not its level, the page says &ldquo;Level not stated&rdquo;. It does not guess.</li>
+      <li>Where the book names few agents, the page shows only those. Tax and trade has four because the book names four.</li>
+      <li>Product names from the book&rsquo;s platform examples are left out. Meridian is the book&rsquo;s worked-example company.</li>
+      <li>Thresholds are the book&rsquo;s illustrative values. Each company sets its own.</li>
+    </ul>
+    <p>Related: <a href="/blueprints/operations/">Operations</a> for the kill switch and guardians, <a href="/workflows/">Workflows</a> for these agents in swimlanes, and <a href="/blueprints/graphs/">the skill graph</a>.</p>
+  </div>
+</section>
+
+<dialog class="tm-dialog" aria-labelledby="tm-dialog-title" data-tm-dialog>
+  <div class="tm-dialog-head">
+    <h2 id="tm-dialog-title" data-tm-dialog-title>Agent</h2>
+    <button class="tm-close" type="button" data-tm-close>Close<span class="visually-hidden"> the agent detail</span></button>
+  </div>
+  <div class="tm-dialog-body" data-tm-dialog-body></div>
+</dialog>

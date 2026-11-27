@@ -6,6 +6,7 @@ import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { BP_DATA_FILES, blueprintVars, breadcrumb, pager, subnav } from './blueprints-static.mjs';
 import { graphsVars } from './graphs-static.mjs';
+import { TEAM_DATA_FILE, teamVars } from './team-static.mjs';
 import { buildGraphs, writeGraphs } from '../tools/build-graphs.mjs';
 import vm from 'node:vm';
 
@@ -173,6 +174,13 @@ export const PAGES = [
     description:
       'Running agents in production, from the book: what to trace, dashboards, the agent registry, audits, guardian agents, the kill switch, SLOs, incidents, demotion, and the skill, agent and release pipelines.',
     sitemap: true, priority: '0.7',
+  },
+  {
+    src: 'team.html', out: 'blueprints/team/index.html', path: '/blueprints/team/', nav: 'BLUEPRINTS',
+    title: 'Agent Operations Team: Every Agent by Department, with Autonomy Levels | Human-Led Enterprise',
+    description:
+      'Every agent the book names, in eleven departments from finance to safety: what each does, its limits, owner, KPIs, exception path and each task with its autonomy level.',
+    sitemap: true, priority: '0.8',
   },
   {
     src: 'leaders.html', out: 'leaders/index.html', path: '/leaders/',
@@ -410,6 +418,7 @@ export function build() {
   const graphsData = writeGraphsScript();
   const grVars = graphsVars(buildGraphs());
   const rmVars = reimagineVars();
+  const tmVars = teamVars(join(SRC, 'assets'));
   const bpScripts = [...BP_DATA_FILES, 'blueprints.js'].map((f) => `<script src="${assetUrl(f)}" defer></script>\n`).join('');
 
   for (const page of PAGES) {
@@ -428,6 +437,8 @@ export function build() {
         ? `<link rel="preload" as="image" type="image/webp" imagesrcset="${assetUrl('images/cover-400.webp')} 400w, ${assetUrl('images/cover-800.webp')} 800w, ${assetUrl('images/cover-1200.webp')} 1200w" imagesizes="${HERO_COVER_SIZES}" fetchpriority="high">\n`
         : page.src === 'reimagine.html'
           ? `<link rel="stylesheet" href="${assetUrl('reimagine.css')}">\n<script src="${assetUrl('reimagine-core.js')}" defer></script>\n<script src="${assetUrl('reimagine.js')}" defer></script>\n`
+        : page.src === 'team.html'
+          ? `<link rel="stylesheet" href="${assetUrl('models.css')}">\n<link rel="stylesheet" href="${assetUrl('team.css')}">\n<script src="${assetUrl(TEAM_DATA_FILE)}" defer></script>\n<script src="${assetUrl('team-ui.js')}" defer></script>\n`
         : page.src === 'frameworks.html'
           ? `<script src="${assetUrl('frameworks.js')}" defer></script>\n`
           : page.bp ? bpScripts + (page.src === 'trace.html' ? `<link rel="stylesheet" href="${assetUrl('trace.css')}">\n<script src="${assetUrl('trace-core.js')}" defer></script>\n<script src="${assetUrl('trace.js')}" defer></script>\n`
@@ -444,12 +455,13 @@ export function build() {
       NAV_SPEAKING: page.nav === 'SPEAKING' ? ' aria-current="page"' : '',
       NAV_IDEAS: page.nav === 'IDEAS' ? ' aria-current="page"' : '',
       NAV_BLUEPRINTS: page.nav === 'BLUEPRINTS' ? ' aria-current="page"' : '',
-      BP_SUBNAV: page.bp ? subnav(page.bp) : page.src === 'reimagine.html' ? subnav('reimagine') : '',
+      BP_SUBNAV: page.bp ? subnav(page.bp) : page.src === 'reimagine.html' ? subnav('reimagine') : page.src === 'team.html' ? subnav('team') : '',
       BP_CRUMB: page.bp ? breadcrumb(page.bp) : '',
       BP_PAGER: page.bp ? pager(page.bp) : '',
       ...bpVars,
       ...grVars,
       ...rmVars,
+      ...tmVars,
       GRAPHS_JSON_URL: assetUrl('data/graphs.json'),
       NAV_BOOK: page.nav === 'BOOK' ? ' aria-current="page"' : '',
       NAV_ABOUT: page.nav === 'ABOUT' ? ' aria-current="page"' : '',
