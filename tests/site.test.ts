@@ -578,3 +578,21 @@ describe('/leaders: Questions leaders ask', () => {
     expect(js).not.toMatch(/https?:\/\//);
   });
 });
+
+describe('no template leaks in visible text', () => {
+  it('no built page shows "undefined", "NaN" or "[object Object]" in its visible text', () => {
+    for (const p of pages) {
+      const visible = html(p)
+        .replace(/<script[\s\S]*?<\/script>/g, ' ')
+        .replace(/<style[\s\S]*?<\/style>/g, ' ')
+        .replace(/<[^>]+>/g, ' ');
+      expect(visible, p.out).not.toMatch(/\bundefined\b|\bNaN\b|\[object Object\]/);
+    }
+  });
+  it('workflow summaries give person touches and exception paths from the step data', () => {
+    const h = html(byOut('workflows/index.html'));
+    const notes = h.match(/Illustrative: cycle time [^<]*/g) || [];
+    expect(notes.length).toBe(9);
+    notes.forEach((n) => expect(n).toMatch(/person touches on the main path \d+ to \d+; exception paths to a person \d+ to \d+;/));
+  });
+});

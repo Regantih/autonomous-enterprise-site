@@ -229,7 +229,7 @@ ${w.steps.map((s) => `    <tr><th scope="row">${esc(s.name)}${s.ex ? ' <span cla
   <ul class="fw-list">
 ${w.failures.map((f) => `    <li><strong>${ft[f.type]}.</strong> ${esc(f.what)} Caught by ${cid(f.control)}. ${esc(f.route)}</li>`).join('\n')}
   </ul>
-  <p class="fw-note">Illustrative: cycle time ${w.metrics.today.cycle} to ${w.metrics.re.cycle}; touches ${w.metrics.today.touches} to ${w.metrics.re.touches}; cost per completed outcome ${w.metrics.today.cost} to ${w.metrics.re.cost}.</p>
+  <p class="fw-note">Illustrative: cycle time ${w.metrics.today.cycle} to ${w.metrics.re.cycle}; person touches on the main path ${AE.flowStats(w.today).touches} to ${AE.flowStats(w.steps).touches}; exception paths to a person ${AE.flowStats(w.today).exPeople} to ${AE.flowStats(w.steps).exPeople}; cost per completed outcome ${w.metrics.today.cost} to ${w.metrics.re.cost}.</p>
 </section>`).join('\n');
 }
 
