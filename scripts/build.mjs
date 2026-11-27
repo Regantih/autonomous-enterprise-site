@@ -403,7 +403,7 @@ export function build() {
   for (const f of readdirSync(join(SRC, 'static'))) cpSync(join(SRC, 'static', f), join(DIST, f), { recursive: true });
 
   const layout = read(join(SRC, 'partials', 'layout.html'));
-  const assetVersion = hash(['styles.css', 'site.js', 'guide.js', 'blueprints.js', 'graphs.js', 'graphs.css', 'intake.js', 'intake.css', 'models.js', 'models.css', 'org.js', 'reimagine-core.js', 'reimagine.js', 'reimagine.css', ...BP_DATA_FILES].map((f) => read(join(SRC, 'assets', f))).join(''));
+  const assetVersion = hash(['styles.css', 'early.js', 'site.js', 'guide.js', 'blueprints.js', 'graphs.js', 'graphs.css', 'intake.js', 'intake.css', 'models.js', 'models.css', 'org.js', 'reimagine-core.js', 'reimagine.js', 'reimagine.css', ...BP_DATA_FILES].map((f) => read(join(SRC, 'assets', f))).join(''));
 
   const bpVars = blueprintVars(join(SRC, 'assets'));
   const recording = writeRecording();

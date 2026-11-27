@@ -429,6 +429,20 @@ describe('portrait, real cover and guide', () => {
     expect(css).toContain('.nav-ready .site-nav.is-open { display: block;');
   });
 
+  it('renders the phone header collapsed before the deferred scripts run (no layout shift)', () => {
+    for (const p of pages) {
+      const head = html(p).split('</head>')[0];
+      const early = head.indexOf('<script src="/assets/early.js?v=');
+      expect(early, p.out).toBeGreaterThan(-1);
+      expect(head.slice(early).split('>')[0], p.out).not.toContain('defer');
+      expect(early, p.out).toBeLessThan(head.indexOf('/assets/styles.css'));
+    }
+    expect(readFileSync(join(DIST, 'assets/early.js'), 'utf8')).toContain("document.documentElement.classList.add('js')");
+    const css = readFileSync(join(DIST, 'assets/styles.css'), 'utf8');
+    expect(css).toContain('.js .site-header:not(.nav-ready) .site-nav { display: none; }');
+    expect(css).toContain('.js .site-header:not(.nav-ready) .nav-toggle[hidden] { display: inline-flex; visibility: hidden; }');
+  });
+
   it('keeps focused fields and anchors clear of the sticky header (scroll padding equals the header height)', () => {
     const css = readFileSync(join(DIST, 'assets/styles.css'), 'utf8');
     expect(css).toMatch(/html \{ scroll-padding-top: calc\(var\(--header-h\) \+ [\d.]+rem\); \}/);

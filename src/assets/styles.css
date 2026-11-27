@@ -1131,6 +1131,13 @@ fieldset.field legend { padding: 0; margin-bottom: 0.35rem; }
 }
 @media (max-width: 26rem) { .nav-toggle-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } .nav-toggle { padding-inline: 0.75rem; } }
 @media (min-width: 60rem) { .nav-toggle { display: none !important; } }
+/* Before the deferred site.js runs, phones already render the collapsed header (early.js sets .js), so the
+   header does not shrink from the full list to one row after load. The toggle keeps its space but stays
+   inert until site.js unhides it. */
+@media (max-width: 59.99rem) {
+  .js .site-header:not(.nav-ready) .site-nav { display: none; }
+  .js .site-header:not(.nav-ready) .nav-toggle[hidden] { display: inline-flex; visibility: hidden; }
+}
 
 /* Focus and anchors land below the sticky header (WCAG 2.2 Focus Not Obscured). */
 :root { --header-h: 4.5rem; }
