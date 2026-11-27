@@ -400,7 +400,7 @@ describe('Organization page', () => {
     // Incomplete information sits right after delegation.
     expect(h.indexOf('id="incomplete"')).toBeGreaterThan(h.indexOf('id="delegation"'));
     expect(h.indexOf('id="incomplete"')).toBeLessThan(h.indexOf('id="capability"'));
-    const panels = [...h.matchAll(/<li class="md-panel[^"]*">([\s\S]*?)<\/li>/g)].map((m) => m[1]);
+    const panels = [...h.matchAll(/<li class="md-panel[^"]*"(?: data-pic="[^"]*")?>([\s\S]*?)<\/li>/g)].map((m) => m[1]);
     expect(panels).toHaveLength(8);
     for (const p of panels) for (const s of sentences(p.replace(/<span class="md-panel-n"[^>]*>\d<\/span>|<p class="md-tag">[^<]*<\/p>|<h3>[^<]*<\/h3>/g, ''))) expect(s.split(/\s+/).length, s).toBeLessThanOrEqual(25);
     for (const ch of ['01', '03', '05', '07', '21', '22', '24', '25', '26']) expect(h, ch).toContain(`Ch ${ch}`);

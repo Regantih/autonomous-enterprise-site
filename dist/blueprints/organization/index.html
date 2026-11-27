@@ -38,6 +38,9 @@
 <script src="/assets/blueprints.js?v=2039a23713" defer></script>
 <link rel="stylesheet" href="/assets/models.css?v=9b39ac3957">
 <script src="/assets/org.js?v=78d2e0df23" defer></script>
+<link rel="stylesheet" href="/assets/vz.css?v=7da1cbadc5">
+<script src="/assets/vz-core.js?v=3ac7487ed8" defer></script>
+<script src="/assets/vz.js?v=a41befa856" defer></script>
 <link rel="stylesheet" href="/assets/styles.css?v=462dc560e7">
 <script src="/assets/site.js?v=462dc560e7" defer></script>
 <script src="/assets/guide.js?v=462dc560e7" defer></script>
@@ -146,6 +149,10 @@
       <li><b>Retain.</b> A person does it; the agent may inform. Typically L0 to L1.</li>
       <li><b>New.</b> Work that did not exist before, such as reviewing the weekly override report.</li>
     </ul>
+      <h3>One clerk&rsquo;s week, before and after</h3>
+      <p>The book takes one accounts payable clerk&rsquo;s job apart, task by task. <span class="md-cite">Book, Ch 24.7.9</span></p>
+      <div class="vz-wrap" hidden><div data-vz="clerk"></div></div>
+      <noscript><p>Today the clerk uses 95% of the time on these tasks. After L3 it is 51%, including two new tasks: reviewing override reports and fixing root causes.</p></noscript>
     <h3>Common errors</h3>
     <ul class="fw-list">
       <li>Saved hours are not saved people. A 30% saving spread over 85 people frees nobody until roles are rebuilt.</li>
@@ -237,57 +244,61 @@
     <p class="eyebrow">Storyboard</p>
     <h2 id="story-title" class="h-sm">One AP team, redesigned over 30 months</h2>
     <p class="md-intro">Follow the accounts payable team at Meridian, the book&rsquo;s fictional company. People move to new roles before the agent depends on them. <span class="md-cite">Book, Ch 24 and Ch 25</span></p>
-    <ol class="md-story">
-      <li class="md-panel">
+    <ol class="md-story" data-vz="story">
+      <li class="md-panel" data-pic="icon|people">
         <span class="md-panel-n" aria-hidden="true">1</span>
         <p class="md-tag">Today</p>
         <h3>A team buried in exceptions</h3>
         <p>85 people process 900,000 invoices a year. About 432 exceptions a day, at 20 minutes each, need about 20 people.</p>
       </li>
-      <li class="md-panel">
+      <li class="md-panel" data-pic="icon|gate">
         <span class="md-panel-n" aria-hidden="true">2</span>
         <p class="md-tag">Month 3 &middot; Gate G0</p>
         <h3>Owners first, promises in writing</h3>
         <p>The Autonomy Office starts. Owners are named for the pilots. The job commitment is announced before pilots, and consultation begins.</p>
       </li>
-      <li class="md-panel">
+      <li class="md-panel" data-pic="icon|map">
         <span class="md-panel-n" aria-hidden="true">3</span>
         <p class="md-tag">Task map</p>
         <h3>The job is taken apart</h3>
         <p>Clean matching is absorbed. Variances and supplier queries are augmented. Override review and root-cause work are new tasks.</p>
       </li>
-      <li class="md-panel">
+      <li class="md-panel" data-pic="icon|id">
         <span class="md-panel-n" aria-hidden="true">4</span>
         <p class="md-tag">Month 13 &middot; Gate G1</p>
         <h3>Role cards and the first run pod</h3>
         <p>Role cards are published. The first cohort is trained before go-live. The first run pod forms for Americas AP.</p>
       </li>
-      <li class="md-panel">
+      <li class="md-panel" data-pic="icon|agent">
         <span class="md-panel-n" aria-hidden="true">5</span>
         <p class="md-tag">Month 16 &middot; Shadow</p>
         <h3>The clerk judges the agent</h3>
         <p>The agent runs on live cases but acts on none. The clerk settles disagreements. Shadow results stay out of performance reviews.</p>
       </li>
-      <li class="md-panel">
+      <li class="md-panel" data-pic="level|2">
         <span class="md-panel-n" aria-hidden="true">6</span>
         <p class="md-tag">Month 18 &middot; L2</p>
         <h3>Approve, with a reason code</h3>
         <p>The clerk approves each proposal and codes every override. Review load is measured before any span is widened.</p>
       </li>
-      <li class="md-panel md-panel-key">
+      <li class="md-panel md-panel-key" data-pic="level|3">
         <span class="md-panel-n" aria-hidden="true">7</span>
         <p class="md-tag">Month 22 &middot; L3 in one entity</p>
         <h3>A new role before the agent acts</h3>
         <p>The clerk becomes an AP exception analyst. The analyst approves up to USD 25,000 but cannot change agent limits or bank data.</p>
       </li>
-      <li class="md-panel">
+      <li class="md-panel" data-pic="bars|20|3|20 people|3 supervisors">
         <span class="md-panel-n" aria-hidden="true">8</span>
         <p class="md-tag">Months 26 to 33</p>
         <h3>Pods, supervisors and the line in charge</h3>
         <p>About 108 hand-offs a day need about three supervisors. Run, build and control pods form. The line takes over all pods.</p>
       </li>
     </ol>
-    <p class="fw-note">Illustrative figures from Meridian, the book&rsquo;s fictional company. About 49% of the clerk&rsquo;s time is released and absorbed by not refilling posts, not by redundancies. Everything outside the green band stays at L2. <span class="md-cite">Book, Ch 24</span></p>
+    <p class="fw-note">Illustrative figures from Meridian, the book&rsquo;s fictional company. About 44% of the clerk&rsquo;s time is released and absorbed by not refilling posts, not by redundancies. Everything outside the green band stays at L2. <span class="md-cite">Book, Ch 24</span></p>
+    <h3 class="vz-sub">Your exception queue: people today and with agents</h3>
+    <p>The book sizes the people an exception queue needs before and after the agent. Enter your own volume and minutes. <span class="md-cite">Book, Ch 25.3.6</span></p>
+    <div class="vz-wrap" hidden><div data-vz="calc:queue"></div></div>
+    <noscript><p>Meridian: 432 exceptions a day at 20 minutes need about 20 people. With the agent, 108 hand-offs a day at 12 minutes need about 3 supervisors.</p></noscript>
   </div>
 </section>
 

@@ -162,7 +162,7 @@ export const PAGES = [
     sitemap: true, priority: '0.7',
   },
   {
-    src: 'organization.html', out: 'blueprints/organization/index.html', path: '/blueprints/organization/', nav: 'BLUEPRINTS', bp: 'organization',
+    src: 'organization.html', out: 'blueprints/organization/index.html', path: '/blueprints/organization/', nav: 'BLUEPRINTS', bp: 'organization', vz: true,
     title: 'Organization: Humans and Agents, Delegation and the Capability Matrix | Human-Led Enterprise',
     description:
       'How the org changes when agents do the work, from the book: roles, pods, decision rights, autonomy levels, incomplete information, who does what, and trust in internal and external agents.',

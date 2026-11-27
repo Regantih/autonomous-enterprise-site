@@ -111,7 +111,7 @@
       return {
         rows: [
           { label: 'Exceptions a day', today: perDay, re: perDay, unit: 'num' },
-          { label: 'Exceptions a person handles a day', today: perDay, re: handed, unit: 'num' },
+          { label: 'Exceptions that reach a person each day', today: perDay, re: handed, unit: 'num' },
           { label: 'Person hours a day', today: hT, re: hR, unit: 'h' },
           { label: 'People needed on the queue', today: pT, re: pR, unit: 'people', key: true },
           { label: 'Cost of those people a year', today: pT * v.fte, re: pR * v.fte, unit: 'money' }

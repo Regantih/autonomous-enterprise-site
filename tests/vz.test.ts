@@ -157,3 +157,31 @@ describe('storyboards follow the approved standard', () => {
     expect(html('book/index.html')).toContain('data-vz="calc:order"');
   });
 });
+
+describe('exception queue (Ch 25.3.6) and one clerk (Table 24.8)', () => {
+  it('reproduces the book: 432 a day, about 20 people today, about 3 supervisors with the agent', () => {
+    const r = run('queue');
+    expect(row(r, 'Exceptions a day').today).toBeCloseTo(432, 6);
+    expect(row(r, 'Person hours a day').today).toBeCloseTo(144, 6);
+    expect(row(r, 'Person hours a day').re).toBeCloseTo(21.6, 6);
+    expect(Math.round(row(r, 'People needed on the queue').today)).toBe(21);
+    expect(Math.round(row(r, 'People needed on the queue').re)).toBe(3);
+  });
+  it('marks the hand-off share as the visitor’s own setting', () => {
+    expect(V.specs.queue.inputs.find((i: Any) => i.k === 'ho').src).toBe(V.YOU);
+  });
+  it('the clerk table sums to 95% today and 51% after, so 44% is released', () => {
+    expect(V.clerkTotals()).toEqual({ today: 95, after: 51 });
+    expect(V.clerkTeam(85, 1800).released).toBeCloseTo(0.44, 6);
+    expect(V.clerkTeam(85, 1800).hours).toBeCloseTo(85 * 1800 * 0.44, 6);
+  });
+  it('organization page: storyboard upgraded with pictures, queue calculator, clerk week; copy says 44%', () => {
+    const h = html('blueprints/organization/index.html');
+    expect(h).toContain('<ol class="md-story" data-vz="story">');
+    expect((h.match(/data-pic="/g) ?? []).length).toBeGreaterThanOrEqual(8);
+    expect(h).toContain('data-vz="calc:queue"');
+    expect(h).toContain('data-vz="clerk"');
+    expect(h).toContain('About 44% of the clerk');
+    expect(h).not.toContain('About 49% of the clerk');
+  });
+});

@@ -95,7 +95,7 @@
     } else if (a[0] === 'level') {
       var L = +a[1];
       for (var k = 0; k <= 5; k++) {
-        svgEl('rect', { x: 14 + k * 23, y: 56 - k * 8, width: 19, height: 8 + k * 8, 'class': k === L ? 'acc' : k < L ? 'vz-pl-done' : 'd thin' }, g);
+        svgEl('rect', { x: 14 + k * 23, y: 50 - k * 8, width: 19, height: 8 + k * 8, 'class': k === L ? 'acc' : k < L ? 'vz-pl-done' : 'd thin' }, g);
         text(g, 23.5 + k * 23, 70, 'L' + k, 'vz-pt', 'middle');
       }
     } else if (a[0] === 'chain') {
@@ -120,7 +120,7 @@
     ctl.setAttribute('role', 'group');
     ctl.setAttribute('aria-label', 'Step through the storyboard');
     ctl.innerHTML = '<button type="button" class="btn btn-ghost btn-sm" data-a="prev">Previous</button>' +
-      '<button type="button" class="btn btn-dark btn-sm" data-a="play" aria-pressed="false">Play</button>' +
+      '<button type="button" class="btn btn-primary btn-sm" data-a="play" aria-pressed="false">Play</button>' +
       '<button type="button" class="btn btn-ghost btn-sm" data-a="next">Next</button>' +
       '<button type="button" class="btn btn-ghost btn-sm" data-a="all">Show all</button>' +
       '<p class="vz-status" aria-live="polite">' + panels.length + ' steps. Press Play or Next.</p>';
@@ -275,7 +275,7 @@
       '<div class="vz-clerk">' +
         '<div class="vz-ctl" role="group" aria-label="Show the clerk\u2019s time"><button type="button" class="btn btn-ghost btn-sm" data-s="today" aria-pressed="true">Today</button>' +
         '<button type="button" class="btn btn-ghost btn-sm" data-s="after" aria-pressed="false">After L3</button>' +
-        '<button type="button" class="btn btn-dark btn-sm" data-s="play">Play the change</button><p class="vz-status" aria-live="polite"></p></div>' +
+        '<button type="button" class="btn btn-primary btn-sm" data-s="play">Play the change</button><p class="vz-status" aria-live="polite"></p></div>' +
         '<ol class="vz-ck">' + rows.map(function (r, i) {
           return '<li class="vz-ck-r vz-c-' + r.cls + '" data-i="' + i + '"><span class="vz-ck-l">' + esc(r.task) + ' <em>' + CLS[r.cls] + '</em></span>' +
             '<svg class="vz-bar" viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true" focusable="false"><rect x="0" y="0" height="10" width="0"></rect></svg><b class="vz-ck-v"></b></li>';
@@ -397,7 +397,7 @@
     var timer = null;
     root.innerHTML =
       '<div class="vz-rm">' +
-        '<div class="vz-ctl" role="group" aria-label="Walk the gates"><button type="button" class="btn btn-dark btn-sm" data-a="play" aria-pressed="false">Play the 33 months</button><p class="vz-status" aria-live="polite"></p></div>' +
+        '<div class="vz-ctl" role="group" aria-label="Walk the gates"><button type="button" class="btn btn-primary btn-sm" data-a="play" aria-pressed="false">Play the 33 months</button><p class="vz-status" aria-live="polite"></p></div>' +
         '<ol class="vz-rm-track">' + PHASES.map(function (p, i) {
           return '<li class="vz-ph vz-ph-' + i + '"><b>' + esc(p.n) + '</b><span>Months ' + p.m[0] + '&ndash;' + p.m[1] + '</span></li>';
         }).join('') + '</ol>' +
