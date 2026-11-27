@@ -98,6 +98,13 @@
         svgEl('rect', { x: 14 + k * 23, y: 50 - k * 8, width: 19, height: 8 + k * 8, 'class': k === L ? 'acc' : k < L ? 'vz-pl-done' : 'd thin' }, g);
         text(g, 23.5 + k * 23, 70, 'L' + k, 'vz-pt', 'middle');
       }
+    } else if (a[0] === 'kill') {
+      // K1..K5: the level pulled is orange; wider stops are taller.
+      var K = +a[1];
+      for (var q = 1; q <= 5; q++) {
+        svgEl('rect', { x: 8 + (q - 1) * 30, y: 54 - q * 8, width: 24, height: 6 + q * 8, rx: 2, 'class': q === K ? 'acc' : 'd thin' }, g);
+        text(g, 20 + (q - 1) * 30, 70, 'K' + q, q === K ? 'vz-pt vz-ptb' : 'vz-pt', 'middle');
+      }
     } else if (a[0] === 'chain') {
       var nn = +a[1] || 4, cur = +a[2];
       for (var c = 0; c < nn; c++) {
@@ -371,29 +378,35 @@
     { id: 'cdo', role: 'Chief data officer', owns: 'Owns the context', text: 'Owns the system of context.', href: '/blueprints/graphs/', link: 'Knowledge graph and enterprise brain' },
     { id: 'cro', role: 'Chief risk officer and internal audit', owns: 'Own the evidence', text: 'Own the evidence standard for decision traces.', href: '/blueprints/trace/', link: 'Decision trace viewer' }
   ];
-  function owners(root) {
+  var OWNERS_MAP = {
+    label: 'Who owns what in the agent estate', hub: ['Every agent', 'A named business owner'],
+    hubHtml: '<p class="vz-own-h">Every agent</p><p>Every agent has a named business owner. The owner signs its limits and promotions and can stop it. No registry, no run. <span class="md-cite">Book, Ch 24.3</span></p><p class="vz-own-hint">Select a role to see what it owns.</p>',
+    nodes: OWNERS.map(function (o) {
+      return { l1: o.role.length > 18 ? (o.id === 'cro' ? 'CRO and audit' : 'Chief data officer') : o.role, l2: o.owns,
+        html: '<p class="vz-own-h">' + esc(o.role) + '</p><p>' + esc(o.text) + ' <span class="md-cite">Book, Ch 01.8</span></p><p><a class="more" href="' + o.href + '">' + esc(o.link) + '</a></p>' };
+    })
+  };
+  function owners(root) { hubMap(root, OWNERS_MAP); }
+  // A hub with nodes around it (wide) or two columns on a spine (narrow). Click, Enter or arrows select a node.
+  function hubMap(root, M) {
     root.innerHTML = '<div class="vz-own"><div class="vz-own-svg"></div><div class="vz-own-detail" role="status" aria-live="polite"></div></div>';
-    var host = $('.vz-own-svg', root), detail = $('.vz-own-detail', root), sel = null, lastW = 0;
+    var host = $('.vz-own-svg', root), detail = $('.vz-own-detail', root), sel = null, lastW = 0, N = M.nodes;
     function select(i, focus) {
       sel = i;
       $$('.vz-node', host).forEach(function (n) { var on = +n.dataset.i === i; n.setAttribute('aria-pressed', String(on)); n.classList.toggle('on', on); if (on && focus) n.focus(); });
       $$('.vz-link', host).forEach(function (l) { l.classList.toggle('on', +l.dataset.i === i); });
-      if (i < 0) {
-        detail.innerHTML = '<p class="vz-own-h">Every agent</p><p>Every agent has a named business owner. The owner signs its limits and promotions and can stop it. No registry, no run. <span class="md-cite">Book, Ch 24.3</span></p><p class="vz-own-hint">Select a role to see what it owns.</p>';
-        return;
-      }
-      var o = OWNERS[i];
-      detail.innerHTML = '<p class="vz-own-h">' + esc(o.role) + '</p><p>' + esc(o.text) + ' <span class="md-cite">Book, Ch 01.8</span></p><p><a class="more" href="' + o.href + '">' + esc(o.link) + '</a></p>';
+      detail.innerHTML = i < 0 ? M.hubHtml : N[i].html;
     }
     function draw() {
       var narrow = host.clientWidth < 560;
       lastW = host.clientWidth;
       host.innerHTML = '';
-      var W = narrow ? 340 : 700, H = narrow ? 470 : 340, cx = W / 2, cy = narrow ? 70 : H / 2;
-      var svg = svgEl('svg', { viewBox: '0 0 ' + W + ' ' + H, 'class': 'vz-own-map', role: 'group', 'aria-label': 'Who owns what in the agent estate' }, host);
-      var pos = OWNERS.map(function (o, i) {
+      var rowsN = Math.ceil(N.length / 2);
+      var W = narrow ? 340 : 700, H = narrow ? 170 + rowsN * 105 - 35 : 340, cx = W / 2, cy = narrow ? 70 : H / 2;
+      var svg = svgEl('svg', { viewBox: '0 0 ' + W + ' ' + H, 'class': 'vz-own-map', role: 'group', 'aria-label': M.label }, host);
+      var pos = N.map(function (o, i) {
         if (narrow) return [i % 2 ? W * 0.75 : W * 0.25, 170 + Math.floor(i / 2) * 105];
-        var ang = -Math.PI / 2 + (i - 0.0) * (2 * Math.PI / OWNERS.length) + Math.PI / 6;
+        var ang = -Math.PI / 2 + i * (2 * Math.PI / N.length) + (N.length === 6 ? Math.PI / 6 : 0);
         return [cx + 240 * Math.cos(ang), cy + 120 * Math.sin(ang)];
       });
       pos.forEach(function (p, i) {
@@ -408,14 +421,14 @@
         text(g, x, y + 14, l2, 'vz-n2', 'middle');
         return g;
       }
-      node(-1, cx, cy, narrow ? 200 : 190, 64, 'Every agent', 'A named business owner');
-      OWNERS.forEach(function (o, i) { node(i, pos[i][0], pos[i][1], narrow ? 156 : 196, 60, o.role.length > 18 ? (o.id === 'cro' ? 'CRO and audit' : 'Chief data officer') : o.role, o.owns); });
+      node(-1, cx, cy, narrow ? 200 : 190, 64, M.hub[0], M.hub[1]);
+      N.forEach(function (o, i) { node(i, pos[i][0], pos[i][1], narrow ? 156 : 196, 60, o.l1, o.l2); });
       select(sel == null ? -1 : sel);
     }
     host.addEventListener('click', function (e) { var n = e.target.closest('.vz-node'); if (n) select(+n.dataset.i); });
     host.addEventListener('keydown', function (e) {
       var n = e.target.closest('.vz-node'); if (!n) return;
-      var i = +n.dataset.i, all = OWNERS.length;
+      var i = +n.dataset.i, all = N.length;
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(i); }
       else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); select(i < 0 ? 0 : (i + 1) % all, true); }
       else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); select(i <= 0 ? all - 1 : i - 1, true); }
@@ -424,6 +437,314 @@
     onView(root, function () { root.classList.add('vz-in'); });
     var rt = null;
     window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { if (Math.abs(host.clientWidth - lastW) > 40) draw(); }, 150); });
+    return { select: select };
+  }
+
+  /* ================= The five decisions leaders own (home; Ch 01.1) ================= */
+  function decisions(root) {
+    var D = V.DECISIONS, list = root.closest('.mgmt') && $('.mgmt-grid', root.closest('.mgmt'));
+    hubMap(root, {
+      label: 'Five decisions leaders own', hub: ['Leaders own', 'five decisions'],
+      hubHtml: '<p class="vz-own-h">Five decisions no framework makes</p><p>Frameworks build the agents. Leaders own these five decisions. That is human-led, agent-operated. <span class="md-cite">Book, Ch 01.1</span></p><p class="vz-own-hint">Select a decision to see the question, the answer and its tool.</p>',
+      nodes: D.map(function (d) {
+        return { l1: d.l1, l2: d.l2, html: '<p class="vz-own-h">' + esc(d.l1) + '</p><p><b>' + esc(d.q) + '</b></p><p>' + esc(d.a) + ' <span class="md-cite">Book, ' + esc(d.c) + '</span></p><p><a class="more" href="' + d.href + '">' + esc(d.link) + '</a></p>' };
+      })
+    });
+    // The five cards stay for no-JS readers; with the map they fold behind one button.
+    if (list) {
+      list.hidden = true;
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'btn btn-ghost btn-sm vz-listbtn'; b.setAttribute('aria-expanded', 'false');
+      b.textContent = 'Show all five as a list';
+      root.parentNode.appendChild(b);
+      b.addEventListener('click', function () {
+        list.hidden = !list.hidden;
+        b.setAttribute('aria-expanded', String(!list.hidden));
+        b.textContent = list.hidden ? 'Show all five as a list' : 'Hide the list';
+      });
+    }
+  }
+
+
+  /* ================= Animated flows: a token walks a route; maps of nodes you can open ================= */
+  // Spec in vz-core.js (AE.vz.FLOWS). Wide and narrow layouts are grids; a narrow 'route' layout draws only the
+  // current case as one column. Play moves a token edge by edge; Next steps; Show all gives the final state.
+  function flow(root, F) {
+    var keys = Object.keys(F.nodes), ci = 0, step = -1, timer = null, lastW = 0, narrow = false, svg, gEdges, gNodes, tok, swarmG;
+    var uid = 'vzf-' + Math.random().toString(36).slice(2, 7);
+    root.innerHTML = '<div class="vz-flow">' +
+      '<div class="vz-cases" role="group" aria-label="Choose a case">' + F.cases.map(function (c, i) {
+        return '<button type="button" class="vz-case" data-c="' + i + '" aria-pressed="' + (i === 0) + '">' + esc(c.name) + '</button>';
+      }).join('') + '</div>' +
+      '<div class="vz-ctl" role="group" aria-label="Step through the flow"><button type="button" class="btn btn-primary btn-sm" data-a="play" aria-pressed="false">Play</button>' +
+      '<button type="button" class="btn btn-ghost btn-sm" data-a="next">Next</button><button type="button" class="btn btn-ghost btn-sm" data-a="all">Show all</button>' +
+      '<p class="vz-status" aria-live="polite"></p></div>' +
+      '<div class="vz-flow-svg"></div>' +
+      '<div class="vz-flow-grid"><ol class="vz-flow-steps" aria-label="Steps in this case"></ol><div class="vz-own-detail vz-flow-detail" role="status" aria-live="polite"></div></div>' +
+    '</div>';
+    var host = $('.vz-flow-svg', root), status = $('.vz-status', root), list = $('.vz-flow-steps', root), detail = $('.vz-flow-detail', root), playBtn = $('[data-a="play"]', root);
+    function C() { return F.cases[ci]; }
+    function say(k) { var c = C(); return (c.say && c.say[k]) || F.nodes[k].d; }
+    function sub(k) { var c = C(); return (c.sub && c.sub[k]) || F.nodes[k].s; }
+    var G = {};
+    function geom() {
+      narrow = host.clientWidth < 560;
+      var route = narrow && F.narrow === 'route', cols = route ? 1 : F.cols[narrow ? 1 : 0], rows = route ? C().route.length : F.rows[narrow ? 1 : 0];
+      var W = narrow ? 340 : 760, cw = W / cols, rh = narrow ? 84 : 92, nw = Math.min(narrow ? (route ? 250 : 140) : 150, cw - 14), nh = narrow ? 56 : 58;
+      var pos = {};
+      if (route) C().route.forEach(function (k, i) { pos[k] = [W / 2, 40 + i * rh]; });
+      else keys.forEach(function (k) { var c = F.nodes[k][narrow ? 'n' : 'w']; if (c) pos[k] = [cw * (c[0] + 0.5), 40 + c[1] * rh]; });
+      G = { W: W, H: 40 + (rows - 1) * rh + 40, cw: cw, rh: rh, nw: nw, nh: nh, pos: pos, route: route };
+    }
+    function edgePath(a, b, o) {
+      var A = G.pos[a], B = G.pos[b];
+      var bus = o && (narrow ? o.nb : o.wb);
+      if (bus != null && !G.route) { var X = bus < 0 ? 4 : G.cw * (bus + 0.5); return 'M' + A[0] + ' ' + A[1] + ' H' + X + ' V' + B[1] + ' H' + B[0]; }
+      if (A[0] === B[0] || A[1] === B[1]) return 'M' + A[0] + ' ' + A[1] + ' L' + B[0] + ' ' + B[1];
+      var my = A[1] + (B[1] > A[1] ? 1 : -1) * G.rh / 2;
+      return 'M' + A[0] + ' ' + A[1] + ' V' + my + ' H' + B[0] + ' V' + B[1];
+    }
+    function edgeOf(a, b) { for (var i = 0; i < F.edges.length; i++) if (F.edges[i][0] === a && F.edges[i][1] === b) return F.edges[i]; return null; }
+    function draw() {
+      geom(); lastW = host.clientWidth; host.innerHTML = '';
+      svg = svgEl('svg', { viewBox: '0 0 ' + G.W + ' ' + G.H, 'class': 'vz-flow-map', role: 'group', 'aria-label': F.label }, host);
+      gEdges = svgEl('g', {}, svg);
+      var edges = G.route ? C().route.slice(1).map(function (k, i) { return [C().route[i], k]; }) : F.edges;
+      edges.forEach(function (e) {
+        if (!G.pos[e[0]] || !G.pos[e[1]]) return;
+        svgEl('path', { d: edgePath(e[0], e[1], e[2]), 'class': 'vz-edge', 'data-e': e[0] + '>' + e[1] }, gEdges);
+      });
+      gNodes = svgEl('g', {}, svg);
+      keys.forEach(function (k) {
+        var p = G.pos[k]; if (!p) return;
+        var n = F.nodes[k];
+        var g = svgEl('g', { 'class': 'vz-fn' + (n.gate ? ' vz-gate-n' : '') + (n.stop ? ' vz-stop-n' : ''), 'data-k': k, tabindex: 0, role: 'button', 'aria-label': n.t + ': ' + sub(k) }, gNodes);
+        svgEl('rect', { x: p[0] - G.nw / 2, y: p[1] - G.nh / 2, width: G.nw, height: G.nh, rx: n.gate ? 14 : 5 }, g);
+        text(g, p[0], p[1] - 4, n.t, 'vz-n1', 'middle');
+        var st = text(g, p[0], p[1] + 14, sub(k), 'vz-n2 vz-fs', 'middle');
+        st.setAttribute('data-s', k);
+      });
+      swarmG = svgEl('g', { 'class': 'vz-swarm' }, svg);
+      tok = svgEl('circle', { r: 8, cx: -20, cy: -20, 'class': 'vz-tok' }, svg);
+      paint();
+    }
+    function nodeEl(k) { return $('.vz-fn[data-k="' + k + '"]', svg); }
+    function listSteps() {
+      var c = C();
+      list.innerHTML = c.route.map(function (k, i) {
+        return '<li data-i="' + i + '"><b>' + esc(F.nodes[k].t) + '.</b> ' + esc(say(k)) + ' <span class="md-cite">Book, ' + esc(F.nodes[k].c) + '</span></li>';
+      }).join('') + '<li class="vz-flow-end" data-i="' + c.route.length + '">' + esc(c.end) + '</li>';
+    }
+    function paint() {
+      var c = C(), r = c.route;
+      $$('.vz-fn', svg).forEach(function (g) {
+        var k = g.dataset.k, i = r.indexOf(k);
+        g.classList.toggle('in', i >= 0); g.classList.toggle('done', i >= 0 && i < step); g.classList.toggle('cur', i >= 0 && i === step);
+        g.classList.toggle('out', i < 0);
+        var t = $('[data-s]', g); if (t) t.textContent = sub(k);
+      });
+      $$('.vz-edge', svg).forEach(function (e) {
+        var ab = e.getAttribute('data-e').split('>'), i = r.indexOf(ab[0]);
+        e.classList.toggle('on', i >= 0 && r[i + 1] === ab[1] && i + 1 <= step);
+      });
+      $$('li', list).forEach(function (li) { var i = +li.dataset.i; li.classList.toggle('on', i <= step || (step >= r.length - 1 && i === r.length)); li.classList.toggle('cur', i === step); });
+      var at = step >= 0 ? G.pos[r[Math.min(step, r.length - 1)]] : null;
+      if (at) { tok.setAttribute('cx', at[0]); tok.setAttribute('cy', at[1] - G.nh / 2 - 2); tok.classList.add('on'); } else tok.classList.remove('on');
+    }
+    function moveTok(a, b, ms, done) {
+      var e = $('.vz-edge[data-e="' + a + '>' + b + '"]', svg);
+      if (reduced() || !e || !e.getTotalLength || !window.requestAnimationFrame) { done(); return; }
+      var L = e.getTotalLength(), t0 = null;
+      function f(t) {
+        if (t0 == null) t0 = t;
+        var k = Math.min(1, (t - t0) / ms), pt = e.getPointAtLength(L * (1 - Math.pow(1 - k, 2)));
+        tok.setAttribute('cx', pt.x); tok.setAttribute('cy', pt.y);
+        if (k < 1) window.requestAnimationFrame(f); else done();
+      }
+      tok.classList.add('on');
+      window.requestAnimationFrame(f);
+    }
+    function swarm(final) {
+      var sw = C().swarm; swarmG.innerHTML = '';
+      if (!sw) return;
+      var counts = {}, ks = Object.keys(sw.to);
+      ks.forEach(function (k) { counts[k] = 0; });
+      // Interleave so the dots leave in a mixed stream, like a real queue.
+      var mixed = [], pools = ks.map(function (k) { return { k: k, n: sw.to[k] }; });
+      for (var j = 0; mixed.length < 100; j++) pools.forEach(function (p) { if (p.n > 0 && (j % Math.max(1, Math.round(100 / p.n / 2.5)) === 0 || j > 60)) { mixed.push(p.k); p.n--; } });
+      function label(k) { var t = $('[data-s="' + k + '"]', svg); if (t) t.textContent = counts[k] + ' of 100'; }
+      if (final || reduced() || !window.requestAnimationFrame) { ks.forEach(function (k) { counts[k] = sw.to[k]; label(k); }); status.textContent = 'All 100 items routed. ' + C().end; return; }
+      var i = 0;
+      ks.forEach(label);
+      var iv = setInterval(function () {
+        if (i >= mixed.length || C().swarm !== sw) { clearInterval(iv); return; }
+        var k = mixed[i++], e = $('.vz-edge[data-e="' + sw.from + '>' + k + '"]', svg);
+        if (!e) return;
+        var dot = svgEl('circle', { r: 3.5, 'class': 'vz-dot' }, swarmG), L = e.getTotalLength();
+        (function (dot, k) {
+          var t0 = null;
+          window.requestAnimationFrame(function f(t) {
+            if (t0 == null) t0 = t;
+            var q = Math.min(1, (t - t0) / 650), pt = e.getPointAtLength(L * q);
+            dot.setAttribute('cx', pt.x); dot.setAttribute('cy', pt.y);
+            if (q < 1) window.requestAnimationFrame(f); else { swarmG.removeChild(dot); counts[k]++; label(k); }
+          });
+        })(dot, k);
+      }, 45);
+    }
+    function show(i) {
+      var c = C(), r = c.route;
+      step = Math.max(-1, Math.min(r.length - 1, i));
+      paint();
+      if (step < 0) { status.textContent = c.route.length + ' steps. Press Play or Next.'; detail.innerHTML = ''; return; }
+      var k = r[step];
+      status.textContent = 'Step ' + (step + 1) + ' of ' + r.length + ': ' + F.nodes[k].t + '.' + (step === r.length - 1 ? ' ' + c.end : '');
+      detail.innerHTML = '<p class="vz-own-h">' + esc(F.nodes[k].t) + '</p><p>' + esc(say(k)) + ' <span class="md-cite">Book, ' + esc(F.nodes[k].c) + '</span></p>';
+      if (step === r.length - 1 && c.swarm) swarm(false);
+    }
+    function stop() { if (timer) clearTimeout(timer); timer = null; playBtn.setAttribute('aria-pressed', 'false'); playBtn.textContent = 'Play'; }
+    function advance() {
+      var r = C().route;
+      if (step >= r.length - 1) { stop(); return; }
+      if (step < 0) { show(0); timer = setTimeout(advance, 1500); return; }
+      var a = r[step], b = r[step + 1];
+      moveTok(a, b, 700, function () { if (!timer) return; show(step + 1); timer = setTimeout(advance, step >= r.length - 1 ? 0 : 1900); });
+    }
+    function play() {
+      if (timer) { stop(); return; }
+      if (step >= C().route.length - 1) step = -1;
+      playBtn.setAttribute('aria-pressed', 'true'); playBtn.textContent = 'Pause';
+      timer = setTimeout(advance, 10);
+    }
+    function pick(i) {
+      stop(); ci = i; step = -1;
+      $$('.vz-case', root).forEach(function (b) { b.setAttribute('aria-pressed', String(+b.dataset.c === i)); });
+      if (G.route) draw(); else { swarmG.innerHTML = ''; }
+      listSteps(); show(-1);
+    }
+    root.addEventListener('click', function (e) {
+      var b = e.target.closest('button');
+      if (b && b.classList.contains('vz-case')) { pick(+b.dataset.c); play(); return; }
+      if (b && b.dataset.a === 'play') return play();
+      if (b && b.dataset.a === 'next') { stop(); if (step >= C().route.length - 1) step = -1; show(step + 1); return; }
+      if (b && b.dataset.a === 'all') { stop(); show(C().route.length - 1); if (C().swarm) swarm(true); return; }
+      var n = e.target.closest('.vz-fn');
+      if (n) openNode(n.dataset.k);
+    });
+    function openNode(k) {
+      stop();
+      var i = C().route.indexOf(k);
+      if (i >= 0) { show(i); return; }
+      detail.innerHTML = '<p class="vz-own-h">' + esc(F.nodes[k].t) + '</p><p>' + esc(F.nodes[k].d) + ' <span class="md-cite">Book, ' + esc(F.nodes[k].c) + '</span></p><p class="vz-own-hint">Not on this case\u2019s path. Pick another case above.</p>';
+    }
+    host.addEventListener('keydown', function (e) {
+      var n = e.target.closest('.vz-fn'); if (!n) return;
+      var all = $$('.vz-fn', svg), i = all.indexOf(n);
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openNode(n.dataset.k); }
+      else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); all[(i + 1) % all.length].focus(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); all[(i - 1 + all.length) % all.length].focus(); }
+    });
+    draw(); listSteps();
+    if (reduced()) { show(C().route.length - 1); if (C().swarm) swarm(true); }
+    else { show(-1); onView(root, function () { root.classList.add('vz-in'); play(); }); }
+    var rt = null;
+    window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { if (Math.abs(host.clientWidth - lastW) > 40 && (host.clientWidth < 560) !== narrow) { stop(); var s0 = step; draw(); show(s0); } }, 150); });
+  }
+
+  /* ================= Who may raise or lower a level (Table 25.2) ================= */
+  function ladder(root) {
+    var Lw = V.LADDER, sel = null, timer = null, at = 0;
+    root.innerHTML = '<div class="vz-lad"><div class="vz-ctl" role="group" aria-label="Walk the ladder"><button type="button" class="btn btn-primary btn-sm" data-a="play" aria-pressed="false">Play: up the ladder, then down</button><p class="vz-status" aria-live="polite"></p></div>' +
+      '<div class="vz-lad-wrap"><ul class="vz-lad-l" aria-label="Autonomy levels, highest first">' + Lw.levels.slice().reverse().map(function (l, ri) {
+        var i = 5 - ri;
+        return '<li class="vz-lv" data-l="' + i + '"><span class="vz-lv-k">' + l.l + '</span><span class="vz-lv-n">' + esc(l.n) + '<small>' + esc(l.who) + '</small></span></li>' + (i > 0 ? '<li class="vz-mv-row"><button type="button" class="vz-mv" data-m="' + (i - 1) + '" aria-pressed="false"><span aria-hidden="true">&uarr;</span> ' + Lw.levels[i - 1].l + ' to ' + l.l + ': <b>' + esc(Lw.up[i - 1].by) + '</b></button></li>' : '');
+      }).join('') + '</ul>' +
+      '<button type="button" class="vz-down" data-m="down" aria-pressed="false"><span aria-hidden="true">&darr;</span> Any level down: <b>' + esc(Lw.down.by) + '</b></button></div>' +
+      '<div class="vz-own-detail" role="status" aria-live="polite"></div></div>';
+    var det = $('.vz-own-detail', root), status = $('.vz-status', root), playBtn = $('[data-a="play"]', root);
+    function mark(lv) { at = lv; $$('.vz-lv', root).forEach(function (li) { var l = +li.dataset.l; li.classList.toggle('on', l === lv); li.classList.toggle('below', l < lv); }); }
+    function pick(m) {
+      sel = m;
+      $$('[data-m]', root).forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.m === String(m))); });
+      var u = m === 'down' ? Lw.down : Lw.up[+m];
+      var head = m === 'down' ? 'Lowering a level' : Lw.levels[+m].l + ' to ' + Lw.levels[+m + 1].l;
+      det.innerHTML = '<p class="vz-own-h">' + esc(head) + ': ' + esc(u.by) + '</p><p>' + esc(u.ev) + ' <span class="md-cite">Book, ' + esc(u.c) + '</span></p>';
+    }
+    function stop() { if (timer) clearInterval(timer); timer = null; playBtn.setAttribute('aria-pressed', 'false'); playBtn.textContent = 'Play: up the ladder, then down'; }
+    root.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      if (b.dataset.a === 'play') {
+        if (timer) return stop();
+        var seq = [0, 1, 2, 3, 'down'], i = 0;
+        playBtn.setAttribute('aria-pressed', 'true'); playBtn.textContent = 'Pause';
+        mark(0); status.textContent = 'The step starts at L0.';
+        timer = setInterval(function () {
+          if (i >= seq.length) return stop();
+          var m = seq[i++]; pick(m);
+          if (m === 'down') { mark(2); status.textContent = 'An incident: one person drops it to L2 at once. No meeting.'; }
+          else { mark(m + 1); status.textContent = Lw.levels[m].l + ' to ' + Lw.levels[m + 1].l + ': decided by ' + Lw.up[m].by + '.'; }
+        }, reduced() ? 4000 : 2200);
+        return;
+      }
+      if (b.dataset.m != null) { stop(); pick(b.dataset.m === 'down' ? 'down' : +b.dataset.m); if (b.dataset.m !== 'down') mark(+b.dataset.m + 1); }
+    });
+    mark(3); pick(2); status.textContent = 'Select a move to see the evidence and who decides.';
+  }
+
+  /* ================= Internal or external agent: the same five questions (Ch 23) ================= */
+  function pair(root) {
+    var Q = V.TRUST_Q;
+    root.innerHTML = '<div class="vz-pair"><div class="vz-pair-q" role="group" aria-label="Pick a question">' + Q.map(function (q, i) {
+      return '<button type="button" class="vz-case" data-q="' + i + '" aria-pressed="' + (i === 0) + '">' + esc(q.q) + '</button>';
+    }).join('') + '</div>' +
+      '<div class="vz-pair-row" aria-live="polite"><div class="vz-pair-card vz-pair-i"><p class="vz-pair-k">Your own agent</p><p class="vz-pair-a"></p></div>' +
+      '<div class="vz-pair-mid" aria-hidden="true"><svg viewBox="0 0 60 40" focusable="false"><path class="vz-pair-line" d="M2 20 H58"></path><circle class="vz-pair-dot" cx="30" cy="20" r="6"></circle></svg><span>Your gateway</span></div>' +
+      '<div class="vz-pair-card vz-pair-e"><p class="vz-pair-k">An outside agent</p><p class="vz-pair-a"></p></div></div>' +
+      '<p class="vz-pair-cite"></p></div>';
+    function pick(i) {
+      $$('[data-q]', root).forEach(function (b) { b.setAttribute('aria-pressed', String(+b.dataset.q === i)); });
+      var row = $('.vz-pair-row', root);
+      row.classList.remove('flip'); void row.getBoundingClientRect(); row.classList.add('flip');
+      $('.vz-pair-i .vz-pair-a', root).textContent = Q[i].i;
+      $('.vz-pair-e .vz-pair-a', root).textContent = Q[i].e;
+      $('.vz-pair-cite', root).innerHTML = '<span class="md-cite">Book, ' + esc(Q[i].c) + '</span>';
+    }
+    root.addEventListener('click', function (e) { var b = e.target.closest('[data-q]'); if (b) pick(+b.dataset.q); });
+    pick(0);
+  }
+
+  /* ================= The book's 31 chapters by part, linked to the site ================= */
+  function chapters(root) {
+    var P = V.PARTS, all = [];
+    P.forEach(function (p, pi) { p.ch.forEach(function (c) { all.push({ n: c[0], t: c[1], d: c[2], href: c[3], link: c[4], p: p.p, pn: p.n, pi: pi }); }); });
+    root.innerHTML = '<div class="vz-chap"><div class="vz-ctl" role="group" aria-label="Filter chapters"><button type="button" class="vz-case" data-f="all" aria-pressed="true">All 31 chapters</button><button type="button" class="vz-case" data-f="site" aria-pressed="false">Chapters you can try on this site</button></div>' +
+      '<div class="vz-chap-parts">' + P.map(function (p, pi) {
+        return '<section class="vz-part vz-part-' + pi + '" aria-label="' + esc(p.p + ': ' + p.n) + '"><h3 class="vz-part-h">' + esc(p.p) + ' <span>' + esc(p.n) + '</span></h3><ul class="vz-chips">' +
+          p.ch.map(function (c) { return '<li><button type="button" class="vz-chip' + (c[3] ? ' has' : '') + '" data-n="' + c[0] + '" aria-pressed="false"><b>' + (c[0] < 10 ? '0' : '') + c[0] + '</b> ' + esc(c[1].split(':')[0]) + '</button></li>'; }).join('') + '</ul></section>';
+      }).join('') + '</div><div class="vz-own-detail" role="status" aria-live="polite"></div></div>';
+    var det = $('.vz-own-detail', root), btns = $$('.vz-chip', root);
+    function pick(n, focus) {
+      var c = all.filter(function (x) { return x.n === n; })[0];
+      btns.forEach(function (b) { var on = +b.dataset.n === n; b.setAttribute('aria-pressed', String(on)); if (on && focus) b.focus(); });
+      det.innerHTML = '<p class="vz-own-h">Chapter ' + c.n + ': ' + esc(c.t) + '</p><p>' + esc(c.d) + ' <span class="md-cite">' + esc(c.p + ', ' + c.pn) + '</span></p>' +
+        (c.href ? '<p><a class="more" href="' + c.href + '">Try it on this site: ' + esc(c.link) + '</a></p>' : '<p class="vz-own-hint">In the book only, for now.</p>');
+    }
+    root.addEventListener('click', function (e) {
+      var f = e.target.closest('[data-f]');
+      if (f) {
+        $$('[data-f]', root).forEach(function (b) { b.setAttribute('aria-pressed', String(b === f)); });
+        root.classList.toggle('vz-only-site', f.dataset.f === 'site'); return;
+      }
+      var b = e.target.closest('.vz-chip'); if (b) pick(+b.dataset.n);
+    });
+    root.addEventListener('keydown', function (e) {
+      var b = e.target.closest('.vz-chip'); if (!b) return;
+      var vis = btns.filter(function (x) { return !root.classList.contains('vz-only-site') || x.classList.contains('has'); }), i = vis.indexOf(b);
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); pick(+vis[(i + 1) % vis.length].dataset.n, true); }
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); pick(+vis[(i - 1 + vis.length) % vis.length].dataset.n, true); }
+    });
+    pick(30);
+    onView(root, function () { root.classList.add('vz-in'); });
   }
 
   /* ================= The 30-month roadmap with gates (Ch 26.3) ================= */
@@ -487,11 +808,17 @@
       else if (t === 'clerk') clerk(el);
       else if (t === 'owners') owners(el);
       else if (t === 'roadmap') roadmap(el);
+      else if (t === 'decisions') decisions(el);
+      else if (t === 'ladder') ladder(el);
+      else if (t === 'pair') pair(el);
+      else if (t === 'chapters') chapters(el);
+      else if (t.indexOf('flow:') === 0) { if (V.FLOWS[t.slice(5)]) flow(el, V.FLOWS[t.slice(5)]); }
       else if (t.indexOf('calc:') === 0) {
         var spec = V.specs[t.slice(5)];
         if (!spec) return;
         var o = {};
         if (spec.id === 'order') o.names = ['2026', 'Month 30'];
+        if (spec.id === 'incident') o.names = ['Found by audit', 'Root-cause loop'];
         if (spec.id === 'touch') {
           o.names = ['Your process', 'Agent-run'];
           var last = AE.simCounts || null;

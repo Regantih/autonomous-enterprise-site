@@ -63,7 +63,7 @@ const BASE_DESCRIPTION =
 
 export const PAGES = [
   {
-    src: 'index.html', out: 'index.html', path: '/',
+    src: 'index.html', out: 'index.html', path: '/', vz: true,
     title: 'The Autonomous Enterprise | How Leaders Build, Govern, and Scale the Agent-Run Company',
     ogTitle: 'The Autonomous Enterprise by Hemanth Reganti',
     description:
@@ -155,7 +155,7 @@ export const PAGES = [
     sitemap: true, priority: '0.8',
   },
   {
-    src: 'design.html', out: 'blueprints/design/index.html', path: '/blueprints/design/', nav: 'BLUEPRINTS', bp: 'design',
+    src: 'design.html', out: 'blueprints/design/index.html', path: '/blueprints/design/', nav: 'BLUEPRINTS', bp: 'design', vz: true,
     title: 'Design Choices: Tabular Models, Retrieval, Evals, Security, Inference and Thresholds | Human-Led Enterprise',
     description:
       'Six design choices from the book: tabular foundation models, retrieval and grounding, evals and audit trails, agent security, inference routing and budgets, and which steps go to models or rules.',
@@ -169,7 +169,7 @@ export const PAGES = [
     sitemap: true, priority: '0.8',
   },
   {
-    src: 'operations.html', out: 'blueprints/operations/index.html', path: '/blueprints/operations/', nav: 'BLUEPRINTS', bp: 'operations',
+    src: 'operations.html', out: 'blueprints/operations/index.html', path: '/blueprints/operations/', nav: 'BLUEPRINTS', bp: 'operations', vz: true,
     title: 'Operating Agents: Audits, Observability, Reliability and Pipelines | Human-Led Enterprise',
     description:
       'Running agents in production, from the book: what to trace, dashboards, the agent registry, audits, guardian agents, the kill switch, SLOs, incidents, demotion, and the skill, agent and release pipelines.',

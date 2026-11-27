@@ -30,11 +30,14 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/assets/fonts/oswald-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
-<script src="/assets/early.js?v=d04933fa48"></script>
+<script src="/assets/early.js?v=14095203e5"></script>
 <link rel="preload" as="image" type="image/webp" imagesrcset="/assets/images/cover-400.webp?v=bcc3859aee 400w, /assets/images/cover-800.webp?v=625dab5aaa 800w, /assets/images/cover-1200.webp?v=9c58bbd2d0 1200w" imagesizes="(min-width: 56rem) 20rem, 11rem" fetchpriority="high">
-<link rel="stylesheet" href="/assets/styles.css?v=d04933fa48">
-<script src="/assets/site.js?v=d04933fa48" defer></script>
-<script src="/assets/guide.js?v=d04933fa48" defer></script>
+<link rel="stylesheet" href="/assets/vz.css?v=5fa151db4d">
+<script src="/assets/vz-core.js?v=c77ea903ff" defer></script>
+<script src="/assets/vz.js?v=c2eb547550" defer></script>
+<link rel="stylesheet" href="/assets/styles.css?v=14095203e5">
+<script src="/assets/site.js?v=14095203e5" defer></script>
+<script src="/assets/guide.js?v=14095203e5" defer></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Book","@id":"https://humanledenterprise.com/#book","name":"The Autonomous Enterprise","alternativeHeadline":"How Leaders Build, Govern, and Scale the Agent-Run Company","description":"Frameworks like LangChain solve the engineering problem of AI agents. This book solves the management problem.","author":{"@id":"https://humanledenterprise.com/#author"},"inLanguage":"en","bookEdition":"First edition","datePublished":"2026-11","image":"https://humanledenterprise.com/assets/images/cover-800.jpg","url":"https://humanledenterprise.com/","workExample":[{"@type":"Book","bookFormat":"https://schema.org/Paperback","isbn":"9798142205612","numberOfPages":742,"offers":{"@type":"Offer","price":"59.99","priceCurrency":"USD","url":"https://www.amazon.com/dp/B0HS8HG6DP","availability":"https://schema.org/InStock"}},{"@type":"Book","bookFormat":"https://schema.org/EBook","offers":{"@type":"Offer","price":"12.99","priceCurrency":"USD","url":"https://www.amazon.com/dp/B0HS8C4WLL","availability":"https://schema.org/InStock"}}]},{"@type":"Person","@id":"https://humanledenterprise.com/#author","name":"Hemanth Reganti","jobTitle":"Author, speaker and advisor","knowsAbout":["Human-led, agent-operated enterprises","AI agent governance","Enterprise autonomy"],"description":"Author of \"The Autonomous Enterprise\" and speaker and advisor on human-led, agent-operated enterprises.","url":"https://humanledenterprise.com/about/","image":{"@type":"ImageObject","url":"https://humanledenterprise.com/assets/images/portrait-960.jpg","width":960,"height":1200,"caption":"Hemanth Reganti"},"sameAs":["https://www.linkedin.com/in/hemanth-reganti-147153178/"],"alumniOf":[{"@type":"EducationalOrganization","name":"Harvard Business School"}]},{"@type":"WebSite","@id":"https://humanledenterprise.com/#website","name":"Human-Led Enterprise","url":"https://humanledenterprise.com/","publisher":{"@id":"https://humanledenterprise.com/#author"}}]}</script>
 </head>
 <body>
@@ -82,6 +85,7 @@
     <p class="eyebrow">The answer</p>
     <h2 id="management-title">The management problem, answered</h2>
     <p class="lead">Frameworks help engineers build agents. Leaders solve the management problem by owning five decisions that no framework makes.</p>
+    <div class="vz-wrap" hidden><p class="ix-label">Try it &middot; Select a decision to see the question, the answer and its tool</p><div data-vz="decisions"></div></div>
     <ol class="mgmt-grid">
       <li class="mgmt-card">
         <h3><span class="mgmt-num">1</span> Where agents act</h3>
@@ -111,7 +115,7 @@
         <h3><span class="mgmt-num">5</span> Whether it pays</h3>
         <p class="mgmt-q">Does this agent create more value than it costs, after review, incidents and fixed cost?</p>
         <p class="mgmt-a">Compare agents in cost per completed outcome, track each agent&rsquo;s net contribution, and run pilots that end in a decision.</p>
-        <p class="mgmt-foot"><span class="md-cite">Book, Ch 25.4</span> <a class="more" href="/blueprints/operations/#dashboards">Cost per outcome</a></p>
+        <p class="mgmt-foot"><span class="md-cite">Book, Ch 25.4</span> <a class="more" href="/blueprints/operations/#dashboards">Cost per outcome</a> <a class="more" href="/frameworks/#cost">Price your exceptions</a></p>
       </li>
     </ol>
     <p class="mgmt-close">Frameworks build the agents; leaders own these five decisions. That is human-led, agent-operated. <span class="md-cite">Book, Ch 01.1</span></p>

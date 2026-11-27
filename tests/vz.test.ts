@@ -318,3 +318,23 @@ describe('ask Hemanth call to action', () => {
       .forEach(([p, id]) => expect(html(p)).toContain(`data-vz="calc:${id}"`));
   });
 });
+
+describe('visuals part 5: maps and flows', () => {
+  const words = (t: string) => t.replace(/&[a-z]+;/g, 'x').split(/\.\s|\?\s/).forEach((s) => expect(s.split(/\s+/).filter(Boolean).length, s).toBeLessThanOrEqual(25));
+  it('home: five-decision map, each node with question, answer, chapter and a link to its tool; cards stay as no-JS list', () => {
+    expect(V.DECISIONS.length).toBe(5);
+    V.DECISIONS.forEach((d: Any) => {
+      expect(d.c).toMatch(/^Ch \d\d\.\d/);
+      expect(d.href).toMatch(/^\/[a-z/-]*\/(#[a-z-]+)?$/);
+      words(d.a); words(d.q);
+    });
+    const h = html('index.html');
+    expect(h).toContain('data-vz="decisions"');
+    expect(h).toMatch(/<ol class="mgmt-grid">/);
+    expect(src('assets/vz.css')).toContain('.mgmt-grid[hidden] { display: none; }');
+    expect(src('assets/vz.js')).toMatch(/list\.hidden = true;[\s\S]*Show all five as a list/);
+  });
+  it('the floating Talk-to-the-book button avoids the new visual containers', () => {
+    ['.vz-flow', '.vz-lad', '.vz-pair', '.vz-chap', '.vz-cases'].forEach((c) => expect(src('assets/site.js')).toContain(c));
+  });
+});
