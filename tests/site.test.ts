@@ -429,6 +429,14 @@ describe('portrait, real cover and guide', () => {
     expect(css).toContain('.nav-ready .site-nav.is-open { display: block;');
   });
 
+  it('moves the workflow token along the drawn connectors and honours reduced motion live', () => {
+    const js = readFileSync(join(DIST, 'assets/blueprints.js'), 'utf8');
+    expect(js).toContain('function laneVia(A, B)');
+    expect(js).toContain('moveToken(tok, prev, [p.cx, p.cy], via ? 700 : 550, live, via)');
+    expect(js).toContain("host.scrollTo({ left: left, behavior: 'smooth' })");
+    expect(js).toContain("reduceMq.addEventListener('change'");
+  });
+
   it('renders the phone header collapsed before the deferred scripts run (no layout shift)', () => {
     for (const p of pages) {
       const head = html(p).split('</head>')[0];

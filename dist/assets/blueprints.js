@@ -3,7 +3,10 @@
   'use strict';
   var AE = window.AE;
   if (!AE || !AE.controls) return;
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var reduceMq = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+  var reduce = !!(reduceMq && reduceMq.matches);
+  // Follow the setting if the visitor changes it while the page is open.
+  if (reduceMq && reduceMq.addEventListener) reduceMq.addEventListener('change', function (e) { reduce = e.matches; });
   var NS = 'http://www.w3.org/2000/svg';
   function $(s, r) { return (r || document).querySelector(s); }
   function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
@@ -36,20 +39,46 @@
     return t;
   }
 
-  // Move an SVG circle from point a to point b.
-  function moveToken(tok, a, b, ms, isLive) {
+  // Move an SVG circle from point a to point b, optionally through waypoints (via), so the token can follow
+  // the drawn connector instead of cutting across lanes. One ease over the whole route, paced by length.
+  function moveToken(tok, a, b, ms, isLive, via) {
     if (reduce || !a) { tok.setAttribute('cx', b[0]); tok.setAttribute('cy', b[1]); return Promise.resolve(); }
+    var pts = [a].concat(via || [], [b]), seg = [], total = 0;
+    for (var j = 1; j < pts.length; j++) { var d = Math.hypot(pts[j][0] - pts[j - 1][0], pts[j][1] - pts[j - 1][1]); seg.push(d); total += d; }
+    function at(e) {
+      var dist = e * total;
+      for (var j = 0; j < seg.length; j++) {
+        if (dist <= seg[j] || j === seg.length - 1) { var f = seg[j] ? Math.min(1, dist / seg[j]) : 1; return [pts[j][0] + (pts[j + 1][0] - pts[j][0]) * f, pts[j][1] + (pts[j + 1][1] - pts[j][1]) * f]; }
+        dist -= seg[j];
+      }
+      return b;
+    }
     return new Promise(function (res) {
       var t0 = null;
       function f(t) {
         if (isLive && !isLive()) return res();
         if (!t0) t0 = t;
-        var k = Math.min(1, (t - t0) / ms), e = k < 0.5 ? 2 * k * k : -1 + (4 - 2 * k) * k;
-        tok.setAttribute('cx', a[0] + (b[0] - a[0]) * e); tok.setAttribute('cy', a[1] + (b[1] - a[1]) * e);
+        var k = Math.min(1, (t - t0) / ms), e = k < 0.5 ? 2 * k * k : -1 + (4 - 2 * k) * k, q = at(e);
+        tok.setAttribute('cx', q[0]); tok.setAttribute('cy', q[1]);
         if (k < 1) requestAnimationFrame(f); else res();
       }
       requestAnimationFrame(f);
     });
+  }
+  // Waypoints along a swimlane connector: out of the right edge of step A, along the channel between the
+  // columns, then into B (the same H-V-H elbow the arrows draw). Straight when both sit in one lane.
+  function laneVia(A, B) {
+    if (!A || !B || Math.abs(A.cy - B.cy) < 1) return null;
+    var right = 2 * A.cx - A.x;
+    if (B.x <= right) return null;
+    var mx = (right + B.x) / 2;
+    return [[mx, A.cy], [mx, B.cy]];
+  }
+  // Keep the moving token in view inside a sideways-scrolling diagram (phones), gliding unless motion is reduced.
+  function follow(host, left) {
+    left = Math.max(0, left);
+    if (Math.abs(host.scrollLeft - left) < 2) return;
+    if (host.scrollTo && !reduce) host.scrollTo({ left: left, behavior: 'smooth' }); else host.scrollLeft = left;
   }
   function typeInto(node, text, isLive) {
     if (reduce) { node.textContent = text; return Promise.resolve(); }
@@ -531,7 +560,7 @@
       var ss = steps(), w = AE.workflows[st.wf];
       log.innerHTML = ''; result.innerHTML = '';
       $$('.sl-step', lane.svg).forEach(function (g) { g.classList.remove('done', 'cur', 'hit'); });
-      var prev = null, main = ss.filter(function (s) { return !s.ex; }), t = 0, re = st.view === 're';
+      var prev = null, prevPos = null, main = ss.filter(function (s) { return !s.ex; }), t = 0, re = st.view === 're';
       function stamp(s) {
         t += re ? (s.lane === 'people' ? 600 : s.lane === 'outside' ? 0 : 4) : (s.ho === 'manual' ? 1.5 : s.ho === 'file' ? 0.5 : 0.1) * 86400;
         if (!re) return '+' + (t / 86400).toFixed(1) + 'd';
@@ -541,9 +570,10 @@
       for (var i = 0; i < main.length; i++) {
         var s = main[i], p = lane.pos[s.id], g = $('.sl-step[data-id="' + s.id + '"]', lane.svg);
         g.classList.add('cur');
-        if (!lane.fit) host.scrollLeft = Math.max(0, p.cx + lane.lw - host.clientWidth / 2);
-        await moveToken(tok, prev, [p.cx, p.cy], 550, live); if (!live()) return;
-        prev = [p.cx, p.cy];
+        if (!lane.fit) follow(host, p.cx + lane.lw - host.clientWidth / 2);
+        var via = laneVia(prevPos, p);
+        await moveToken(tok, prev, [p.cx, p.cy], via ? 700 : 550, live, via); if (!live()) return;
+        prev = [p.cx, p.cy]; prevPos = p;
         select(s);
         var li = line('wf-l-step', '<b>' + stamp(s) + ' &middot; ' + String(ss.indexOf(s) + 1).padStart(2, '0') + ' ' + esc(LANE_NAME[s.lane]) + ' &middot; ' + lvl(s.lvl) + '</b><span></span>');
         await typeInto($('span', li), st.view === 're' ? s.log : s.name, live); if (!live()) return;
@@ -567,7 +597,9 @@
           var target = ss.filter(function (x) { return x.lane === fail.lane && ss.indexOf(x) > ss.indexOf(s); })[0];
           var dest = target ? [lane.pos[target.id].cx, lane.pos[target.id].cy] : [p.cx + lane.cw / 2, lane.laneY[fail.lane] + lane.lh / 2];
           if (target) $('.sl-step[data-id="' + target.id + '"]', lane.svg).classList.add('cur');
-          await moveToken(tok, prev, dest, 650, live); if (!live()) return;
+          var tp = target ? lane.pos[target.id] : null, rv = laneVia(p, tp);
+          if (tp && !lane.fit) follow(host, tp.cx + lane.lw - host.clientWidth / 2);
+          await moveToken(tok, prev, dest, rv ? 750 : 650, live, rv); if (!live()) return;
           line('wf-l-route', '<b>Routed to ' + esc(LANE_NAME[fail.lane]) + '</b><span>' + esc(fail.route) + '</span>');
           result.innerHTML = '<div class="lr-result lr-r-human"><b>Caught, not crashed</b><span>' + esc(fail.what) + ' Control ' + cid(fail.control) + ' stopped it at step ' + (ss.indexOf(s) + 1) + '. Every path ends in a decision trace.</span></div>';
           select(s);
