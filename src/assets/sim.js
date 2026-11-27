@@ -105,7 +105,15 @@
       }
       summary();
     }
+    // Share the step counts with the hours panel (vz.js): your process and the book's agent-run flow.
+    function emitCounts() {
+      var wf = S.byId(st.flow.template);
+      if (!wf) return;
+      AE.simCounts = { a: S.stats(st.flow), b: AE.flowStats(wf.steps), name: wf.short };
+      document.dispatchEvent(new CustomEvent('ae:sim-counts'));
+    }
     function summary() {
+      emitCounts();
       var f = S.stats(st.flow);
       live.innerHTML = '<b>' + f.steps + ' main-path ' + (f.steps === 1 ? 'step' : 'steps') + '</b>, ' + f.waits + ' queue ' + (f.waits === 1 ? 'wait' : 'waits') + ', ' + f.touches + ' person ' + (f.touches === 1 ? 'touch' : 'touches') + ' so far.';
     }

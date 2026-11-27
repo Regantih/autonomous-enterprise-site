@@ -221,6 +221,7 @@
         if (row.today === row.re) { d.textContent = 'Same'; better = null; }
         else if (!row.today) { d.textContent = (row.re > 0 ? '+' : '') + V.fmt(row.re, row.unit, v.cur); better = row.higher ? row.re > 0 : row.re < 0; }
         else { var pc = (row.re - row.today) / Math.abs(row.today) * 100; d.textContent = (pc > 0 ? '+' : '') + V.num(pc, Math.abs(pc) < 10 ? 1 : 0) + '%' ; better = row.higher ? pc > 0 : pc < 0; }
+        if (row.neutral) better = null;
         d.className = 'vz-d' + (better === true ? ' vz-good' : better === false ? ' vz-bad' : '');
       });
       var key = r.rows.filter(function (x) { return x.key; })[0] || r.rows[0];
@@ -448,6 +449,10 @@
           o.names = ['Your process', 'Agent-run'];
           var last = AE.simCounts || null;
           o.counts = function () { return AE.simCounts || last || { a: { touches: 0, exPeople: 0, handoffs: 0 }, b: { touches: 0, exPeople: 0, handoffs: 0 } }; };
+          o.after = function () {
+            var c = AE.simCounts, p = $('.vz-priv', el);
+            if (p) p.textContent = (c && c.name ? 'Compared with the book\u2019s agent-run flow for ' + c.name + '. ' : '') + 'Computed in your browser. Nothing is stored or sent.';
+          };
           var api = calc(el, spec, o);
           document.addEventListener('ae:sim-counts', function () { api.update(); });
           return;

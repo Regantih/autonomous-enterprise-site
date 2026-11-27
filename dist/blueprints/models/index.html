@@ -38,6 +38,9 @@
 <script src="/assets/blueprints.js?v=2039a23713" defer></script>
 <link rel="stylesheet" href="/assets/models.css?v=9b39ac3957">
 <script src="/assets/models.js?v=ae133c964e" defer></script>
+<link rel="stylesheet" href="/assets/vz.css?v=7da1cbadc5">
+<script src="/assets/vz-core.js?v=06ce143a88" defer></script>
+<script src="/assets/vz.js?v=f3cd724ec6" defer></script>
 <link rel="stylesheet" href="/assets/styles.css?v=462dc560e7">
 <script src="/assets/site.js?v=462dc560e7" defer></script>
 <script src="/assets/guide.js?v=462dc560e7" defer></script>
@@ -152,50 +155,50 @@
     <p class="eyebrow">Storyboard</p>
     <h2 id="story-title" class="h-sm">One dispute, five engines</h2>
     <p class="md-intro">A customer short-pays an invoice. Follow the case through each engine. The language model reads, the graph resolves, the tabular model scores, and the harness decides. <span class="md-cite">Book, Ch 03 and Ch 04</span></p>
-    <ol class="md-story">
-      <li class="md-panel">
+    <ol class="md-story" data-vz="story">
+      <li class="md-panel" data-pic="icon|mail">
         <span class="md-panel-n" aria-hidden="true">1</span>
         <p class="md-tag">Channel</p>
         <h3>The email arrives</h3>
         <p>A customer short-pays a USD 96,000 invoice by USD 3,400. The email says the contract price is 12.50, not 14.20. A case opens.</p>
       </li>
-      <li class="md-panel">
+      <li class="md-panel" data-pic="icon|doc">
         <span class="md-panel-n" aria-hidden="true">2</span>
         <p class="md-tag">GPT-class model</p>
         <h3>The language model reads</h3>
         <p>It reads the email and attachment. It returns a typed claim: pricing, 2,000 units, billed 14.20, claimed 12.50. It decides nothing.</p>
       </li>
-      <li class="md-panel">
+      <li class="md-panel" data-pic="icon|graph">
         <span class="md-panel-n" aria-hidden="true">3</span>
         <p class="md-tag">Knowledge graph</p>
         <h3>The graph resolves</h3>
         <p>It matches the CRM account to the right ERP customer. It finds which ERP holds the invoice and the contract price.</p>
       </li>
-      <li class="md-panel">
+      <li class="md-panel" data-pic="icon|db">
         <span class="md-panel-n" aria-hidden="true">4</span>
         <p class="md-tag">Data and retrieval</p>
         <h3>The facts arrive</h3>
         <p>Governed tools fetch delivery records, both prices, 24 months of payment history and two past disputes. Data freshness is logged.</p>
       </li>
-      <li class="md-panel">
+      <li class="md-panel" data-pic="gauge|0.87|0.81">
         <span class="md-panel-n" aria-hidden="true">5</span>
         <p class="md-tag">Tabular model</p>
         <h3>The tabular model scores</h3>
         <p>Its context is 1,800 resolved disputes. It returns a 0.87 probability that the claim is valid, with the drivers behind it.</p>
       </li>
-      <li class="md-panel md-panel-key">
+      <li class="md-panel md-panel-key" data-pic="icon|shield">
         <span class="md-panel-n" aria-hidden="true">6</span>
         <p class="md-tag">Harness</p>
         <h3>The harness decides</h3>
         <p>USD 3,400 is inside the channel limit. The threshold for that amount is 0.81, and 0.87 clears it. Segregation of duties passes.</p>
       </li>
-      <li class="md-panel">
+      <li class="md-panel" data-pic="icon|sign">
         <span class="md-panel-n" aria-hidden="true">7</span>
         <p class="md-tag">Rules, then GPT-class model</p>
         <h3>A rule posts, the model replies</h3>
         <p>A deterministic rule posts the credit request at L3. The language model drafts the reply. Over the limit, a person approves at L2.</p>
       </li>
-      <li class="md-panel">
+      <li class="md-panel" data-pic="icon|loop">
         <span class="md-panel-n" aria-hidden="true">8</span>
         <p class="md-tag">Learning loop</p>
         <h3>The outcome teaches</h3>

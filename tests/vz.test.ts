@@ -185,3 +185,38 @@ describe('exception queue (Ch 25.3.6) and one clerk (Table 24.8)', () => {
     expect(h).not.toContain('About 49% of the clerk');
   });
 });
+
+describe('estate (Ch 01.9, Ch 21.13.2) and simulator hours', () => {
+  it('reproduces Meridian sizing: 400 x 110,000 x 20% = 8.8M; half realized = 4.4M', () => {
+    const r = run('estate');
+    expect(row(r, 'Capacity released (value a year)').re).toBeCloseTo(8_800_000, 0);
+    expect(row(r, 'People cost a year').today - row(r, 'People cost a year').re).toBeCloseTo(4_400_000, 0);
+    expect(row(r, 'Capacity released (people)').re).toBeCloseTo(80, 6);
+  });
+  it('applies only the book ratios to cycle time, and 10% per system touched', () => {
+    expect(row(run('estate', { cyc: 140, ratio: 'o2c' }), 'Cycle time, at the book\u2019s ratio').re).toBeCloseTo(73, 6);
+    expect(row(run('estate', { cyc: 9, ratio: 'close' }), 'Cycle time, at the book\u2019s ratio').re).toBeCloseTo(5, 6);
+    expect(row(run('estate', { sys: 5, sysT: 4 }), 'Cost index from systems touched (today = 100)').re).toBeCloseTo(100 / 1.1, 6);
+    expect(row(run('estate', { sys: 5, sysT: 5 }), 'Cost index from systems touched (today = 100)').re).toBeCloseTo(100, 6);
+  });
+  it('turns step counts into hours with the visitor’s own minutes', () => {
+    const c = { a: { touches: 6, exPeople: 1, handoffs: 5 }, b: { touches: 0, exPeople: 1, handoffs: 6 } };
+    const r = run('touch', { n: 1000, m: 10, x: 20, rate: 60 }, c);
+    expect(row(r, 'Person hours a year').today).toBeCloseTo(1000 * 6.2 * 10 / 60, 6);
+    expect(row(r, 'Person hours a year').re).toBeCloseTo(1000 * 0.2 * 10 / 60, 6);
+    expect(row(r, 'Cost of person time a year').re).toBeCloseTo(1000 * 0.2 * 10, 6);
+    V.specs.touch.inputs.filter((i: Any) => i.k !== 'rate').forEach((i: Any) => expect(i.src).toBe(V.YOU));
+  });
+  it('the simulator shares its counts from the same step rule (AE.flowStats)', () => {
+    const sim = src('assets/sim.js');
+    expect(sim).toContain("AE.simCounts = { a: S.stats(st.flow), b: AE.flowStats(wf.steps)");
+    expect(sim).toContain("new CustomEvent('ae:sim-counts')");
+  });
+  it('pages: workflows, reimagine and models carry their visuals', () => {
+    expect(html('workflows/index.html')).toContain('data-vz="calc:touch"');
+    expect(html('reimagine/index.html')).toContain('data-vz="calc:estate"');
+    const m = html('blueprints/models/index.html');
+    expect(m).toContain('<ol class="md-story" data-vz="story">');
+    expect(m).toContain('data-pic="gauge|0.87|0.81"');
+  });
+});

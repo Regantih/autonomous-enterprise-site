@@ -158,7 +158,7 @@
   };
 
   /* ---------- 4. Capacity and cycle time for an estate (Ch 01.9, Ch 21.13.2, Ch 30.5.1) ---------- */
-  var RATIOS = { o2c: { label: 'Order to cash, 140 to 73 days (Ch 30.5.1)', r: 73 / 140 }, close: { label: 'Month-end close, 9 to 5 days (Ch 01.9.2)', r: 5 / 9 } };
+  var RATIOS = { o2c: { label: 'Order to cash: 140 to 73 days (Ch 30.5.1)', r: 73 / 140 }, close: { label: 'Close: 9 to 5 days (Ch 01.9.2)', r: 5 / 9 } };
   var ESTATE = {
     id: 'estate', title: 'Your estate: today and transformed',
     inputs: [
@@ -210,14 +210,14 @@
       return {
         rows: [
           { label: 'Person touches per case (main path)', today: counts.a.touches, re: counts.b.touches, unit: 'num' },
-          { label: 'Hand-offs per case', today: counts.a.handoffs, re: counts.b.handoffs, unit: 'num' },
+          { label: 'Hand-offs per case (any kind)', today: counts.a.handoffs, re: counts.b.handoffs, unit: 'num', neutral: true },
           { label: 'Person hours a year', today: hA, re: hB, unit: 'h' },
           { label: 'Cost of person time a year', today: hA * v.rate, re: hB * v.rate, unit: 'money', key: true }
         ],
         formula: [
           'Touch and hand-off counts come from the step data: your process and the book\u2019s agent-run flow.',
           'Hours = cases \u00d7 (person touches + exception share, if any exception path goes to a person) \u00d7 minutes per touch \u00f7 60.',
-          'Cost = hours \u00d7 your hourly cost. Every time input is yours; the book gives no minutes per touch for your process.'
+          'Hand-offs count every kind: an agent-run flow often has more, but they are system to system, not queue waits. Cost = hours \u00d7 your hourly cost. Every time input is yours; the book gives no minutes per touch for your process.'
         ]
       };
     }

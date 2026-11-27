@@ -92,7 +92,7 @@ export const PAGES = [
     sitemap: true, priority: '0.9',
   },
   {
-    src: 'reimagine.html', out: 'reimagine/index.html', path: '/reimagine/', nav: 'BLUEPRINTS',
+    src: 'reimagine.html', out: 'reimagine/index.html', path: '/reimagine/', nav: 'BLUEPRINTS', vz: true,
     title: 'Reimagine Your Operations: Apply the Book to Your Estate | Human-Led Enterprise',
     description:
       'Describe your core systems, value streams and readiness. The rules of The Autonomous Enterprise show your archetype, foundations gate, engine routing, phases, first pilots and top risks.',
@@ -106,7 +106,7 @@ export const PAGES = [
     sitemap: true, priority: '0.8',
   },
   {
-    src: 'workflows.html', out: 'workflows/index.html', path: '/workflows/', nav: 'BLUEPRINTS', bp: 'workflows',
+    src: 'workflows.html', out: 'workflows/index.html', path: '/workflows/', nav: 'BLUEPRINTS', bp: 'workflows', vz: true,
     title: 'Reimagined Workflows as Swimlanes | Human-Led Enterprise',
     description:
       'Nine enterprise workflows reimagined for agents: today versus reimagined swimlanes with autonomy levels, models, embedded controls and failure injection.',
@@ -148,7 +148,7 @@ export const PAGES = [
     sitemap: true, priority: '0.7',
   },
   {
-    src: 'models.html', out: 'blueprints/models/index.html', path: '/blueprints/models/', nav: 'BLUEPRINTS', bp: 'models',
+    src: 'models.html', out: 'blueprints/models/index.html', path: '/blueprints/models/', nav: 'BLUEPRINTS', bp: 'models', vz: true,
     title: 'Models: GPT-class, Tabular, Voice, Vision and Physical AI in the Solution Framework | Human-Led Enterprise',
     description:
       'Every model family an agent-operated enterprise uses, from the book: what each is good at, an example, its autonomy level, how it is evaluated and where it sits in the architecture.',
