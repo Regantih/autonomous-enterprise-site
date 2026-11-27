@@ -427,6 +427,27 @@ describe('visuals part 5: maps and flows', () => {
     const h = html('blueprints/organization/index.html');
     ['ladder', 'pair', 'flow:tiers'].forEach((k) => expect(h).toContain(`data-vz="${k}"`));
   });
+  it('book chapter map: 31 chapters in four parts (front matter), each with a line, and every site link resolves to a built page and anchor', () => {
+    const all = V.PARTS.flatMap((p: Any) => p.ch);
+    expect(all.map((c: Any) => c[0])).toEqual(Array.from({ length: 31 }, (_, i) => i + 1));
+    expect(V.PARTS.map((p: Any) => p.ch.length)).toEqual([11, 8, 7, 5]);
+    const outs = new Map((PAGES as Any[]).map((p) => [p.path, p.out]));
+    all.forEach((c: Any) => {
+      words(c[2]);
+      if (!c[3]) return;
+      const [path, anchor] = c[3].split('#');
+      expect(outs.has(path), c[3]).toBe(true);
+      if (anchor && !anchor.startsWith('wf-')) expect(html(outs.get(path)), c[3]).toContain(`id="${anchor}"`);
+    });
+    expect(all.filter((c: Any) => c[3]).length).toBeGreaterThanOrEqual(24);
+    expect(JSON.stringify(V.PARTS)).not.toMatch(/SAP|Oracle|Salesforce|ServiceNow|Workday|Coupa|Microsoft/);
+    expect(html('book/index.html')).toContain('data-vz="chapters"');
+  });
+  it('leaders Fund theme links to the exception cost calculator', () => {
+    const h = html('leaders/index.html');
+    const fund = h.slice(h.indexOf('id="t-fund"'), h.indexOf('id="q-04"'));
+    expect(fund).toMatch(/class="lq-tt"[\s\S]*href="\/frameworks\/#cost"/);
+  });
   it('the floating Talk-to-the-book button avoids the new visual containers', () => {
     ['.vz-flow', '.vz-lad', '.vz-pair', '.vz-chap', '.vz-cases'].forEach((c) => expect(src('assets/site.js')).toContain(c));
   });

@@ -277,3 +277,4 @@ details[open] > summary .lq-plus::after { transform: translate(-50%, -50%) rotat
   .ld-ck { min-height: 1.75rem; align-items: center; }
   .ld-ck input { width: 1.2rem; height: 1.2rem; margin-top: 0; }
 }
+.lq-tt { margin: 1rem 0 0; padding: 0.7rem 0.9rem; background: var(--paper); border-left: 4px solid var(--orange); border-radius: 4px; }
