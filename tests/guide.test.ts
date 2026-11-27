@@ -18,8 +18,8 @@ import {
   type ChatMessage,
 } from '../lib/guide';
 import { misboundFigures } from '../lib/fact-check';
-import { CORE, EXAMPLE_ANSWER, INTAKE_LINE, INTAKE_WORDS, MAX_CALLS_PER_TURN, MAX_TOOL_STEPS, MIN_ANSWER_WORDS, buildSystemPrompt, copiesExample, dedupeSentences, normalizeCite, parseStep, unsupportedSentences } from '../lib/guide-agent';
-import { HANDOFFS, KNOWN_CITES, PASSAGES, SITE_PAGES, chapterTags, graphIntent, intakeIntent, pagePlan, requestKind, runTool, searchBook } from '../lib/guide-tools';
+import { CORE, EXAMPLE_ANSWER, withTeamCite, INTAKE_LINE, INTAKE_WORDS, MAX_CALLS_PER_TURN, MAX_TOOL_STEPS, MIN_ANSWER_WORDS, buildSystemPrompt, copiesExample, dedupeSentences, normalizeCite, parseStep, unsupportedSentences } from '../lib/guide-agent';
+import { HANDOFFS, KNOWN_CITES, PASSAGES, SITE_PAGES, chapterTags, graphIntent, intakeIntent, searchTeam, teamIntent, pagePlan, requestKind, runTool, searchBook } from '../lib/guide-tools';
 import { KNOWLEDGE } from '../lib/knowledge.generated';
 import { validateConversationLead } from '../lib/validate';
 // @ts-expect-error plain JS build script
@@ -276,6 +276,52 @@ describe('POST /api/guide (agent loop)', () => {
     expect(first).toContain('Journal agent (agent, Record-to-report department; Ch 12.5.2)');
     expect(body).toMatchObject({ ok: true, cites: ['Ch 12'] });
     expect((body.pages as { id: string }[]).map((p) => p.id)).toContain('team');
+  });
+
+  it('answers a department question from the team data, never the sample graph, with Ch 14 and the team page (mocked model)', async () => {
+    const Q = 'Which agents work in procurement, and which one has the highest autonomy?';
+    // The model asks for the sample graph; code runs the book search instead.
+    const GRAPH_STEP = step({ tools: [{ name: 'ask_graph', args: { question: Q } }] });
+    const PROC_ANSWER = step({ answer: 'Procurement has ten agents (Ch 14): Spend classification, Intake, PO approval, Sourcing, Negotiation, Contract, Renewal, Supplier risk, Payment-terms validation and Payments fraud document. The highest autonomy in the department is L4. Three agents reach it: the Spend classification agent (Ch 14.5.2), the Contract agent (Ch 14.8.1) and the Supplier risk agent (Ch 14.9.2). The Supplier risk agent computes and explains a five-dimension supplier risk score and blocks new POs on a sanctions hit. The Contract agent drafts, reviews and monitors supplier contracts against the clause playbook. Which of these matters most to you?', cites: ['Ch 14'], tools: [{ name: 'suggest_page', args: { page: 'team', reason: 'Every agent with its level, owner and limits.' } }] });
+    ai.run.mockReset().mockResolvedValueOnce(GRAPH_STEP).mockResolvedValueOnce(PROC_ANSWER);
+    const { body } = await call(chat([{ role: 'user', content: Q }]));
+    const trace = body.trace as { tool: string }[];
+    expect(trace.some((t) => t.tool === 'ask_graph')).toBe(false);
+    const first = (ai.run.mock.calls[0][1] as { messages: { content: string }[] }).messages;
+    expect(first.at(-1)!.content).toContain('Procurement department (Procurement and spend; Ch 14)');
+    expect(first.at(-1)!.content).toContain('Highest autonomy in the department: L4, reached by Spend classification agent, Contract agent, Supplier risk agent.');
+    expect(first[0].content).toContain('Do not call ask_graph');
+    expect(body).toMatchObject({ ok: true, cites: ['Ch 14'] });
+    expect(body.reply).toContain('(Ch 14');
+    expect(body.reply).not.toMatch(/synthetic|sample/i);
+    expect((body.pages as { id: string }[]).map((p) => p.id)).toContain('team');
+  });
+
+  it('cites the chapter in the text of a team answer, adding it in code when the model left it out (mocked model)', async () => {
+    const TEAM_ANSWER = step({ answer: 'The Journal agent maps a journal request to a known pattern, then builds the entry with support and submits it to the ledger checks. Its tasks run at L1 to L3, and its owner is the agent product owner. An accountant approves its journals, and the controller approves after the entity close lock. Batch approval applies only when each entry is below 0.5% of entity performance materiality.', cites: ['Ch 12'], tools: [{ name: 'suggest_page', args: { page: 'team', reason: 'Every agent with its level, owner and limits.' } }] });
+    ai.run.mockReset().mockResolvedValueOnce(TEAM_ANSWER);
+    const { body } = await call(chat([{ role: 'user', content: 'What does the Journal agent do and who owns it?' }]));
+    expect(body.ok).toBe(true);
+    expect(body.reply).toMatch(/^The Journal agent \(Ch 12\.5\.2\) maps/);
+    expect(buildSystemPrompt(sanitizeProfile({}))).toContain('cite its chapter in the text right after it');
+  });
+
+  it('routes team questions to the team data and keeps sample-data questions on the graphs (code, no model)', () => {
+    expect(teamIntent('Which agents work in procurement, and which one has the highest autonomy?')).toBe(true);
+    expect(graphIntent('Which agents work in procurement, and which one has the highest autonomy?')).toBe(false);
+    expect(graphIntent('What does the Journal agent do and who owns it?')).toBe(false);
+    expect(teamIntent('Which agent in the sample data approves invoices?')).toBe(false);
+    expect(graphIntent('Which supplier is riskiest in the sample data?')).toBe(true);
+    expect(graphIntent('Which agent may approve invoices in the skill graph?')).toBe(true);
+    const hits = searchTeam('Which agents work in procurement, and which one has the highest autonomy?');
+    expect(hits).toHaveLength(4);
+    expect(hits[0].text).toMatch(/^Procurement department \(Procurement and spend; Ch 14\)/);
+    expect(hits.slice(1).map((h) => h.text.split(' (')[0])).toEqual(['Spend classification agent', 'Contract agent', 'Supplier risk agent']);
+    expect(hits[0].cites).toEqual(['Ch 14']);
+    const ev = hits.map((h) => h.text).join('\n');
+    expect(withTeamCite('The Supplier risk agent scores suppliers.', ev)).toBe('The Supplier risk agent (Ch 14.9.2) scores suppliers.');
+    expect(withTeamCite('Procurement runs ten agents.', ev)).toBe('Procurement (Ch 14) runs ten agents.');
+    expect(withTeamCite('Nothing named here.', ev)).toBe('Nothing named here.');
   });
 
   it('searches the book in code on the question before the first model call', async () => {

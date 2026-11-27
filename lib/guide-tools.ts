@@ -175,7 +175,7 @@ function graphSummary(subs: Subgraph[]): string {
 export function runTool(call: ToolCall, visitorText = ''): ToolResult {
   if (call.name === 'search_book') {
     const query = str(call.args.query, 200) || visitorText.slice(0, 200);
-    const hits = searchBook(query);
+    const hits = teamIntent(query) || teamIntent(visitorText) ? searchTeam(teamIntent(query) ? query : `${visitorText} ${query}`) : searchBook(query);
     const cites = [...new Set(hits.flatMap((h) => h.cites))];
     if (!hits.length) {
       return { trace: { tool: 'search_book', label: 'Searched the book: no passage matched', detail: query }, forModel: `search_book("${query}"): no passage matched. The book may not cover this.`, cites: [] };
@@ -242,10 +242,84 @@ export function intakeIntent(text: string): HandoffIntent | null {
   return null;
 }
 
+// ---------- the agent operations team (book data, not the sample graph) ----------
+
+const TEAM_SECTION = 'Agent operations team';
+const TEAM_PASSAGES = PASSAGES.filter((p) => p.section === TEAM_SECTION);
+const DEPT_RE = /^(.+?) department \(([^;]+);/;
+/** Department lines: the words that name each department ("procurement", "record-to-report", "supply chain"). */
+const TEAM_DEPTS = TEAM_PASSAGES.flatMap((p) => {
+  const m = p.text.match(DEPT_RE);
+  if (!m || /\((?:agent|human role),/.test(p.text.split(':')[0])) return [];
+  const names = [m[1], ...m[2].split(/[:,()]|\band\b/)].map((x) => x.toLowerCase().replace(/^finance\s*$/, '').trim()).filter((x) => x.length > 2);
+  return [{ passage: p, names: [...new Set(names)] }];
+});
+/** Agent and human-role names the book's team data carries, longest first ("Journal verification agent" before "Journal agent"). */
+export const TEAM_AGENT_NAMES = TEAM_PASSAGES
+  .map((p) => p.text.match(/^(.+?) \((?:agent|human role),/)?.[1])
+  .filter((x): x is string => !!x)
+  .sort((a, b) => b.length - a.length);
+const esc = (t: string) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const mentions = (t: string, name: string) => new RegExp(`(^|[^a-z])${esc(name.toLowerCase())}s?([^a-z]|$)`).test(t);
+
+/** The department lines a question names, by any of the department's names. */
+export function teamDepartments(text: string): Passage[] {
+  const t = text.toLowerCase().replace(/\u2019/g, "'");
+  return TEAM_DEPTS.filter((d) => d.names.some((n) => mentions(t, n))).map((d) => d.passage);
+}
+/** The agent names a question names, longest match first, without counting a shorter name inside a longer one. */
+export function teamAgents(text: string): string[] {
+  let t = text.toLowerCase().replace(/\u2019/g, "'");
+  const out: string[] = [];
+  for (const n of TEAM_AGENT_NAMES) {
+    if (mentions(t, n)) { out.push(n); t = t.replace(new RegExp(esc(n.toLowerCase()), 'g'), ' '); }
+  }
+  return out;
+}
+
+/**
+ * A question about the book's agent operations team: it names a team agent, or asks which agents work in a book
+ * department, their autonomy or who owns them. These are answered from the team data (search_book), never from the
+ * synthetic sample graph. A question that says it is about the sample data or the graphs is not a team question.
+ */
+export function teamIntent(text: string): boolean {
+  const t = text.toLowerCase().replace(/\u2019/g, "'");
+  if (/\b(sample|synthetic|demo|knowledge graph|skill graph|the graphs?|graphs page)\b/.test(t)) return false;
+  if (teamAgents(t).length) return true;
+  if (/\b(agent (operations )?team|agent roster|every agent|which agents|what agents|how many agents)\b/.test(t)) return true;
+  return /\bagents?\b/.test(t) && (teamDepartments(t).length > 0 || /\b(highest|most|lowest|autonomy|who owns|owner|department)\b/.test(t));
+}
+
+/** The chapter a team line gives its agent or department ("Ch 12.5.2", "Ch 14"), read from the line itself. */
+export function teamCite(name: string): string | null {
+  const p = TEAM_PASSAGES.find((x) => x.text.startsWith(`${name} (`)) ?? TEAM_DEPTS.find((d) => d.passage.text.startsWith(`${name} department (`))?.passage;
+  return p?.text.split(':')[0].match(/;\s*(Ch [\d.]+(?:,\s*[\d.]+)*)\)$/)?.[1] ?? null;
+}
+/** Department short names as the team lines give them ("Procurement", "Record-to-report"). */
+export const TEAM_DEPT_NAMES = TEAM_DEPTS.map((d) => d.passage.text.match(DEPT_RE)![1]);
+
+/** Search for a team question: the named departments' lines first, then the named agents' lines, then keyword hits. */
+export function searchTeam(query: string, k = 4): Passage[] {
+  const out: Passage[] = [];
+  const add = (p?: Passage) => { if (p && !out.includes(p) && out.length < k) out.push(p); };
+  const depts = teamDepartments(query);
+  const byName = (n: string) => TEAM_PASSAGES.find((p) => p.text.startsWith(`${n} (`));
+  for (const d of depts) add(d);
+  for (const n of teamAgents(query)) add(byName(n));
+  // A department question: next, the agents that reach the department's highest autonomy (named on its line).
+  for (const d of depts) for (const n of (d.text.match(/reached by ([^.]+)\./)?.[1] ?? '').split(/,\s*/)) add(byName(n.trim()));
+  const teamHits = searchBook(query, 12).filter((p) => p.section === TEAM_SECTION);
+  for (const p of teamHits) add(p);
+  for (const p of searchBook(query, k)) add(p);
+  return out;
+}
+
 /** A question about the site's synthetic sample data (suppliers, invoices, exceptions, controls, risk) or its agents' skills. */
 export function graphIntent(text: string): boolean {
   const t = text.toLowerCase();
   if (/\b(sample|synthetic|demo|knowledge graph|skill graph|the graph|graphs)\b/.test(t)) return true;
+  // A question that names a book department or agent is about the book's team, not the sample graph.
+  if (teamIntent(t)) return false;
   if (/\b(riskiest|highest[- ]risk|most risky|which (supplier|vendor|invoice|control|exception|polic|agent))/.test(t)) return true;
   return /\b(suppliers?|vendors?|invoices?|exceptions?|controls?)\b.{0,40}\b(most|highest|riskiest|open|overdue|flagged|top|worst|list)\b/.test(t);
 }

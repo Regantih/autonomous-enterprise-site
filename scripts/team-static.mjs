@@ -225,6 +225,23 @@ export function teamAgentLine(a, d) {
   return line + cite;
 }
 
+/**
+ * One searchable line per department: its scope, each member with its autonomy range, and the highest autonomy in the
+ * department computed from the task levels, so "which agents in X, and which has the highest autonomy" is answerable
+ * from this one line. Closed by the department's chapter citation.
+ */
+export function teamDeptLine(d, members, count) {
+  const ranged = members.map((a) => ({ a, r: agentRange(a), top: agentLevels(a).at(-1) }));
+  const names = ranged.map(({ a, r }) => `${a.name} (${r == null ? 'level not stated' : levelLabel(r)})`);
+  const agents = ranged.filter((x) => kindOf(x.a) === 'agent');
+  const max = Math.max(-1, ...agents.map((x) => x.top ?? -1));
+  const top = agents.filter((x) => x.top === max && max >= 0).map((x) => x.a.name);
+  const highest = max < 0
+    ? 'Highest autonomy: no level stated in the book.'
+    : `Highest autonomy in the department: L${max}, reached by ${top.join(', ')}.`;
+  return `- ${d.short} department (${flat(d.name)}; ${d.cite}): ${flat(d.lead)} ${deptCountLabel(count)}: ${names.join(', ')}. ${highest} [${d.cite}]`;
+}
+
 /** The team section of the guide's knowledge pack, generated from the same data file the page renders. */
 export function teamKnowledge(T) {
   const c = teamCounts(T);
@@ -234,8 +251,7 @@ export function teamKnowledge(T) {
     `- The Agent Operations Team page at /blueprints/team/ lists every agent the book names: ${c.agents} agents and ${c.roles} human roles in ${c.depts} departments, ${c.tasks} tasks, each task tagged with its L0 to L5 level or "Level not stated", with owner, approver, limits, kill switch, KPIs and a chapter citation (Ch 12–20, 05, 22, 24, 25).`,
   ];
   for (const d of T.depts) {
-    const names = T.agents.filter((a) => a.dept === d.id).map((a) => a.name);
-    lines.push(`- ${d.short} department (${flat(d.name)}; ${d.cite}): ${flat(d.lead)} ${deptCountLabel(c.per[d.id])}: ${names.join(', ')}.`);
+    lines.push(teamDeptLine(d, T.agents.filter((a) => a.dept === d.id), c.per[d.id]));
   }
   for (const a of T.agents) lines.push(`- ${teamAgentLine(a, byDept.get(a.dept))}`);
   return lines.join('\n');
