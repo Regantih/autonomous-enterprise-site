@@ -30,15 +30,15 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/assets/fonts/oswald-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
-<script src="/assets/early.js?v=6e2c980869"></script>
+<script src="/assets/early.js?v=cf5480ead6"></script>
 <script src="/assets/data/controls.js?v=e0d936f9ff" defer></script>
 <script src="/assets/data/layers.js?v=7c10827ab4" defer></script>
-<script src="/assets/data/workflows.js?v=8cbdf12494" defer></script>
+<script src="/assets/data/workflows.js?v=f43330bf0d" defer></script>
 <script src="/assets/data/architecture.js?v=2a1d6d58f4" defer></script>
-<script src="/assets/blueprints.js?v=00aa8c4d8f" defer></script>
-<link rel="stylesheet" href="/assets/styles.css?v=6e2c980869">
-<script src="/assets/site.js?v=6e2c980869" defer></script>
-<script src="/assets/guide.js?v=6e2c980869" defer></script>
+<script src="/assets/blueprints.js?v=6d4c868e91" defer></script>
+<link rel="stylesheet" href="/assets/styles.css?v=cf5480ead6">
+<script src="/assets/site.js?v=cf5480ead6" defer></script>
+<script src="/assets/guide.js?v=cf5480ead6" defer></script>
 </head>
 <body class="has-fab">
 <a class="skip-link" href="#main">Skip to content</a>
@@ -162,7 +162,7 @@
     <li><strong>Model outage.</strong> The primary model times out. Caught by <a class="cid" href="/controls/#RES-02">RES-02</a>. The model gateway switches to the fallback model. If that fails, the step drops to L1 for a clerk.</li>
     <li><strong>Low confidence.</strong> Agent confidence is 0.62, below the required 0.84. Caught by <a class="cid" href="/controls/#TAL-02">TAL-02</a>. The decision threshold is not met. The case goes to a person.</li>
   </ul>
-  <p class="fw-note">Illustrative: cycle time 9 days to 1 day; touches 7 to 1; cost per completed outcome $46 to $9.</p>
+  <p class="fw-note">Illustrative: cycle time 9 days to 1 day; touches undefined to undefined; cost per completed outcome $46 to $9.</p>
 </section>
 <section class="wf-static" id="wf-p2p" aria-labelledby="wfh-p2p">
   <p class="fw-num">02 &middot; Chain level today L0, reimagined L3</p>
@@ -186,7 +186,7 @@
     <li><strong>Model outage.</strong> The model gateway reports an outage. Caught by <a class="cid" href="/controls/#RES-02">RES-02</a>. The case drops to L1. A clerk sees the match result and the open questions.</li>
     <li><strong>Low confidence.</strong> Two causes are equally likely. Caught by <a class="cid" href="/controls/#TAL-02">TAL-02</a>. Low confidence. The proposal goes to the buyer with both causes.</li>
   </ul>
-  <p class="fw-note">Illustrative: cycle time 12 days to 2 days; touches 5 to 1; cost per completed outcome $31 to $6.</p>
+  <p class="fw-note">Illustrative: cycle time 12 days to 2 days; touches undefined to undefined; cost per completed outcome $31 to $6.</p>
 </section>
 <section class="wf-static" id="wf-r2r" aria-labelledby="wfh-r2r">
   <p class="fw-num">03 &middot; Chain level today L0, reimagined L2</p>
@@ -209,7 +209,7 @@
     <li><strong>Model outage.</strong> The matching model fails. Caught by <a class="cid" href="/controls/#RES-02">RES-02</a>. Rules-based matching runs alone. Unmatched items go to accountants.</li>
     <li><strong>Low confidence.</strong> A break explanation cites no source. Caught by <a class="cid" href="/controls/#MR-04">MR-04</a>. The groundedness check rejects it. An accountant investigates.</li>
   </ul>
-  <p class="fw-note">Illustrative: cycle time 8 days to 4 days; touches 40 to 12; cost per completed outcome $210 to $70.</p>
+  <p class="fw-note">Illustrative: cycle time 8 days to 4 days; touches undefined to undefined; cost per completed outcome $210 to $70.</p>
 </section>
 <section class="wf-static" id="wf-supplier" aria-labelledby="wfh-supplier">
   <p class="fw-num">04 &middot; Chain level today L0, reimagined L0</p>
@@ -232,7 +232,7 @@
     <li><strong>Low confidence.</strong> The graph links the new account to another supplier. Caught by <a class="cid" href="/controls/#MR-04">MR-04</a>. A possible fraud ring. The case goes to the fraud team with the graph path.</li>
     <li><strong>Model outage.</strong> The graph service is down. Caught by <a class="cid" href="/controls/#RES-02">RES-02</a>. Checks fall back to a clerk with a checklist. No change can commit meanwhile.</li>
   </ul>
-  <p class="fw-note">Illustrative: cycle time 15 days to 4 days; touches 9 to 3; cost per completed outcome $120 to $45.</p>
+  <p class="fw-note">Illustrative: cycle time 15 days to 4 days; touches undefined to undefined; cost per completed outcome $120 to $45.</p>
 </section>
 <section class="wf-static" id="wf-voice" aria-labelledby="wfh-voice">
   <p class="fw-num">05 &middot; Chain level today L0, reimagined L3</p>
@@ -256,7 +256,7 @@
     <li><strong>Amount over limit.</strong> The caller asks for a refund above the policy limit. Caught by <a class="cid" href="/controls/#TAL-01">TAL-01</a>. The agent cannot act. Handoff to a person with context.</li>
     <li><strong>Model outage.</strong> The speech model is down. Caught by <a class="cid" href="/controls/#RES-02">RES-02</a>. Calls route straight to the people queue with a callback offer.</li>
   </ul>
-  <p class="fw-note">Illustrative: cycle time 11 min to 4 min; touches 2 to 0.3; cost per completed outcome $7.50 to $1.90.</p>
+  <p class="fw-note">Illustrative: cycle time 11 min to 4 min; touches undefined to undefined; cost per completed outcome $7.50 to $1.90.</p>
 </section>
 <section class="wf-static" id="wf-maint" aria-labelledby="wfh-maint">
   <p class="fw-num">06 &middot; Chain level today L0, reimagined L2</p>
@@ -280,7 +280,7 @@
     <li><strong>Low confidence.</strong> The anomaly score sits in the grey zone. Caught by <a class="cid" href="/controls/#MR-01">MR-01</a>. The step drops to L1. A technician inspects before any order.</li>
     <li><strong>Bad data.</strong> The asset record does not match the sensor tag. Caught by <a class="cid" href="/controls/#DQ-03">DQ-03</a>. The order is blocked until the asset owner fixes the record.</li>
   </ul>
-  <p class="fw-note">Illustrative: cycle time 6 days to 1 day; touches 6 to 2; cost per completed outcome $380 to $140.</p>
+  <p class="fw-note">Illustrative: cycle time 6 days to 1 day; touches undefined to undefined; cost per completed outcome $380 to $140.</p>
 </section>
 <section class="wf-static" id="wf-picking" aria-labelledby="wfh-picking">
   <p class="fw-num">07 &middot; Chain level today L0, reimagined L3</p>
@@ -303,7 +303,7 @@
     <li><strong>Model outage.</strong> The optimizer fails to return a plan. Caught by <a class="cid" href="/controls/#RES-02">RES-02</a>. A rules-based wave plan runs. Throughput drops but work continues.</li>
     <li><strong>Low confidence.</strong> Grasp confidence falls for a new item type. Caught by <a class="cid" href="/controls/#MON-03">MON-03</a>. The policy is demoted for that item. Associates pick it until retraining in the twin.</li>
   </ul>
-  <p class="fw-note">Illustrative: cycle time 4 hours to 1.5 hours; touches 3 to 0.4; cost per completed outcome $1.10 to $0.55.</p>
+  <p class="fw-note">Illustrative: cycle time 4 hours to 1.5 hours; touches undefined to undefined; cost per completed outcome $1.10 to $0.55.</p>
 </section>
 <section class="wf-static" id="wf-planning" aria-labelledby="wfh-planning">
   <p class="fw-num">08 &middot; Chain level today L0, reimagined L2</p>
@@ -326,7 +326,7 @@
     <li><strong>Amount over limit.</strong> The plan adds $1.2 million of inventory. Caught by <a class="cid" href="/controls/#TAL-01">TAL-01</a>. Routed to the supply chain leader with the trade-offs.</li>
     <li><strong>Low confidence.</strong> Demand drifts away from the trained range. Caught by <a class="cid" href="/controls/#MON-02">MON-02</a>. Drift alert. Forecast ranges widen; the planner reviews every change.</li>
   </ul>
-  <p class="fw-note">Illustrative: cycle time 10 days to 3 days; touches 25 to 6; cost per completed outcome $2,400 to $700.</p>
+  <p class="fw-note">Illustrative: cycle time 10 days to 3 days; touches undefined to undefined; cost per completed outcome $2,400 to $700.</p>
 </section>
 <section class="wf-static" id="wf-onboard" aria-labelledby="wfh-onboard">
   <p class="fw-num">09 &middot; Chain level today L0, reimagined L3</p>
@@ -349,7 +349,7 @@
     <li><strong>Model outage.</strong> The model gateway is unavailable. Caught by <a class="cid" href="/controls/#RES-02">RES-02</a>. The role template runs without tailoring. HR reviews the plan.</li>
     <li><strong>Low confidence.</strong> The role does not match any template; confidence 0.55. Caught by <a class="cid" href="/controls/#MR-06">MR-06</a>. Below the decision threshold. HR builds the plan with the agent as an assistant.</li>
   </ul>
-  <p class="fw-note">Illustrative: cycle time 12 days to productive to 3 days to productive; touches 7 to 2; cost per completed outcome $310 to $120.</p>
+  <p class="fw-note">Illustrative: cycle time 12 days to productive to 3 days to productive; touches undefined to undefined; cost per completed outcome $310 to $120.</p>
 </section>
     <p class="fw-note">All metrics are illustrative, not client data. Limits such as $5,000 are illustrative; each company sets its own with internal audit.</p>
   </div>

@@ -591,9 +591,9 @@
       if (st.view === 'today') fails.appendChild(el('span', 'muted wf-note', 'Today there is no harness. Inject a failure to see who catches it.'));
       var m = w.metrics;
       $('.wf-metrics', root).innerHTML = '<p class="dcard-k">Before and after &middot; illustrative</p><table class="wf-mt"><thead><tr><th scope="col"></th><th scope="col">Today</th><th scope="col">Reimagined</th></tr></thead><tbody>' +
-        '<tr><th scope="row">Cycle time</th><td>' + m.today.cycle + '</td><td>' + m.re.cycle + '</td></tr><tr><th scope="row">Touches per case</th><td>' + m.today.touches + '</td><td>' + m.re.touches + '</td></tr>' +
+        '<tr><th scope="row">Cycle time</th><td>' + m.today.cycle + '</td><td>' + m.re.cycle + '</td></tr>' + AE.touchRows(w).map(function (r) { return '<tr><th scope="row">' + r.label + '</th><td>' + r.today + '</td><td>' + r.re + '</td></tr>'; }).join('') +
         '<tr><th scope="row">Cost per completed outcome</th><td>' + m.today.cost + '</td><td>' + m.re.cost + '</td></tr><tr><th scope="row">Chain level</th><td>L' + chainOf(w.today).level + '</td><td>L' + chainOf(w.steps).level + '</td></tr></tbody></table>' +
-        '<p class="fw-note">Illustrative figures, not client data. <a href="/frameworks/#' + w.fw + '">Related framework: ' + esc(AE.frameworkNames[w.fw]) + '</a></p>';
+        '<p class="fw-note">Cycle time and cost are illustrative figures, not client data. Person touches and exception paths are counted from the steps above (main-path steps at L0 to L2; exception steps in the People lane). <a href="/frameworks/#' + w.fw + '">Related framework: ' + esc(AE.frameworkNames[w.fw]) + '</a></p>';
       log.innerHTML = ''; result.innerHTML = '';
       $('.wf-ctitle', root).textContent = 'Case console \u00b7 ' + w.short + ' \u00b7 ' + (isBoth ? 'side by side' : st.view === 're' ? 'reimagined' : 'today');
       var s = ss.filter(function (x) { return x.id === st.sel; })[0] || ss.filter(function (x) { return x.card; })[0] || ss[1];
@@ -660,7 +660,7 @@
       var ch = chainOf(ss);
       result.innerHTML = st.view === 're'
         ? '<div class="lr-result lr-r-post"><b>Completed at chain level L' + ch.level + '</b><span>Every step left a trace. Illustrative cycle time ' + w.metrics.re.cycle + ', cost per completed outcome ' + w.metrics.re.cost + '.</span></div>'
-        : '<div class="lr-result lr-r-human"><b>Completed by hand at L' + ch.level + '</b><span>Illustrative cycle time ' + w.metrics.today.cycle + ', ' + w.metrics.today.touches + ' touches, cost per completed outcome ' + w.metrics.today.cost + '.</span></div>';
+        : '<div class="lr-result lr-r-human"><b>Completed by hand at L' + ch.level + '</b><span>Illustrative cycle time ' + w.metrics.today.cycle + ', ' + AE.flowStats(w.today).touches + ' person touches on the main path, cost per completed outcome ' + w.metrics.today.cost + '.</span></div>';
     }
     // Side-by-side run: the same case through Today and Agent-run at once. Both tokens move at one speed;
     // a token pauses with a clock at each queue wait its own step data has (AE.isQueueWait). Nothing here is

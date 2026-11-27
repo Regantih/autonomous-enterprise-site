@@ -75,7 +75,7 @@ describe('workflow blueprints data', () => {
       expect(w.today.length, w.id).toBeGreaterThan(2);
       expect(w.steps.length, w.id).toBeGreaterThan(4);
       expect(w.failures.length, w.id).toBeGreaterThanOrEqual(3);
-      for (const k of ['cycle', 'touches', 'cost']) expect(w.metrics.today[k] && w.metrics.re[k], w.id).toBeTruthy();
+      for (const k of ['cycle', 'cost']) expect(w.metrics.today[k] && w.metrics.re[k], w.id).toBeTruthy();
     }
   });
 
@@ -596,6 +596,33 @@ describe('workflows side-by-side run', () => {
       expect(line, w.id).not.toMatch(/\$|%|\bday|\bmin|\bhour|\bsec/);
       for (const m of line.match(/\d+/g) || []) expect(Number(m)).toBeLessThan(20);
     }
+  });
+
+  it('keeps the before-and-after table person counts identical to the comparison line, for every workflow', () => {
+    const o2c = AE.workflows.find((w: { id: string }) => w.id === 'o2c');
+    expect(AE.touchRows(o2c)).toEqual([
+      { label: 'Person touches (main path)', today: 4, re: 0 },
+      { label: 'Exception paths to a person', today: 0, re: 1 }
+    ]);
+    for (const w of AE.workflows) {
+      // No hand-typed touch figures in the data: they can only come from the steps.
+      expect(w.metrics.today.touches, w.id).toBeUndefined();
+      expect(w.metrics.re.touches, w.id).toBeUndefined();
+      const [main, ex] = AE.touchRows(w);
+      const t = AE.flowStats(w.today), r = AE.flowStats(w.steps);
+      expect([main.today, main.re, ex.today, ex.re], w.id).toEqual([t.touches, r.touches, t.exPeople, r.exPeople]);
+      const line = AE.compareLine(w);
+      expect(line, w.id).toContain(`Today: ${t.steps} step`);
+      expect(line, w.id).toContain(`, ${main.today} person touch`);
+      expect(line, w.id).toContain(`, ${main.re} person touch`);
+      if (ex.re) expect(line, w.id).toContain(`; ${ex.re} exception path`);
+      else expect(line.split('Agent-run:')[1], w.id).not.toContain('exception path');
+    }
+    const js = readFileSync(join(DIST, 'assets/blueprints.js'), 'utf8');
+    expect(js).toContain('AE.touchRows(w).map(');
+    expect(js).not.toContain('Touches per case');
+    expect(js).not.toMatch(/metrics\.(today|re)\.touches/);
+    expect(js).toContain('AE.flowStats(w.today).touches');
   });
 
   it('adds a Side by side view with Run both, queue clocks, a live result and reduced motion', () => {

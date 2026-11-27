@@ -30,7 +30,7 @@
     { id: 'o2c', name: 'Order-to-cash: customer dispute and credit memo', short: 'Dispute and credit memo',
       summary: 'A customer disputes an invoice. The agent investigates, the policy table routes, and a released interface posts the credit.',
       fw: 'pvrc',
-      metrics: { today: { cycle: '9 days', touches: '7', cost: '$46' }, re: { cycle: '1 day', touches: '1', cost: '$9' } },
+      metrics: { today: { cycle: '9 days', cost: '$46' }, re: { cycle: '1 day', cost: '$9' } },
       today: [
         T('t1', 'outside', 'Customer emails a dispute to a shared inbox', null, null, 'Inbox age'),
         T('t2', 'people', 'Clerk reads the email and finds the invoice', 0, 'manual', 'Time to first touch'),
@@ -60,7 +60,7 @@
     { id: 'p2p', name: 'Procure-to-pay: supplier invoice exceptions', short: 'Invoice exceptions',
       summary: 'An invoice fails the three-way match. The agent finds the cause and proposes a fix inside tolerance.',
       fw: 'scale',
-      metrics: { today: { cycle: '12 days', touches: '5', cost: '$31' }, re: { cycle: '2 days', touches: '1', cost: '$6' } },
+      metrics: { today: { cycle: '12 days', cost: '$31' }, re: { cycle: '2 days', cost: '$6' } },
       today: [
         T('t1', 'outside', 'Supplier sends a PDF invoice', null, null, 'Invoices per day'),
         T('t2', 'people', 'Clerk keys the invoice', 0, 'manual', 'Keying time'),
@@ -89,7 +89,7 @@
     { id: 'r2r', name: 'Record-to-report: month-end close and reconciliations', short: 'Month-end close',
       summary: 'Agents match and explain breaks and propose journals. A key financial control keeps journal approval at L2.',
       fw: 'ceiling',
-      metrics: { today: { cycle: '8 days', touches: '40', cost: '$210' }, re: { cycle: '4 days', touches: '12', cost: '$70' } },
+      metrics: { today: { cycle: '8 days', cost: '$210' }, re: { cycle: '4 days', cost: '$70' } },
       today: [
         T('t1', 'systems', 'Subledgers close; balances export to spreadsheets', 1, null, 'Export time'),
         T('t2', 'people', 'Accountants tick and tie in spreadsheets', 0, 'file', 'Hours per reconciliation'),
@@ -117,7 +117,7 @@
     { id: 'supplier', name: 'Supplier onboarding and bank-detail change', short: 'Supplier bank change',
       summary: 'Agents check the supplier and build the evidence. The bank-detail change stays with people, by design.',
       fw: 'not-automate',
-      metrics: { today: { cycle: '15 days', touches: '9', cost: '$120' }, re: { cycle: '4 days', touches: '3', cost: '$45' } },
+      metrics: { today: { cycle: '15 days', cost: '$120' }, re: { cycle: '4 days', cost: '$45' } },
       today: [
         T('t1', 'outside', 'Supplier emails forms and a bank letter', null, null, 'Requests per week'),
         T('t2', 'people', 'Clerk checks documents by hand', 0, 'manual', 'Check time'),
@@ -145,7 +145,7 @@
     { id: 'voice', name: 'Customer service voice line', short: 'Voice line',
       summary: 'A voice agent verifies the caller, answers from policy and acts within limits. Hard cases go to a person with context.',
       fw: 'harness',
-      metrics: { today: { cycle: '11 min', touches: '2', cost: '$7.50' }, re: { cycle: '4 min', touches: '0.3', cost: '$1.90' } },
+      metrics: { today: { cycle: '11 min', cost: '$7.50' }, re: { cycle: '4 min', cost: '$1.90' } },
       today: [
         T('t1', 'outside', 'Customer calls and waits in a queue', null, null, 'Wait time'),
         T('t2', 'people', 'Agent at the desk verifies identity', 0, 'manual', 'Handle time'),
@@ -174,7 +174,7 @@
     { id: 'maint', name: 'Predictive maintenance', short: 'Predictive maintenance',
       summary: 'Sensors feed models, the maintenance agent drafts the work order, and a technician approves.',
       fw: 'weakest-link',
-      metrics: { today: { cycle: '6 days', touches: '6', cost: '$380' }, re: { cycle: '1 day', touches: '2', cost: '$140' } },
+      metrics: { today: { cycle: '6 days', cost: '$380' }, re: { cycle: '1 day', cost: '$140' } },
       today: [
         T('t1', 'channel', 'Operator notices noise on a pump', 0, null, 'Unplanned downtime'),
         T('t2', 'people', 'Operator calls the maintenance desk', 0, 'manual', 'Call wait'),
@@ -203,7 +203,7 @@
     { id: 'picking', name: 'Warehouse picking with robots', short: 'Robot picking',
       summary: 'An optimizer plans the waves. A robot policy, trained with reinforcement learning in a digital twin, picks inside a safety envelope.',
       fw: 'harness',
-      metrics: { today: { cycle: '4 hours', touches: '3', cost: '$1.10' }, re: { cycle: '1.5 hours', touches: '0.4', cost: '$0.55' } },
+      metrics: { today: { cycle: '4 hours', cost: '$1.10' }, re: { cycle: '1.5 hours', cost: '$0.55' } },
       today: [
         T('t1', 'outside', 'Customer orders arrive', null, null, 'Orders per hour'),
         T('t2', 'systems', 'Warehouse system prints pick lists in waves', 1, 'file', 'Wave delay'),
@@ -230,7 +230,7 @@
     { id: 'planning', name: 'Demand and supply planning', short: 'Demand and supply planning',
       summary: 'Forecast models and an optimizer build the plan. An agent explains it. A planner approves.',
       fw: 'cost',
-      metrics: { today: { cycle: '10 days', touches: '25', cost: '$2,400' }, re: { cycle: '3 days', touches: '6', cost: '$700' } },
+      metrics: { today: { cycle: '10 days', cost: '$2,400' }, re: { cycle: '3 days', cost: '$700' } },
       today: [
         T('t1', 'systems', 'Analysts export history to spreadsheets', 1, null, 'Export time'),
         T('t2', 'people', 'Analysts build the forecast by hand', 0, 'file', 'Forecast error'),
@@ -257,7 +257,7 @@
     { id: 'onboard', name: 'Employee onboarding', short: 'Employee onboarding',
       summary: 'An agent runs the logistics of a new hire. Access follows the role model. Decisions about the person stay with people.',
       fw: 'not-automate',
-      metrics: { today: { cycle: '12 days to productive', touches: '7', cost: '$310' }, re: { cycle: '3 days to productive', touches: '2', cost: '$120' } },
+      metrics: { today: { cycle: '12 days to productive', cost: '$310' }, re: { cycle: '3 days to productive', cost: '$120' } },
       today: [
         T('t1', 'systems', 'Hire confirmed in the HR system', null, null, 'Days to start'),
         T('t2', 'people', 'HR emails IT, facilities, payroll and the manager', 0, 'manual', 'Emails per hire'),
@@ -312,6 +312,15 @@
     return name + ': ' + n(f.steps, 'step', 'steps') + ', ' + n(f.handoffs, 'hand-off', 'hand-offs') + (f.handoffs ? ' (' + (!f.waits ? 'none a queue wait' : f.waits === f.handoffs ? (f.waits === 1 ? 'a queue wait' : 'all queue waits') : f.waits + ' of them ' + (f.waits === 1 ? 'a queue wait' : 'queue waits')) + ')' : '') + ', ' +
       n(f.touches, 'person touch', 'person touches') + (f.exPeople ? '; ' + n(f.exPeople, 'exception path goes', 'exception paths go') + ' to a person' : '') + '.';
   }
+  /* Before-and-after table rows for the person counts. Same rule as the comparison line, from the same
+     step data, so the table and the line cannot disagree. Main-path touches and exception paths are separate rows. */
+  AE.touchRows = function (wf) {
+    var t = AE.flowStats(wf.today), r = AE.flowStats(wf.steps);
+    return [
+      { label: 'Person touches (main path)', today: t.touches, re: r.touches },
+      { label: 'Exception paths to a person', today: t.exPeople, re: r.exPeople }
+    ];
+  };
   AE.compareLine = function (wf) {
     return side('Today', AE.flowStats(wf.today)) + ' ' + side('Agent-run', AE.flowStats(wf.steps));
   };
