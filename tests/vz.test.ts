@@ -443,6 +443,9 @@ describe('visuals part 5: maps and flows', () => {
     expect(JSON.stringify(V.PARTS)).not.toMatch(/SAP|Oracle|Salesforce|ServiceNow|Workday|Coupa|Microsoft/);
     expect(html('book/index.html')).toContain('data-vz="chapters"');
   });
+  it('long chapter citations inside detail panels may wrap (no sideways scroll at 390)', () => {
+    expect(src('assets/vz.css')).toContain('.vz-own-detail .md-cite, .vz-flow-steps .md-cite { white-space: normal; }');
+  });
   it('leaders Fund theme links to the exception cost calculator', () => {
     const h = html('leaders/index.html');
     const fund = h.slice(h.indexOf('id="t-fund"'), h.indexOf('id="q-04"'));

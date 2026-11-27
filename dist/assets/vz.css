@@ -299,3 +299,4 @@
 .vz-part-1 { transition-delay: 0.15s; } .vz-part-2 { transition-delay: 0.3s; } .vz-part-3 { transition-delay: 0.45s; }
 @media (prefers-reduced-motion: reduce) { [data-vz="chapters"] .vz-part { opacity: 1; transform: none; transition: none; } }
 .mgmt-grid[hidden] { display: none; }
+.vz-own-detail .md-cite, .vz-flow-steps .md-cite { white-space: normal; }
